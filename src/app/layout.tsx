@@ -1,13 +1,5 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Modern Portfolio",
-  description: "Built with NextUI",
-};
+import Footer from "@/components/footer";
 
 export default function RootLayout({
   children,
@@ -15,9 +7,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className="bg-[#f0f7f5] text-slate-900">
         {children}
+        <Footer />
       </body>
     </html>
   );
