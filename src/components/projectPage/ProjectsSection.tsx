@@ -1,64 +1,92 @@
 "use client";
 
 import { useState } from "react";
-import { ProjectFilter } from "./ProjectFilter";
-import { ProjectCard } from "./ProjectCardV2";
+import { AnimatePresence, motion } from "framer-motion";
+import { ProjectFilter } from "./ProjectFilter"; 
+import ProjectCard from "@/components/projectPage/Cards/ProjectCards"; 
 
 const PROJECTS = [
   {
-    title: "Demand Planner Platform",
-    description: "Enterprise demand forecasting and planning system.",
-    category: "ML / AI",
-  },
-  {
-    title: "Food Ordering App",
-    description: "Full-stack food ordering platform with Supabase.",
-    category: "App",
-  },
-  {
-    title: "Marketing Analytics Dashboard",
-    description: "MMM and ROI analytics for global brands.",
-    category: "Consulting",
-  },
-  {
-    title: "Portfolio Website",
-    description: "Modern developer portfolio with animations.",
+    id: 1,
+    title: "Neon Dashboard",
+    description: "A futuristic analytics dashboard featuring real-time data visualization and a cyberpunk aesthetic.",
     category: "Web",
   },
   {
-    title: "Game Engine Prototype",
-    description: "2D game engine with physics simulation.",
-    category: "Game",
+    id: 2,
+    title: "Zen Focus",
+    description: "A meditation application helping users find clarity through generative ambient soundscapes.",
+    category: "App",
   },
   {
-    title: "Design System",
-    description: "Reusable UI components and UX guidelines.",
+    id: 3,
+    title: "Neural Nexus",
+    description: "An open-source machine learning pipeline that simplifies complex model training.",
+    category: "ML / AI",
+  },
+  {
+    id: 4,
+    title: "Eco Tracker",
+    description: "IoT based system for tracking carbon footprints in large corporate office spaces.",
     category: "UI/UX",
+  },
+  {
+    id: 5,
+    title: "Crypto Vault",
+    description: "Secure, non-custodial wallet with biometric authentication and social recovery.",
+    category: "Web",
+  },
+  {
+    id: 6,
+    title: "Vocalize",
+    description: "AI text-to-speech engine optimized for natural conversation flow.",
+    category: "ML / AI",
   },
 ];
 
 export function ProjectsSection() {
-  const [active, setActive] = useState("All");
+  const [activeCategory, setActiveCategory] = useState("All");
 
-  const visible =
-    active === "All"
+  const filteredProjects =
+    activeCategory === "All"
       ? PROJECTS
-      : PROJECTS.filter((p) => p.category === active);
+      : PROJECTS.filter((p) => p.category === activeCategory);
 
   return (
-    <section>
-      <ProjectFilter active={active} onChange={setActive} />
+    <div className="w-full">
+      {/* Filter Bar */}
+      <ProjectFilter active={activeCategory} onChange={setActiveCategory} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {visible.map((p, i) => (
-          <ProjectCard
-            key={i}
-            title={p.title}
-            description={p.description}
-            category={p.category}
-          />
-        ))}
-      </div>
-    </section>
+      {/* Grid */}
+      <motion.div 
+        layout
+        className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+      >
+        <AnimatePresence mode="popLayout">
+          {filteredProjects.map((project) => (
+            <motion.div
+              key={project.id}
+              layout
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ProjectCard
+                title={project.title}
+                description={project.description}
+                category={project.category}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </motion.div>
+
+      {filteredProjects.length === 0 && (
+        <div className="py-20 text-center text-white/50">
+          <p>No projects found in this category.</p>
+        </div>
+      )}
+    </div>
   );
 }

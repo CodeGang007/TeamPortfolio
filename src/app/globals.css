@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: #ebf2f4;
+:root {
+  /* Ensure no solid colors are overriding the background */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+}
+
+@layer base {
+  html, body {
+    /* CRITICAL: Make body transparent so the fixed background shows */
+    background-color: transparent !important; 
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
 }
