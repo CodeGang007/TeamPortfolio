@@ -30,7 +30,8 @@ export default function AppLayout({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="relative w-full">
+    // Ensure bg is transparent (default is usually transparent, but safe to be sure)
+    <div className="relative w-full bg-transparent">
       {/* NAVBAR */}
       <Navbar>
         <NavBody>
@@ -67,7 +68,7 @@ export default function AppLayout({
       </Navbar>
 
       {/* PAGE CONTENT */}
-      <main className="mt-32">{children}</main>
+      <main className="mt-32 relative z-10">{children}</main>
     </div>
   );
 }

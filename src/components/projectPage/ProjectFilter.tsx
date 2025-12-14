@@ -1,5 +1,7 @@
 "use client";
 
+import GlassButton from "./buttons/GlassButton"; // Adjust path as needed
+
 const FILTERS = [
   "All",
   "Web",
@@ -18,24 +20,21 @@ export function ProjectFilter({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="top-24 z-10 mb-10 flex gap-2 overflow-x-auto pb-2">
+    <div className="top-24 z-10 mb-10 flex gap-4 overflow-x-auto pb-4 px-2 pt-2">
       {FILTERS.map((filter) => {
         const isActive = active === filter;
 
         return (
-          <button
+          <GlassButton
             key={filter}
             onClick={() => onChange(filter)}
-            className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all
-              ${
-                isActive
-                  ? "bg-slate-900 text-white shadow-md"
-                  : "bg-white/60 text-slate-700 hover:bg-white hover:text-slate-900"
-              }
-            `}
+            isActive={isActive}
+            // We adjust the font size here to scale the button down 
+            // to fit a filter list better than the huge default size
+            style={{ fontSize: "0.85rem" }} 
           >
             {filter}
-          </button>
+          </GlassButton>
         );
       })}
     </div>
