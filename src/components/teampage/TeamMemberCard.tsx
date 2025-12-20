@@ -17,7 +17,7 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
   return (
     <motion.div
       className={styles.card} // <-- glassy card class
-      whileHover={{ y: -8, scale: 1.01 }}
+      whileHover={{ y: 0, scale: 1.01 }}
       transition={{ type: "spring", stiffness: 260, damping: 18 }}
     >
       {/* Header: Image & Rating */}
