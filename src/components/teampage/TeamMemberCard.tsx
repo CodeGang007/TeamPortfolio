@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { TeamMember } from "../types";
+import { TeamMember } from "./types";
 import { StarRating } from "./StarRating";
 import { TechBadge } from "./TechBadge";
 import { SocialLinks } from "./SocialLinks";
