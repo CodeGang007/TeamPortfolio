@@ -1,6 +1,6 @@
 import React from 'react';
 import { Github, Linkedin, Instagram } from 'lucide-react';
-import { SocialLinks as SocialLinksType } from '../types';
+import { SocialLinks as SocialLinksType } from './types';
 
 interface SocialLinksProps {
   links: SocialLinksType;
