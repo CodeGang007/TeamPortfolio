@@ -1,6 +1,7 @@
-export interface SocialLink {
-  platform: "github" | "linkedin" | "twitter" | "portfolio" | "instagram";
-  url: string;
+export interface SocialLinks {
+  linkedin?: string;
+  github?: string;
+  instagram?: string;
 }
 
 export interface TeamMember {
@@ -8,13 +9,13 @@ export interface TeamMember {
   role: string;
   imageUrl: string;
 
-  rating: number; // 0–5 (supports half-stars if your StarRating allows)
+  rating: number; // 0–5
 
   description: string;
 
-  techStack: string[]; // e.g. ["React", "Next.js", "Tailwind", "FastAPI"]
+  techStack: string[];
 
-  socials: SocialLink[];
+  socials: SocialLinks;
 
   projectUrl: string;
 }
