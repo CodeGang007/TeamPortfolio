@@ -1,13 +1,6 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Modern Portfolio",
-  description: "Built with NextUI",
-};
+import Footer from "@/components/footer";
+import AnimatedBackground from "@/components/ui/AnimatedBg"; // Import the component
 
 export default function RootLayout({
   children,
@@ -15,9 +8,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        suppressHydrationWarning
+        // Removed bg-[#f0f7f5] here because it is now inside AnimatedBackground
+        className="text-slate-900 relative" 
+      >
+        <AnimatedBackground />
         {children}
+        <Footer />
       </body>
     </html>
   );
