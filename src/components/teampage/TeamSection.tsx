@@ -1,142 +1,127 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { TeamFilter } from "./TeamFilter";
 import { TeamMemberCard } from "./TeamMemberCard";
 import { TeamMember } from "./types";
+import { db } from "@/lib/firebase"; 
+import { 
+  collection, 
+  getDocs, 
+  query, 
+  where, 
+  orderBy, 
+  addDoc 
+} from "firebase/firestore";
 
-const TEAM_MEMBERS: TeamMember[] = [
-  {
-    name: "John Doe",
-    role: "Frontend Developer",
-    description:
-      "Passionate about building scalable and beautiful web interfaces.",
-    rating: 4.8,
-    imageUrl: "/team/john.jpg",
-    techStack: ["React", "TypeScript", "Tailwind"],
-    socials: {
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-    },
-    projectUrl: "/projects",
-  },
-  {
-    name: "Aarav Sharma",
-    role: "Backend Developer",
-    description:
-      "Designs secure and high-performance backend systems.",
-    rating: 4.6,
-    imageUrl: "/team/aarav.jpg",
-    techStack: ["Node.js", "Express", "MongoDB"],
-    socials: {
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-    },
-    projectUrl: "/projects",
-  },
-  {
-    name: "Meera Patel",
-    role: "UI/UX Designer",
-    description:
-      "Creates intuitive designs focused on user psychology.",
-    rating: 4.9,
-    imageUrl: "/team/meera.jpg",
-    techStack: ["Figma", "Framer", "Adobe XD"],
-    socials: {
-      linkedin: "https://linkedin.com",
-      instagram: "https://instagram.com",
-    },
-    projectUrl: "/projects",
-  },
-  {
-    name: "Rohit Verma",
-    role: "ML / AI Engineer",
-    description:
-      "Builds intelligent systems using machine learning models.",
-    rating: 4.7,
-    imageUrl: "/team/rohit.jpg",
-    techStack: ["Python", "TensorFlow", "PyTorch"],
-    socials: {
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-    },
-    projectUrl: "/projects",
-  },
-  {
-    name: "Sara Khan",
-    role: "Full Stack Developer",
-    description:
-      "Combines frontend finesse with backend logic.",
-    rating: 4.8,
-    imageUrl: "/team/sara.jpg",
-    techStack: ["Next.js", "PostgreSQL", "Prisma"],
-    socials: {
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-    },
-    projectUrl: "/projects",
-  },
-  {
-    name: "Dev Malhotra",
-    role: "DevOps Engineer",
-    description:
-      "Automates infrastructure and deployment pipelines.",
-    rating: 4.5,
-    imageUrl: "/team/dev.jpg",
-    techStack: ["Docker", "AWS", "CI/CD"],
-    socials: {
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-    },
-    projectUrl: "/projects",
-  },
-];
 
 export function TeamSection() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [members, setMembers] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [debugLog, setDebugLog] = useState<string>("");
+
+  // --- 1. FETCH DATA (Runs once on load) ---
+  const fetchTeam = async () => {
+    setLoading(true);
+    try {
+      const teamCollection = collection(db, "team");
+      
+      // Try with Index first
+      try {
+        const q = query(teamCollection, where("active", "==", true), orderBy("order", "asc"));
+        const snapshot = await getDocs(q);
+        handleSnapshot(snapshot);
+      } catch (idxError) {
+        // If Index fails, fallback to basic fetch
+        console.warn("Index query failed, falling back to basic fetch:", idxError);
+        const snapshot = await getDocs(teamCollection);
+        handleSnapshot(snapshot);
+      }
+
+    } catch (error: any) {
+      console.error("Fetch error:", error);
+      setDebugLog("Error fetching: " + error.message);
+      setLoading(false);
+    }
+  };
+
+  const handleSnapshot = (snapshot: any) => {
+    if (snapshot.empty) {
+      setDebugLog("Connected, but database is empty. Click 'Repair Database' below.");
+      setMembers([]);
+    } else {
+      const fetchedMembers = snapshot.docs.map((doc: any) => {
+        const data = doc.data();
+        return {
+          name: data.name || "Unknown",
+          role: data.role || "Developer",
+          imageUrl: data.imageUrl || "/team/default.jpg",
+          rating: data.rating || 5,
+          description: data.description || "No description.",
+          techStack: data.techStack || [],
+          projectUrl: data.projectUrl || "#",
+          socials: data.socials || {}
+        } as TeamMember;
+      });
+      setMembers(fetchedMembers);
+      setDebugLog(""); // Clear errors if successful
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchTeam();
+  }, []);
+
 
   const filteredMembers =
     activeCategory === "All"
-      ? TEAM_MEMBERS
-      : TEAM_MEMBERS.filter((member) =>
+      ? members
+      : members.filter((member) =>
           member.role.toLowerCase().includes(activeCategory.toLowerCase())
         );
 
   return (
     <div className="w-full">
-      {/* Filter Bar */}
-      <TeamFilter
-        active={activeCategory}
-        onChange={setActiveCategory}
-      />
+      {/* DEBUG / REPAIR SECTION */}
+      {members.length === 0 && !loading && (
+        <div className="mb-8 p-6 bg-slate-50 border border-slate-200 rounded-xl text-center">
+          <h3 className="text-lg font-bold text-slate-700 mb-2">Database Setup Needed</h3>
+          <p className="text-slate-500 mb-4">{debugLog || "No team members found in the database."}</p>
+          
+        </div>
+      )}
 
-      {/* Grid */}
-      <motion.div
-        layout
-        className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
-      >
-        <AnimatePresence mode="popLayout">
-          {filteredMembers.map((member) => (
-            <motion.div
-              key={member.name}
-              layout
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.3 }}
-            >
-              <TeamMemberCard member={member} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      {/* FILTER & GRID */}
+      {members.length > 0 && (
+        <>
+          <TeamFilter active={activeCategory} onChange={setActiveCategory} />
+          
+          <motion.div layout className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 mt-8">
+            <AnimatePresence mode="popLayout">
+              {filteredMembers.map((member, index) => (
+                <motion.div
+                  key={index}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                >
+                  <TeamMemberCard member={member} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        </>
+      )}
 
-      {filteredMembers.length === 0 && (
-        <div className="py-20 text-center text-slate-400">
-          <p>No team members found in this category.</p>
+      {/* LOADING SPINNER */}
+      {loading && (
+        <div className="py-20 text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-teal-500 border-r-transparent"></div>
+          <p className="mt-4 text-slate-400">Loading team...</p>
         </div>
       )}
     </div>
