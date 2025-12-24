@@ -1,116 +1,134 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import styles from "./GlassLetter.module.css";
 
-interface TypingHeadingProps {
-  prefix: string;
-  suffixes: string[];
-}
+const GlassLetter = ({ char, index }: { char: string; index: number }) => {
+  return (
+    <span 
+      className={styles.letterWrapper} 
+      data-text={char}
+      style={{ "--i": index } as React.CSSProperties}
+    >
+      <span className={styles.glassBase}>{char}</span>
+      <span className={styles.rim}>{char}</span>
+      <span className={styles.liquidContent} data-text={char}>{char}</span>
+      <span className={styles.bubbles}>{char}</span>
+      <span className={styles.shine}>{char}</span>
+      <span className="opacity-0 select-none pointer-events-none">
+        {char === " " ? "\u00A0" : char}
+      </span>
+    </span>
+  );
+};
 
-export default function TypingHeading({ prefix, suffixes }: TypingHeadingProps) {
+export default function TypingHeading({ prefix, suffixes }: { prefix: string; suffixes: string[] }) {
   const [text, setText] = useState("");
   const [loopIndex, setLoopIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
-    if (!suffixes || suffixes.length === 0) return;
-    if (isDone) return;
-
+    if (!suffixes?.length || isDone) return;
     const currentSuffix = suffixes[loopIndex];
-    const typeSpeed = isDeleting ? 50 : 100;
+    const typeSpeed = isDeleting ? 40 : 80;
 
     const handleTyping = () => {
       if (!isDeleting) {
         if (text.length < currentSuffix.length) {
           setText(currentSuffix.slice(0, text.length + 1));
         } else {
-          if (loopIndex === suffixes.length - 1) {
-            setIsDone(true);
-          } else {
-            setTimeout(() => setIsDeleting(true), 1500);
-          }
+          if (loopIndex === suffixes.length - 1) setIsDone(true);
+          else setTimeout(() => setIsDeleting(true), 2500);
         }
       } else {
-        if (text.length > 0) {
-          setText(currentSuffix.slice(0, text.length - 1));
-        } else {
+        if (text.length > 0) setText(currentSuffix.slice(0, text.length - 1));
+        else {
           setIsDeleting(false);
-          setLoopIndex((prev) => prev + 1);
+          setLoopIndex((prev) => (prev + 1) % suffixes.length);
         }
       }
     };
-
     const timer = setTimeout(handleTyping, typeSpeed);
     return () => clearTimeout(timer);
   }, [text, isDeleting, loopIndex, isDone, suffixes]);
 
   return (
-    <div className="py-12 relative flex justify-center md:justify-start">
-      <style jsx>{`
-        @keyframes liquidFlow {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        
-        .liquid-text {
-          /* 
-             Darker "Obsidian" Liquid Gradient 
-             Starts Dark Slate -> Deep Teal -> White Reflection -> Deep Teal -> Dark Slate
-             This ensures it matches the "Dive into" color at the edges but glows inside.
-          */
-          background: linear-gradient(
-            90deg, 
-            #1e293b 0%,   /* Slate 800 (Matches body text) */
-            #0f766e 25%,  /* Teal 700 (Rich, Deep Teal) */
-            #0000 45%,  /* Slate 200 (Soft Silver Shine) */
-            #0000 50%,  /* Pure White (Sharp Highlight) */
-            #0000 55%,  /* Slate 200 */
-            #0f766e 75%,  /* Teal 700 */
-            #1e293b 100%  /* Slate 800 */
-          );
-          
-          background-size: 200% auto;
-          background-clip: text;
-          -webkit-background-clip: text;
-          color: transparent;
-          
-          animation: liquidFlow 4s linear infinite; /* Slowed down slightly for elegance */
-          
-          /* Subtle dark glow to lift it off the light background */
-          filter: drop-shadow(0 2px 4px rgba(15, 118, 110, 0.2));
-        }
-      `}</style>
+    <div className="relative py-12 flex flex-col md:flex-row items-center justify-start bg-transparent overflow-visible">
+      
+      {/* ULTRA-GLOSS MASTER FILTER */}
+      <svg style={{ position: "absolute", width: 0, height: 0 }}>
+        <defs>
+          <filter id="ultra-gloss-aquarium" x="-25%" y="-25%" width="150%" height="150%">
+            {/* 1. Bit Wavy Container: Noise-based displacement */}
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="4" seed="1" result="noise">
+              <animate attributeName="seed" from="1" to="100" dur="15s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" result="wavySource" />
 
-      {/* Spotlight for readability */}
-      <div className="absolute inset-0 -inset-x-4 md:-inset-x-10 bg-white/40 blur-3xl -z-10 rounded-full pointer-events-none" />
+            {/* 2. Volume & Lighting pass */}
+            <feGaussianBlur in="wavySource" stdDeviation="2.5" result="blur" />
+            
+            {/* PASS 1: Broad Surface Glow */}
+            <feSpecularLighting in="blur" surfaceScale="5" specularConstant="1" specularExponent="35" lightingColor="#ffffff" result="spec1">
+              <fePointLight x="-50" y="-100" z="250" />
+            </feSpecularLighting>
+            
+            {/* PASS 2: Sharp Edge Sparkle */}
+            <feSpecularLighting in="blur" surfaceScale="3" specularConstant="1.5" specularExponent="55" lightingColor="#ffffff" result="spec2">
+              <fePointLight x="200" y="-100" z="200" />
+            </feSpecularLighting>
+            
+            <feComposite in="spec1" in2="wavySource" operator="in" result="light1" />
+            <feComposite in="spec2" in2="wavySource" operator="in" result="light2" />
+            <feBlend in="light1" in2="light2" mode="screen" result="studio-light" />
+            
+            {/* 3. Gooey Edge rounding */}
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -11" result="goo" />
+            
+            {/* 4. Final Composition */}
+            <feMerge>
+              <feMergeNode in="goo" />
+              <feMergeNode in="studio-light" />
+            </feMerge>
 
-      <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-2 leading-tight">
-        {/* Static Prefix - Dark Slate */}
-        <span 
-          className="text-slate-800"
-          style={{ textShadow: "0 1px 1px #0000" }}
-        >
+            {/* Strict containment - liquid stays inside the wavy glass */}
+            <feComposite in2="wavySource" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
+
+      <h1 className="text-7xl md:text-8xl font-black tracking-tighter leading-tight flex flex-wrap items-center">
+        {/* Dark Prefix */}
+        <span className="text-[#0f172a] mr-10 select-none">
           {prefix}
         </span>
-        
-        {/* Dynamic Suffix - Dark Liquid */}
-        <span className="relative ml-3 inline-block">
-          <span className="liquid-text font-extrabold pb-2 inline-block">
-            {text}
-          </span>
-          
-          {/* Cursor - Matching Dark Teal */}
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
-            className="absolute -right-3 md:-right-5 top-2 bottom-2 inline-block w-[4px] bg-teal-700 rounded-full"
-            style={{ boxShadow: "0 0 8px rgba(15, 118, 110, 0.6)" }}
-          />
-        </span>
+
+        {/* The Animated Aquarium Letters */}
+        <div className="flex flex-wrap items-center gap-2">
+          <AnimatePresence mode="popLayout">
+            {text.split("").map((char, index) => (
+              <motion.div
+                key={`${loopIndex}-${index}`}
+                initial={{ opacity: 0, scale: 0.8, filter: "blur(4px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 0.8, filter: "blur(4px)" }}
+                transition={{ type: "spring", damping: 18, stiffness: 240 }}
+              >
+                <GlassLetter char={char} index={index} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {!isDone && (
+            <motion.div
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+              className="w-2.5 h-[0.8em] bg-[#0f172a]/20 backdrop-blur-md rounded-full ml-4"
+            />
+          )}
+        </div>
       </h1>
     </div>
   );
