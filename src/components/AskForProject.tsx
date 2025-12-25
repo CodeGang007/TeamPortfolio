@@ -1,24 +1,22 @@
-"use client";
-
 import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 
-interface AskForProjectProps {
-    isOnline: boolean;
-}
+export default function AskForProject() {
+    const { isAuthenticated, openLoginModal } = useAuth();
+    const isOnline = isAuthenticated;
 
-export default function AskForProject({ isOnline }: AskForProjectProps) {
     return (
         <div className={`relative my-20 flex flex-col items-center justify-center overflow-hidden rounded-3xl border px-6 py-32 text-center shadow-2xl backdrop-blur-md md:px-12 transition-all duration-500 ${isOnline
-                ? 'border-zinc-800/50 bg-gradient-to-br from-zinc-950 to-black'
-                : 'border-red-900/50 bg-gradient-to-br from-zinc-950 to-red-950/20'
+            ? 'border-zinc-800/50 bg-gradient-to-br from-zinc-950 to-black'
+            : 'border-red-900/50 bg-gradient-to-br from-zinc-950 to-red-950/20'
             }`}>
             {/* Icon Badge */}
             <motion.div
                 className={`mb-8 flex items-center justify-center h-20 w-20 rounded-2xl border-2 transition-all duration-500 ${isOnline
-                        ? 'bg-brand-green/10 border-brand-green/30 shadow-[0_0_30px_rgba(34,197,94,0.1)]'
-                        : 'bg-red-500/10 border-red-500/30 shadow-[0_0_30px_rgba(239,68,68,0.1)]'
+                    ? 'bg-brand-green/10 border-brand-green/30 shadow-[0_0_30px_rgba(34,197,94,0.1)]'
+                    : 'bg-red-500/10 border-red-500/30 shadow-[0_0_30px_rgba(239,68,68,0.1)]'
                     }`}
                 whileHover={{ scale: isOnline ? 1.1 : 1, rotate: isOnline ? 5 : 0 }}
                 transition={{ type: "spring", stiffness: 300 }}
@@ -31,8 +29,8 @@ export default function AskForProject({ isOnline }: AskForProjectProps) {
             <h2 className={`mb-6 text-5xl md:text-7xl font-black tracking-tighter leading-tight transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'
                 }`}>
                 Have a <span className={`text-transparent bg-clip-text transition-all duration-500 ${isOnline
-                        ? 'bg-gradient-to-r from-brand-green to-green-400 drop-shadow-[0_0_20px_rgba(34,197,94,0.4)]'
-                        : 'bg-gradient-to-r from-red-500 to-orange-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.4)]'
+                    ? 'bg-gradient-to-r from-brand-green to-green-400 drop-shadow-[0_0_20px_rgba(34,197,94,0.4)]'
+                    : 'bg-gradient-to-r from-red-500 to-orange-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.4)]'
                     }`}>vision</span><br />
                 in mind?
             </h2>
@@ -55,18 +53,18 @@ export default function AskForProject({ isOnline }: AskForProjectProps) {
             <Link
                 href="/project-templates"
                 className={`group relative inline-flex h-16 items-center gap-3 rounded-full border-2 px-10 text-lg font-black transition-all duration-500 ${isOnline
-                        ? 'border-brand-green bg-brand-green text-black shadow-[0_10px_40px_rgba(34,197,94,0.3)] hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(34,197,94,0.5)] active:scale-95'
-                        : 'border-red-500/30 bg-red-500/20 text-red-300 shadow-[0_10px_40px_rgba(239,68,68,0.2)] cursor-not-allowed opacity-60'
+                    ? 'border-brand-green bg-brand-green text-black shadow-[0_10px_40px_rgba(34,197,94,0.3)] hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(34,197,94,0.5)] active:scale-95'
+                    : 'border-red-500/50 bg-red-500/20 text-red-200 shadow-[0_10px_40px_rgba(239,68,68,0.3)] hover:bg-red-500/30 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(239,68,68,0.4)] active:scale-95 cursor-pointer'
                     }`}
-                onClick={(e) => !isOnline && e.preventDefault()}
             >
-                <span className="relative z-10">{isOnline ? 'START BUILDING' : 'SYSTEM OFFLINE'}</span>
+                <span className="relative z-10">START BUILDING</span>
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2 relative z-10" strokeWidth={3} />
 
-                {/* Animated glow effect - only when online */}
-                {isOnline && (
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-brand-green to-green-400 opacity-0 group-hover:opacity-20 blur-xl transition-opacity"></div>
-                )}
+                {/* Animated glow effect */}
+                <div className={`absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 blur-xl transition-opacity ${isOnline
+                    ? 'bg-gradient-to-r from-brand-green to-green-400'
+                    : 'bg-gradient-to-r from-red-500 to-orange-500'
+                    }`}></div>
             </Link>
 
             {/* Subtle Grid Pattern */}

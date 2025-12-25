@@ -4,11 +4,13 @@ import AppLayout from "@/components/AppLayout";
 import AskForProject from "@/components/AskForProject";
 import FloatingHero from "@/components/FloatingHero";
 import CreativeProjects from "@/components/CreativeProjects";
+import TrilemmaGame from "@/components/TrilemmaGame";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function HomePage() {
-  const [isOnline, setIsOnline] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const isOnline = isAuthenticated;
 
   return (
     <AppLayout>
@@ -63,7 +65,7 @@ export default function HomePage() {
           <img src="/3d_cube.png" alt="" className="w-full h-full object-contain mix-blend-screen" />
         </motion.div>
 
-        <FloatingHero onSystemStateChange={setIsOnline} />
+        <FloatingHero />
 
         <div className="container mx-auto px-6 md:px-12 relative z-10">
           {/* Projects Section with State-Responsive Header */}
@@ -103,12 +105,13 @@ export default function HomePage() {
               </p>
             </div>
 
-            <CreativeProjects isOnline={isOnline} />
+            <CreativeProjects />
           </section>
 
           {/* Call to Action Section */}
           <section className="pb-24">
-            <AskForProject isOnline={isOnline} />
+            <TrilemmaGame />
+            <AskForProject />
           </section>
         </div>
 

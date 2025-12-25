@@ -9,6 +9,7 @@ import heroStyles from "@/components/projectPage/HeroGlassCard.module.css";
 import glassBtnStyles from "@/components/projectPage/buttons/GlassButton.module.css";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Real-world Trending Data - Expanded Catalog
 const ALL_TEMPLATES = [
@@ -48,6 +49,8 @@ const CATEGORIES = ["All", "Programming", "Design", "AI-Powered Services", "Vide
 const ITEMS_PER_PAGE = 8;
 
 export default function ProjectTemplatesPage() {
+    const { isAuthenticated } = useAuth();
+    const isOnline = isAuthenticated;
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -93,7 +96,7 @@ export default function ProjectTemplatesPage() {
                 {/* Abstract 3D Decorative Elements */}
                 <motion.img
                     src="/3d_cube.png"
-                    className="absolute top-[20%] right-[5%] w-56 h-56 opacity-20 pointer-events-none z-0 mix-blend-screen"
+                    className={`absolute top-[20%] right-[5%] w-56 h-56 opacity-20 pointer-events-none z-0 mix-blend-screen transition-all duration-500 ${!isOnline && 'grayscale sepia hue-rotate-[-50deg]'}`}
                     animate={{
                         rotate: [0, 20, 0],
                         y: [0, -25, 0]
@@ -103,7 +106,7 @@ export default function ProjectTemplatesPage() {
 
                 <motion.img
                     src="/3d_blob.png"
-                    className="absolute bottom-[10%] left-[3%] w-72 h-72 opacity-15 pointer-events-none z-0 mix-blend-screen"
+                    className={`absolute bottom-[10%] left-[3%] w-72 h-72 opacity-15 pointer-events-none z-0 mix-blend-screen transition-all duration-500 ${!isOnline && 'grayscale sepia hue-rotate-[-50deg]'}`}
                     animate={{
                         scale: [1, 1.15, 1],
                         rotate: [0, -10, 0]
@@ -115,13 +118,13 @@ export default function ProjectTemplatesPage() {
                 <div className="bg-transparent border-b border-white/20 py-4 backdrop-blur-sm">
                     <div className="container mx-auto px-6 md:px-12 flex items-center justify-center">
                         <div className="relative w-full max-w-xl group">
-                            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
+                            <Search className={`absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 transition-colors ${isOnline ? 'text-slate-400 group-focus-within:text-indigo-500' : 'text-red-400/50 group-focus-within:text-red-500'}`} />
                             <input
                                 type="text"
                                 placeholder="Search for templates, skills, or projects..."
                                 value={searchQuery}
                                 onChange={handleSearch}
-                                className="w-full rounded-full border border-white/10 bg-zinc-900/80 py-3 pl-12 pr-4 text-white placeholder:text-zinc-500 outline-none transition-all hover:border-white/30 focus:border-brand-green focus:bg-black focus:ring-4 focus:ring-brand-green/10 shadow-sm backdrop-blur-md"
+                                className={`w-full rounded-full border py-3 pl-12 pr-4 outline-none transition-all shadow-sm backdrop-blur-md ${isOnline ? 'border-white/10 bg-zinc-900/80 text-white placeholder:text-zinc-500 hover:border-white/30 focus:border-brand-green focus:bg-black focus:ring-4 focus:ring-brand-green/10' : 'border-red-900/30 bg-red-950/20 text-red-200 placeholder:text-red-400/50 hover:border-red-500/30 focus:border-red-500/50 focus:bg-red-950/30 focus:ring-4 focus:ring-red-500/10'}`}
                             />
                         </div>
                     </div>
@@ -131,14 +134,14 @@ export default function ProjectTemplatesPage() {
 
 
                     {/* Floating Hero Section - Compact */}
-                    <div className={`${heroStyles.card} mb-8 px-6 py-8 md:px-12 md:py-10 group relative overflow-hidden border border-zinc-800 bg-zinc-900/50`}>
+                    <div className={`${heroStyles.card} mb-8 px-6 py-8 md:px-12 md:py-10 group relative overflow-hidden border transition-all duration-500 ${isOnline ? 'border-zinc-800 bg-zinc-900/50' : 'border-red-900/50 bg-red-950/20'}`}>
                         {/* Abstract Animated Background */}
-                        <div className="absolute top-0 right-0 -mr-20 -mt-20 h-72 w-72 rounded-full bg-brand-green/20 blur-[80px] animate-pulse"></div>
-                        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 h-64 w-64 rounded-full bg-brand-green/10 blur-[60px]"></div>
+                        <div className={`absolute top-0 right-0 -mr-20 -mt-20 h-72 w-72 rounded-full blur-[80px] animate-pulse transition-colors duration-500 ${isOnline ? 'bg-brand-green/20' : 'bg-red-500/20'}`}></div>
+                        <div className={`absolute bottom-0 left-0 -ml-20 -mb-20 h-64 w-64 rounded-full blur-[60px] transition-colors duration-500 ${isOnline ? 'bg-brand-green/10' : 'bg-red-500/10'}`}></div>
 
                         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                             <div className="max-w-xl space-y-4">
-                                <div className="inline-flex items-center gap-2 rounded-full bg-brand-green/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-green backdrop-blur-md border border-brand-green/20">
+                                <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur-md border transition-all duration-500 ${isOnline ? 'bg-brand-green/10 text-brand-green border-brand-green/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
                                     <Sparkles className="h-3 w-3" />
                                     <span>Premium Templates</span>
                                 </div>
@@ -154,7 +157,7 @@ export default function ProjectTemplatesPage() {
                                         className={glassBtnStyles.button}
                                     >
                                         <span className={glassBtnStyles.text}>
-                                            <span className="flex items-center gap-2 text-brand-green">
+                                            <span className={`flex items-center gap-2 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>
                                                 Start a Project
                                                 <ArrowRight className="h-4 w-4" />
                                             </span>
@@ -166,9 +169,9 @@ export default function ProjectTemplatesPage() {
 
                             {/* Rocket Illustration - Smaller */}
                             <div className="relative hidden md:flex items-center justify-center">
-                                <div className="absolute inset-0 bg-brand-green/20 blur-2xl rounded-full"></div>
+                                <div className={`absolute inset-0 blur-2xl rounded-full ${isOnline ? 'bg-brand-green/20' : 'bg-red-500/20'}`}></div>
                                 <div className="relative h-32 w-32 animate-float">
-                                    <Rocket className="h-full w-full text-brand-green drop-shadow-xl" strokeWidth={1} />
+                                    <Rocket className={`h-full w-full drop-shadow-xl ${isOnline ? 'text-brand-green' : 'text-red-500'}`} strokeWidth={1} />
                                 </div>
                             </div>
                         </div>
@@ -188,10 +191,10 @@ export default function ProjectTemplatesPage() {
                     <div className="min-h-[600px] mb-16">
                         <div className="mb-6 flex items-end justify-between">
                             <div>
-                                <h2 className="text-2xl font-bold text-white tracking-tight">
+                                <h2 className={`text-2xl font-bold tracking-tight transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'}`}>
                                     {selectedCategory === 'All' ? 'Trending now' : `${selectedCategory} Templates`}
                                 </h2>
-                                <p className="text-sm text-zinc-400">Discover projects that align with your vision.</p>
+                                <p className={`text-sm transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>Discover projects that align with your vision.</p>
                             </div>
                             <span className="hidden md:block rounded-full bg-zinc-800 border border-zinc-700 px-3 py-1 text-xs font-bold text-zinc-300">
                                 {filteredTemplates.length} results
@@ -202,15 +205,15 @@ export default function ProjectTemplatesPage() {
                             {paginatedTemplates.map((template) => (
                                 template.isCustom ? (
                                     // Premium Custom Card
-                                    <div key={template.id} className="group relative flex h-full flex-col items-center justify-center rounded-[2rem] border-2 border-dashed border-zinc-700 bg-zinc-900/50 p-8 text-center transition-all hover:border-brand-green hover:bg-zinc-900 hover:shadow-xl hover:shadow-brand-green/10 cursor-pointer min-h-[420px]">
+                                    <div key={template.id} className={`group relative flex h-full flex-col items-center justify-center rounded-[2rem] border-2 border-dashed border-zinc-700 bg-zinc-900/50 p-8 text-center transition-all hover:bg-zinc-900 hover:shadow-xl cursor-pointer min-h-[420px] ${isOnline ? 'hover:border-brand-green hover:shadow-brand-green/10' : 'hover:border-red-500 hover:shadow-red-500/10'}`}>
                                         <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-zinc-800 shadow-sm ring-4 ring-zinc-700 group-hover:scale-110 transition-transform duration-300">
-                                            <Sparkles className="h-10 w-10 text-brand-green" />
+                                            <Sparkles className={`h-10 w-10 ${isOnline ? 'text-brand-green' : 'text-red-500'}`} />
                                         </div>
                                         <h3 className="mb-2 text-xl font-bold text-white">Create Custom</h3>
                                         <p className="text-sm text-zinc-400 mb-8 max-w-[200px] leading-relaxed">
                                             Have a unique vision? Build your project from scratch with our expert network.
                                         </p>
-                                        <button className="rounded-full bg-brand-green px-8 py-3 text-sm font-bold text-black shadow-lg shadow-brand-green/20 transition-all hover:bg-green-400 hover:shadow-brand-green/40 active:scale-95">
+                                        <button className={`rounded-full px-8 py-3 text-sm font-bold text-black shadow-lg transition-all active:scale-95 ${isOnline ? 'bg-brand-green shadow-brand-green/20 hover:bg-green-400 hover:shadow-brand-green/40' : 'bg-red-500 shadow-red-500/20 hover:bg-red-400 hover:shadow-red-500/40'}`}>
                                             Define Vision
                                         </button>
                                     </div>
@@ -239,7 +242,7 @@ export default function ProjectTemplatesPage() {
                                 </p>
                                 <button
                                     onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}
-                                    className="mt-6 font-semibold text-brand-green hover:text-green-400"
+                                    className={`mt-6 font-semibold hover:text-green-400 ${isOnline ? 'text-brand-green hover:text-green-400' : 'text-red-500 hover:text-red-400'}`}
                                 >
                                     Clear all filters
                                 </button>
