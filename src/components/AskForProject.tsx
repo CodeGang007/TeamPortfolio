@@ -60,6 +60,27 @@ export default function AskForProject() {
                     )}
                 </p>
 
+                {/* Floating Loki Helmet (3D Object) */}
+                <motion.div
+                    className="absolute -top-32 -left-4 md:-top-32 md:-left-24 w-32 h-32 md:w-48 md:h-48 pointer-events-none z-0"
+                    animate={{
+                        y: [-10, 10, -10],
+                        rotate: [0, 5, -5, 0],
+                        scale: [1, 1.05, 1]
+                    }}
+                    transition={{
+                        duration: 6,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
+                >
+                    <img
+                        src={isOnline ? "/loki-green.png" : "/loki-red.png"}
+                        alt="Loki Helmet"
+                        className={`w-full h-full object-contain mix-blend-screen ${isOnline ? 'drop-shadow-[0_0_30px_rgba(34,197,94,0.3)]' : 'drop-shadow-[0_0_30px_rgba(239,68,68,0.3)]'}`}
+                    />
+                </motion.div>
+
                 {/* CTA Button Wrapper */}
                 <div className="relative">
                     {/* Timeline Branches Effect - Radiating from behind the button */}
