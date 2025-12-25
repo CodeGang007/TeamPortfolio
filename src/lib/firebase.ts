@@ -1,6 +1,7 @@
 // src/lib/firebase.ts
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBS0tfDynheCHtuB2JWU1PsexqXtuX7_ic",
@@ -16,5 +17,6 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 // Initialize Cloud Firestore (Standard Mode)
 const db = getFirestore(app);
+const storage = getStorage(app);
 
-export { db };
+export { db, storage };

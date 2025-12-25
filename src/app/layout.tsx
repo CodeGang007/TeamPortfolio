@@ -1,5 +1,5 @@
 import "./globals.css";
-import Footer from "@/components/footer";
+import FooterWrapper from "@/components/FooterWrapper";
 import AnimatedBackground from "@/components/ui/AnimatedBg"; // Import the component
 
 export default function RootLayout({
@@ -12,11 +12,11 @@ export default function RootLayout({
       <body
         suppressHydrationWarning
         // Removed bg-[#f0f7f5] here because it is now inside AnimatedBackground
-        className="text-slate-900 relative" 
+        className="text-slate-900 relative"
       >
         <AnimatedBackground />
         {children}
-        <Footer />
+        <FooterWrapper />
       </body>
     </html>
   );

@@ -19,7 +19,7 @@
   --global--size: clamp(2rem, 4vw, 5rem);
   --anim--hover-time: 400ms;
   --anim--hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
-  
+
   font-size: var(--global--size);
   display: inline-flex;
   position: relative;
@@ -73,12 +73,10 @@
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   pointer-events: auto;
   z-index: 3;
-  background: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.05),
-    rgba(255, 255, 255, 0.2),
-    rgba(255, 255, 255, 0.05)
-  );
+  background: linear-gradient(-75deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.05));
   border-radius: 999vw;
   box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
     inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
@@ -131,20 +129,17 @@
   box-sizing: border-box;
   border-radius: 999vw;
   overflow: clip;
-  background: linear-gradient(
-    var(--angle-2),
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.5) 40% 50%,
-    rgba(255, 255, 255, 0) 55%
-  );
+  background: linear-gradient(var(--angle-2),
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.5) 40% 50%,
+      rgba(255, 255, 255, 0) 55%);
   z-index: 3;
   mix-blend-mode: screen;
   pointer-events: none;
   background-size: 200% 200%;
   background-position: 0% 50%;
   background-repeat: no-repeat;
-  transition: background-position calc(var(--anim--hover-time) * 1.25)
-      var(--anim--hover-ease),
+  transition: background-position calc(var(--anim--hover-time) * 1.25) var(--anim--hover-ease),
     --angle-2 calc(var(--anim--hover-time) * 1.25) var(--anim--hover-ease);
 }
 
@@ -159,6 +154,7 @@
 
 /* Mobile Touch Adjustments */
 @media (hover: none) and (pointer: coarse) {
+
   .text::after,
   .button:active .text::after {
     --angle-2: -45deg;
@@ -178,14 +174,12 @@
   left: calc(0% - var(--border-width) / 2);
   padding: var(--border-width);
   box-sizing: border-box;
-  background: conic-gradient(
-      from var(--angle-1) at 50% 50%,
+  background: conic-gradient(from var(--angle-1) at 50% 50%,
       rgba(0, 0, 0, 0.5),
       rgba(0, 0, 0, 0) 5% 40%,
       rgba(0, 0, 0, 0.5) 50%,
       rgba(0, 0, 0, 0) 60% 95%,
-      rgba(0, 0, 0, 0.5)
-    ),
+      rgba(0, 0, 0, 0.5)),
     linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
@@ -203,6 +197,7 @@
 }
 
 @media (hover: none) and (pointer: coarse) {
+
   .button::after,
   .button:hover::after,
   .button:active::after {
@@ -253,50 +248,51 @@
 }
 
 .button.active {
-  background: linear-gradient(
-    -45deg,
-    rgba(30, 30, 30, 0.7),
-    rgba(0, 0, 0, 0.8), 
-    rgba(30, 30, 30, 0.7)
-  );
-  
+  background: linear-gradient(-45deg,
+      rgba(30, 30, 30, 0.7),
+      rgba(0, 0, 0, 0.8),
+      rgba(30, 30, 30, 0.7));
+
   /* Update shadows to blend with the dark liquid */
-  box-shadow: 
-    inset 0 0.125em 0.125em rgba(0, 0, 0, 0.5),   /* Deeper top-inner shadow */
-    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.15), /* Subtle bottom glass reflection */
-    0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.5),     /* Drop shadow */
-    0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.05), /* Very subtle inner rim */
+  box-shadow:
+    inset 0 0.125em 0.125em rgba(0, 0, 0, 0.5),
+    /* Deeper top-inner shadow */
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.15),
+    /* Subtle bottom glass reflection */
+    0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.5),
+    /* Drop shadow */
+    0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.05),
+    /* Very subtle inner rim */
     0 0 0 0 rgba(255, 255, 255, 1);
-    
+
   transform: scale(0.975);
 }
 
 /* 2. Change the text color to White when active */
 .button.active .text {
   color: rgba(255, 255, 255, 0.95);
-  text-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.8); /* Stronger text shadow for contrast */
+  text-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.8);
+  /* Stronger text shadow for contrast */
 }
 
 /* 3. Adjust the glare/shine on the text to be more visible on dark background */
 .button.active .text::after {
-  background: linear-gradient(
-    var(--angle-2),
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.3) 40% 50%, /* Slightly dimmer glare so it's not too harsh */
-    rgba(255, 255, 255, 0) 55%
-  );
+  background: linear-gradient(var(--angle-2),
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 40% 50%,
+      /* Slightly dimmer glare so it's not too harsh */
+      rgba(255, 255, 255, 0) 55%);
   background-position: 25% 50%;
 }
 
 /* 4. Keep the border outline, but maybe make it slightly subtler */
 .button.active::after {
-  background: conic-gradient(
-      from var(--angle-1) at 50% 50%,
+  background: conic-gradient(from var(--angle-1) at 50% 50%,
       rgba(0, 0, 0, 0.5),
       rgba(0, 0, 0, 0) 5% 40%,
       rgba(0, 0, 0, 0.5) 50%,
       rgba(0, 0, 0, 0) 60% 95%,
-      rgba(0, 0, 0, 0.5)
-    ),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)); /* Dimmer border */
+      rgba(0, 0, 0, 0.5)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
+  /* Dimmer border */
 }

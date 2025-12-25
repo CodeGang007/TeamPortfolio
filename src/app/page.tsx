@@ -1,5 +1,6 @@
 import AppLayout from "@/components/AppLayout";
 import { CarouselDemo } from "@/components/ProjectCards";
+import AskForProject from "@/components/AskForProject";
 
 export default function HomePage() {
   return (
@@ -16,6 +17,8 @@ export default function HomePage() {
         </p>
 
         <CarouselDemo />
+
+        <AskForProject />
       </div>
     </AppLayout>
   );
