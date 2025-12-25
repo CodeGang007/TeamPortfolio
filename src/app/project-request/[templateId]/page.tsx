@@ -368,15 +368,15 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
     }, [formData.category]);
 
     return (
-        <div className="min-h-screen bg-white text-slate-900 font-sans" onPaste={handlePaste}>
+        <div className="min-h-screen bg-black text-white font-sans" onPaste={handlePaste}>
             {/* Header */}
-            <div className="sticky top-0 z-50 flex h-16 items-center border-b bg-white/90 backdrop-blur-md px-4 md:px-8">
-                <Link href="/project-templates" className="mr-4 flex h-8 w-8 items-center justify-center rounded-full hover:bg-slate-100">
-                    <ArrowLeft className="h-5 w-5 text-slate-600" />
+            <div className="sticky top-0 z-50 flex h-16 items-center border-b border-zinc-800 bg-black/90 backdrop-blur-md px-4 md:px-8">
+                <Link href="/project-templates" className="mr-4 flex h-8 w-8 items-center justify-center rounded-full hover:bg-zinc-800 transition-colors">
+                    <ArrowLeft className="h-5 w-5 text-zinc-400 hover:text-white" />
                 </Link>
                 <div className="flex flex-1 items-center justify-between">
-                    <span className="font-semibold text-slate-900">Project creation</span>
-                    <div className="h-8 w-8 rounded-full bg-slate-200" />
+                    <span className="font-semibold text-white">Project creation</span>
+                    <div className="h-8 w-8 rounded-full bg-zinc-800 border border-zinc-700" />
                 </div>
             </div>
 
@@ -393,7 +393,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     initial={{ opacity: 0, y: -20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -20 }}
-                                    className="rounded-xl bg-red-50 border border-red-200 p-4 text-red-600 font-medium flex items-center gap-2"
+                                    className="rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-red-500 font-medium flex items-center gap-2"
                                 >
                                     <X className="h-5 w-5" />
                                     {validationError}
@@ -402,46 +402,46 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         </AnimatePresence>
                         {/* Project Name */}
                         <div className="space-y-2">
-                            <label className="text-base font-semibold text-slate-800">Project name<span className="text-red-500 ml-0.5">*</span></label>
+                            <label className="text-base font-semibold text-zinc-300">Project name<span className="text-brand-green ml-0.5">*</span></label>
                             <div className="relative">
                                 <input
                                     type="text"
-                                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3 text-white placeholder:text-zinc-600 focus:border-brand-green focus:outline-none focus:ring-2 focus:ring-brand-green/20 transition-all font-medium"
                                     placeholder="Enter project name"
                                     maxLength={100}
                                     value={formData.projectName}
                                     onChange={e => updateFormData({ projectName: e.target.value })}
                                 />
-                                <span className="absolute right-3 top-3 text-xs text-slate-400">{formData.projectName.length} / 100</span>
+                                <span className="absolute right-3 top-3 text-xs text-zinc-600">{formData.projectName.length} / 100</span>
                             </div>
                         </div>
 
                         {/* Description */}
                         <div className="space-y-2">
-                            <label className="text-base font-semibold text-slate-800">Description<span className="text-red-500 ml-0.5">*</span></label>
+                            <label className="text-base font-semibold text-zinc-300">Description<span className="text-brand-green ml-0.5">*</span></label>
                             <div className="relative">
                                 <textarea
-                                    className="h-48 w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                                    className="h-48 w-full resize-none rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3 text-white placeholder:text-zinc-600 focus:border-brand-green focus:outline-none focus:ring-2 focus:ring-brand-green/20 transition-all font-medium leading-relaxed custom-scrollbar"
                                     placeholder="Describe your project..."
                                     maxLength={800}
                                     value={formData.description}
                                     onChange={e => updateFormData({ description: e.target.value })}
                                 />
-                                <span className="absolute right-3 bottom-3 text-xs text-slate-400">{formData.description.length} / 800</span>
+                                <span className="absolute right-3 bottom-3 text-xs text-zinc-600">{formData.description.length} / 800</span>
                             </div>
                         </div>
 
                         {/* Categories */}
                         <div className="space-y-3">
-                            <label className="text-base font-semibold text-slate-800">Categories<span className="text-red-500 ml-0.5">*</span></label>
+                            <label className="text-base font-semibold text-zinc-300">Categories<span className="text-brand-green ml-0.5">*</span></label>
                             <div className="flex flex-wrap gap-3">
                                 {categories.map(cat => (
                                     <button
                                         key={cat}
                                         onClick={() => updateFormData({ category: cat })}
-                                        className={`rounded-full px-8 py-2.5 text-sm font-semibold transition-all duration-200 ${formData.category === cat
-                                            ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 ring-2 ring-blue-600 ring-offset-2"
-                                            : "bg-slate-100/80 text-slate-500 hover:bg-slate-200 hover:text-slate-700"
+                                        className={`rounded-full px-8 py-2.5 text-sm font-bold transition-all duration-200 border ${formData.category === cat
+                                            ? "bg-brand-green text-black border-brand-green shadow-lg shadow-brand-green/20"
+                                            : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300"
                                             }`}
                                     >
                                         {cat}
@@ -452,16 +452,16 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
                         {/* Sub-Categories */}
                         <div className="space-y-4">
-                            <label className="text-base font-semibold text-slate-800">Sub-Categories<span className="text-red-500 ml-0.5">*</span></label>
-                            <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+                            <label className="text-base font-semibold text-zinc-300">Sub-Categories<span className="text-brand-green ml-0.5">*</span></label>
+                            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
                                 <div className="grid grid-cols-2 gap-y-4 gap-x-6 sm:grid-cols-3 md:grid-cols-4">
                                     {subCategories.map((sub) => (
                                         <label key={sub} className="flex cursor-pointer items-center gap-3 group">
                                             <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-all duration-200 ${formData.subCategories.includes(sub)
-                                                ? 'border-blue-500 bg-blue-500 shadow-md shadow-blue-200'
-                                                : 'border-slate-300 bg-white group-hover:border-blue-400'
+                                                ? 'border-brand-green bg-brand-green shadow-md shadow-brand-green/20'
+                                                : 'border-zinc-700 bg-zinc-900 group-hover:border-zinc-500'
                                                 }`}>
-                                                {formData.subCategories.includes(sub) && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
+                                                {formData.subCategories.includes(sub) && <Check className="h-3.5 w-3.5 text-black" strokeWidth={3} />}
                                             </div>
                                             <input
                                                 type="checkbox"
@@ -469,7 +469,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                                 checked={formData.subCategories.includes(sub)}
                                                 onChange={() => toggleSubCategory(sub)}
                                             />
-                                            <span className={`truncate text-sm select-none transition-colors ${formData.subCategories.includes(sub) ? 'text-slate-900 font-medium' : 'text-slate-500 group-hover:text-slate-700'
+                                            <span className={`truncate text-sm select-none transition-colors ${formData.subCategories.includes(sub) ? 'text-white font-medium' : 'text-zinc-500 group-hover:text-zinc-300'
                                                 }`}>{sub}</span>
                                         </label>
                                     ))}
@@ -479,37 +479,37 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                             <div className="space-y-3">
-                                <label className="text-base font-semibold text-slate-800">Delivery<span className="text-red-500 ml-0.5">*</span></label>
+                                <label className="text-base font-semibold text-zinc-300">Delivery<span className="text-brand-green ml-0.5">*</span></label>
                                 <div className="relative group">
                                     <input
                                         type="date"
-                                        className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all group-hover:border-slate-300 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                        className="w-full rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3.5 text-white focus:border-brand-green focus:outline-none focus:ring-4 focus:ring-brand-green/10 transition-all group-hover:border-zinc-700 [color-scheme:dark]"
                                         value={formData.deliveryTime}
                                         onChange={e => updateFormData({ deliveryTime: e.target.value })}
                                     />
                                     {/* Custom Calendar Icon Overlay */}
-                                    <div className="pointer-events-none absolute right-4 top-3.5 text-slate-400 group-hover:text-blue-500 transition-colors">
+                                    <div className="pointer-events-none absolute right-4 top-3.5 text-zinc-600 group-hover:text-brand-green transition-colors">
                                         <CalendarDays className="h-5 w-5" />
                                     </div>
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <label className="text-base font-semibold text-slate-800">Budget<span className="text-red-500 ml-0.5">*</span></label>
+                                <label className="text-base font-semibold text-zinc-300">Budget<span className="text-brand-green ml-0.5">*</span></label>
                                 <div className="flex gap-2">
                                     {/* Currency Selector */}
                                     <div className="relative">
                                         <select
                                             value={formData.currency}
                                             onChange={e => updateFormData({ currency: e.target.value })}
-                                            className="h-full appearance-none rounded-xl border border-slate-200 bg-white pl-3 pr-8 py-3.5 text-slate-700 font-semibold focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all hover:border-slate-300 cursor-pointer"
+                                            className="h-full appearance-none rounded-xl border border-zinc-800 bg-zinc-900/50 pl-3 pr-8 py-3.5 text-white font-semibold focus:border-brand-green focus:outline-none focus:ring-4 focus:ring-brand-green/10 transition-all hover:border-zinc-700 cursor-pointer"
                                         >
                                             {CURRENCIES.map(currency => (
-                                                <option key={currency.code} value={currency.code}>
+                                                <option key={currency.code} value={currency.code} className="bg-zinc-900 text-white">
                                                     {currency.code} ({currency.symbol})
                                                 </option>
                                             ))}
                                         </select>
-                                        <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400">
+                                        <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-zinc-600">
                                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                             </svg>
@@ -517,12 +517,12 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     </div>
                                     {/* Amount Input */}
                                     <div className="relative group flex-1">
-                                        <span className="absolute left-4 top-3.5 font-semibold text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                                        <span className="absolute left-4 top-3.5 font-semibold text-zinc-500 group-focus-within:text-brand-green transition-colors">
                                             {selectedCurrency.symbol}
                                         </span>
                                         <input
                                             type="number"
-                                            className="w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 py-3.5 text-slate-900 font-semibold focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all group-hover:border-slate-300"
+                                            className="w-full rounded-xl border border-zinc-800 bg-zinc-900/50 pl-10 pr-4 py-3.5 text-white font-semibold focus:border-brand-green focus:outline-none focus:ring-4 focus:ring-brand-green/10 transition-all group-hover:border-zinc-700"
                                             placeholder="2,000.00"
                                             value={formData.budget}
                                             onChange={e => updateFormData({ budget: e.target.value })}
@@ -540,10 +540,10 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="text-base font-semibold text-slate-800">Images<span className="text-red-500 ml-0.5">*</span></h3>
-                                    <p className="text-xs text-slate-500">Drag & drop or paste images (Max 10)</p>
+                                    <h3 className="text-base font-semibold text-zinc-300">Images<span className="text-brand-green ml-0.5">*</span></h3>
+                                    <p className="text-xs text-zinc-500">Drag & drop or paste images (Max 10)</p>
                                 </div>
-                                <span className="text-xs font-medium text-slate-400 bg-slate-100 px-2 py-1 rounded-md">
+                                <span className="text-xs font-medium text-zinc-400 bg-zinc-800 px-2 py-1 rounded-md">
                                     {images.length} / {MAX_IMAGES}
                                 </span>
                             </div>
@@ -554,8 +554,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 onDrop={handleImageDrop}
                                 onClick={() => imageInputRef.current?.click()}
                                 className={`relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all duration-200 ${isDraggingImages
-                                    ? "border-blue-500 bg-blue-50 scale-[1.02]"
-                                    : "border-slate-200 bg-slate-50 hover:border-blue-400 hover:bg-slate-100"
+                                    ? "border-brand-green bg-brand-green/10 scale-[1.02]"
+                                    : "border-zinc-800 bg-zinc-900/30 hover:border-zinc-600 hover:bg-zinc-900"
                                     }`}
                             >
                                 <input
@@ -566,11 +566,11 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     className="hidden"
                                     onChange={(e) => processImages(e.target.files!)}
                                 />
-                                <div className="rounded-full bg-white p-3 shadow-sm mb-2">
-                                    <Upload className={`h-6 w-6 ${isDraggingImages ? 'text-blue-500' : 'text-slate-400'}`} />
+                                <div className="rounded-full bg-zinc-800 p-3 shadow-sm mb-2">
+                                    <Upload className={`h-6 w-6 ${isDraggingImages ? 'text-brand-green' : 'text-zinc-400'}`} />
                                 </div>
-                                <p className="text-sm font-medium text-slate-600">Click or drag images here</p>
-                                <p className="text-xs text-slate-400 mt-1">supports .png, .jpg, .webp</p>
+                                <p className="text-sm font-medium text-zinc-300">Click or drag images here</p>
+                                <p className="text-xs text-zinc-500 mt-1">supports .png, .jpg, .webp</p>
                             </div>
 
                             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -582,7 +582,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.5 }}
-                                            className="group relative aspect-square overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm"
+                                            className="group relative aspect-square overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 shadow-sm"
                                         >
                                             <img src={img.url} alt="preview" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
                                             <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
@@ -603,8 +603,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="text-base font-semibold text-slate-800">Attachments<span className="text-red-500 ml-0.5">*</span></h3>
-                                    <p className="text-xs text-slate-500">PDF, Word, Excel, etc (Max 10MB)</p>
+                                    <h3 className="text-base font-semibold text-zinc-300">Attachments<span className="text-brand-green ml-0.5">*</span></h3>
+                                    <p className="text-xs text-zinc-500">PDF, Word, Excel, etc (Max 10MB)</p>
                                 </div>
                             </div>
 
@@ -617,20 +617,20 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, x: -10 }}
-                                            className="flex items-center justify-between rounded-lg bg-blue-50/50 p-3 hover:bg-blue-50 transition-colors group border border-transparent hover:border-blue-100"
+                                            className="flex items-center justify-between rounded-lg bg-zinc-900 p-3 hover:bg-zinc-800 transition-colors group border border-zinc-800 hover:border-zinc-700"
                                         >
                                             <div className="flex items-center gap-3 overflow-hidden">
-                                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-200 transition-colors">
+                                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-zinc-400 group-hover:text-white transition-colors">
                                                     {getFileIcon(file.name)}
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <p className="text-sm font-medium text-slate-700 truncate">{file.name}</p>
-                                                    <p className="text-[10px] text-slate-400">{file.size}</p>
+                                                    <p className="text-sm font-medium text-zinc-300 truncate">{file.name}</p>
+                                                    <p className="text-[10px] text-zinc-500">{file.size}</p>
                                                 </div>
                                             </div>
                                             <button
                                                 onClick={() => setAttachments(prev => prev.filter(a => a.id !== file.id))}
-                                                className="ml-2 rounded-full p-1 text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors"
+                                                className="ml-2 rounded-full p-1 text-zinc-500 hover:bg-red-500/10 hover:text-red-500 transition-colors"
                                             >
                                                 <X className="h-4 w-4" />
                                             </button>
@@ -646,8 +646,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 onDrop={handleDocDrop}
                                 onClick={() => docInputRef.current?.click()}
                                 className={`relative flex min-h-[80px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all duration-200 ${isDraggingDocs
-                                    ? "border-purple-500 bg-purple-50 scale-[1.01]"
-                                    : "border-slate-200 bg-slate-50 hover:border-purple-300 hover:bg-purple-50/30"
+                                    ? "border-brand-green bg-brand-green/10 scale-[1.01]"
+                                    : "border-zinc-800 bg-zinc-900/30 hover:border-zinc-600 hover:bg-zinc-900"
                                     }`}
                             >
                                 <input
@@ -658,7 +658,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     className="hidden"
                                     onChange={(e) => processDocs(e.target.files!)}
                                 />
-                                <div className="flex items-center gap-2 text-slate-500">
+                                <div className="flex items-center gap-2 text-zinc-500">
                                     <Plus className="h-4 w-4" />
                                     <span className="text-sm font-medium">Add or drop files</span>
                                 </div>
@@ -666,21 +666,21 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         </div>
 
                         {/* Additional Notes Section */}
-                        <div className="space-y-4 pt-4 border-t border-slate-100">
+                        <div className="space-y-4 pt-4 border-t border-zinc-800">
                             <div>
-                                <h3 className="text-base font-semibold text-slate-800">Additional Notes</h3>
-                                <p className="text-xs text-slate-500">Any specific details or requirements?</p>
+                                <h3 className="text-base font-semibold text-zinc-300">Additional Notes</h3>
+                                <p className="text-xs text-zinc-500">Any specific details or requirements?</p>
                             </div>
 
                             <div className="relative group">
                                 <textarea
-                                    className="h-32 w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all group-hover:border-slate-300"
+                                    className="h-32 w-full resize-none rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3 text-white placeholder:text-zinc-600 focus:border-brand-green focus:outline-none focus:ring-2 focus:ring-brand-green/20 transition-all group-hover:border-zinc-700"
                                     placeholder="e.g. I need a responsive design, SEO optimization, and dark mode support."
                                     maxLength={500}
                                     value={formData.additionalNotes}
                                     onChange={e => updateFormData({ additionalNotes: e.target.value })}
                                 />
-                                <span className="absolute right-3 bottom-3 text-xs text-slate-400">{formData.additionalNotes?.length || 0} / 500</span>
+                                <span className="absolute right-3 bottom-3 text-xs text-zinc-600">{formData.additionalNotes?.length || 0} / 500</span>
                             </div>
                         </div>
 
@@ -691,7 +691,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                     <Button
                         size="lg"
                         disabled={isSubmitting}
-                        className="w-full max-w-md rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 py-7 text-lg font-bold text-white shadow-xl shadow-purple-200 hover:shadow-purple-300 transform transition-all hover:-translate-y-1 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
+                        className="w-full max-w-md rounded-xl bg-brand-green py-7 text-lg font-bold text-black shadow-lg shadow-brand-green/20 hover:shadow-brand-green/40 hover:bg-green-400 transform transition-all hover:-translate-y-1 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
                         onClick={handleSubmit}
                     >
                         {isSubmitting ? (
@@ -703,7 +703,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                     </Button>
 
                     {/* Action Bar - Sleek modern design */}
-                    <div className="w-full max-w-md rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100/50 border border-slate-200/60 p-4 backdrop-blur-sm">
+                    <div className="w-full max-w-md rounded-2xl bg-zinc-900/80 border border-zinc-800 p-4 backdrop-blur-sm">
                         <div className="flex items-center justify-between">
                             {/* Left: Quick Actions */}
                             <div className="flex items-center gap-2">
@@ -712,7 +712,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     type="button"
                                     onClick={handleUndo}
                                     disabled={historyIndex <= 0}
-                                    className="group flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/80 border border-slate-200/80 text-slate-500 hover:text-blue-600 hover:bg-blue-50/80 hover:border-blue-200 transition-all duration-200 shadow-sm hover:shadow disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white/80 disabled:hover:text-slate-500 disabled:hover:border-slate-200/80"
+                                    className="group flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/50 border border-zinc-800 text-zinc-400 hover:text-brand-green hover:border-brand-green/50 transition-all duration-200 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
                                     title="Undo (Ctrl+Z)"
                                 >
                                     <RotateCcw className="h-3.5 w-3.5 group-hover:rotate-[-20deg] transition-transform duration-200" />
@@ -723,7 +723,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 <button
                                     type="button"
                                     onClick={handleClearAll}
-                                    className="group flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/80 border border-slate-200/80 text-slate-500 hover:text-red-500 hover:bg-red-50/80 hover:border-red-200 transition-all duration-200 shadow-sm hover:shadow"
+                                    className="group flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/50 border border-zinc-800 text-zinc-400 hover:text-red-500 hover:border-red-500/50 transition-all duration-200 shadow-sm"
                                 >
                                     <Trash2 className="h-3.5 w-3.5 group-hover:scale-110 transition-transform duration-200" />
                                     <span className="text-xs font-medium">Clear</span>
@@ -731,12 +731,12 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                             </div>
 
                             {/* Right: Keyboard shortcut */}
-                            <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-400">
+                            <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-zinc-600">
                                 <span>or</span>
                                 <div className="flex items-center gap-0.5">
-                                    <kbd className="px-1.5 py-0.5 rounded bg-white/80 border border-slate-200/80 font-mono text-[10px] text-slate-500 shadow-sm">⌘</kbd>
-                                    <span className="text-slate-300">+</span>
-                                    <kbd className="px-1.5 py-0.5 rounded bg-white/80 border border-slate-200/80 font-mono text-[10px] text-slate-500 shadow-sm">Z</kbd>
+                                    <kbd className="px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 font-mono text-[10px] text-zinc-500 shadow-sm">⌘</kbd>
+                                    <span className="text-zinc-600">+</span>
+                                    <kbd className="px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 font-mono text-[10px] text-zinc-500 shadow-sm">Z</kbd>
                                 </div>
                             </div>
                         </div>
@@ -750,19 +750,19 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-[100] flex items-center justify-center bg-white/90 backdrop-blur-md"
+                            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md"
                         >
                             <motion.div
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 transition={{ delay: 0.1, type: "spring" }}
-                                className="flex flex-col items-center text-center p-8"
+                                className="flex flex-col items-center text-center p-8 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl"
                             >
-                                <div className="h-24 w-24 rounded-full bg-green-100 flex items-center justify-center mb-6">
-                                    <CheckCircle className="h-12 w-12 text-green-600" />
+                                <div className="h-24 w-24 rounded-full bg-brand-green/20 flex items-center justify-center mb-6">
+                                    <CheckCircle className="h-12 w-12 text-brand-green" />
                                 </div>
-                                <h2 className="text-3xl font-bold text-slate-900 mb-2">Project Published!</h2>
-                                <p className="text-slate-500 max-w-xs">Your project request has been successfully submitted. Redirecting you home...</p>
+                                <h2 className="text-3xl font-bold text-white mb-2">Project Published!</h2>
+                                <p className="text-zinc-400 max-w-xs">Your project request has been successfully submitted. Redirecting you home...</p>
                             </motion.div>
                         </motion.div>
                     )}

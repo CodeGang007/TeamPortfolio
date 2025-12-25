@@ -7,7 +7,16 @@ module.exports = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        brand: {
+          black: "#000000",
+          dark: "#0a0a0a",
+          green: "#00ff41", // Matrix/Cyber green
+          "green-dim": "#008F11",
+        }
+      }
+    },
   },
   darkMode: "class",
   plugins: [nextui()],

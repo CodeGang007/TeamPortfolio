@@ -1,7 +1,5 @@
 "use client";
 
-import GlassButton from "@/components/projectPage/buttons/GlassButton"; // same button as project filter
-
 const FILTERS = [
   "All",
   "Frontend",
@@ -25,14 +23,16 @@ export function TeamFilter({
         const isActive = active === filter;
 
         return (
-          <GlassButton
+          <button
             key={filter}
             onClick={() => onChange(filter)}
-            isActive={isActive}
-            style={{ fontSize: "0.85rem" }}
+            className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-200 border ${isActive
+              ? "bg-brand-green text-black border-brand-green shadow-lg shadow-brand-green/20"
+              : "bg-black/40 backdrop-blur-md text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-white"
+              }`}
           >
             {filter}
-          </GlassButton>
+          </button>
         );
       })}
     </div>

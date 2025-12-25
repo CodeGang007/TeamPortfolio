@@ -25,16 +25,16 @@ export function ProjectFilter({
         const isActive = active === filter;
 
         return (
-          <GlassButton
+          <button
             key={filter}
             onClick={() => onChange(filter)}
-            isActive={isActive}
-            // We adjust the font size here to scale the button down 
-            // to fit a filter list better than the huge default size
-            style={{ fontSize: "0.85rem" }} 
+            className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-200 border whitespace-nowrap ${isActive
+                ? "bg-brand-green text-black border-brand-green shadow-lg shadow-brand-green/20"
+                : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-white"
+              }`}
           >
             {filter}
-          </GlassButton>
+          </button>
         );
       })}
     </div>
