@@ -12,6 +12,8 @@ import {
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Menu, X, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
@@ -22,7 +24,7 @@ export default function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { isAuthenticated, openLoginModal } = useAuth();
+  const { isAuthenticated, openLoginModal, logout } = useAuth();
   const router = useRouter();
 
   const navItems = [
@@ -96,6 +98,40 @@ export default function AppLayout({
                 {item.name}
               </a>
             ))}
+
+            <div className="mt-4 w-full h-px bg-white/10" />
+
+            {/* Mobile CTA Button */}
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                if (isAuthenticated) {
+                  router.push('/contactus');
+                } else {
+                  openLoginModal();
+                }
+              }}
+              className={`mt-4 w-full rounded-md px-4 py-3 text-sm font-bold shadow-md transition-all active:scale-95 ${isAuthenticated
+                ? "bg-white text-black hover:bg-zinc-200"
+                : "bg-red-500/20 text-red-200 border border-red-500/50 hover:bg-red-500/30"
+                }`}
+            >
+              {isAuthenticated ? "Book a call" : "System Offline"}
+            </button>
+
+            {/* Mobile Sign Out (if authenticated) */}
+            {isAuthenticated && (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  logout();
+                }}
+                className="mt-2 w-full rounded-md px-4 py-3 text-sm font-bold text-red-400 hover:bg-red-500/10 transition-all text-left flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Log out</span>
+              </button>
+            )}
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
