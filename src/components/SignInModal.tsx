@@ -11,33 +11,19 @@ interface SignInModalProps {
 }
 
 export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
-    const { signIn } = useAuth();
+    const { login } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
 
     const handleGoogleSignIn = async () => {
         setIsLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            signIn({
-                name: "Demo User",
-                email: "demo@codegang.com",
-                photoURL: "https://github.com/shadcn.png"
-            });
-            setIsLoading(false);
+        try {
+            await login();
             onClose();
-        }, 1500);
-    };
-
-    const handleDemoAccess = () => {
-        setIsLoading(true);
-        setTimeout(() => {
-            signIn({
-                name: "Visitor",
-                email: "visitor@codegang.com"
-            });
+        } catch (error) {
+            console.error("Sign in failed", error);
+        } finally {
             setIsLoading(false);
-            onClose();
-        }, 1000);
+        }
     };
 
     return (
@@ -96,15 +82,6 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                                                     <span>Continue with Google</span>
                                                 </>
                                             )}
-                                        </button>
-
-                                        <button
-                                            onClick={handleDemoAccess}
-                                            disabled={isLoading}
-                                            className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 font-semibold text-zinc-300 transition-colors hover:bg-zinc-800 hover:text-white disabled:opacity-70 disabled:cursor-not-allowed"
-                                        >
-                                            <User className="h-5 w-5" />
-                                            <span>Demo Access</span>
                                         </button>
                                     </div>
 

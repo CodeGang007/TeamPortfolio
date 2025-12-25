@@ -15,6 +15,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
+import UserMenu from "@/components/UserMenu";
 
 export default function AppLayout({
   children,
@@ -59,6 +60,12 @@ export default function AppLayout({
           >
             {isAuthenticated ? "Book a call" : "System Offline"}
           </NavbarButton>
+
+          {isAuthenticated && (
+            <div className="ml-2">
+              <UserMenu />
+            </div>
+          )}
         </NavBody>
 
         <MobileNav>

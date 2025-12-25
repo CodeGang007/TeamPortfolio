@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
     ArrowLeft, Upload, FileText, X, Rocket, Zap,
-    Calendar, CalendarDays, Image as ImageIcon, Check, Trash2, Plus, FileSpreadsheet, File, Loader2, CheckCircle, RotateCcw
+    Calendar, CalendarDays, Image as ImageIcon, Check, Trash2, Plus, FileSpreadsheet, File, Loader2, CheckCircle, RotateCcw, User
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import { db, storage } from "@/lib/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
+import UserMenu from "@/components/UserMenu";
 
 // Storage key for session storage
 const STORAGE_KEY = 'project_request_form_data';
@@ -379,7 +380,18 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                 </Link>
                 <div className="flex flex-1 items-center justify-between">
                     <span className="font-semibold text-white">Project creation</span>
-                    <div className="h-8 w-8 rounded-full bg-zinc-800 border border-zinc-700" />
+                    {isOnline ? (
+                        <div className="flex items-center gap-2">
+                            <UserMenu />
+                        </div>
+                    ) : (
+                        <button
+                            onClick={openLoginModal}
+                            className="h-9 w-9 flex items-center justify-center rounded-full bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 hover:border-zinc-600 transition-all text-zinc-400 hover:text-white"
+                        >
+                            <User className="h-4 w-4" />
+                        </button>
+                    )}
                 </div>
             </div>
 

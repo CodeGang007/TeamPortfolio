@@ -1,136 +1,153 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
-interface User {
-    email: string;
-    name: string;
-    photoURL?: string;
-}
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { auth } from "@/lib/firebase";
+import {
+    onAuthStateChanged,
+    signInWithPopup,
+    signOut as firebaseSignOut,
+    GoogleAuthProvider,
+    User
+} from "firebase/auth";
 
 interface AuthContextType {
-    user: User | null;
     isAuthenticated: boolean;
-    isLoading: boolean;
-    isMounted: boolean;
-    signIn: (userData: User) => void;
-    signOut: () => void;
-    isLoginModalOpen: boolean;
+    user: User | null;
+    loading: boolean;
+    login: () => Promise<void>;
+    logout: () => Promise<void>;
+    triggerAuth: () => void;
+    showAuthToast: boolean;
+    setShowAuthToast: (show: boolean) => void;
+    authToastDismissed: boolean;
+    setAuthToastDismissed: (dismissed: boolean) => void;
     openLoginModal: () => void;
     closeLoginModal: () => void;
-    triggerAuth: (callback?: () => void) => void;
-    showAuthToast: boolean;
-    dismissAuthToast: () => void;
+    isLoginModalOpen: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+    isAuthenticated: false,
+    user: null,
+    loading: true,
+    login: async () => { },
+    logout: async () => { },
+    triggerAuth: () => { },
+    showAuthToast: false,
+    setShowAuthToast: () => { },
+    authToastDismissed: false,
+    setAuthToastDismissed: () => { },
+    openLoginModal: () => { },
+    closeLoginModal: () => { },
+    isLoginModalOpen: false,
+});
 
-// Initialize auth state synchronously to prevent flash
-const getInitialAuthState = () => {
-    if (typeof window === 'undefined') return { user: null, isAuthenticated: false };
+export const useAuth = () => useContext(AuthContext);
 
-    try {
-        const storedUser = localStorage.getItem('authUser');
-        if (storedUser) {
-            const userData = JSON.parse(storedUser);
-            return { user: userData, isAuthenticated: true };
-        }
-    } catch (error) {
-        console.error('Failed to parse stored user:', error);
-    }
-
-    return { user: null, isAuthenticated: false };
-};
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const initialState = getInitialAuthState();
-    const [user, setUser] = useState<User | null>(initialState.user);
-    const [isAuthenticated, setIsAuthenticated] = useState(initialState.isAuthenticated);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const [showAuthToast, setShowAuthToast] = useState(false);
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
     const [isMounted, setIsMounted] = useState(false);
 
-    // Set mounted after hydration to prevent SSR mismatch
+    // UI State
+    const [showAuthToast, setShowAuthToast] = useState(false);
+    const [authToastDismissed, setAuthToastDismissed] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+    const router = useRouter();
+
     useEffect(() => {
         setIsMounted(true);
+
+        // Subscribe to Firebase Auth state changes
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+            setLoading(false);
+
+            // If user logs in, dismiss toast and close modal
+            if (currentUser) {
+                setShowAuthToast(false);
+                setAuthToastDismissed(true);
+                setIsLoginModalOpen(false);
+            }
+        });
+
+        return () => unsubscribe();
     }, []);
 
-    // Show toast repeatedly every 7.5 seconds if not authenticated
+    // Recurring Toast Logic (Only when not authenticated)
     useEffect(() => {
-        if (isMounted && !isAuthenticated) {
+        if (!loading && !user && !authToastDismissed) {
             // Show first toast after 2 seconds
             const initialTimeout = setTimeout(() => {
                 setShowAuthToast(true);
-            }, 200000);
+            }, 2000);
 
             // Then show every 7.5 seconds
             const interval = setInterval(() => {
-                setShowAuthToast(true);
-            }, 200000);
+                if (!user) {
+                    setShowAuthToast(true);
+                }
+            }, 7500);
 
             return () => {
                 clearTimeout(initialTimeout);
                 clearInterval(interval);
             };
-        } else {
-            // Hide toast when authenticated
-            setShowAuthToast(false);
         }
-    }, [isAuthenticated, isMounted]);
+    }, [loading, user, authToastDismissed]);
 
-    const signIn = (userData: User) => {
-        setUser(userData);
-        setIsAuthenticated(true);
-        localStorage.setItem('authUser', JSON.stringify(userData));
-        setIsLoginModalOpen(false);
-        setShowAuthToast(false); // Dismiss toast on signin
+
+    const login = async () => {
+        try {
+            const provider = new GoogleAuthProvider();
+            await signInWithPopup(auth, provider);
+            // State updates handled by onAuthStateChanged
+        } catch (error) {
+            console.error("Login failed:", error);
+            throw error;
+        }
     };
 
-    const signOut = () => {
-        setUser(null);
-        setIsAuthenticated(false);
-        localStorage.removeItem('authUser');
-        sessionStorage.removeItem('hasSeenAuthToast'); // Reset toast flag
+    const logout = async () => {
+        try {
+            await firebaseSignOut(auth);
+            router.push("/");
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
+
+    const triggerAuth = () => {
+        setIsLoginModalOpen(true);
     };
 
     const openLoginModal = () => setIsLoginModalOpen(true);
     const closeLoginModal = () => setIsLoginModalOpen(false);
 
-    const triggerAuth = (callback?: () => void) => {
-        if (isAuthenticated) {
-            callback?.();
-        } else {
-            setIsLoginModalOpen(true);
-        }
-    };
-
-    const dismissAuthToast = () => setShowAuthToast(false);
+    // Hydration safety: ensure server and client match initially
+    const isAuthenticated = isMounted ? !!user : false;
 
     return (
-        <AuthContext.Provider value={{
-            user,
-            isAuthenticated: isMounted ? isAuthenticated : false, // Always false on server until mounted
-            isLoading,
-            isMounted,
-            signIn,
-            signOut,
-            isLoginModalOpen,
-            openLoginModal,
-            closeLoginModal,
-            triggerAuth,
-            showAuthToast,
-            dismissAuthToast
-        }}>
+        <AuthContext.Provider
+            value={{
+                isAuthenticated,
+                user,
+                loading,
+                login,
+                logout,
+                triggerAuth,
+                showAuthToast,
+                setShowAuthToast,
+                authToastDismissed,
+                setAuthToastDismissed,
+                openLoginModal,
+                closeLoginModal,
+                isLoginModalOpen,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );
-}
-
-export function useAuth() {
-    const context = useContext(AuthContext);
-    if (context === undefined) {
-        throw new Error('useAuth must be used within an AuthProvider');
-    }
-    return context;
-}
+};
