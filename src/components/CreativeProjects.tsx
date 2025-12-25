@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Project {
     id: number;
@@ -50,11 +51,10 @@ const FEATURED_PROJECTS: Project[] = [
     },
 ];
 
-interface CreativeProjectsProps {
-    isOnline: boolean;
-}
+export default function CreativeProjects() {
+    const { isAuthenticated, triggerAuth } = useAuth();
+    const isOnline = isAuthenticated;
 
-export default function CreativeProjects({ isOnline }: CreativeProjectsProps) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {FEATURED_PROJECTS.map((project, index) => (
@@ -68,8 +68,8 @@ export default function CreativeProjects({ isOnline }: CreativeProjectsProps) {
                 >
                     {/* Card Container */}
                     <div className={`relative h-[400px] rounded-2xl overflow-hidden border transition-all duration-500 ${isOnline
-                            ? 'bg-zinc-900/50 border-zinc-800 hover:border-brand-green/50'
-                            : 'bg-zinc-900/30 border-red-900/50 hover:border-red-500/50'
+                        ? 'bg-zinc-900/50 border-zinc-800 hover:border-brand-green/50'
+                        : 'bg-zinc-900/30 border-red-900/50 hover:border-red-500/50'
                         }`}>
                         {/* Image */}
                         <div className="relative h-48 overflow-hidden">
@@ -80,8 +80,8 @@ export default function CreativeProjects({ isOnline }: CreativeProjectsProps) {
                                     }`}
                             />
                             <div className={`absolute inset-0 transition-opacity duration-500 ${isOnline
-                                    ? 'bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent'
-                                    : 'bg-gradient-to-t from-zinc-950 via-red-950/30 to-transparent'
+                                ? 'bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent'
+                                : 'bg-gradient-to-t from-zinc-950 via-red-950/30 to-transparent'
                                 }`} />
                         </div>
 
@@ -102,8 +102,8 @@ export default function CreativeProjects({ isOnline }: CreativeProjectsProps) {
                                     <span
                                         key={tag}
                                         className={`text-xs px-2 py-1 rounded-full font-medium transition-all duration-500 ${isOnline
-                                                ? 'bg-brand-green/10 text-brand-green border border-brand-green/20'
-                                                : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                                            ? 'bg-brand-green/10 text-brand-green border border-brand-green/20'
+                                            : 'bg-red-500/10 text-red-400 border border-red-500/20'
                                             }`}
                                     >
                                         {tag}
@@ -115,10 +115,16 @@ export default function CreativeProjects({ isOnline }: CreativeProjectsProps) {
                             <div className="flex gap-3 mt-auto">
                                 {project.link && (
                                     <a
-                                        href={project.link}
+                                        href={isOnline ? project.link : "#"}
+                                        onClick={(e) => {
+                                            if (!isOnline) {
+                                                e.preventDefault();
+                                                triggerAuth();
+                                            }
+                                        }}
                                         className={`flex items-center gap-2 text-sm font-medium transition-colors duration-500 ${isOnline
-                                                ? 'text-brand-green hover:text-green-400'
-                                                : 'text-red-400 hover:text-red-300'
+                                            ? 'text-brand-green hover:text-green-400'
+                                            : 'text-red-400 hover:text-red-300'
                                             }`}
                                     >
                                         <ExternalLink size={16} />
@@ -127,10 +133,16 @@ export default function CreativeProjects({ isOnline }: CreativeProjectsProps) {
                                 )}
                                 {project.github && (
                                     <a
-                                        href={project.github}
+                                        href={isOnline ? project.github : "#"}
+                                        onClick={(e) => {
+                                            if (!isOnline) {
+                                                e.preventDefault();
+                                                triggerAuth();
+                                            }
+                                        }}
                                         className={`flex items-center gap-2 text-sm font-medium transition-colors duration-500 ${isOnline
-                                                ? 'text-zinc-400 hover:text-white'
-                                                : 'text-red-300/50 hover:text-red-200'
+                                            ? 'text-zinc-400 hover:text-white'
+                                            : 'text-red-300/50 hover:text-red-200'
                                             }`}
                                     >
                                         <Github size={16} />

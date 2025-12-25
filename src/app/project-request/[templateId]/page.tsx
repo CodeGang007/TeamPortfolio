@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { db, storage } from "@/lib/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Storage key for session storage
 const STORAGE_KEY = 'project_request_form_data';
@@ -84,6 +85,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
     // UI State
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const { isAuthenticated, openLoginModal } = useAuth();
+    const isOnline = isAuthenticated;
 
     // Undo history state
     const [formHistory, setFormHistory] = useState<typeof formData[]>([]);
@@ -368,9 +371,9 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
     }, [formData.category]);
 
     return (
-        <div className="min-h-screen bg-black text-white font-sans" onPaste={handlePaste}>
+        <div className={`min-h-screen font-sans transition-all duration-500 ${isOnline ? 'bg-black text-white' : 'bg-zinc-950 text-white'}`} onPaste={handlePaste}>
             {/* Header */}
-            <div className="sticky top-0 z-50 flex h-16 items-center border-b border-zinc-800 bg-black/90 backdrop-blur-md px-4 md:px-8">
+            <div className={`sticky top-0 z-50 flex h-16 items-center border-b px-4 md:px-8 backdrop-blur-md transition-all duration-500 ${isOnline ? 'border-zinc-800 bg-black/90' : 'border-red-900/50 bg-red-950/20'}`}>
                 <Link href="/project-templates" className="mr-4 flex h-8 w-8 items-center justify-center rounded-full hover:bg-zinc-800 transition-colors">
                     <ArrowLeft className="h-5 w-5 text-zinc-400 hover:text-white" />
                 </Link>
@@ -402,11 +405,11 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         </AnimatePresence>
                         {/* Project Name */}
                         <div className="space-y-2">
-                            <label className="text-base font-semibold text-zinc-300">Project name<span className="text-brand-green ml-0.5">*</span></label>
+                            <label className="text-base font-semibold text-zinc-300">Project name<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
                             <div className="relative">
                                 <input
                                     type="text"
-                                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3 text-white placeholder:text-zinc-600 focus:border-brand-green focus:outline-none focus:ring-2 focus:ring-brand-green/20 transition-all font-medium"
+                                    className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
                                     placeholder="Enter project name"
                                     maxLength={100}
                                     value={formData.projectName}
@@ -418,10 +421,10 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
                         {/* Description */}
                         <div className="space-y-2">
-                            <label className="text-base font-semibold text-zinc-300">Description<span className="text-brand-green ml-0.5">*</span></label>
+                            <label className="text-base font-semibold text-zinc-300">Description<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
                             <div className="relative">
                                 <textarea
-                                    className="h-48 w-full resize-none rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3 text-white placeholder:text-zinc-600 focus:border-brand-green focus:outline-none focus:ring-2 focus:ring-brand-green/20 transition-all font-medium leading-relaxed custom-scrollbar"
+                                    className={`h-48 w-full resize-none rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium leading-relaxed custom-scrollbar ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
                                     placeholder="Describe your project..."
                                     maxLength={800}
                                     value={formData.description}
@@ -433,14 +436,16 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
                         {/* Categories */}
                         <div className="space-y-3">
-                            <label className="text-base font-semibold text-zinc-300">Categories<span className="text-brand-green ml-0.5">*</span></label>
+                            <label className="text-base font-semibold text-zinc-300">Categories<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
                             <div className="flex flex-wrap gap-3">
                                 {categories.map(cat => (
                                     <button
                                         key={cat}
                                         onClick={() => updateFormData({ category: cat })}
                                         className={`rounded-full px-8 py-2.5 text-sm font-bold transition-all duration-200 border ${formData.category === cat
-                                            ? "bg-brand-green text-black border-brand-green shadow-lg shadow-brand-green/20"
+                                            ? isOnline
+                                                ? "bg-brand-green text-black border-brand-green shadow-lg shadow-brand-green/20"
+                                                : "bg-red-500/20 text-red-200 border-red-500/50 shadow-lg shadow-red-500/20"
                                             : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300"
                                             }`}
                                     >
@@ -452,16 +457,18 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
                         {/* Sub-Categories */}
                         <div className="space-y-4">
-                            <label className="text-base font-semibold text-zinc-300">Sub-Categories<span className="text-brand-green ml-0.5">*</span></label>
+                            <label className="text-base font-semibold text-zinc-300">Sub-Categories<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
                             <div className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
                                 <div className="grid grid-cols-2 gap-y-4 gap-x-6 sm:grid-cols-3 md:grid-cols-4">
                                     {subCategories.map((sub) => (
                                         <label key={sub} className="flex cursor-pointer items-center gap-3 group">
                                             <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-all duration-200 ${formData.subCategories.includes(sub)
-                                                ? 'border-brand-green bg-brand-green shadow-md shadow-brand-green/20'
+                                                ? isOnline
+                                                    ? 'border-brand-green bg-brand-green shadow-md shadow-brand-green/20'
+                                                    : 'border-red-500 bg-red-500/20 shadow-md shadow-red-500/20'
                                                 : 'border-zinc-700 bg-zinc-900 group-hover:border-zinc-500'
                                                 }`}>
-                                                {formData.subCategories.includes(sub) && <Check className="h-3.5 w-3.5 text-black" strokeWidth={3} />}
+                                                {formData.subCategories.includes(sub) && <Check className={`h-3.5 w-3.5 ${isOnline ? 'text-black' : 'text-red-200'}`} strokeWidth={3} />}
                                             </div>
                                             <input
                                                 type="checkbox"
@@ -479,29 +486,29 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                             <div className="space-y-3">
-                                <label className="text-base font-semibold text-zinc-300">Delivery<span className="text-brand-green ml-0.5">*</span></label>
+                                <label className="text-base font-semibold text-zinc-300">Delivery<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
                                 <div className="relative group">
                                     <input
                                         type="date"
-                                        className="w-full rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3.5 text-white focus:border-brand-green focus:outline-none focus:ring-4 focus:ring-brand-green/10 transition-all group-hover:border-zinc-700 [color-scheme:dark]"
+                                        className={`w-full rounded-xl border px-4 py-3.5 focus:outline-none focus:ring-4 transition-all group-hover:border-zinc-700 [color-scheme:dark] ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/10' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/10'}`}
                                         value={formData.deliveryTime}
                                         onChange={e => updateFormData({ deliveryTime: e.target.value })}
                                     />
                                     {/* Custom Calendar Icon Overlay */}
-                                    <div className="pointer-events-none absolute right-4 top-3.5 text-zinc-600 group-hover:text-brand-green transition-colors">
+                                    <div className={`pointer-events-none absolute right-4 top-3.5 transition-colors ${isOnline ? 'text-zinc-600 group-hover:text-brand-green' : 'text-red-400/50 group-hover:text-red-500'}`}>
                                         <CalendarDays className="h-5 w-5" />
                                     </div>
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <label className="text-base font-semibold text-zinc-300">Budget<span className="text-brand-green ml-0.5">*</span></label>
+                                <label className="text-base font-semibold text-zinc-300">Budget<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
                                 <div className="flex gap-2">
                                     {/* Currency Selector */}
                                     <div className="relative">
                                         <select
                                             value={formData.currency}
                                             onChange={e => updateFormData({ currency: e.target.value })}
-                                            className="h-full appearance-none rounded-xl border border-zinc-800 bg-zinc-900/50 pl-3 pr-8 py-3.5 text-white font-semibold focus:border-brand-green focus:outline-none focus:ring-4 focus:ring-brand-green/10 transition-all hover:border-zinc-700 cursor-pointer"
+                                            className={`h-full appearance-none rounded-xl border pl-3 pr-8 py-3.5 font-semibold focus:outline-none focus:ring-4 transition-all hover:border-zinc-700 cursor-pointer ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/10' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/10'}`}
                                         >
                                             {CURRENCIES.map(currency => (
                                                 <option key={currency.code} value={currency.code} className="bg-zinc-900 text-white">
@@ -517,12 +524,12 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     </div>
                                     {/* Amount Input */}
                                     <div className="relative group flex-1">
-                                        <span className="absolute left-4 top-3.5 font-semibold text-zinc-500 group-focus-within:text-brand-green transition-colors">
+                                        <span className={`absolute left-4 top-3.5 font-semibold transition-colors ${isOnline ? 'text-zinc-500 group-focus-within:text-brand-green' : 'text-red-400/60 group-focus-within:text-red-500'}`}>
                                             {selectedCurrency.symbol}
                                         </span>
                                         <input
                                             type="number"
-                                            className="w-full rounded-xl border border-zinc-800 bg-zinc-900/50 pl-10 pr-4 py-3.5 text-white font-semibold focus:border-brand-green focus:outline-none focus:ring-4 focus:ring-brand-green/10 transition-all group-hover:border-zinc-700"
+                                            className={`w-full rounded-xl border pl-10 pr-4 py-3.5 font-semibold focus:outline-none focus:ring-4 transition-all group-hover:border-zinc-700 ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/10' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/10'}`}
                                             placeholder="2,000.00"
                                             value={formData.budget}
                                             onChange={e => updateFormData({ budget: e.target.value })}
@@ -540,7 +547,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="text-base font-semibold text-zinc-300">Images<span className="text-brand-green ml-0.5">*</span></h3>
+                                    <h3 className="text-base font-semibold text-zinc-300">Images<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></h3>
                                     <p className="text-xs text-zinc-500">Drag & drop or paste images (Max 10)</p>
                                 </div>
                                 <span className="text-xs font-medium text-zinc-400 bg-zinc-800 px-2 py-1 rounded-md">
@@ -554,8 +561,12 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 onDrop={handleImageDrop}
                                 onClick={() => imageInputRef.current?.click()}
                                 className={`relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all duration-200 ${isDraggingImages
-                                    ? "border-brand-green bg-brand-green/10 scale-[1.02]"
-                                    : "border-zinc-800 bg-zinc-900/30 hover:border-zinc-600 hover:bg-zinc-900"
+                                    ? isOnline
+                                        ? "border-brand-green bg-brand-green/10 scale-[1.02]"
+                                        : "border-red-500 bg-red-500/10 scale-[1.02]"
+                                    : isOnline
+                                        ? "border-zinc-800 bg-zinc-900/30 hover:border-zinc-600 hover:bg-zinc-900"
+                                        : "border-red-900/30 bg-red-950/20 hover:border-red-500/30 hover:bg-red-900/10"
                                     }`}
                             >
                                 <input
@@ -567,7 +578,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     onChange={(e) => processImages(e.target.files!)}
                                 />
                                 <div className="rounded-full bg-zinc-800 p-3 shadow-sm mb-2">
-                                    <Upload className={`h-6 w-6 ${isDraggingImages ? 'text-brand-green' : 'text-zinc-400'}`} />
+                                    <Upload className={`h-6 w-6 ${isDraggingImages ? (isOnline ? 'text-brand-green' : 'text-red-500') : 'text-zinc-400'}`} />
                                 </div>
                                 <p className="text-sm font-medium text-zinc-300">Click or drag images here</p>
                                 <p className="text-xs text-zinc-500 mt-1">supports .png, .jpg, .webp</p>
@@ -603,7 +614,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="text-base font-semibold text-zinc-300">Attachments<span className="text-brand-green ml-0.5">*</span></h3>
+                                    <h3 className="text-base font-semibold text-zinc-300">Attachments<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></h3>
                                     <p className="text-xs text-zinc-500">PDF, Word, Excel, etc (Max 10MB)</p>
                                 </div>
                             </div>
@@ -646,8 +657,12 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 onDrop={handleDocDrop}
                                 onClick={() => docInputRef.current?.click()}
                                 className={`relative flex min-h-[80px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all duration-200 ${isDraggingDocs
-                                    ? "border-brand-green bg-brand-green/10 scale-[1.01]"
-                                    : "border-zinc-800 bg-zinc-900/30 hover:border-zinc-600 hover:bg-zinc-900"
+                                    ? isOnline
+                                        ? "border-brand-green bg-brand-green/10 scale-[1.01]"
+                                        : "border-red-500 bg-red-500/10 scale-[1.01]"
+                                    : isOnline
+                                        ? "border-zinc-800 bg-zinc-900/30 hover:border-zinc-600 hover:bg-zinc-900"
+                                        : "border-red-900/30 bg-red-950/20 hover:border-red-500/30 hover:bg-red-900/10"
                                     }`}
                             >
                                 <input
@@ -674,7 +689,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
                             <div className="relative group">
                                 <textarea
-                                    className="h-32 w-full resize-none rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3 text-white placeholder:text-zinc-600 focus:border-brand-green focus:outline-none focus:ring-2 focus:ring-brand-green/20 transition-all group-hover:border-zinc-700"
+                                    className={`h-32 w-full resize-none rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all group-hover:border-zinc-700 ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
                                     placeholder="e.g. I need a responsive design, SEO optimization, and dark mode support."
                                     maxLength={500}
                                     value={formData.additionalNotes}
@@ -691,15 +706,21 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                     <Button
                         size="lg"
                         disabled={isSubmitting}
-                        className="w-full max-w-md rounded-xl bg-brand-green py-7 text-lg font-bold text-black shadow-lg shadow-brand-green/20 hover:shadow-brand-green/40 hover:bg-green-400 transform transition-all hover:-translate-y-1 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
-                        onClick={handleSubmit}
+                        className={`w-full max-w-md rounded-xl py-7 text-lg font-bold shadow-lg transform transition-all hover:-translate-y-1 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none ${isOnline ? 'bg-brand-green text-black shadow-brand-green/20 hover:shadow-brand-green/40 hover:bg-green-400' : 'bg-red-500/20 text-red-200 border border-red-500/50 shadow-red-500/20 hover:shadow-red-500/40 hover:bg-red-500/30'}`}
+                        onClick={() => {
+                            if (!isOnline) {
+                                openLoginModal();
+                            } else {
+                                handleSubmit();
+                            }
+                        }}
                     >
                         {isSubmitting ? (
                             <div className="flex items-center gap-2">
                                 <Loader2 className="h-5 w-5 animate-spin" />
                                 Publishing...
                             </div>
-                        ) : "Publish Project"}
+                        ) : isOnline ? "Publish Project" : "Sign In Required"}
                     </Button>
 
                     {/* Action Bar - Sleek modern design */}
@@ -712,7 +733,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     type="button"
                                     onClick={handleUndo}
                                     disabled={historyIndex <= 0}
-                                    className="group flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/50 border border-zinc-800 text-zinc-400 hover:text-brand-green hover:border-brand-green/50 transition-all duration-200 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                                    className={`group flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/50 border border-zinc-800 text-zinc-400 transition-all duration-200 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed ${isOnline ? 'hover:text-brand-green hover:border-brand-green/50' : 'hover:text-red-500 hover:border-red-500/50'}`}
                                     title="Undo (Ctrl+Z)"
                                 >
                                     <RotateCcw className="h-3.5 w-3.5 group-hover:rotate-[-20deg] transition-transform duration-200" />

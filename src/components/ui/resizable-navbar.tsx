@@ -83,14 +83,16 @@ export const Navbar = ({ children, className }: NavbarProps) => {
   );
 };
 
-export const NavBody = ({ children, className, visible }: NavBodyProps) => {
+export const NavBody = ({ children, className, visible, isOnline = true }: NavBodyProps & { isOnline?: boolean }) => {
   return (
     <motion.div
       animate={{
         backdropFilter: visible ? "blur(12px)" : "none",
         backgroundColor: visible ? "rgba(0, 0, 0, 0.7)" : "transparent",
         boxShadow: visible
-          ? "0 0 24px rgba(0, 255, 65, 0.1), 0 1px 1px rgba(0, 255, 65, 0.05), 0 0 0 1px rgba(0, 255, 65, 0.1)"
+          ? isOnline
+            ? "0 0 24px rgba(0, 255, 65, 0.1), 0 1px 1px rgba(0, 255, 65, 0.05), 0 0 0 1px rgba(0, 255, 65, 0.1)"
+            : "0 0 24px rgba(239, 68, 68, 0.1), 0 1px 1px rgba(239, 68, 68, 0.05), 0 0 0 1px rgba(239, 68, 68, 0.1)"
           : "none",
         width: visible ? "auto" : "100%",
         y: visible ? 20 : 0,
@@ -115,7 +117,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
   );
 };
 
-export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
+export const NavItems = ({ items, className, onItemClick, isOnline = true }: NavItemsProps & { isOnline?: boolean }) => {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
@@ -129,15 +131,23 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       {items.map((item, idx) => (
         <a
           onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
-          className="relative px-3 py-1.5 text-zinc-400 hover:text-white transition-colors whitespace-nowrap"
+          onClick={(e) => {
+            if (onItemClick) onItemClick();
+          }}
+          className={cn(
+            "relative px-3 py-1.5 transition-colors whitespace-nowrap",
+            isOnline ? "text-zinc-400 hover:text-white" : "text-red-300/60 hover:text-red-200"
+          )}
           key={`link-${idx}`}
           href={item.link}
         >
           {hovered === idx && (
             <motion.div
               layoutId="hovered"
-              className="absolute inset-0 h-full w-full rounded-full bg-white/5"
+              className={cn(
+                "absolute inset-0 h-full w-full rounded-full",
+                isOnline ? "bg-white/5" : "bg-red-500/10"
+              )}
             />
           )}
           <span className="relative z-20">{item.name}</span>
@@ -229,16 +239,22 @@ export const MobileNavToggle = ({
   );
 };
 
-export const NavbarLogo = () => {
+export const NavbarLogo = ({ isOnline = true }: { isOnline?: boolean }) => {
   return (
     <Link
       href="/"
       className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal"
     >
-      <div className="h-6 w-6 rounded bg-brand-green flex items-center justify-center font-bold text-black text-xs">
+      <div className={cn(
+        "h-6 w-6 rounded flex items-center justify-center font-bold text-black text-xs transition-colors duration-500",
+        isOnline ? "bg-brand-green" : "bg-red-500"
+      )}>
         CG
       </div>
-      <span className="font-medium text-white">CodeGang</span>
+      <span className={cn(
+        "font-medium transition-colors duration-500",
+        isOnline ? "text-white" : "text-red-200"
+      )}>CodeGang</span>
     </Link>
   );
 };
