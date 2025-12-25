@@ -84,14 +84,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             // Show first toast after 2 seconds
             const initialTimeout = setTimeout(() => {
                 setShowAuthToast(true);
-            }, 2000);
+            }, 1000);
 
             // Then show every 7.5 seconds
             const interval = setInterval(() => {
                 if (!user) {
                     setShowAuthToast(true);
                 }
-            }, 7500);
+            }, 330000);
 
             return () => {
                 clearTimeout(initialTimeout);
