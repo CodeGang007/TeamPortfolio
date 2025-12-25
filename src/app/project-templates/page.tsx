@@ -8,6 +8,7 @@ import { Search, SlidersHorizontal, Rocket, Sparkles, ArrowRight } from "lucide-
 import heroStyles from "@/components/projectPage/HeroGlassCard.module.css";
 import glassBtnStyles from "@/components/projectPage/buttons/GlassButton.module.css";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 // Real-world Trending Data - Expanded Catalog
 const ALL_TEMPLATES = [
@@ -88,7 +89,27 @@ export default function ProjectTemplatesPage() {
 
     return (
         <AppLayout>
-            <div className="min-h-screen bg-transparent font-sans selection:bg-indigo-100 selection:text-indigo-900">
+            <div className="min-h-screen bg-transparent font-sans selection:bg-indigo-100 selection:text-indigo-900 relative overflow-hidden">
+                {/* Abstract 3D Decorative Elements */}
+                <motion.img
+                    src="/3d_cube.png"
+                    className="absolute top-[20%] right-[5%] w-56 h-56 opacity-20 pointer-events-none z-0 mix-blend-screen"
+                    animate={{
+                        rotate: [0, 20, 0],
+                        y: [0, -25, 0]
+                    }}
+                    transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                />
+
+                <motion.img
+                    src="/3d_blob.png"
+                    className="absolute bottom-[10%] left-[3%] w-72 h-72 opacity-15 pointer-events-none z-0 mix-blend-screen"
+                    animate={{
+                        scale: [1, 1.15, 1],
+                        rotate: [0, -10, 0]
+                    }}
+                    transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                />
 
                 {/* Modern Header - Centered Search (Scrolls away) */}
                 <div className="bg-transparent border-b border-white/20 py-4 backdrop-blur-sm">
@@ -100,7 +121,7 @@ export default function ProjectTemplatesPage() {
                                 placeholder="Search for templates, skills, or projects..."
                                 value={searchQuery}
                                 onChange={handleSearch}
-                                className="w-full rounded-full border border-white/30 bg-white/20 py-3 pl-12 pr-4 text-slate-900 placeholder:text-slate-500 outline-none transition-all hover:border-white/50 focus:border-indigo-500 focus:bg-white/40 focus:ring-4 focus:ring-indigo-500/10 shadow-sm backdrop-blur-md"
+                                className="w-full rounded-full border border-white/10 bg-zinc-900/80 py-3 pl-12 pr-4 text-white placeholder:text-zinc-500 outline-none transition-all hover:border-white/30 focus:border-brand-green focus:bg-black focus:ring-4 focus:ring-brand-green/10 shadow-sm backdrop-blur-md"
                             />
                         </div>
                     </div>
@@ -110,21 +131,21 @@ export default function ProjectTemplatesPage() {
 
 
                     {/* Floating Hero Section - Compact */}
-                    <div className={`${heroStyles.card} mb-8 px-6 py-8 md:px-12 md:py-10 group`}>
+                    <div className={`${heroStyles.card} mb-8 px-6 py-8 md:px-12 md:py-10 group relative overflow-hidden border border-zinc-800 bg-zinc-900/50`}>
                         {/* Abstract Animated Background */}
-                        <div className="absolute top-0 right-0 -mr-20 -mt-20 h-72 w-72 rounded-full bg-indigo-600/30 blur-[80px] animate-pulse"></div>
-                        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 h-64 w-64 rounded-full bg-purple-600/20 blur-[60px]"></div>
+                        <div className="absolute top-0 right-0 -mr-20 -mt-20 h-72 w-72 rounded-full bg-brand-green/20 blur-[80px] animate-pulse"></div>
+                        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 h-64 w-64 rounded-full bg-brand-green/10 blur-[60px]"></div>
 
                         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                             <div className="max-w-xl space-y-4">
-                                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-indigo-200 backdrop-blur-md border border-white/10">
+                                <div className="inline-flex items-center gap-2 rounded-full bg-brand-green/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-green backdrop-blur-md border border-brand-green/20">
                                     <Sparkles className="h-3 w-3" />
                                     <span>Premium Templates</span>
                                 </div>
                                 <h1 className="text-3xl font-extrabold tracking-tight md:text-5xl lg:leading-[1.1] text-white">
                                     Boost your ecosystem
                                 </h1>
-                                <p className="text-sm md:text-base text-slate-300 max-w-md leading-relaxed">
+                                <p className="text-sm md:text-base text-zinc-400 max-w-md leading-relaxed">
                                     Access a curated library of high-performance project templates. Launch faster.
                                 </p>
                                 <div className={`${glassBtnStyles.container} mt-4`} style={{ fontSize: '0.9rem' } as React.CSSProperties}>
@@ -133,7 +154,7 @@ export default function ProjectTemplatesPage() {
                                         className={glassBtnStyles.button}
                                     >
                                         <span className={glassBtnStyles.text}>
-                                            <span className="flex items-center gap-2">
+                                            <span className="flex items-center gap-2 text-brand-green">
                                                 Start a Project
                                                 <ArrowRight className="h-4 w-4" />
                                             </span>
@@ -145,15 +166,15 @@ export default function ProjectTemplatesPage() {
 
                             {/* Rocket Illustration - Smaller */}
                             <div className="relative hidden md:flex items-center justify-center">
-                                <div className="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full"></div>
+                                <div className="absolute inset-0 bg-brand-green/20 blur-2xl rounded-full"></div>
                                 <div className="relative h-32 w-32 animate-float">
-                                    <Rocket className="h-full w-full text-indigo-300 drop-shadow-xl" strokeWidth={1} />
+                                    <Rocket className="h-full w-full text-brand-green drop-shadow-xl" strokeWidth={1} />
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div id="discover-templates" className="sticky top-28 z-40 mb-8 -mx-6 bg-transparent px-6 py-2 md:-mx-12 md:px-12 border-b border-white/10 backdrop-blur-md">
+                    <div id="discover-templates" className="relative z-40 mb-8 -mx-6 bg-transparent px-6 py-2 md:-mx-12 md:px-12 border-b border-white/10">
                         <div className="container mx-auto">
                             <TemplateFilter
                                 categories={CATEGORIES}
@@ -167,12 +188,12 @@ export default function ProjectTemplatesPage() {
                     <div className="min-h-[600px] mb-16">
                         <div className="mb-6 flex items-end justify-between">
                             <div>
-                                <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+                                <h2 className="text-2xl font-bold text-white tracking-tight">
                                     {selectedCategory === 'All' ? 'Trending now' : `${selectedCategory} Templates`}
                                 </h2>
-                                <p className="text-sm text-slate-500">Discover projects that align with your vision.</p>
+                                <p className="text-sm text-zinc-400">Discover projects that align with your vision.</p>
                             </div>
-                            <span className="hidden md:block rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
+                            <span className="hidden md:block rounded-full bg-zinc-800 border border-zinc-700 px-3 py-1 text-xs font-bold text-zinc-300">
                                 {filteredTemplates.length} results
                             </span>
                         </div>
@@ -181,15 +202,15 @@ export default function ProjectTemplatesPage() {
                             {paginatedTemplates.map((template) => (
                                 template.isCustom ? (
                                     // Premium Custom Card
-                                    <div key={template.id} className="group relative flex h-full flex-col items-center justify-center rounded-[2rem] border-2 border-dashed border-indigo-200 bg-indigo-50/30 p-8 text-center transition-all hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-xl hover:shadow-indigo-500/10 cursor-pointer min-h-[420px]">
-                                        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-sm ring-4 ring-white group-hover:scale-110 transition-transform duration-300">
-                                            <Sparkles className="h-10 w-10 text-indigo-600" />
+                                    <div key={template.id} className="group relative flex h-full flex-col items-center justify-center rounded-[2rem] border-2 border-dashed border-zinc-700 bg-zinc-900/50 p-8 text-center transition-all hover:border-brand-green hover:bg-zinc-900 hover:shadow-xl hover:shadow-brand-green/10 cursor-pointer min-h-[420px]">
+                                        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-zinc-800 shadow-sm ring-4 ring-zinc-700 group-hover:scale-110 transition-transform duration-300">
+                                            <Sparkles className="h-10 w-10 text-brand-green" />
                                         </div>
-                                        <h3 className="mb-2 text-xl font-bold text-slate-900">Create Custom</h3>
-                                        <p className="text-sm text-slate-600 mb-8 max-w-[200px] leading-relaxed">
+                                        <h3 className="mb-2 text-xl font-bold text-white">Create Custom</h3>
+                                        <p className="text-sm text-zinc-400 mb-8 max-w-[200px] leading-relaxed">
                                             Have a unique vision? Build your project from scratch with our expert network.
                                         </p>
-                                        <button className="rounded-full bg-indigo-600 px-8 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700 hover:shadow-indigo-300 active:scale-95">
+                                        <button className="rounded-full bg-brand-green px-8 py-3 text-sm font-bold text-black shadow-lg shadow-brand-green/20 transition-all hover:bg-green-400 hover:shadow-brand-green/40 active:scale-95">
                                             Define Vision
                                         </button>
                                     </div>
@@ -209,16 +230,16 @@ export default function ProjectTemplatesPage() {
 
                         {filteredTemplates.length === 0 && (
                             <div className="flex flex-col items-center justify-center py-24 text-center">
-                                <div className="mb-6 rounded-full bg-slate-100 p-6">
-                                    <Search className="h-10 w-10 text-slate-400" />
+                                <div className="mb-6 rounded-full bg-zinc-800 p-6">
+                                    <Search className="h-10 w-10 text-zinc-500" />
                                 </div>
-                                <h3 className="text-xl font-bold text-slate-900">No projects found</h3>
-                                <p className="mt-2 text-slate-500 max-w-xs mx-auto">
+                                <h3 className="text-xl font-bold text-white">No projects found</h3>
+                                <p className="mt-2 text-zinc-400 max-w-xs mx-auto">
                                     We couldn't find anything matching "{searchQuery}". Try adjusting your filters.
                                 </p>
                                 <button
                                     onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}
-                                    className="mt-6 font-semibold text-indigo-600 hover:text-indigo-700"
+                                    className="mt-6 font-semibold text-brand-green hover:text-green-400"
                                 >
                                     Clear all filters
                                 </button>

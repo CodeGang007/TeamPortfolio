@@ -35,17 +35,11 @@ export default function ProjectCard({ id, title, tags, priceRange, image }: Proj
                         </div>
                     )}
 
-                    {/* Floating Pill on Image */}
-                    <div className={styles.category} style={{
-                        position: 'absolute',
-                        top: '12px',
-                        left: '12px',
-                        marginBottom: 0,
-                        background: 'rgba(255, 255, 255, 0.85)',
-                        backdropFilter: 'blur(8px)',
-                        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-                    }}>
-                        {tags[0] || "Project"}
+                    {/* Badge */}
+                    <div className="absolute top-3 left-3">
+                        <span className={styles.category}>
+                            {tags[0] || "Project"}
+                        </span>
                     </div>
                 </div>
 
@@ -54,21 +48,15 @@ export default function ProjectCard({ id, title, tags, priceRange, image }: Proj
                     {title}
                 </h3>
 
-                {/* Description - Using price as a subtitle since we don't have a long description prop, 
-                    or generic text to match the screenshot "A futuristic analytics..." */}
                 <p className={styles.description}>
                     A premium template designed for high-performance and scalability.
-                    Includes advanced features and modern UI patterns.
                 </p>
 
                 {/* Action Button */}
-                <div className={glassBtnStyles.container} style={{ width: '100%', marginTop: 'auto', '--global--size': '1rem' } as React.CSSProperties}>
-                    <button className={glassBtnStyles.button} style={{ width: '100%', justifyContent: 'center' }}>
-                        <span className={glassBtnStyles.text} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%', justifyContent: 'center' }}>
-                            View Project <ArrowUpRight size={16} />
-                        </span>
+                <div className="mt-auto w-full">
+                    <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-zinc-800 text-white font-bold text-sm transition-all hover:bg-brand-green hover:text-black">
+                        View Project <ArrowUpRight size={16} />
                     </button>
-                    <div className={glassBtnStyles.shadow}></div>
                 </div>
             </div>
         </Link>
