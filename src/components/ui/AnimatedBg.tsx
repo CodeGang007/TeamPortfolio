@@ -8,7 +8,7 @@ export default function AnimatedBackground() {
       <svg
         viewBox="0 0 100 100"
         preserveAspectRatio="xMidYMid slice"
-        className="w-full h-full opacity-70" // Adjusted opacity for better text readability
+        className="w-full h-full opacity-100" // Increased opacity for pastel visibility
       >
         <defs>
           <radialGradient
@@ -25,8 +25,8 @@ export default function AnimatedBackground() {
               values="0%;3%;0%"
               repeatCount="indefinite"
             ></animate>
-            <stop offset="0%" stopColor="rgba(255, 0, 255, 1)"></stop>
-            <stop offset="100%" stopColor="rgba(255, 0, 255, 0)"></stop>
+            <stop offset="0%" stopColor="rgba(255, 182, 193, 0.8)"></stop>
+            <stop offset="100%" stopColor="rgba(255, 182, 193, 0)"></stop>
           </radialGradient>
           <radialGradient
             id="Gradient2"
@@ -42,8 +42,8 @@ export default function AnimatedBackground() {
               values="0%;3%;0%"
               repeatCount="indefinite"
             ></animate>
-            <stop offset="0%" stopColor="rgba(255, 255, 0, 1)"></stop>
-            <stop offset="100%" stopColor="rgba(255, 255, 0, 0)"></stop>
+            <stop offset="0%" stopColor="rgba(250, 250, 210, 0.8)"></stop>
+            <stop offset="100%" stopColor="rgba(250, 250, 210, 0)"></stop>
           </radialGradient>
           <radialGradient
             id="Gradient3"
@@ -59,8 +59,8 @@ export default function AnimatedBackground() {
               values="0%;3%;0%"
               repeatCount="indefinite"
             ></animate>
-            <stop offset="0%" stopColor="rgba(0, 255, 255, 1)"></stop>
-            <stop offset="100%" stopColor="rgba(0, 255, 255, 0)"></stop>
+            <stop offset="0%" stopColor="rgba(175, 238, 238, 0.8)"></stop>
+            <stop offset="100%" stopColor="rgba(175, 238, 238, 0)"></stop>
           </radialGradient>
           <radialGradient
             id="Gradient4"
@@ -76,8 +76,8 @@ export default function AnimatedBackground() {
               values="0%;5%;0%"
               repeatCount="indefinite"
             ></animate>
-            <stop offset="0%" stopColor="rgba(0, 255, 0, 1)"></stop>
-            <stop offset="100%" stopColor="rgba(0, 255, 0, 0)"></stop>
+            <stop offset="0%" stopColor="rgba(224, 255, 255, 0.8)"></stop>
+            <stop offset="100%" stopColor="rgba(224, 255, 255, 0)"></stop>
           </radialGradient>
           <radialGradient
             id="Gradient5"
@@ -93,8 +93,8 @@ export default function AnimatedBackground() {
               values="0%;5%;0%"
               repeatCount="indefinite"
             ></animate>
-            <stop offset="0%" stopColor="rgba(0,0,255, 1)"></stop>
-            <stop offset="100%" stopColor="rgba(0,0,255, 0)"></stop>
+            <stop offset="0%" stopColor="rgba(230, 230, 250, 0.8)"></stop>
+            <stop offset="100%" stopColor="rgba(230, 230, 250, 0)"></stop>
           </radialGradient>
           <radialGradient
             id="Gradient6"
@@ -110,8 +110,8 @@ export default function AnimatedBackground() {
               values="0%;5%;0%"
               repeatCount="indefinite"
             ></animate>
-            <stop offset="0%" stopColor="rgba(255,0,0, 1)"></stop>
-            <stop offset="100%" stopColor="rgba(255,0,0, 0)"></stop>
+            <stop offset="0%" stopColor="rgba(255, 228, 225, 0.8)"></stop>
+            <stop offset="100%" stopColor="rgba(255, 228, 225, 0)"></stop>
           </radialGradient>
         </defs>
         <rect
