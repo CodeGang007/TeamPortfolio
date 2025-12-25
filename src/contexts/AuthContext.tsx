@@ -20,6 +20,7 @@ interface AuthContextType {
     triggerAuth: () => void;
     showAuthToast: boolean;
     setShowAuthToast: (show: boolean) => void;
+    dismissAuthToast: () => void;
     authToastDismissed: boolean;
     setAuthToastDismissed: (dismissed: boolean) => void;
     openLoginModal: () => void;
@@ -36,6 +37,7 @@ const AuthContext = createContext<AuthContextType>({
     triggerAuth: () => { },
     showAuthToast: false,
     setShowAuthToast: () => { },
+    dismissAuthToast: () => { },
     authToastDismissed: false,
     setAuthToastDismissed: () => { },
     openLoginModal: () => { },
@@ -126,6 +128,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const openLoginModal = () => setIsLoginModalOpen(true);
     const closeLoginModal = () => setIsLoginModalOpen(false);
 
+    const dismissAuthToast = () => {
+        setShowAuthToast(false);
+    };
+
     // Hydration safety: ensure server and client match initially
     const isAuthenticated = isMounted ? !!user : false;
 
@@ -140,6 +146,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 triggerAuth,
                 showAuthToast,
                 setShowAuthToast,
+                dismissAuthToast,
                 authToastDismissed,
                 setAuthToastDismissed,
                 openLoginModal,
