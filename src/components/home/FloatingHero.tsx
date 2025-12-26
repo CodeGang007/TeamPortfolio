@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
+import { Rocket } from "lucide-react";
 
 export default function FloatingHero() {
     const { isAuthenticated } = useAuth();
@@ -119,10 +121,12 @@ export default function FloatingHero() {
                 </motion.p>
 
                 {/* CTA Button - Color changes with state */}
+                {/* CTA Buttons */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 3 }}
+                    className="flex flex-col sm:flex-row items-center gap-4"
                 >
                     <a
                         href="#projects"
@@ -146,6 +150,17 @@ export default function FloatingHero() {
                             />
                         </svg>
                     </a>
+
+                    <Link
+                        href="/project-request/custom-vision-card"
+                        className={`group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-sm md:text-base transition-all duration-300 overflow-hidden border-2 ${isOnline
+                            ? 'border-brand-green/50 text-brand-green hover:bg-brand-green/10 shadow-[0_0_30px_rgba(34,197,94,0.1)] hover:shadow-[0_0_50px_rgba(34,197,94,0.2)]'
+                            : 'border-red-500/50 text-red-500 hover:bg-red-500/10 shadow-[0_0_30px_rgba(239,68,68,0.1)] hover:shadow-[0_0_50px_rgba(239,68,68,0.2)]'
+                            }`}
+                    >
+                        <span className="relative z-10">Start Project</span>
+                        <Rocket className="w-5 h-5 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform relative z-10" />
+                    </Link>
                 </motion.div>
             </div>
 

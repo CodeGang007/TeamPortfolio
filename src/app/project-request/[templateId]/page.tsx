@@ -375,7 +375,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
         <div className={`min-h-screen font-sans transition-all duration-500 ${isOnline ? 'bg-black text-white' : 'bg-zinc-950 text-white'}`} onPaste={handlePaste}>
             {/* Header */}
             <div className={`sticky top-0 z-50 flex h-16 items-center border-b px-4 md:px-8 backdrop-blur-md transition-all duration-500 ${isOnline ? 'border-zinc-800 bg-black/90' : 'border-red-900/50 bg-red-950/20'}`}>
-                <Link href="/project-templates" className="mr-4 flex h-8 w-8 items-center justify-center rounded-full hover:bg-zinc-800 transition-colors">
+                <Link href="/" className="mr-4 flex h-8 w-8 items-center justify-center rounded-full hover:bg-zinc-800 transition-colors">
                     <ArrowLeft className="h-5 w-5 text-zinc-400 hover:text-white" />
                 </Link>
                 <div className="flex flex-1 items-center justify-between">
