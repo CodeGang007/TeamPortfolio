@@ -71,7 +71,8 @@ export default function ProfilePage() {
                         ...prev,
                         ...data,
                         enterpriseDetails: {
-                            ...prev.enterpriseDetails,
+                            size: "1-10",
+                            ...(prev.enterpriseDetails || {}),
                             ...(data.enterpriseDetails || {})
                         }
                     }));
@@ -102,10 +103,6 @@ export default function ProfilePage() {
                 ...formData,
                 updatedAt: serverTimestamp()
             };
-
-            // If individual, we might want to clear enterprise details or just ignore them.
-            // Keeping them in state is fine, but maybe redundant in DB. 
-            // For now, we save everything to preserve draft-like state if they switch back.
 
             await setDoc(userRef, dataToSave, { merge: true });
 
