@@ -3,7 +3,7 @@
 import AppLayout from "@/components/AppLayout";
 import ProjectCard from "@/components/ProjectCard";
 import TemplateFilter from "@/components/TemplateFilter";
-import Pagination from "@/components/Pagination";
+import Pagination from "@/components/shared/Pagination";
 import { Search, SlidersHorizontal, Rocket, Sparkles, ArrowRight } from "lucide-react";
 import heroStyles from "@/components/projectPage/HeroGlassCard.module.css";
 import glassBtnStyles from "@/components/projectPage/buttons/GlassButton.module.css";
