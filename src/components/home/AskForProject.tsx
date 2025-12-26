@@ -2,7 +2,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
-import TimelineBranches from "./TimelineBranches";
+
 
 export default function AskForProject() {
     const { isAuthenticated, openLoginModal } = useAuth();
@@ -83,12 +83,11 @@ export default function AskForProject() {
 
                 {/* CTA Button Wrapper */}
                 <div className="relative">
-                    {/* Timeline Branches Effect - Radiating from behind the button */}
-                    <TimelineBranches isOnline={isOnline} />
+
 
                     {/* CTA Button */}
                     <Link
-                        href="/project-templates"
+                        href="/project-request/custom-vision-card"
                         className={`group relative inline-flex h-16 items-center gap-3 rounded-full border-2 px-10 text-lg font-black transition-all duration-500 z-20 ${isOnline
                             ? 'border-brand-green bg-brand-green text-black shadow-[0_10px_40px_rgba(34,197,94,0.3)] hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(34,197,94,0.5)] active:scale-95'
                             : 'border-red-500/50 bg-red-500/20 text-red-200 shadow-[0_10px_40px_rgba(239,68,68,0.3)] hover:bg-red-500/30 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(239,68,68,0.4)] active:scale-95 cursor-pointer'
