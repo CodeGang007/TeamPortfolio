@@ -20,6 +20,7 @@ export default function FloatingHero() {
                     filter: isOnline
                         ? 'hue-rotate(0deg) brightness(1)'
                         : 'hue-rotate(290deg) brightness(0.8) saturate(1.5)',
+                    willChange: "transform"
                 }}
                 animate={{
                     scale: [1, 1.05, 1],
