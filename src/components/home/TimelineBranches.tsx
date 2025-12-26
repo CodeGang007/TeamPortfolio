@@ -57,8 +57,8 @@ export default function TimelineBranches({ isOnline }: TimelineBranchesProps) {
     return (
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 overflow-visible w-0 h-0">
             <svg
-                width="0"
-                height="0"
+                width="1"
+                height="1"
                 className="overflow-visible"
             >
                 {paths.map((d, i) => (

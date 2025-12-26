@@ -1,9 +1,9 @@
 "use client";
 
 import AppLayout from "@/components/AppLayout";
-import AskForProject from "@/components/AskForProject";
-import FloatingHero from "@/components/FloatingHero";
-import CreativeProjects from "@/components/CreativeProjects";
+import AskForProject from "@/components/home/AskForProject";
+import FloatingHero from "@/components/home/FloatingHero";
+import CreativeProjects from "@/components/home/CreativeProjects";
 import TrilemmaGame from "@/components/TrilemmaGame";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";

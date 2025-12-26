@@ -1,10 +1,12 @@
 import "./globals.css";
-import FooterWrapper from "@/components/FooterWrapper";
+import FooterWrapper from "@/components/layout/FooterWrapper";
+// import AnimatedBackground from "@/components/ui/AnimatedBg"; // Keeping as is if it exists there
 import AnimatedBackground from "@/components/ui/AnimatedBg";
 import { AuthProvider } from "@/contexts/AuthContext";
-import ModalWrapper from "@/components/ModalWrapper";
-import AuthGuard from "@/components/AuthGuard";
-import AuthToast from "@/components/AuthToast";
+import ModalWrapper from "@/components/shared/ModalWrapper";
+import AuthGuard from "@/components/auth/AuthGuard";
+import AuthToast from "@/components/auth/AuthToast";
+import SmoothScroll from "@/components/ui/SmoothScroll";
 
 export default function RootLayout({
   children,
@@ -20,6 +22,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <AuthGuard />
+          <SmoothScroll />
           <AnimatedBackground />
           {children}
           <ModalWrapper />
