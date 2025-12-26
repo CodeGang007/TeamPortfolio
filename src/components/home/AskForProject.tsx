@@ -2,7 +2,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
-import TimelineBranches from "./TimelineBranches";
+
 
 export default function AskForProject() {
     const { isAuthenticated, openLoginModal } = useAuth();
@@ -83,8 +83,7 @@ export default function AskForProject() {
 
                 {/* CTA Button Wrapper */}
                 <div className="relative">
-                    {/* Timeline Branches Effect - Radiating from behind the button */}
-                    <TimelineBranches isOnline={isOnline} />
+
 
                     {/* CTA Button */}
                     <Link

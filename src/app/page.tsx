@@ -22,6 +22,7 @@ export default function HomePage() {
             filter: isOnline
               ? 'hue-rotate(0deg) brightness(1)'
               : 'hue-rotate(290deg) brightness(0.8) saturate(1.5)',
+            willChange: "transform"
           }}
           animate={{
             y: [0, -30, 0],
@@ -55,6 +56,7 @@ export default function HomePage() {
             filter: isOnline
               ? 'hue-rotate(0deg) brightness(1)'
               : 'hue-rotate(290deg) brightness(0.8) saturate(1.5)',
+            willChange: "transform"
           }}
           animate={{
             rotate: [0, 15, 0],
