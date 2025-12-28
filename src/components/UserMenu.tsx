@@ -56,6 +56,7 @@ export default function UserMenu() {
                                 src={user.photoURL}
                                 alt={user.displayName || "User"}
                                 className="h-full w-full object-cover"
+                                referrerPolicy="no-referrer"
                             />
                         ) : (
                             <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-green/20 to-brand-green/40 text-xs font-bold text-brand-green">

@@ -44,10 +44,12 @@ export function NavbarDemo() {
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
-          <NavItems items={navItems} />
-          <div className="flex items-center gap-4">
-            {/* <NavbarButton variant="secondary">Login</NavbarButton> */}
-            <NavbarButton variant="primary">Book a call</NavbarButton>
+          <div className="flex items-center gap-6">
+            <NavItems items={navItems} />
+            <div className="flex items-center gap-4">
+              {/* <NavbarButton variant="secondary">Login</NavbarButton> */}
+              <NavbarButton variant="primary">Book a call</NavbarButton>
+            </div>
           </div>
         </NavBody>
 

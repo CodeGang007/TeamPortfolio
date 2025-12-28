@@ -51,31 +51,17 @@ interface MobileNavMenuProps {
 }
 
 export const Navbar = ({ children, className }: NavbarProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-  const [visible, setVisible] = useState<boolean>(false);
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 100) {
-      setVisible(true);
-    } else {
-      setVisible(false);
-    }
-  });
+  // Removed scroll logic as we want a static top bar appearance (or always visible)
 
   return (
     <motion.div
-      ref={ref}
-      className={cn("sticky inset-x-0 top-5 z-[100] w-full", className)}
+      className={cn("sticky inset-x-0 top-0 z-[100] w-full border-b border-white/10 bg-black text-white", className)}
     >
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
           ? React.cloneElement(
             child as React.ReactElement<{ visible?: boolean }>,
-            { visible },
+            { visible: true }, // Always visible
           )
           : child,
       )}
@@ -85,35 +71,14 @@ export const Navbar = ({ children, className }: NavbarProps) => {
 
 export const NavBody = ({ children, className, visible, isOnline = true }: NavBodyProps & { isOnline?: boolean }) => {
   return (
-    <motion.div
-      animate={{
-        backdropFilter: visible ? "blur(12px)" : "none",
-        backgroundColor: visible ? "rgba(0, 0, 0, 0.7)" : "transparent",
-        boxShadow: visible
-          ? isOnline
-            ? "0 0 24px rgba(0, 255, 65, 0.1), 0 1px 1px rgba(0, 255, 65, 0.05), 0 0 0 1px rgba(0, 255, 65, 0.1)"
-            : "0 0 24px rgba(239, 68, 68, 0.1), 0 1px 1px rgba(239, 68, 68, 0.05), 0 0 0 1px rgba(239, 68, 68, 0.1)"
-          : "none",
-        width: visible ? "auto" : "100%",
-        y: visible ? 20 : 0,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 200,
-        damping: 50,
-      }}
-      style={{
-        minWidth: visible ? "auto" : "auto",
-        maxWidth: "fit-content",
-      }}
+    <div
       className={cn(
-        "relative z-[60] mx-auto hidden w-auto flex-row items-center justify-between self-start rounded-full px-8 py-3 lg:flex border border-transparent gap-10",
-        visible && "border-white/10 bg-black/80 backdrop-blur-md",
+        "relative z-[60] mx-auto hidden w-full flex-row items-center justify-between px-8 py-4 lg:flex max-w-7xl",
         className,
       )}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };
 
@@ -159,28 +124,14 @@ export const NavItems = ({ items, className, onItemClick, isOnline = true }: Nav
 
 export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
   return (
-    <motion.div
-      animate={{
-        backdropFilter: visible ? "blur(10px)" : "none",
-        backgroundColor: visible ? "rgba(0,0,0,0.8)" : "transparent",
-        width: visible ? "90%" : "100%",
-        paddingRight: visible ? "12px" : "0px",
-        paddingLeft: visible ? "12px" : "0px",
-        borderRadius: visible ? "4px" : "2rem",
-        y: visible ? 20 : 0,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 200,
-        damping: 50,
-      }}
+    <div
       className={cn(
-        "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between bg-transparent px-0 py-2 lg:hidden",
+        "relative z-50 mx-auto flex w-full flex-col items-center justify-between bg-black px-4 py-4 lg:hidden border-b border-white/10",
         className,
       )}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };
 

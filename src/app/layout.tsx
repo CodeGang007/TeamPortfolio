@@ -23,7 +23,8 @@ export default function RootLayout({
         <AuthProvider>
           <AuthGuard />
           <SmoothScroll />
-          <AnimatedBackground />
+          <SmoothScroll />
+          {/* <AnimatedBackground /> - Removed for Gumroad theme */}
           {children}
           <ModalWrapper />
           <AuthToast />

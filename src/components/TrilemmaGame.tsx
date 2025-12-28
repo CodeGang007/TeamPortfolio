@@ -2,13 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Trophy, AlertCircle } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { X, Trophy, AlertCircle, Zap, DollarSign, Star } from "lucide-react";
 
 export default function TrilemmaGame() {
-    const { isAuthenticated } = useAuth();
-    const isOnline = isAuthenticated;
-
     const [isOpen, setIsOpen] = useState(false);
     const [toggles, setToggles] = useState({
         fast: false,
@@ -65,59 +61,41 @@ export default function TrilemmaGame() {
         <>
             {/* Trigger Card - Placed on Home Screen */}
             <motion.div
-                className={`relative group cursor-pointer overflow-hidden rounded-3xl border p-8 md:p-12 mt-12 w-full mx-auto transition-all duration-500 ${isOnline
-                    ? 'bg-zinc-900/50 border-zinc-800 hover:border-brand-green/50 hover:shadow-[0_0_40px_rgba(34,197,94,0.15)]'
-                    : 'bg-red-950/10 border-red-900/30 hover:border-red-500/50 hover:shadow-[0_0_40px_rgba(239,68,68,0.15)]'
-                    }`}
+                className="relative group cursor-pointer overflow-hidden rounded-sm border-2 border-black p-8 md:p-12 mt-12 w-full mx-auto bg-white shadow-[4px_4px_0px_0px_#000] hover:shadow-[8px_8px_0px_0px_#000] hover:-translate-y-1 transition-all duration-300"
                 onClick={() => setIsOpen(true)}
-                whileHover={{ scale: 1.005 }}
-                whileTap={{ scale: 0.995 }}
             >
-                {/* Background Grid - Creative Touch */}
-                <div className={`absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none transition-opacity duration-500 ${isOnline ? 'opacity-20' : 'opacity-10'}`}></div>
-
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                     <div className="text-center md:text-left flex-1">
-                        <h3 className={`text-3xl md:text-4xl font-black italic mb-3 tracking-tight transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'}`}>
+                        <h3 className="text-3xl md:text-4xl font-black italic mb-3 tracking-tight text-black">
                             The Impossible Choice?
                         </h3>
-                        <p className={`text-lg font-light max-w-xl transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>
+                        <p className="text-lg font-medium text-black/70 max-w-xl">
                             Fast. Cheap. Good. Conventional wisdom says you can only pick two. <br className="hidden md:block" />
-                            <span className={`font-bold inline-block mt-2 border-b-2 border-dashed pb-0.5 ${isOnline ? 'text-brand-green border-brand-green/50' : 'text-red-400 border-red-500/50'}`}>
+                            <span className="font-black inline-block mt-2 bg-gumroad-pink px-1 border border-black text-black -rotate-1 shadow-[2px_2px_0px_0px_#000]">
                                 We don't believe in convention.
                             </span>
                         </p>
                     </div>
 
-                    {/* Visual Trilemma Icon - More Creative */}
+                    {/* Visual Trilemma Icon */}
                     <div className="relative flex-shrink-0">
-                        {/* Connecting Lines */}
-                        <svg className={`absolute inset-0 w-full h-full transform scale-150 opacity-20 transition-colors duration-500 ${isOnline ? 'stroke-brand-green' : 'stroke-red-500'}`} viewBox="0 0 100 100">
-                            <path d="M50 20 L20 80 L80 80 Z" fill="none" strokeWidth="2" strokeDasharray="4 4" className="animate-[dash_20s_linear_infinite]" />
-                        </svg>
-
-                        <div className="flex gap-3 relative z-10">
-                            {['Fast', 'Cheap', 'Good'].map((item, i) => (
+                        <div className="flex gap-4 relative z-10">
+                            {[
+                                { label: 'Fast', icon: Zap, color: 'bg-gumroad-yellow' },
+                                { label: 'Cheap', icon: DollarSign, color: 'bg-gumroad-blue' },
+                                { label: 'Good', icon: Star, color: 'bg-gumroad-pink' }
+                            ].map((item) => (
                                 <motion.div
-                                    key={item}
+                                    key={item.label}
                                     whileHover={{ y: -5 }}
-                                    className={`px-5 py-3 rounded-xl text-sm font-bold border-2 backdrop-blur-md transition-all duration-500 ${isOnline
-                                        ? 'bg-zinc-950/80 border-zinc-800 text-zinc-400 group-hover:border-brand-green/30 group-hover:text-brand-green'
-                                        : 'bg-red-950/20 border-red-900/30 text-red-400/70 group-hover:border-red-500/30 group-hover:text-red-400'
-                                        }`}
+                                    className={`px-4 py-3 border-2 border-black font-black text-sm shadow-[3px_3px_0px_0px_#000] ${item.color}`}
                                 >
-                                    {item}
+                                    {item.label}
                                 </motion.div>
                             ))}
                         </div>
                     </div>
                 </div>
-
-                {/* Subtle Background Gradient */}
-                <div className={`absolute -right-20 -top-20 w-80 h-80 rounded-full blur-[120px] transition-colors duration-500 ${isOnline
-                    ? 'bg-brand-green/10 group-hover:bg-brand-green/20'
-                    : 'bg-red-500/10 group-hover:bg-red-500/20'
-                    }`} />
             </motion.div>
 
             {/* Game Modal */}
@@ -130,7 +108,7 @@ export default function TrilemmaGame() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsOpen(false)}
-                            className="absolute inset-0 bg-black/90 backdrop-blur-md"
+                            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
                         />
 
                         {/* Modal Content */}
@@ -138,20 +116,14 @@ export default function TrilemmaGame() {
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className={`relative w-full max-w-lg p-8 md:p-10 rounded-3xl border shadow-2xl overflow-hidden transition-colors duration-500 ${isOnline
-                                ? 'bg-zinc-900 border-zinc-700 shadow-brand-green/10'
-                                : 'bg-zinc-950 border-red-900/50 shadow-red-500/10'
-                                }`}
+                            className="relative w-full max-w-lg p-8 md:p-10 bg-white border-2 border-black shadow-[8px_8px_0px_0px_#000]"
                         >
                             {/* Close Button */}
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${isOnline
-                                    ? 'hover:bg-zinc-800 text-zinc-500 hover:text-white'
-                                    : 'hover:bg-red-900/20 text-red-500 hover:text-red-300'
-                                    }`}
+                                className="absolute top-4 right-4 p-2 hover:bg-black hover:text-white transition-colors border-2 border-transparent hover:border-black rounded-sm"
                             >
-                                <X size={20} />
+                                <X size={24} strokeWidth={3} />
                             </button>
 
                             {/* WINNER STATE */}
@@ -160,31 +132,26 @@ export default function TrilemmaGame() {
                                     <motion.div
                                         initial={{ scale: 0 }}
                                         animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
-                                        className={`inline-flex items-center justify-center w-24 h-24 rounded-full mb-8 ${isOnline
-                                            ? 'bg-brand-green/20 text-brand-green ring-4 ring-brand-green/10'
-                                            : 'bg-red-500/20 text-red-500 ring-4 ring-red-500/10'
-                                            }`}
+                                        className="inline-flex items-center justify-center w-24 h-24 rounded-full mb-8 bg-gumroad-yellow border-2 border-black shadow-[4px_4px_0px_0px_#000]"
                                     >
-                                        <Trophy size={48} strokeWidth={2} />
+                                        <Trophy size={48} strokeWidth={3} className="text-black" />
                                     </motion.div>
 
-                                    <h2 className={`text-4xl font-black italic mb-4 ${isOnline ? 'text-white' : 'text-red-100'}`}>
+                                    <h2 className="text-4xl font-black italic mb-4 text-black">
                                         You belong here.
                                     </h2>
 
-                                    <div className={`text-sm font-bold tracking-[0.2em] uppercase mb-2 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>
+                                    <div className="text-sm font-black tracking-[0.2em] uppercase mb-2 text-gumroad-pink">
                                         Code Gang Presents
                                     </div>
-                                    <p className={`text-lg font-light mb-8 ${isOnline ? 'text-zinc-400' : 'text-red-300/70'}`}>
+                                    <p className="text-lg font-bold mb-8 text-black/70">
                                         We specialize in breaking the rules of what's possible.
                                     </p>
 
                                     <button
                                         onClick={() => setIsOpen(false)}
-                                        className={`w-full py-4 rounded-xl font-bold text-lg text-black transition-all transform hover:scale-[1.02] active:scale-95 ${isOnline
-                                            ? 'bg-brand-green hover:bg-green-400 shadow-lg shadow-brand-green/20'
-                                            : 'bg-red-500 hover:bg-red-400 shadow-lg shadow-red-500/20 text-white'
-                                            }`}
+                                        className="w-full py-4 font-black text-lg text-black bg-gumroad-green border-2 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-1 transition-all active:translate-y-0 active:shadow-none"
+                                        style={{ backgroundColor: '#4ADE80' }} // Green color for success
                                     >
                                         Start Building
                                     </button>
@@ -192,52 +159,37 @@ export default function TrilemmaGame() {
                             ) : (
                                 /* GAME STATE */
                                 <div className="text-center">
-                                    <h3 className={`text-3xl font-black mb-3 ${isOnline ? 'text-white' : 'text-red-100'}`}>
+                                    <h3 className="text-3xl font-black mb-3 text-black">
                                         Pick Your Priorities
                                     </h3>
-                                    <p className={`mb-10 text-lg font-light ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>
+                                    <p className="mb-10 text-lg font-medium text-black/60">
                                         Select the two that matter most.
                                     </p>
 
-                                    <div className="space-y-6">
+                                    <div className="space-y-4">
                                         {(['fast', 'cheap', 'good'] as const).map((option) => (
                                             <div
                                                 key={option}
-                                                className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 ${toggles[option]
-                                                        ? (isOnline
-                                                            ? 'border-brand-green/30 bg-brand-green/5'
-                                                            : 'border-red-500/30 bg-red-500/5')
-                                                        : (isOnline
-                                                            ? 'border-zinc-800 bg-zinc-900'
-                                                            : 'border-red-900/20 bg-red-950/10')
+                                                onClick={() => handleToggle(option)}
+                                                className={`flex items-center justify-between p-4 border-2 border-black cursor-pointer transition-all ${toggles[option]
+                                                        ? 'bg-black text-white shadow-[4px_4px_0px_0px_#888]'
+                                                        : 'bg-white hover:bg-gray-50'
                                                     }`}
                                             >
                                                 <div className="text-left pl-2">
-                                                    <span className={`block text-xl font-bold capitalize ${toggles[option]
-                                                            ? (isOnline ? 'text-white' : 'text-red-100')
-                                                            : (isOnline ? 'text-zinc-500' : 'text-red-400/50')
-                                                        }`}>{option}</span>
-                                                    <span className={`text-xs ${isOnline ? 'text-zinc-600' : 'text-red-900/40'}`}>
+                                                    <span className="block text-xl font-bold capitalize">{option}</span>
+                                                    <span className={`text-xs ${toggles[option] ? 'text-gray-400' : 'text-gray-500'}`}>
                                                         {option === 'fast' && 'Rapid delivery timeline'}
                                                         {option === 'cheap' && 'Budget-friendly cost'}
                                                         {option === 'good' && 'Premium quality results'}
                                                     </span>
                                                 </div>
 
-                                                {/* CREATIVE TOGGLE SWITCH */}
-                                                <button
-                                                    onClick={() => handleToggle(option)}
-                                                    className={`relative w-16 h-9 rounded-full transition-colors duration-300 focus:outline-none ${toggles[option]
-                                                            ? (isOnline ? 'bg-brand-green' : 'bg-red-500')
-                                                            : (isOnline ? 'bg-zinc-800' : 'bg-red-950/30 border border-red-900/30')
-                                                        }`}
-                                                >
-                                                    <motion.div
-                                                        className="absolute top-1 left-1 w-7 h-7 bg-white rounded-full shadow-md"
-                                                        animate={{ x: toggles[option] ? 28 : 0 }}
-                                                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                                                    />
-                                                </button>
+                                                {/* BRUTALIST TOGGLE */}
+                                                <div className={`w-8 h-8 border-2 border-current flex items-center justify-center ${toggles[option] ? 'bg-gumroad-pink text-black' : 'bg-transparent'
+                                                    }`}>
+                                                    {toggles[option] && <div className="w-4 h-4 bg-black" />}
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -251,13 +203,10 @@ export default function TrilemmaGame() {
                                             >
                                                 <button
                                                     onClick={enableGodMode}
-                                                    className={`group w-full py-3 px-4 rounded-xl flex items-center justify-center gap-3 text-sm font-semibold transition-all border border-dashed ${isOnline
-                                                            ? 'border-zinc-700 bg-zinc-900/50 text-zinc-400 hover:text-brand-green hover:border-brand-green/50 hover:bg-brand-green/5'
-                                                            : 'border-red-900/40 bg-red-950/20 text-red-400/70 hover:text-red-300 hover:border-red-500/50 hover:bg-red-500/10'
-                                                        }`}
+                                                    className="group w-full py-3 px-4 flex items-center justify-center gap-3 text-sm font-black transition-all border-2 border-dashed border-black hover:bg-gumroad-yellow hover:border-solid hover:shadow-[3px_3px_0px_0px_#000]"
                                                 >
-                                                    <AlertCircle size={18} />
-                                                    <span>Wait, I actually want <span className="underline">all three</span>?</span>
+                                                    <AlertCircle size={18} strokeWidth={3} />
+                                                    <span>Wait, I actually want <span className="underline decoration-2 underline-offset-2">all three</span>?</span>
                                                 </button>
                                             </motion.div>
                                         )}

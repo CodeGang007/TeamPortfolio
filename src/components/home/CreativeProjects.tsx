@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
-import { useAuth } from "@/contexts/AuthContext";
 
 interface Project {
     id: number;
@@ -18,12 +17,12 @@ interface Project {
 const FEATURED_PROJECTS: Project[] = [
     {
         id: 1,
-        title: "AI-Powered Analytics Dashboard",
+        title: "Monitrix",
         description: "Real-time data visualization platform with machine learning insights",
         image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
         tags: ["React", "Python", "TensorFlow"],
-        link: "#",
-        github: "#"
+        link: "https://github.com/silverstar33/monitrix",
+        github: "https://github.com/silverstar33/monitrix"
     },
     {
         id: 2,
@@ -52,11 +51,8 @@ const FEATURED_PROJECTS: Project[] = [
 ];
 
 export default function CreativeProjects() {
-    const { isAuthenticated, triggerAuth } = useAuth();
-    const isOnline = isAuthenticated;
-
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {FEATURED_PROJECTS.map((project, index) => (
                 <motion.div
                     key={project.id}
@@ -67,32 +63,22 @@ export default function CreativeProjects() {
                     className="group relative"
                 >
                     {/* Card Container */}
-                    <div className={`relative h-[400px] rounded-2xl overflow-hidden border transition-all duration-500 ${isOnline
-                        ? 'bg-zinc-900/50 border-zinc-800 hover:border-brand-green/50'
-                        : 'bg-zinc-900/30 border-red-900/50 hover:border-red-500/50'
-                        }`}>
+                    <div className="relative h-[420px] bg-white border-2 border-black rounded-sm overflow-hidden shadow-[4px_4px_0px_0px_#000] hover:shadow-[8px_8px_0px_0px_#000] hover:-translate-y-1 transition-all duration-300 flex flex-col">
                         {/* Image */}
-                        <div className="relative h-48 overflow-hidden">
+                        <div className="relative h-48 border-b-2 border-black overflow-hidden bg-gray-100">
                             <img
                                 src={project.image}
                                 alt={project.title}
-                                className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${isOnline ? '' : 'grayscale sepia hue-rotate-[-20deg] saturate-150'
-                                    }`}
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
-                            <div className={`absolute inset-0 transition-opacity duration-500 ${isOnline
-                                ? 'bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent'
-                                : 'bg-gradient-to-t from-zinc-950 via-red-950/30 to-transparent'
-                                }`} />
                         </div>
 
                         {/* Content */}
-                        <div className="p-6 relative z-10">
-                            <h3 className={`text-xl font-bold mb-2 transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'
-                                }`}>
+                        <div className="p-6 flex flex-col flex-grow">
+                            <h3 className="text-xl font-black mb-2 text-black leading-tight">
                                 {project.title}
                             </h3>
-                            <p className={`text-sm mb-4 line-clamp-2 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'
-                                }`}>
+                            <p className="text-sm text-black/70 mb-4 line-clamp-2 font-medium">
                                 {project.description}
                             </p>
 
@@ -101,10 +87,7 @@ export default function CreativeProjects() {
                                 {project.tags.map((tag) => (
                                     <span
                                         key={tag}
-                                        className={`text-xs px-2 py-1 rounded-full font-medium transition-all duration-500 ${isOnline
-                                            ? 'bg-brand-green/10 text-brand-green border border-brand-green/20'
-                                            : 'bg-red-500/10 text-red-400 border border-red-500/20'
-                                            }`}
+                                        className="text-xs px-2 py-1 bg-gumroad-yellow border border-black text-black font-bold shadow-[2px_2px_0px_0px_#000]"
                                     >
                                         {tag}
                                     </span>
@@ -112,59 +95,27 @@ export default function CreativeProjects() {
                             </div>
 
                             {/* Links */}
-                            <div className="flex gap-3 mt-auto">
+                            <div className="flex gap-4 mt-auto pt-4 border-t-2 border-black/10">
                                 {project.link && (
                                     <a
-                                        href={isOnline ? project.link : "#"}
-                                        onClick={(e) => {
-                                            if (!isOnline) {
-                                                e.preventDefault();
-                                                triggerAuth();
-                                            }
-                                        }}
-                                        className={`flex items-center gap-2 text-sm font-medium transition-colors duration-500 ${isOnline
-                                            ? 'text-brand-green hover:text-green-400'
-                                            : 'text-red-400 hover:text-red-300'
-                                            }`}
+                                        href={project.link}
+                                        className="flex items-center gap-2 text-sm font-bold text-black hover:text-gumroad-pink transition-colors"
                                     >
-                                        <ExternalLink size={16} />
+                                        <ExternalLink size={16} strokeWidth={3} />
                                         <span>View</span>
                                     </a>
                                 )}
                                 {project.github && (
                                     <a
-                                        href={isOnline ? project.github : "#"}
-                                        onClick={(e) => {
-                                            if (!isOnline) {
-                                                e.preventDefault();
-                                                triggerAuth();
-                                            }
-                                        }}
-                                        className={`flex items-center gap-2 text-sm font-medium transition-colors duration-500 ${isOnline
-                                            ? 'text-zinc-400 hover:text-white'
-                                            : 'text-red-300/50 hover:text-red-200'
-                                            }`}
+                                        href={project.github}
+                                        className="flex items-center gap-2 text-sm font-bold text-black hover:text-gumroad-blue transition-colors"
                                     >
-                                        <Github size={16} />
+                                        <Github size={16} strokeWidth={3} />
                                         <span>Code</span>
                                     </a>
                                 )}
                             </div>
                         </div>
-
-                        {/* Scan Line Effect */}
-                        <motion.div
-                            className={`absolute inset-0 h-0.5 bg-gradient-to-r from-transparent via-current to-transparent opacity-0 group-hover:opacity-100 pointer-events-none ${isOnline ? 'text-brand-green' : 'text-red-500'
-                                }`}
-                            animate={{
-                                top: ["-10%", "110%"],
-                            }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                ease: "linear",
-                            }}
-                        />
                     </div>
                 </motion.div>
             ))}

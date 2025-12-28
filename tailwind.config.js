@@ -9,6 +9,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        gumroad: {
+          bg: "#f4f4f0",
+          cream: "#FDFBF7",
+          charcoal: "#1a1a1a",
+          black: "#000000",
+          pink: "#ff90e8",
+          yellow: "#ffc900",
+          blue: "#90e0ff",
+          green: "#00d084",
+        },
         brand: {
           black: "#000000",
           dark: "#0a0a0a",

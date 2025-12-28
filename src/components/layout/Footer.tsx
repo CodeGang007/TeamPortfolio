@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Github, Linkedin, Twitter, Mail } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 
 export default function Footer() {
   const { isAuthenticated, triggerAuth } = useAuth();
-  const router = useRouter();
   const isOnline = isAuthenticated;
 
   const handleLinkClick = (e: React.MouseEvent, href: string) => {
@@ -18,49 +17,45 @@ export default function Footer() {
   };
 
   return (
-    <footer className={`relative border-t overflow-hidden transition-colors duration-500 ${isOnline
-      ? 'border-zinc-800/50 bg-black'
-      : 'border-red-900/30 bg-black' // Keep bg black but change border
-      }`}>
-      {/* Subtle glow accent */}
-      <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-96 h-px bg-gradient-to-r from-transparent to-transparent transition-colors duration-500 ${isOnline
-        ? 'via-brand-green/30'
-        : 'via-red-500/30'
-        }`}></div>
-
+    <footer className="relative border-t border-white/10 bg-black text-white overflow-hidden">
       <div className="container mx-auto px-8 py-16 relative z-10">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4 mb-12">
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-colors duration-500 ${isOnline
-                ? 'bg-brand-green/10 border-brand-green/30'
-                : 'bg-red-500/10 border-red-500/30'
-                }`}>
-                <span className={`font-black text-xl transition-colors duration-500 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>CG</span>
+              <div className="w-12 h-12 rounded-sm border border-white/20 flex items-center justify-center bg-zinc-900 shadow-[4px_4px_0px_0px_#333]">
+                <span className="font-black text-xl text-white">CG</span>
               </div>
-              <h3 className={`text-2xl font-black tracking-tight transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'}`}>
+              <h3 className="text-2xl font-black tracking-tight text-white">
                 CodeGang
               </h3>
             </div>
-            <p className={`leading-relaxed max-w-md font-light transition-colors duration-500 ${isOnline ? 'text-zinc-500' : 'text-red-300/50'}`}>
-              Building <span className={`font-medium transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-200'}`}>next-generation digital solutions</span> that redefine possibilities.
+            <p className="leading-relaxed max-w-md font-medium text-zinc-400">
+              Building <span className="text-gumroad-pink font-bold">next-generation digital solutions</span> that redefine possibilities.
               Where cutting-edge technology meets creative excellence.
             </p>
 
             {/* Social Links */}
             <div className="flex gap-4 mt-6">
-              {[Github, Linkedin, Twitter, Mail].map((Icon, i) => (
+              {[
+                { Icon: Github, href: "#" },
+                { Icon: Linkedin, href: "#" },
+                {
+                  Icon: () => (
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-[18px] h-[18px]">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                  ), href: "#"
+                },
+                { Icon: Mail, href: "#" },
+              ].map((item, i) => (
                 <a
                   key={i}
-                  href="#"
+                  href={item.href}
                   onClick={(e) => handleLinkClick(e, '#')}
-                  className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all duration-300 ${isOnline
-                    ? 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-brand-green hover:border-brand-green/30'
-                    : 'bg-red-900/10 border-red-900/30 text-red-400 hover:text-red-200 hover:border-red-500/50 hover:bg-red-900/20'
-                    }`}
+                  className="w-10 h-10 rounded-sm border border-white/20 flex items-center justify-center bg-zinc-900 text-zinc-400 hover:text-white hover:border-gumroad-green hover:bg-zinc-800 transition-all"
                 >
-                  <Icon size={18} />
+                  <item.Icon size={18} strokeWidth={2.5} />
                 </a>
               ))}
             </div>
@@ -68,7 +63,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className={`text-sm font-bold uppercase tracking-wider mb-4 transition-colors duration-500 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>
+            <h4 className="text-sm font-black uppercase tracking-wider mb-4 text-white border-b-2 border-white/20 inline-block pb-1">
               Navigate
             </h4>
             <ul className="space-y-3">
@@ -82,10 +77,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.path}
-                    className={`transition-colors font-light ${isOnline
-                      ? 'text-zinc-500 hover:text-white'
-                      : 'text-red-300/50 hover:text-red-200'
-                      }`}
+                    className="font-medium text-zinc-400 hover:text-gumroad-pink transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -96,61 +88,43 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h4 className={`text-sm font-bold uppercase tracking-wider mb-4 transition-colors duration-500 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>
+            <h4 className="text-sm font-black uppercase tracking-wider mb-4 text-white border-b-2 border-white/20 inline-block pb-1">
               Get in Touch
             </h4>
             <div className="space-y-3">
               <a
                 href="mailto:hello@codegang.dev"
-                className={`block transition-colors font-light ${isOnline
-                  ? 'text-zinc-500 hover:text-brand-green'
-                  : 'text-red-300/50 hover:text-red-300'
-                  }`}
+                className="block font-medium text-zinc-400 hover:text-gumroad-blue transition-colors"
               >
                 hello@codegang.dev
               </a>
-              <p className={`text-sm font-light ${isOnline ? 'text-zinc-600' : 'text-red-900/50'}`}>
-                Available for projects
-              </p>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className={`pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4 transition-colors duration-500 ${isOnline
-          ? 'border-zinc-800/50'
-          : 'border-red-900/30'
-          }`}>
-          <p className={`text-sm font-light ${isOnline ? 'text-zinc-600' : 'text-red-900/50'}`}>
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm font-medium text-zinc-600">
             © {new Date().getFullYear()} CodeGang. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
             <Link
               href={isOnline ? "/privacy" : "#"}
               onClick={(e) => handleLinkClick(e, "/privacy")}
-              className={`transition-colors font-light ${isOnline
-                ? 'text-zinc-600 hover:text-brand-green'
-                : 'text-red-300/50 hover:text-red-200'
-                }`}
+              className="font-medium text-zinc-500 hover:text-gumroad-pink transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
               href={isOnline ? "/terms" : "#"}
               onClick={(e) => handleLinkClick(e, "/terms")}
-              className={`transition-colors font-light ${isOnline
-                ? 'text-zinc-600 hover:text-brand-green'
-                : 'text-red-300/50 hover:text-red-200'
-                }`}
+              className="font-medium text-zinc-500 hover:text-gumroad-pink transition-colors"
             >
               Terms of Service
             </Link>
           </div>
         </div>
       </div>
-
-      {/* Subtle grid pattern */}
-      <div className={`absolute inset-0 bg-[url('/grid.svg')] bg-center pointer-events-none transition-opacity duration-500 ${isOnline ? 'opacity-[0.02]' : 'opacity-[0.05]'}`}></div>
     </footer>
   );
 }

@@ -137,7 +137,7 @@ export default function AppLayout({
       </Navbar>
 
       {/* PAGE CONTENT */}
-      <main className="mt-32 relative z-10">{children}</main>
+      <main className="relative z-10">{children}</main>
     </div>
   );
 }
