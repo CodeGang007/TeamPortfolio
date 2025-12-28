@@ -338,6 +338,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                 templateId,
                 clientId: "user_temp", 
                 isDraft: false,
+                assignedTo: null,
                 imageUrls: [], // Will be populated by service with hardcoded values
                 attachmentUrls: [] // Will be populated by service with hardcoded values
             };
