@@ -9,9 +9,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { db, storage } from "@/lib/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { projectRequestService } from "@/lib/projectService";
 import { useAuth } from "@/contexts/AuthContext";
 import UserMenu from "@/components/UserMenu";
 
@@ -48,8 +46,18 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
         subCategories: [] as string[],
         deliveryTime: "",
         budget: "",
-        currency: "USD",
+        currency: "INR",
         additionalNotes: "",
+        projectLinks: {
+            github: "",
+            figma: "",
+            website: "",
+            documentation: "",
+            other: ""
+        },
+        projectType: "fixed_price",
+        communicationPreference: "",
+        priority: "medium"
     });
 
     // Most used currencies in the world
@@ -108,6 +116,20 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
         if (savedData) {
             try {
                 const parsed = JSON.parse(savedData);
+                // Ensure projectLinks exists
+                if (!parsed.projectLinks) {
+                    parsed.projectLinks = {
+                        github: "",
+                        figma: "",
+                        website: "",
+                        documentation: "",
+                        other: ""
+                    };
+                }
+                // Ensure new fields exist
+                if (!parsed.projectType) parsed.projectType = "fixed_price";
+                if (!parsed.communicationPreference) parsed.communicationPreference = "";
+                if (!parsed.priority) parsed.priority = "medium";
                 setFormData(parsed);
             } catch (e) {
                 console.error('Error loading saved form data:', e);
@@ -178,6 +200,16 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             budget: "",
             currency: "USD",
             additionalNotes: "",
+            projectLinks: {
+                github: "",
+                figma: "",
+                website: "",
+                documentation: "",
+                other: ""
+            },
+            projectType: "fixed_price",
+            communicationPreference: "",
+            priority: "medium"
         };
         setFormData(clearedData);
         setImages([]);
@@ -280,12 +312,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
         });
     };
 
-    // --- Submission Logic ---
-    const uploadFile = async (file: File, path: string) => {
-        const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
-        const snapshot = await uploadBytes(storageRef, file);
-        return await getDownloadURL(snapshot.ref);
-    };
+
 
     const handleSubmit = async () => {
         setValidationError("");
@@ -305,31 +332,22 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
         setIsSubmitting(true);
 
         try {
-            // Upload Images
-            const imageUrls = await Promise.all(
-                images.map(img => uploadFile(img.file, 'project-images'))
-            );
-
-            // Upload Attachments
-            const attachmentUrls = await Promise.all(
-                attachments.map(att => uploadFile(att.file, 'project-attachments'))
-            );
-
-            // Save to Firestore
-            await addDoc(collection(db, "project_requests"), {
+            // Prepare project data
+            const projectData = {
                 ...formData,
                 templateId,
-                imageUrls,
-                attachmentUrls: attachments.map((att, index) => ({
-                    name: att.name,
-                    url: attachmentUrls[index],
-                    type: att.type,
-                    size: att.size
-                })),
-                status: "pending",
-                createdAt: serverTimestamp(),
-            });
+                clientId: "user_temp", 
+                isDraft: false,
+                assignedTo: null,
+                imageUrls: [], // Will be populated by service with hardcoded values
+                attachmentUrls: [] // Will be populated by service with hardcoded values
+            };
 
+            // Publish project to Firebase Realtime Database
+            const projectId = await projectRequestService.publishProject(projectData);
+            
+            console.log('Project published with ID:', projectId);
+            
             setIsSuccess(true);
             setTimeout(() => {
                 router.push('/');
@@ -469,7 +487,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
                         {/* Sub-Categories */}
                         <div className="space-y-4">
-                            <label className="text-base font-semibold text-zinc-300">Sub-Categories<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
+                            <label className="text-base font-semibold text-zinc-300">Sub-Categories</label>
                             <div className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
                                 <div className="grid grid-cols-2 gap-y-4 gap-x-6 sm:grid-cols-3 md:grid-cols-4">
                                     {subCategories.map((sub) => (
@@ -496,6 +514,44 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                             </div>
                         </div>
 
+                        {/* Project Type */}
+                        <div className="space-y-3">
+                            <label className="text-base font-semibold text-zinc-300">Project Type</label>
+                            <p className="text-xs text-zinc-500 -mt-2">Select how you&lsquo;d like to work with us and get billed</p>
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                <button
+                                    onClick={() => updateFormData({ projectType: "fixed_price" })}
+                                    className={`p-4 rounded-xl border text-left transition-all duration-200 ${
+                                        formData.projectType === "fixed_price"
+                                            ? isOnline
+                                                ? "bg-brand-green/10 border-brand-green text-white"
+                                                : "bg-red-500/10 border-red-500/50 text-red-200"
+                                            : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300"
+                                    }`}
+                                >
+                                    <div className="font-bold text-sm mb-1">Fixed Price</div>
+                                    <div className="text-xs opacity-80">One agreed price for the entire project scope</div>
+                                </button>
+                                <button
+                                    onClick={() => updateFormData({ projectType: "hourly" })}
+                                    className={`p-4 rounded-xl border text-left transition-all duration-200 ${
+                                        formData.projectType === "hourly"
+                                            ? isOnline
+                                                ? "bg-brand-green/10 border-brand-green text-white"
+                                                : "bg-red-500/10 border-red-500/50 text-red-200"
+                                            : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300"
+                                    }`}
+                                >
+                                    <div className="font-bold text-sm mb-1">Hourly Rate</div>
+                                    <div className="text-xs opacity-80">Pay per hour worked (minimum 5-6 hours)</div>
+                                </button>
+                            </div>
+                        </div>
+
+
+
+                       
+
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                             <div className="space-y-3">
                                 <label className="text-base font-semibold text-zinc-300">Delivery<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
@@ -506,10 +562,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                         value={formData.deliveryTime}
                                         onChange={e => updateFormData({ deliveryTime: e.target.value })}
                                     />
-                                    {/* Custom Calendar Icon Overlay */}
-                                    <div className={`pointer-events-none absolute right-4 top-3.5 transition-colors ${isOnline ? 'text-zinc-600 group-hover:text-brand-green' : 'text-red-400/50 group-hover:text-red-500'}`}>
-                                        <CalendarDays className="h-5 w-5" />
-                                    </div>
+                                    
                                 </div>
                             </div>
                             <div className="space-y-3">
@@ -559,8 +612,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="text-base font-semibold text-zinc-300">Images<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></h3>
-                                    <p className="text-xs text-zinc-500">Drag & drop or paste images (Max 10)</p>
+                                    <h3 className="text-base font-semibold text-zinc-300">Images</h3>
+                                    <p className="text-xs text-zinc-500">Drag & drop or paste images (Optional - Max 10)</p>
                                 </div>
                                 <span className="text-xs font-medium text-zinc-400 bg-zinc-800 px-2 py-1 rounded-md">
                                     {images.length} / {MAX_IMAGES}
@@ -627,7 +680,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                             <div className="flex items-center justify-between">
                                 <div>
                                     <h3 className="text-base font-semibold text-zinc-300">Attachments<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></h3>
-                                    <p className="text-xs text-zinc-500">PDF, Word, Excel, etc (Max 10MB)</p>
+                                    <p className="text-xs text-zinc-500">PDF, Word, Excel, etc (Required - Max 10MB)</p>
                                 </div>
                             </div>
 
@@ -692,7 +745,67 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                             </div>
                         </div>
 
-                        {/* Additional Notes Section */}
+                      
+
+                         {/* Project Links Section */}
+                        <div className="space-y-4">
+                            <label className="text-base font-semibold text-zinc-300">Project Links</label>
+                            <p className="text-xs text-zinc-500 -mt-2">Share relevant project resources and references</p>
+                            
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-zinc-400">GitHub Repository</label>
+                                    <input
+                                        type="url"
+                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                        placeholder="https://github.com/username/repository"
+                                        value={formData.projectLinks.github}
+                                        onChange={e => updateFormData({ projectLinks: { ...formData.projectLinks, github: e.target.value } })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-zinc-400">Figma Design</label>
+                                    <input
+                                        type="url"
+                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                        placeholder="https://figma.com/file/..."
+                                        value={formData.projectLinks.figma}
+                                        onChange={e => updateFormData({ projectLinks: { ...formData.projectLinks, figma: e.target.value } })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-zinc-400">Live Website/Demo</label>
+                                    <input
+                                        type="url"
+                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                        placeholder="https://yourproject.com"
+                                        value={formData.projectLinks.website}
+                                        onChange={e => updateFormData({ projectLinks: { ...formData.projectLinks, website: e.target.value } })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-zinc-400">Documentation/Requirements</label>
+                                    <input
+                                        type="url"
+                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                        placeholder="https://docs.google.com/... or Notion link"
+                                        value={formData.projectLinks.documentation}
+                                        onChange={e => updateFormData({ projectLinks: { ...formData.projectLinks, documentation: e.target.value } })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-zinc-400">Other Resources</label>
+                                    <input
+                                        type="url"
+                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                        placeholder="Any other relevant links"
+                                        value={formData.projectLinks.other}
+                                        onChange={e => updateFormData({ projectLinks: { ...formData.projectLinks, other: e.target.value } })}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                          {/* Additional Notes Section */}
                         <div className="space-y-4 pt-4 border-t border-zinc-800">
                             <div>
                                 <h3 className="text-base font-semibold text-zinc-300">Additional Notes</h3>
@@ -710,6 +823,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 <span className="absolute right-3 bottom-3 text-xs text-zinc-600">{formData.additionalNotes?.length || 0} / 500</span>
                             </div>
                         </div>
+
 
                     </div>
                 </div>
