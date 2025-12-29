@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, setDoc, serverTimestamp } from "firebase/firestore";
 import {
     onAuthStateChanged,
     signInWithPopup,
@@ -12,53 +12,58 @@ import {
     User
 } from "firebase/auth";
 
-interface AuthContextType {
-    isAuthenticated: boolean;
-    user: User | null;
-    loading: boolean;
-    customPhotoURL: string | null; // User-uploaded custom avatar
-    displayPhotoURL: string | null; // Resolved: custom → email fallback
-    login: () => Promise<void>;
-    logout: () => Promise<void>;
-    refreshUser: () => Promise<void>;
-    triggerAuth: () => void;
-    showAuthToast: boolean;
-    setShowAuthToast: (show: boolean) => void;
-    dismissAuthToast: () => void;
-    authToastDismissed: boolean;
-    setAuthToastDismissed: (dismissed: boolean) => void;
-    openLoginModal: () => void;
-    closeLoginModal: () => void;
-    isLoginModalOpen: boolean;
-}
+    export type UserRole = 'admin' | 'developer' | 'client';
 
-const AuthContext = createContext<AuthContextType>({
-    isAuthenticated: false,
-    user: null,
-    loading: true,
-    customPhotoURL: null,
-    displayPhotoURL: null,
-    login: async () => { },
-    logout: async () => { },
-    refreshUser: async () => { },
-    triggerAuth: () => { },
-    showAuthToast: false,
-    setShowAuthToast: () => { },
-    dismissAuthToast: () => { },
-    authToastDismissed: false,
-    setAuthToastDismissed: () => { },
-    openLoginModal: () => { },
-    closeLoginModal: () => { },
-    isLoginModalOpen: false,
-});
+    interface AuthContextType {
+        isAuthenticated: boolean;
+        user: User | null;
+        loading: boolean;
+        role: UserRole; // Added role
+        customPhotoURL: string | null;
+        displayPhotoURL: string | null;
+        login: () => Promise<void>;
+        logout: () => Promise<void>;
+        refreshUser: () => Promise<void>;
+        triggerAuth: () => void;
+        showAuthToast: boolean;
+        setShowAuthToast: (show: boolean) => void;
+        dismissAuthToast: () => void;
+        authToastDismissed: boolean;
+        setAuthToastDismissed: (dismissed: boolean) => void;
+        openLoginModal: () => void;
+        closeLoginModal: () => void;
+        isLoginModalOpen: boolean;
+    }
 
-export const useAuth = () => useContext(AuthContext);
+    const AuthContext = createContext<AuthContextType>({
+        isAuthenticated: false,
+        user: null,
+        loading: true,
+        role: 'client', // Default
+        customPhotoURL: null,
+        displayPhotoURL: null,
+        login: async () => { },
+        logout: async () => { },
+        refreshUser: async () => { },
+        triggerAuth: () => { },
+        showAuthToast: false,
+        setShowAuthToast: () => { },
+        dismissAuthToast: () => { },
+        authToastDismissed: false,
+        setAuthToastDismissed: () => { },
+        openLoginModal: () => { },
+        closeLoginModal: () => { },
+        isLoginModalOpen: false,
+    });
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [isMounted, setIsMounted] = useState(false);
-    const [customPhotoURL, setCustomPhotoURL] = useState<string | null>(null);
+    export const useAuth = () => useContext(AuthContext);
+
+    export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+        const [user, setUser] = useState<User | null>(null);
+        const [loading, setLoading] = useState(true);
+        const [isMounted, setIsMounted] = useState(false);
+        const [customPhotoURL, setCustomPhotoURL] = useState<string | null>(null);
+        const [role, setRole] = useState<UserRole>('client'); // Role state
 
     // UI State
     const [showAuthToast, setShowAuthToast] = useState(false);
@@ -89,10 +94,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return () => unsubscribe();
     }, []);
 
-    // Subscribe to Firestore for customPhotoURL changes
+    // Sync Auth Data to Firestore (displayName & email) to ensure Admin Dashboard has data
+    useEffect(() => {
+        const syncUserToFirestore = async () => {
+            if (!user) return;
+            try {
+                const userDocRef = doc(db, "users", user.uid);
+                // We use setDoc with merge: true to avoid overwriting existing profile data
+                // Only update if we have a name/email to give
+                if (user.displayName || user.email) {
+                    await setDoc(userDocRef, {
+                        displayName: user.displayName,
+                        email: user.email,
+                        photoURL: user.photoURL, // Also helpful to sync
+                        updatedAt: serverTimestamp()
+                    }, { merge: true });
+                }
+            } catch (err) {
+                console.error("Failed to sync user data to Firestore:", err);
+            }
+        };
+
+        if (user) {
+            syncUserToFirestore();
+        }
+    }, [user]);
+
+    // Subscribe to Firestore for user data (customPhotoURL + role)
     useEffect(() => {
         if (!user) {
             setCustomPhotoURL(null);
+            setRole('client'); // Default to client on logout
             return;
         }
 
@@ -101,8 +133,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 setCustomPhotoURL(data.customPhotoURL || null);
+                // Check both root-level role and nested profile.role
+                const fetchedRole = data.role || data.profile?.role;
+                setRole((fetchedRole?.toLowerCase() as UserRole) || 'client');
             } else {
                 setCustomPhotoURL(null);
+                setRole('client');
             }
         }, (error) => {
             console.error("Error listening to user document:", error);
@@ -117,12 +153,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Recurring Toast Logic (Only when not authenticated)
     useEffect(() => {
         if (!loading && !user && !authToastDismissed) {
-            // Show first toast after 2 seconds
+             // ... existing toast logic ...
             const initialTimeout = setTimeout(() => {
                 setShowAuthToast(true);
             }, 1000);
 
-            // Then show every 7.5 seconds
             const interval = setInterval(() => {
                 if (!user) {
                     setShowAuthToast(true);
@@ -141,7 +176,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const provider = new GoogleAuthProvider();
             await signInWithPopup(auth, provider);
-            // State updates handled by onAuthStateChanged
         } catch (error) {
             console.error("Login failed:", error);
             throw error;
@@ -184,6 +218,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 isAuthenticated,
                 user,
                 loading,
+                role,
                 customPhotoURL,
                 displayPhotoURL,
                 login,

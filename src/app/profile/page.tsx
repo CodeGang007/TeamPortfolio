@@ -118,6 +118,8 @@ function ProfileContent() {
             // Clean up data based on business model
             const dataToSave = {
                 ...formData,
+                displayName: user.displayName, // Ensure name is synced to Firestore
+                email: user.email,             // Ensure email is synced to Firestore
                 updatedAt: serverTimestamp()
             };
 
