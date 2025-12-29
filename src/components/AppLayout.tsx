@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/resizable-navbar";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, User, FileText, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
@@ -24,7 +24,7 @@ export default function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { isAuthenticated, openLoginModal, logout } = useAuth();
+  const { isAuthenticated, openLoginModal, logout, role } = useAuth();
   const router = useRouter();
 
   const navItems = [
@@ -118,6 +118,41 @@ export default function AppLayout({
             >
               {isAuthenticated ? "Book a call" : "System Offline"}
             </button>
+
+            {/* Mobile User Links (if authenticated) */}
+            {isAuthenticated && (
+              <>
+                <a
+                  href="/profile"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMobileMenuOpen(false);
+                    router.push('/profile');
+                  }}
+                  className="mt-2 w-full rounded-md px-4 py-3 text-sm font-bold text-zinc-400 hover:bg-white/5 transition-all text-left flex items-center gap-2"
+                >
+                  <User className="h-4 w-4" />
+                  <span>Profile</span>
+                </a>
+
+                <a
+                  href="/dashboard/projects"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMobileMenuOpen(false);
+                    router.push('/dashboard/projects');
+                  }}
+                  className="mt-2 w-full rounded-md px-4 py-3 text-sm font-bold text-zinc-400 hover:bg-white/5 transition-all text-left flex items-center gap-2"
+                >
+                  {role === 'admin' ? (
+                      <LayoutGrid className="h-4 w-4" />
+                  ) : (
+                      <FileText className="h-4 w-4" />
+                  )}
+                  <span>{role === 'admin' ? "Manage Publications" : "My Publications"}</span>
+                </a>
+              </>
+            )}
 
             {/* Mobile Sign Out (if authenticated) */}
             {isAuthenticated && (

@@ -58,7 +58,7 @@ interface ProjectDetail {
     title: string;
     projectName: string; // Added
     description: string;
-    status: "active" | "completed" | "on-hold" | "pending";
+    status: "active" | "completed" | "on-hold" | "pending" | "pending-closure" | "closed";
     progress: number;
     liveUrl?: string;
     milestones: Milestone[];
@@ -275,10 +275,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             id: d.uid,
                             name: d.name,
                             role: d.role,
-                            email: d.email, // Added email mapping
-                            color: "from-violet-500 to-purple-600" // Random/Hash color generator would be better
-                        })),
-                        milestones: progressData.milestones || []
+                            email: d.email,
+                            color: "from-violet-500 to-purple-600"
+                        }))
                     });
                 } else {
                      // Fallback if progress init failed or draft
@@ -375,7 +374,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             )}
                             
                             {/* Admin Controls */}
-                            {role === 'admin' && (
+                            {role === 'admin' ? (
                                 isEditing ? (
                                     <div className="flex items-center gap-2">
                                         <Button 
@@ -395,15 +394,76 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         </Button>
                                     </div>
                                 ) : (
-                                    <Button 
-                                        size="sm" 
-                                        variant="outline"
-                                        onClick={() => setIsEditing(true)}
-                                        className="border-[#27272a] ml-2 text-[#a1a1aa] hover:text-white hover:border-[#3f3f46] text-xs h-8"
-                                    >
-                                        <Edit className="h-3.5 w-3.5 mr-1.5" /> Edit Project
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                        {project.status === 'pending-closure' && (
+                                            <Button
+                                                size="sm"
+                                                onClick={async () => {
+                                                    if (confirm("Approve closure? This will schedule deletion in 3 days.")) {
+                                                        const deletionDate = new Date();
+                                                        deletionDate.setDate(deletionDate.getDate() + 3);
+                                                        
+                                                        try {
+                                                            await projectRequestService.updateProjectProgress(project.id, {
+                                                                status: 'closed',
+                                                                deletionScheduledAt: deletionDate.toISOString()
+                                                            });
+                                                            setProject({ ...project, status: 'closed' });
+                                                            setSnackbarMessage("Project closed and scheduled for deletion.");
+                                                            setShowSnackbar(true);
+                                                        } catch (e) {
+                                                            alert("Failed to close project");
+                                                        }
+                                                    }
+                                                }}
+                                                className="bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/20 text-xs h-8"
+                                            >
+                                                Approve Closure
+                                            </Button>
+                                        )}
+                                        <Button 
+                                            size="sm" 
+                                            variant="outline"
+                                            onClick={() => setIsEditing(true)}
+                                            className="border-[#27272a] text-[#a1a1aa] hover:text-white hover:border-[#3f3f46] text-xs h-8"
+                                        >
+                                            <Edit className="h-3.5 w-3.5 mr-1.5" /> Edit Project
+                                        </Button>
+                                    </div>
                                 )
+                            ) : (
+                                /* Client Controls */
+                                <>
+                                    {/* Allow closure request if not already closed/completed/pending-closure */}
+                                    {!['completed', 'closed', 'pending-closure'].includes(project.status) && (
+                                         <Button 
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={async () => {
+                                                if (confirm("Request to close this project? Admins will review your request.")) {
+                                                    try {
+                                                        await projectRequestService.updateProjectProgress(project.id, {
+                                                            status: 'pending-closure'
+                                                        });
+                                                        setProject({ ...project, status: 'pending-closure' });
+                                                        setSnackbarMessage("Closure request sent to admins.");
+                                                        setShowSnackbar(true);
+                                                    } catch (e) {
+                                                        alert("Failed to submit request");
+                                                    }
+                                                }
+                                            }}
+                                            className="border-red-900/30 text-red-400 hover:bg-red-900/20 hover:border-red-900/50 text-xs h-8"
+                                        >
+                                            Request Closure
+                                        </Button>
+                                    )}
+                                    {project.status === 'pending-closure' && (
+                                        <span className="text-xs text-amber-500 animate-pulse px-2 py-1 bg-amber-500/10 rounded border border-amber-500/20">
+                                            Closure Pending Approval
+                                        </span>
+                                    )}
+                                </>
                             )}
                         </div>
                     </div>

@@ -76,7 +76,7 @@ export interface Milestone {
 
 export interface ProjectProgress {
     projectId: string;
-    status: "active" | "completed" | "on-hold" | "pending";
+    status: "active" | "completed" | "on-hold" | "pending" | "pending-closure" | "closed";
     progress: number;
     hoursSpent: number;
     tasksCompleted: number;
@@ -84,6 +84,7 @@ export interface ProjectProgress {
     startDate: string;
     dueDate: string;
     endDate?: string; // Added to fix lint
+    deletionScheduledAt?: string; // For closed projects
     liveUrl?: string;
     milestones: Milestone[];
     teamSize?: number;

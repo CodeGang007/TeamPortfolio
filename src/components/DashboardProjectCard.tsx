@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Calendar, User } from "lucide-react";
 import Link from "next/link";
 
-export type ProjectStatus = "active" | "completed" | "on-hold" | "pending";
+export type ProjectStatus = "active" | "completed" | "on-hold" | "pending" | "pending-closure" | "closed";
 
 interface DashboardProjectCardProps {
     id: string;
@@ -37,9 +37,9 @@ const statusConfig: Record<ProjectStatus, { label: string; dotClass: string; bgC
     },
     completed: {
         label: "COMPLETED",
-        dotClass: "bg-zinc-400",
-        bgClass: "bg-zinc-800/80",
-        textClass: "text-zinc-400",
+        dotClass: "bg-purple-400",
+        bgClass: "bg-purple-950/80",
+        textClass: "text-purple-400",
     },
     "on-hold": {
         label: "ON HOLD",
@@ -49,10 +49,22 @@ const statusConfig: Record<ProjectStatus, { label: string; dotClass: string; bgC
     },
     pending: {
         label: "PENDING",
-        dotClass: "bg-blue-400",
-        bgClass: "bg-blue-950/80",
-        textClass: "text-blue-400",
+        dotClass: "bg-zinc-400",
+        bgClass: "bg-zinc-800/80",
+        textClass: "text-zinc-400",
     },
+    "pending-closure": {
+        label: "CLOSING...",
+        dotClass: "bg-red-400",
+        bgClass: "bg-red-950/80",
+        textClass: "text-red-400 animate-pulse",
+    },
+    closed: {
+        label: "CLOSED",
+        dotClass: "bg-zinc-600",
+        bgClass: "bg-zinc-900/80",
+        textClass: "text-zinc-600",
+    }
 };
 
 export default function DashboardProjectCard({
