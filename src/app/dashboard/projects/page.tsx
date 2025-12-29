@@ -12,40 +12,83 @@ import {
     Rocket,
     Loader2,
     FileEdit,
-    Trash2
+    Trash2,
+    LayoutGrid
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import DashboardProjectCard, { ProjectStatus } from "@/components/DashboardProjectCard";
-import { projectRequestService, ProjectRequest } from "@/lib/projectService";
+import { projectRequestService, ProjectRequest as BaseProjectRequest } from "@/lib/projectService";
+
+interface ProjectRequest extends BaseProjectRequest {
+    dynamicStatus?: string;
+}
 
 type TabType = "all" | "drafts";
 
 export default function ProjectDashboard() {
-    const { user, isAuthenticated, loading } = useAuth();
+    const { user, isAuthenticated, loading, role } = useAuth();
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<TabType>("all");
     const [searchQuery, setSearchQuery] = useState("");
     const [projects, setProjects] = useState<ProjectRequest[]>([]);
     const [isLoadingData, setIsLoadingData] = useState(true);
+    const [userMap, setUserMap] = useState<Record<string, { name: string; email: string }>>({});
+    const [selectedUserFilter, setSelectedUserFilter] = useState<string>("all");
 
     // Fetch projects
     useEffect(() => {
         const fetchProjects = async () => {
             if (!user) return;
             try {
-                // In a real app with Firestore, we would query by userId.
-                // With the current REST API service, we filter client side as determined in the plan.
-                const allProjects = await projectRequestService.getProjectsByUserId(user.uid);
+                let fetchedProjects: ProjectRequest[] = [];
+
+                if (role === 'admin') {
+                     // Admin sees all projects
+                     fetchedProjects = await projectRequestService.getAllProjects();
+                } else {
+                     // Clients see only their own
+                     fetchedProjects = await projectRequestService.getProjectsByUserId(user.uid);
+                }
+
+                // Fetch progress data for all non-draft projects to get real status
+                const projectsWithStatus = await Promise.all(fetchedProjects.map(async (p) => {
+                    if (p.isDraft || !p.id) return p;
+                    try {
+                        const progress = await projectRequestService.getProjectProgress(p.id);
+                        if (progress) {
+                            // Attach dynamic status to the project object (casting/extending needed or just pass separately)
+                            // Ideally, ProjectRequest should have an optional dynamicStatus field, or we map it here.
+                            return { ...p, dynamicStatus: progress.status };
+                        }
+                    } catch (e) {
+                         console.error(`Failed to fetch progress for ${p.id}`, e);
+                    }
+                    return p;
+                }));
+
                 // Sort by date descending (newest first)
-                const sorted = allProjects.sort((a, b) => {
+                const sorted = projectsWithStatus.sort((a, b) => {
                     const dateA = new Date(a.draftSavedAt || a.initiatedAt || 0).getTime();
                     const dateB = new Date(b.draftSavedAt || b.initiatedAt || 0).getTime();
                     return dateB - dateA;
                 });
                 setProjects(sorted);
+
+                // If Admin, fetch user details for these projects
+                if (role === 'admin' && fetchedProjects.length > 0) {
+                    const uniqueUserIds = Array.from(new Set(fetchedProjects.map(p => p.userId).filter(Boolean)));
+                    if (uniqueUserIds.length > 0) {
+                        try {
+                            const profiles = await projectRequestService.getUserProfiles(uniqueUserIds);
+                            setUserMap(profiles);
+                        } catch (err) {
+                            console.error("Failed to fetch user profiles", err);
+                        }
+                    }
+                }
             } catch (error) {
                 console.error("Failed to fetch projects", error);
             } finally {
@@ -56,7 +99,9 @@ export default function ProjectDashboard() {
         if (isAuthenticated) {
             fetchProjects();
         }
-    }, [user, isAuthenticated]);
+    }, [user, isAuthenticated, role]);
+
+
 
 
     if (!loading && !isAuthenticated) {
@@ -82,10 +127,21 @@ export default function ProjectDashboard() {
     const displayProjects = activeTab === "all" ? publishedProjects : draftProjects;
 
     const filteredProjects = displayProjects.filter(
-        (project) =>
-            project.projectName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            project.category.toLowerCase().includes(searchQuery.toLowerCase())
+        (project) => {
+            const matchesSearch = project.projectName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                project.category.toLowerCase().includes(searchQuery.toLowerCase());
+            
+            const matchesUser = selectedUserFilter === "all" || project.userId === selectedUserFilter;
+            
+            return matchesSearch && matchesUser;
+        }
     );
+
+    // Get unique authors for filter dropdown
+    const authors = Array.from(new Set(displayProjects.map(p => p.userId))).map(uid => ({
+        id: uid,
+        name: userMap[uid]?.name || "Unknown User"
+    }));
 
     return (
         <div className="min-h-screen bg-[#09090b] text-white">
@@ -99,10 +155,24 @@ export default function ProjectDashboard() {
                             </Link>
                             <div>
                                 <h1 className="text-lg font-semibold text-white flex items-center gap-2">
-                                    <FolderKanban className="h-4 w-4 text-brand-green" />
-                                    My Publications
+                                    {role === 'admin' ? (
+                                        <>
+                                            <LayoutGrid className="h-4 w-4 text-brand-green" />
+                                            Manage Publications
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FolderKanban className="h-4 w-4 text-brand-green" />
+                                            My Publications
+                                        </>
+                                    )}
                                 </h1>
-                                <p className="text-[11px] text-[#71717a]">Track your published projects and drafts</p>
+                                <p className="text-[11px] text-[#71717a]">
+                                    {role === 'admin' 
+                                        ? "Overview of all platform activity and projects" 
+                                        : "Track your published projects and drafts"
+                                    }
+                                </p>
                             </div>
                         </div>
 
@@ -151,6 +221,21 @@ export default function ProjectDashboard() {
 
                         {/* Search */}
                         <div className="flex items-center gap-3 pb-2 md:pb-0">
+                            {role === 'admin' && (
+                                <div className="relative">
+                                    <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#52525b]" />
+                                    <select
+                                        value={selectedUserFilter}
+                                        onChange={(e) => setSelectedUserFilter(e.target.value)}
+                                        className="appearance-none w-full md:w-48 rounded-lg bg-[#18181b] border border-[#27272a] pl-9 pr-8 py-2 text-sm text-white placeholder:text-[#52525b] focus:outline-none focus:border-[#3f3f46] transition-colors"
+                                    >
+                                        <option value="all">All Users</option>
+                                        {authors.map(author => (
+                                            <option key={author.id} value={author.id}>{author.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
                             <div className="relative w-full md:w-auto">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#52525b]" />
                                 <input
@@ -193,7 +278,10 @@ export default function ProjectDashboard() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                         {filteredProjects.map((project, index) => {
                             // Map generic status to dashboard status
-                            const status: ProjectStatus = project.isDraft ? 'pending' : 'active';
+                            let status: ProjectStatus = project.isDraft ? 'pending' : 'active';
+                            if (project.dynamicStatus) {
+                                status = project.dynamicStatus as ProjectStatus;
+                            }
                             
                             return (
                                 <div key={project.id || index} className="group relative">
@@ -210,7 +298,11 @@ export default function ProjectDashboard() {
                                                 status={status}
                                                 category={project.category}
                                                 gradientIndex={index}
-                                                clientName={project.isDraft ? "Draft" : "You"}
+                                                clientName={
+                                                    role === 'admin' 
+                                                    ? (userMap[project.userId]?.name || project.userName || project.userEmail || "User") 
+                                                    : (project.isDraft ? "Draft" : "You")
+                                                }
                                             />
                                         </div>
                                     </Link>

@@ -1,11 +1,19 @@
+import { db, auth } from './firebase'; // Ensure db and auth are exported from firebase.ts
+import { collection, query, where, getDocs } from 'firebase/firestore';
+
 // Firebase Realtime Database service for project requests
 const FIREBASE_DB_URL = 'https://codegang-v2-default-rtdb.firebaseio.com';
+
+// Helper to get auth token
+const getAuthToken = async () => {
+    return auth.currentUser ? await auth.currentUser.getIdToken() : null;
+};
 
 // Note: Make sure your Firebase Realtime Database rules allow writes:
 // {
 //   "rules": {
-//     ".read": true,
-//     ".write": true
+//     ".read": "auth != null",
+//     ".write": "auth != null"
 //   }
 // }
 
@@ -37,7 +45,9 @@ export interface ProjectRequest {
   inTransactionAt?: string | null;
   completedAt?: string | null;
   assignedTo: string[] | null;
-  userId: string; // Added userId
+  userId: string;
+  userName?: string; // Added
+  userEmail?: string; // Added
   imageUrls: string[];
   attachmentUrls: Array<{
     name: string;
@@ -47,11 +57,47 @@ export interface ProjectRequest {
   }>;
 }
 
+export interface TeamMember {
+    uid: string;
+    name: string;
+    email: string;
+    role: string;
+    photoURL?: string;
+}
+
+export interface Milestone {
+    id: string;
+    title: string;
+    date: string;
+    status: "completed" | "current" | "upcoming";
+    description?: string;
+    icon: string;
+}
+
+export interface ProjectProgress {
+    projectId: string;
+    status: "active" | "completed" | "on-hold" | "pending";
+    progress: number;
+    hoursSpent: number;
+    tasksCompleted: number;
+    tasksTotal: number;
+    startDate: string;
+    dueDate: string;
+    endDate?: string; // Added to fix lint
+    liveUrl?: string;
+    milestones: Milestone[];
+    teamSize?: number;
+    assignedDevelopers?: TeamMember[]; // Added
+}
+
 export const projectRequestService = {
   // Create a new project request
   async createProject(projectData: Omit<ProjectRequest, 'id'>): Promise<string> {
     try {
-      const response = await fetch(`${FIREBASE_DB_URL}/project_requests.json`, {
+      const token = await getAuthToken();
+      const url = `${FIREBASE_DB_URL}/project_requests.json` + (token ? `?auth=${token}` : '');
+      
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,7 +163,10 @@ export const projectRequestService = {
   // Update existing project
   async updateProject(id: string, projectData: Partial<ProjectRequest>): Promise<void> {
     try {
-      const response = await fetch(`${FIREBASE_DB_URL}/project_requests/${id}.json`, {
+      const token = await getAuthToken();
+      const url = `${FIREBASE_DB_URL}/project_requests/${id}.json` + (token ? `?auth=${token}` : '');
+
+      const response = await fetch(url, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -137,7 +186,10 @@ export const projectRequestService = {
   // Delete project
   async deleteProject(id: string): Promise<void> {
     try {
-      const response = await fetch(`${FIREBASE_DB_URL}/project_requests/${id}.json`, {
+      const token = await getAuthToken();
+      const url = `${FIREBASE_DB_URL}/project_requests/${id}.json` + (token ? `?auth=${token}` : '');
+
+      const response = await fetch(url, {
         method: 'DELETE',
       });
 
@@ -153,7 +205,9 @@ export const projectRequestService = {
   // Get all project requests (Admin use mostly)
   async getAllProjects(): Promise<ProjectRequest[]> {
     try {
-      const response = await fetch(`${FIREBASE_DB_URL}/project_requests.json`);
+      const token = await getAuthToken();
+      const url = `${FIREBASE_DB_URL}/project_requests.json` + (token ? `?auth=${token}` : '');
+      const response = await fetch(url);
       
       if (!response.ok) {
         throw new Error('Failed to fetch project requests');
@@ -189,10 +243,13 @@ export const projectRequestService = {
   // Get project by ID
   async getProjectById(id: string): Promise<ProjectRequest | null> {
     try {
-      const response = await fetch(`${FIREBASE_DB_URL}/project_requests/${id}.json`);
+      const token = await getAuthToken();
+      const url = `${FIREBASE_DB_URL}/project_requests/${id}.json` + (token ? `?auth=${token}` : '');
+      const response = await fetch(url);
       
       if (!response.ok) {
-        throw new Error('Failed to fetch project request');
+        console.error(`Failed to fetch project request. Status: ${response.status} ${response.statusText}`, { url });
+        throw new Error(`Failed to fetch project request: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
@@ -209,7 +266,10 @@ export const projectRequestService = {
   // Update project status
   async updateProjectStatus(id: string, statusField: string, timestamp: string): Promise<void> {
     try {
-      const response = await fetch(`${FIREBASE_DB_URL}/project_requests/${id}.json`, {
+      const token = await getAuthToken();
+      const url = `${FIREBASE_DB_URL}/project_requests/${id}.json` + (token ? `?auth=${token}` : '');
+
+      const response = await fetch(url, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -226,5 +286,117 @@ export const projectRequestService = {
       console.error('Error updating project status:', error);
       throw error;
     }
+  },
+
+  // Get project progress
+  async getProjectProgress(projectId: string): Promise<ProjectProgress | null> {
+    try {
+      const token = await getAuthToken();
+      const url = `${FIREBASE_DB_URL}/project_progress/${projectId}.json` + (token ? `?auth=${token}` : '');
+      const response = await fetch(url);
+      if (!response.ok) return null;
+      const data = await response.json();
+      return data ? { projectId, ...data } : null;
+    } catch (error) {
+      console.error('Error fetching project progress:', error);
+      return null;
+    }
+  },
+
+  // Update project progress
+  async updateProjectProgress(projectId: string, data: Partial<ProjectProgress>): Promise<void> {
+    try {
+      const token = await getAuthToken();
+      const url = `${FIREBASE_DB_URL}/project_progress/${projectId}.json` + (token ? `?auth=${token}` : '');
+
+      await fetch(url, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch (error) {
+      console.error('Error updating project progress:', error);
+      throw error;
+    }
+  },
+
+  // Initialize progress for a new project
+  async initializeProjectProgress(projectId: string): Promise<void> {
+      const defaultProgress: Omit<ProjectProgress, 'projectId'> = {
+          status: 'pending',
+          progress: 0,
+          hoursSpent: 0,
+          tasksCompleted: 0,
+          tasksTotal: 0,
+          startDate: new Date().toISOString().split('T')[0],
+          dueDate: '',
+          endDate: '',
+          milestones: [],
+          teamSize: 0,
+          assignedDevelopers: []
+      };
+      await this.updateProjectProgress(projectId, defaultProgress);
+  },
+
+  // Get all developers (candidates for assignment)
+  async getDevelopers(): Promise<TeamMember[]> {
+      try {
+          const q = query(collection(db, "users"), where("role", "==", "developer"));
+          const querySnapshot = await getDocs(q);
+          const developers: TeamMember[] = [];
+          
+          querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              developers.push({
+                  uid: doc.id,
+                  name: data.display_name || data.displayName || "Unknown Developer",
+                  email: data.email,
+                  role: "developer",
+                  photoURL: data.photo_url || data.photoURL
+              });
+          });
+          
+          return developers;
+      } catch (error) {
+          console.error("Error fetching developers:", error);
+          return [];
+      }
+  },
+
+  // Get basic user profiles for a list of UIDs (to display names in admin dashboard)
+  async getUserProfiles(userIds: string[]): Promise<Record<string, { name: string; email: string }>> {
+      if (!userIds.length) return {};
+      
+      try {
+          const q = query(collection(db, "users"));
+          const querySnapshot = await getDocs(q);
+          
+          const userMap: Record<string, { name: string; email: string }> = {};
+          querySnapshot.forEach((doc) => {
+              if (userIds.includes(doc.id)) {
+                  const data = doc.data();
+                  // Try various common field names for name
+                  const name = data.display_name || 
+                               data.displayName || 
+                               data.name || 
+                               data.fullName ||
+                               data.profile?.displayName || 
+                               data.profile?.name || 
+                               ""; // Leave empty if not found, to allow fallback in UI
+
+                  const email = data.email || data.profile?.email || "";
+
+                  userMap[doc.id] = {
+                      name: name || email || "Unknown User", // Fallback to email if name missing
+                      email: email
+                  };
+              }
+          });
+          
+          return userMap;
+      } catch (error) {
+          console.error("Error fetching user profiles:", error);
+          return {};
+      }
   }
 };

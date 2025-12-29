@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 
 export default function UserMenu() {
-    const { user, logout, displayPhotoURL } = useAuth();
+    const { user, logout, displayPhotoURL, role } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -83,6 +83,9 @@ export default function UserMenu() {
                             <p className="text-xs text-zinc-500 truncate mt-0.5 font-medium">
                                 {user.email}
                             </p>
+                            <span className="inline-block mt-2 px-1.5 py-0.5 rounded text-[10px] bg-zinc-800 text-zinc-400 border border-zinc-700 capitalize">
+                                {role}
+                            </span>
                         </div>
 
                         <div className="h-px w-full bg-zinc-800" />
@@ -103,8 +106,17 @@ export default function UserMenu() {
                                 onClick={() => setIsOpen(false)}
                                 className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-900 hover:text-white transition-colors"
                             >
-                                <FileText size={16} strokeWidth={1.75} />
-                                <span>My Publications</span>
+                                {role === 'admin' ? (
+                                    <>
+                                        <LayoutGrid size={16} strokeWidth={1.75} />
+                                        <span>Manage Publications</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <FileText size={16} strokeWidth={1.75} />
+                                        <span>My Publications</span>
+                                    </>
+                                )}
                             </Link>
                         </div>
 
