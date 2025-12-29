@@ -95,6 +95,7 @@ const getProjectData = (id: string): ProjectDetail | null => {
     return {
         id,
         title: "SaaS Analytics Platform",
+        projectName: "SaaS Analytics Platform",
         description: "A comprehensive analytics dashboard for tracking user engagement and business metrics with real-time visualization.",
         status: "active",
         progress: 65,
@@ -120,7 +121,19 @@ const getProjectData = (id: string): ProjectDetail | null => {
             { id: "m3", title: "Frontend Development", date: "Jan 05", status: "current", description: "React components.", icon: "development" },
             { id: "m4", title: "Backend Integration", date: "Jan 15", status: "upcoming", description: "API and database.", icon: "integration" },
             { id: "m5", title: "Beta Launch", date: "Jan 25", status: "upcoming", icon: "launch" }
-        ]
+        ],
+        currency: "USD",
+        budget: "5000",
+        deliveryTime: "3 months",
+        projectType: "Full Stack",
+        additionalNotes: "N/A",
+        projectLinks: {
+            github: "",
+            figma: "",
+            website: "",
+            documentation: "",
+            other: ""
+        }
     };
 };
 
@@ -284,6 +297,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                      setProject({
                         id: projectRequest.id || id,
                         title: projectRequest.projectName,
+                        projectName: projectRequest.projectName,
                         description: projectRequest.description,
                         status: 'pending',
                         progress: 0,
@@ -298,7 +312,19 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             teamSize: 0
                         },
                         teamMembers: [],
-                        milestones: []
+                        milestones: [],
+                        currency: projectRequest.currency,
+                        budget: projectRequest.budget,
+                        deliveryTime: projectRequest.deliveryTime,
+                        projectType: projectRequest.projectType,
+                        additionalNotes: projectRequest.additionalNotes || "",
+                        projectLinks: projectRequest.projectLinks || {
+                            github: "",
+                            figma: "",
+                            website: "",
+                            documentation: "",
+                            other: ""
+                        }
                      });
                 }
 
