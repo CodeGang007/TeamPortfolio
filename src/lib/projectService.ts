@@ -37,9 +37,7 @@ export interface ProjectRequest {
   inTransactionAt?: string | null;
   completedAt?: string | null;
   assignedTo: string[] | null;
-  estimatedHours?: number | null;
-  actualHours?: number | null;
-  clientId: string;
+  userId: string; // Added userId
   imageUrls: string[];
   attachmentUrls: Array<{
     name: string;
@@ -93,8 +91,6 @@ export const projectRequestService = {
       inTransactionAt: null,
       completedAt: null,
       assignedTo: null,
-      estimatedHours: null,
-      actualHours: null,
       priority: "medium",
       // Hardcoded images and attachments for now
       imageUrls: [
@@ -118,7 +114,43 @@ export const projectRequestService = {
     });
   },
 
-  // Get all project requests
+  // Update existing project
+  async updateProject(id: string, projectData: Partial<ProjectRequest>): Promise<void> {
+    try {
+      const response = await fetch(`${FIREBASE_DB_URL}/project_requests/${id}.json`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(projectData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update project request');
+      }
+    } catch (error) {
+      console.error('Error updating project request:', error);
+      throw error;
+    }
+  },
+
+  // Delete project
+  async deleteProject(id: string): Promise<void> {
+    try {
+      const response = await fetch(`${FIREBASE_DB_URL}/project_requests/${id}.json`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete project request');
+      }
+    } catch (error) {
+      console.error('Error deleting project request:', error);
+      throw error;
+    }
+  },
+
+  // Get all project requests (Admin use mostly)
   async getAllProjects(): Promise<ProjectRequest[]> {
     try {
       const response = await fetch(`${FIREBASE_DB_URL}/project_requests.json`);
@@ -138,6 +170,19 @@ export const projectRequestService = {
     } catch (error) {
       console.error('Error fetching project requests:', error);
       throw error;
+    }
+  },
+
+  // Get projects by User ID
+  async getProjectsByUserId(userId: string): Promise<ProjectRequest[]> {
+    try {
+        // Note: For efficient filtering in real apps, use Firebase queries. 
+        // Here we fetch all and filter client-side for simplicity with REST API.
+        const allProjects = await this.getAllProjects();
+        return allProjects.filter(p => p.userId === userId);
+    } catch (error) {
+        console.error('Error fetching user projects:', error);
+        throw error;
     }
   },
 

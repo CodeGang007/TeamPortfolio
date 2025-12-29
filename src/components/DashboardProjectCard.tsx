@@ -75,10 +75,9 @@ export default function DashboardProjectCard({
             whileHover={{ y: -2 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
         >
-            <Link href={`/dashboard/projects/${id}`}>
                 <div
                     className={`group relative overflow-hidden rounded-xl border bg-[#18181b] transition-all duration-200 cursor-pointer ${isActive
-                            ? "border-emerald-500"
+                            ? "border-brand-green"
                             : "border-[#27272a] hover:border-[#52525b]"
                         }`}
                 >
@@ -139,7 +138,6 @@ export default function DashboardProjectCard({
                         </div>
                     </div>
                 </div>
-            </Link>
         </motion.div>
     );
 }

@@ -103,15 +103,6 @@ export default function UserMenu() {
                                 onClick={() => setIsOpen(false)}
                                 className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-900 hover:text-white transition-colors"
                             >
-                                <LayoutGrid size={16} strokeWidth={1.75} />
-                                <span>Project Tracking</span>
-                            </Link>
-
-                            <Link
-                                href="/publications"
-                                onClick={() => setIsOpen(false)}
-                                className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-900 hover:text-white transition-colors"
-                            >
                                 <FileText size={16} strokeWidth={1.75} />
                                 <span>My Publications</span>
                             </Link>

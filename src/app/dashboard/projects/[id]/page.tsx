@@ -101,7 +101,12 @@ const getProjectData = (id: string): ProjectDetail | null => {
     };
 };
 
-export default function ProjectDetailPage({ params }: { params: { id: string } }) {
+import { use } from "react";
+
+// ... existing imports ...
+
+export default function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = use(params);
     const { user, isAuthenticated, loading } = useAuth();
     const router = useRouter();
     const [project, setProject] = useState<ProjectDetail | null>(null);
@@ -109,11 +114,11 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setProject(getProjectData(params.id));
+            setProject(getProjectData(id));
             setIsLoading(false);
         }, 400);
         return () => clearTimeout(timer);
-    }, [params.id]);
+    }, [id]);
 
     useEffect(() => {
         if (!loading && !isAuthenticated) router.push("/");
