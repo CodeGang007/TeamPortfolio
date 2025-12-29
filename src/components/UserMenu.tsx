@@ -2,12 +2,12 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, User as UserIcon, ChevronDown } from "lucide-react";
+import { LogOut, User as UserIcon, ChevronDown, Camera, LayoutGrid, FileText } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 
 export default function UserMenu() {
-    const { user, logout } = useAuth();
+    const { user, logout, displayPhotoURL } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -51,9 +51,9 @@ export default function UserMenu() {
                     </span>
 
                     <div className="relative h-9 w-9 overflow-hidden rounded-full border border-zinc-700 bg-zinc-800 shadow-sm">
-                        {user.photoURL ? (
+                        {displayPhotoURL ? (
                             <img
-                                src={user.photoURL}
+                                src={displayPhotoURL}
                                 alt={user.displayName || "User"}
                                 className="h-full w-full object-cover"
                             />
@@ -92,20 +92,43 @@ export default function UserMenu() {
                             <Link
                                 href="/profile"
                                 onClick={() => setIsOpen(false)}
-                                className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-zinc-400 hover:bg-zinc-900 hover:text-white transition-colors"
+                                className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-900 hover:text-white transition-colors"
                             >
-                                <UserIcon size={16} />
+                                <UserIcon size={16} strokeWidth={1.75} />
                                 <span>Profile</span>
                             </Link>
 
+                            <Link
+                                href="/dashboard/projects"
+                                onClick={() => setIsOpen(false)}
+                                className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-900 hover:text-white transition-colors"
+                            >
+                                <LayoutGrid size={16} strokeWidth={1.75} />
+                                <span>Project Tracking</span>
+                            </Link>
+
+                            <Link
+                                href="/publications"
+                                onClick={() => setIsOpen(false)}
+                                className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-900 hover:text-white transition-colors"
+                            >
+                                <FileText size={16} strokeWidth={1.75} />
+                                <span>My Publications</span>
+                            </Link>
+                        </div>
+
+                        <div className="h-px w-full bg-zinc-800 my-2" />
+
+                        {/* Logout */}
+                        <div>
                             <button
                                 onClick={() => {
                                     setIsOpen(false);
                                     logout();
                                 }}
-                                className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+                                className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
                             >
-                                <LogOut size={16} />
+                                <LogOut size={16} strokeWidth={1.75} />
                                 <span>Log out</span>
                             </button>
                         </div>
