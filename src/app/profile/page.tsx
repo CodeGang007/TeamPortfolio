@@ -1,17 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
-import { db } from "@/lib/firebase";
+import { useRouter, useSearchParams } from "next/navigation";
+import { db, storage } from "@/lib/firebase";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
-import { motion } from "framer-motion";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { motion, AnimatePresence } from "framer-motion";
+
 import {
     User, Mail, Phone, Building2, Save,
-    Briefcase, MapPin, Loader2, ArrowLeft
+    Briefcase, MapPin, Loader2, ArrowLeft, Camera, X, Upload
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import PhoneInput from "@/components/PhoneInput";
 
 // Types
 type BusinessModel = "individual" | "enterprise";
@@ -28,14 +31,28 @@ interface UserProfileData {
     };
 }
 
-export default function ProfilePage() {
-    const { user, isAuthenticated, loading } = useAuth();
+function ProfileContent() {
+    const { user, isAuthenticated, loading, displayPhotoURL } = useAuth();
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     // Form State
     const [isLoadingData, setIsLoadingData] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
+
+    // Avatar editing state
+    const [showAvatarModal, setShowAvatarModal] = useState(false);
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+
+    // Check if we should open avatar modal from URL
+    useEffect(() => {
+        if (searchParams.get('tab') === 'avatar') {
+            setShowAvatarModal(true);
+        }
+    }, [searchParams]);
 
     const [formData, setFormData] = useState<UserProfileData>({
         phoneNumber: "",
@@ -101,6 +118,8 @@ export default function ProfilePage() {
             // Clean up data based on business model
             const dataToSave = {
                 ...formData,
+                displayName: user.displayName, // Ensure name is synced to Firestore
+                email: user.email,             // Ensure email is synced to Firestore
                 updatedAt: serverTimestamp()
             };
 
@@ -175,10 +194,10 @@ export default function ProfilePage() {
                     {/* Left Column: Read-only Identity */}
                     <div className="md:col-span-4 space-y-6">
                         <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 flex flex-col items-center text-center">
-                            <div className="relative mb-4 h-32 w-32 overflow-hidden rounded-full border-2 border-zinc-700 shadow-xl">
-                                {user.photoURL ? (
+                            <div className="relative mb-4 h-32 w-32 overflow-hidden rounded-full border-2 border-zinc-700 shadow-xl group">
+                                {displayPhotoURL ? (
                                     <img
-                                        src={user.photoURL}
+                                        src={displayPhotoURL}
                                         alt={user.displayName || "User"}
                                         className="h-full w-full object-cover"
                                     />
@@ -187,6 +206,16 @@ export default function ProfilePage() {
                                         {(user.displayName?.[0] || "U").toUpperCase()}
                                     </div>
                                 )}
+                                {/* Edit Avatar Overlay */}
+                                <button
+                                    onClick={() => setShowAvatarModal(true)}
+                                    className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                >
+                                    <div className="flex flex-col items-center gap-1 text-white">
+                                        <Camera className="h-6 w-6" />
+                                        <span className="text-xs font-medium">Edit</span>
+                                    </div>
+                                </button>
                             </div>
                             <h2 className="text-xl font-bold text-white">{user.displayName || "User Name"}</h2>
                             <p className="text-sm text-zinc-400 mt-1">{user.email}</p>
@@ -246,16 +275,11 @@ export default function ProfilePage() {
                                 <div className="grid gap-6 md:grid-cols-2">
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-zinc-300">Phone Number</label>
-                                        <div className="relative">
-                                            <Phone className="absolute left-3 top-3 h-4 w-4 text-zinc-500" />
-                                            <input
-                                                type="text"
-                                                value={formData.phoneNumber}
-                                                onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                                                placeholder="+91 ...."
-                                                className="w-full rounded-xl border border-zinc-800 bg-zinc-950 pl-10 pr-4 py-3 text-white placeholder:text-zinc-600 focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20 transition-all"
-                                            />
-                                        </div>
+                                        <PhoneInput
+                                            value={formData.phoneNumber}
+                                            onChange={(value) => setFormData({ ...formData, phoneNumber: value })}
+                                            placeholder="Enter phone number"
+                                        />
                                     </div>
 
                                     <div className="space-y-2">
@@ -349,6 +373,226 @@ export default function ProfilePage() {
                     </div>
                 </div>
             </main>
+
+            {/* Avatar Edit Modal */}
+            <AnimatePresence>
+                {showAvatarModal && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+                        onClick={() => {
+                            setShowAvatarModal(false);
+                            setAvatarPreview(null);
+                            setSelectedFile(null);
+                            // Remove the tab query param
+                            router.replace('/profile');
+                        }}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 w-full max-w-md shadow-2xl"
+                        >
+                            {/* Modal Header */}
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-xl font-bold text-white">Edit Avatar</h3>
+                                <button
+                                    onClick={() => {
+                                        setShowAvatarModal(false);
+                                        setAvatarPreview(null);
+                                        setSelectedFile(null);
+                                        router.replace('/profile');
+                                    }}
+                                    className="p-2 rounded-full hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
+                                >
+                                    <X className="h-5 w-5" />
+                                </button>
+                            </div>
+
+                            {/* Preview Area */}
+                            <div className="flex flex-col items-center gap-6">
+                                <div className="relative h-40 w-40 overflow-hidden rounded-full border-4 border-zinc-700 shadow-xl bg-zinc-800">
+                                    {avatarPreview ? (
+                                        <img
+                                            src={avatarPreview}
+                                            alt="Avatar Preview"
+                                            className="h-full w-full object-cover"
+                                        />
+                                    ) : displayPhotoURL ? (
+                                        <img
+                                            src={displayPhotoURL}
+                                            alt="Current Avatar"
+                                            className="h-full w-full object-cover"
+                                        />
+                                    ) : (
+                                        <div className="flex h-full w-full items-center justify-center text-5xl font-bold text-zinc-500">
+                                            {(user?.displayName?.[0] || "U").toUpperCase()}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Custom Predefined Avatars */}
+                                <div className="w-full">
+                                    <p className="text-sm font-medium text-zinc-400 mb-3">Choose a preset</p>
+                                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                                        {[
+                                            "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
+                                            "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
+                                            "https://api.dicebear.com/7.x/avataaars/svg?seed=Zack",
+                                            "https://api.dicebear.com/7.x/avataaars/svg?seed=Bella",
+                                            "https://api.dicebear.com/7.x/avataaars/svg?seed=Trouble",
+                                            "https://api.dicebear.com/7.x/bottts/svg?seed=Gizmo",
+                                            "https://api.dicebear.com/7.x/bottts/svg?seed=Max"
+                                        ].map((avatarUrl, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => {
+                                                    setAvatarPreview(avatarUrl);
+                                                    // Convert URL to file-like object if needed, or just handle URL update
+                                                    // For now, we'll just set the preview. We might need logic to handle 'saving' a URL vs a File.
+                                                    // Actually, we can just save the URL directly if no file is selected.
+                                                    setSelectedFile(null); // Clear manual file selection
+                                                }}
+                                                className={`flex-shrink-0 h-12 w-12 rounded-full border-2 overflow-hidden transition-all ${avatarPreview === avatarUrl
+                                                    ? "border-brand-green scale-110"
+                                                    : "border-zinc-700 hover:border-zinc-500"
+                                                    }`}
+                                            >
+                                                <img src={avatarUrl} alt={`Avatar ${index + 1}`} className="h-full w-full object-cover" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center w-full gap-4">
+                                    <div className="h-px bg-zinc-800 flex-1" />
+                                    <span className="text-xs text-zinc-500 font-medium">OR UPLOAD</span>
+                                    <div className="h-px bg-zinc-800 flex-1" />
+                                </div>
+
+                                {/* File Input */}
+                                <label className="w-full">
+                                    <div className="flex flex-col items-center justify-center gap-3 border-2 border-dashed border-zinc-700 rounded-xl p-6 hover:border-brand-green/50 hover:bg-zinc-800/50 transition-all cursor-pointer">
+                                        <Upload className="h-8 w-8 text-zinc-500" />
+                                        <div className="text-center">
+                                            <p className="text-sm font-medium text-zinc-300">
+                                                {selectedFile ? selectedFile.name : "Click to upload"}
+                                            </p>
+                                            <p className="text-xs text-zinc-500 mt-1">
+                                                PNG, JPG or WebP (max 5MB)
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <input
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/webp"
+                                        className="hidden"
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                if (file.size > 5 * 1024 * 1024) {
+                                                    alert("File size must be less than 5MB");
+                                                    return;
+                                                }
+                                                setSelectedFile(file);
+                                                const reader = new FileReader();
+                                                reader.onloadend = () => {
+                                                    setAvatarPreview(reader.result as string);
+                                                };
+                                                reader.readAsDataURL(file);
+                                            }
+                                        }}
+                                    />
+                                </label>
+
+                                {/* Action Buttons */}
+                                <div className="flex gap-3 w-full">
+                                    <Button
+                                        onClick={() => {
+                                            setShowAvatarModal(false);
+                                            setAvatarPreview(null);
+                                            setSelectedFile(null);
+                                            router.replace('/profile');
+                                        }}
+                                        variant="outline"
+                                        className="flex-1 border-zinc-700 text-zinc-400 hover:bg-zinc-800 hover:text-white"
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        onClick={async () => {
+                                            if (!user) return;
+                                            if (!selectedFile && !avatarPreview) return;
+
+                                            setIsUploadingAvatar(true);
+                                            try {
+                                                let downloadURL = avatarPreview;
+
+                                                // If a file is selected, upload it
+                                                if (selectedFile) {
+                                                    const storageRef = ref(storage, `avatars/${user.uid}`);
+                                                    await uploadBytes(storageRef, selectedFile);
+                                                    downloadURL = await getDownloadURL(storageRef);
+                                                }
+
+                                                if (downloadURL) {
+                                                    // Save as customPhotoURL in Firestore only
+                                                    // This preserves the original email provider photo in user.photoURL
+                                                    const userRef = doc(db, "users", user.uid);
+                                                    await setDoc(userRef, { customPhotoURL: downloadURL, updatedAt: serverTimestamp() }, { merge: true });
+                                                }
+
+                                                // Close modal and refresh
+                                                setShowAvatarModal(false);
+                                                setAvatarPreview(null);
+                                                setSelectedFile(null);
+                                                router.replace('/profile');
+                                                setSuccessMessage("Avatar updated successfully!");
+                                                setTimeout(() => setSuccessMessage(""), 3000);
+                                            } catch (error) {
+                                                console.error("Error uploading avatar:", error);
+                                                alert("Failed to upload avatar. Please try again.");
+                                            } finally {
+                                                setIsUploadingAvatar(false);
+                                            }
+                                        }}
+                                        disabled={(!selectedFile && !avatarPreview) || isUploadingAvatar}
+                                        className="flex-1 bg-brand-green text-black hover:bg-brand-green/90 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {isUploadingAvatar ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                Uploading...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Save className="mr-2 h-4 w-4" />
+                                                Save Avatar
+                                            </>
+                                        )}
+                                    </Button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
+    );
+}
+
+export default function ProfilePage() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-screen items-center justify-center bg-black text-white">
+                <Loader2 className="h-8 w-8 animate-spin text-brand-green" />
+            </div>
+        }>
+            <ProfileContent />
+        </Suspense>
     );
 }

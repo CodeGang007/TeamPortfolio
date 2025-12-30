@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
     ArrowLeft, Upload, FileText, X, Rocket, Zap,
@@ -93,14 +93,16 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
     // UI State
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
-    const { isAuthenticated, openLoginModal } = useAuth();
+    const { user, isAuthenticated, openLoginModal } = useAuth();
     const isOnline = isAuthenticated;
 
     // Undo history state
     const [formHistory, setFormHistory] = useState<typeof formData[]>([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
     const [validationError, setValidationError] = useState("");
+    const [toastMessage, setToastMessage] = useState("");
 
 
     // Initial Load
@@ -314,8 +316,130 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
 
 
+    // Draft Logic
+    const searchParams = useSearchParams();
+    const draftId = searchParams.get('draftId');
+    const [isLoadingDraft, setIsLoadingDraft] = useState(false);
+
+    // Load Draft Data
+    useEffect(() => {
+        const loadDraft = async () => {
+            if (!draftId) return;
+            
+            setIsLoadingDraft(true);
+            try {
+                const draft = await projectRequestService.getProjectById(draftId);
+                if (draft) {
+                    // Populate form
+                    setFormData({
+                        projectName: draft.projectName || "",
+                        description: draft.description || "",
+                        category: draft.category || "Full Stack Development",
+                        subCategories: draft.subCategories || [],
+                        deliveryTime: draft.deliveryTime || "",
+                        budget: draft.budget || "",
+                        currency: draft.currency || "INR",
+                        additionalNotes: draft.additionalNotes || "",
+                        projectLinks: draft.projectLinks || {
+                            github: "",
+                            figma: "",
+                            website: "",
+                            documentation: "",
+                            other: ""
+                        },
+                        projectType: draft.projectType || "fixed_price",
+                        communicationPreference: draft.communicationPreference || "",
+                        priority: draft.priority || "medium"
+                    });
+                    
+                    // Note: Handling images/attachments files from URL is tricky as input type='file' requires File objects.
+                    // For now, we rely on the service to keep URLs, but we might show them as "existing files".
+                    // This is a known limitation for this iteration.
+                }
+            } catch (error) {
+                console.error("Failed to load draft:", error);
+                setValidationError("Failed to load draft.");
+            } finally {
+                setIsLoadingDraft(false);
+            }
+        };
+
+        if (draftId) {
+            loadDraft();
+        }
+    }, [draftId]);
+
+    const handleSaveDraft = async () => {
+        if (!user) {
+             openLoginModal();
+             return;
+        }
+
+        setIsSaving(true);
+        try {
+            // Check draft limit if creating a new draft
+            if (!draftId) {
+                const userProjects = await projectRequestService.getProjectsByUserId(user.uid);
+                const draftCount = userProjects.filter(p => p.isDraft).length;
+                if (draftCount >= 6) {
+                    setToastMessage("Limit reached: You can only have 6 drafts.");
+                    setValidationError("Maximum limit of 6 drafts reached. Please delete an older draft.");
+                    setIsSaving(false);
+                    return;
+                }
+            }
+
+            const projectData = {
+                ...formData,
+                templateId,
+                userId: user.uid,
+                isDraft: true, // Ensure it remains a draft
+                draftSavedAt: new Date().toISOString()
+            };
+
+            let savedId = draftId;
+
+            if (draftId) {
+                // Update existing draft
+                await projectRequestService.updateProject(draftId, projectData);
+            } else {
+                // Create new draft
+                savedId = await projectRequestService.saveDraft({
+                     ...projectData,
+                     assignedTo: null,
+                     imageUrls: [],
+                     attachmentUrls: []
+                });
+            }
+            
+            // Show toast instead of redirect
+            // Assuming we might not have a toast component ready, let's look for one or implement a simple one.
+            // But wait, the user said "snackbar or a toaster".
+            // I'll add a simple local state for a snackbar since I don't see a global toast context in the visible code.
+            setToastMessage("Draft saved successfully");
+            setTimeout(() => setToastMessage(""), 3000);
+
+            // If it was a new draft, we might want to update the URL to include the draftId so subsequent saves are updates
+             if (!draftId && savedId) {
+                 const newUrl = `/project-request/${templateId}?draftId=${savedId}`;
+                 window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl);
+            }
+
+        } catch (error) {
+            console.error("Error saving draft:", error);
+            setValidationError("Failed to save draft.");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
     const handleSubmit = async () => {
         setValidationError("");
+
+        if (!user) {
+            openLoginModal();
+            return;
+        }
 
         // Validation
         if (!formData.projectName.trim()) {
@@ -328,29 +452,58 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
+        if (!formData.deliveryTime) {
+            setValidationError("Delivery date is required.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        if (!formData.budget.trim()) {
+            setValidationError("Budget is required.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
 
         setIsSubmitting(true);
 
         try {
+            const timestamp = new Date().toISOString();
             // Prepare project data
             const projectData = {
                 ...formData,
                 templateId,
-                clientId: "user_temp", 
+                userId: user.uid,
+                userName: user.displayName || "Unknown Client",
+                userEmail: user.email || "No Email",
                 isDraft: false,
-                assignedTo: null,
-                imageUrls: [], // Will be populated by service with hardcoded values
-                attachmentUrls: [] // Will be populated by service with hardcoded values
+                priority: "medium"
             };
 
-            // Publish project to Firebase Realtime Database
-            const projectId = await projectRequestService.publishProject(projectData);
-            
-            console.log('Project published with ID:', projectId);
+            if (draftId) {
+                // Update and Publish existing draft
+                 await projectRequestService.updateProject(draftId, {
+                    ...projectData,
+                    workflowStatus: {
+                        initiatedAt: timestamp,
+                        collectedAt: "",
+                        inProgressAt: "",
+                        inTransactionAt: "",
+                        completedAt: ""
+                    },
+                    assignedTo: null,
+                 });
+            } else {
+                // Create new Published Project
+                await projectRequestService.publishProject({
+                    ...projectData,
+                     assignedTo: null,
+                     imageUrls: [],
+                     attachmentUrls: []
+                });
+            }
             
             setIsSuccess(true);
             setTimeout(() => {
-                router.push('/');
+                router.push('/dashboard/projects');
             }, 3000);
 
         } catch (error) {
@@ -558,6 +711,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 <div className="relative group">
                                     <input
                                         type="date"
+                                        min={new Date().toISOString().split('T')[0]}
                                         className={`w-full rounded-xl border px-4 py-3.5 focus:outline-none focus:ring-4 transition-all group-hover:border-zinc-700 [color-scheme:dark] ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/10' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/10'}`}
                                         value={formData.deliveryTime}
                                         onChange={e => updateFormData({ deliveryTime: e.target.value })}
@@ -745,7 +899,6 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                             </div>
                         </div>
 
-                      
 
                          {/* Project Links Section */}
                         <div className="space-y-4">
@@ -829,6 +982,24 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                 </div>
 
                 <div className="mt-12 flex flex-col items-center gap-4 pb-12">
+                     <button
+                        onClick={handleSaveDraft}
+                        disabled={isSaving || isSubmitting}
+                        className={`w-full max-w-md rounded-xl py-4 font-bold transition-all active:scale-[0.98] ${isOnline
+                            ? 'border border-zinc-800 bg-zinc-900 text-white hover:bg-zinc-800'
+                            : 'border border-red-900/50 bg-red-950/20 text-red-200 hover:bg-red-900/30'
+                            } ${isSaving ? 'opacity-70 cursor-wait' : ''}`}
+                    >
+                        {isSaving ? (
+                            <span className="flex items-center justify-center gap-2">
+                                <Loader2 className="h-5 w-5 animate-spin" />
+                                Saving Draft...
+                            </span>
+                        ) : (
+                            "Save as Draft"
+                        )}
+                    </button>
+
                     <Button
                         size="lg"
                         disabled={isSubmitting}
@@ -909,8 +1080,31 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     <CheckCircle className="h-12 w-12 text-brand-green" />
                                 </div>
                                 <h2 className="text-3xl font-bold text-white mb-2">Project Published!</h2>
-                                <p className="text-zinc-400 max-w-xs">Your project request has been successfully submitted. Redirecting you home...</p>
+                                <p className="text-zinc-400 max-w-xs">Redirecting to your publications...</p>
                             </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Toast Notification */}
+                <AnimatePresence>
+                    {toastMessage && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            className="fixed bottom-6 right-6 z-[100] flex items-center gap-3 rounded-xl bg-zinc-900 border border-zinc-800 p-4 shadow-xl shadow-black/50"
+                        >
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-green/10 text-brand-green">
+                                <CheckCircle className="h-5 w-5" />
+                            </div>
+                            <p className="font-medium text-white">{toastMessage}</p>
+                            <button 
+                                onClick={() => setToastMessage("")}
+                                className="ml-2 text-zinc-500 hover:text-white"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
                         </motion.div>
                     )}
                 </AnimatePresence>
