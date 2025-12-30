@@ -33,33 +33,38 @@ export function ProjectsSection() {
   // FUNCTION: This goes to the internet to get your data
   const fetchProjects = async () => {
     try {
-      // Step A: Point to your 'projects' collection
       const projectsCol = collection(db, "projects");
+      let snapshot;
 
-      // Step B: Create a "Question" (Query)
-      // "Give me projects where active is true, ordered by the order number"
-      const q = query(
-        projectsCol,
-        where("active", "==", true),
-        orderBy("order", "asc")
-      );
-
-      // Step C: Execute the search
-      const snapshot = await getDocs(q);
+      // Try OPTIMIZED query (Requires Firestore Index)
+      try {
+        const q = query(
+          projectsCol,
+          where("active", "==", true),
+          orderBy("order", "asc")
+        );
+        snapshot = await getDocs(q);
+      } catch (indexError: any) {
+        console.warn("Index query failed (likely missing index), falling back to basic fetch.", indexError);
+        // Fallback: Fetch ALL and filter client-side
+        snapshot = await getDocs(projectsCol);
+      }
 
       // Step D: Clean up the data. 
-      // Firebase gives us a weird object; we turn it into a simple list.
-      const projectList = snapshot.docs.map(doc => ({
-        id: doc.id,               // The Auto-ID from Firebase
-        ...doc.data()             // Everything else (title, description, etc.)
-      })) as Project[];
+      let projectList = snapshot.docs.map(doc => ({
+        id: doc.id,               
+        ...doc.data()             
+      })) as any[];
 
-      // Step E: Save that list into our State
+      // Client-side Filter & Sort (in case fallback was used)
+      projectList = projectList
+        .filter(p => p.active === true)
+        .sort((a, b) => (a.order || 99) - (b.order || 99));
+
       setProjects(projectList);
     } catch (error) {
       console.error("Firebase Error:", error);
     } finally {
-      // Stop showing the loading spinner
       setLoading(false);
     }
   };

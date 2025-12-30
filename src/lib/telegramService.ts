@@ -70,7 +70,7 @@ export const telegramService = {
 *Description:*
 ${project.description.substring(0, 300)}${project.description.length > 300 ? '...' : ''}
 
-[View in Dashboard](https://team-portfolio-app.vercel.app/dashboard/projects)
+[View in Dashboard](https://team-portfolio-cg3e.vercel.app/dashboard/projects)
       `.trim();
   }
 };
