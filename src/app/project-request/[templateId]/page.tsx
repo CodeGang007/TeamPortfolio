@@ -462,6 +462,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                 ...formData,
                 templateId,
                 userId: user.uid,
+                userName: user.displayName || "Unknown Client", // Added
+                userEmail: user.email || "No Email", // Added
                 isDraft: false, // Publish!
                 initiatedAt: timestamp,
                 // Ensure draft fields are cleared/overwritten if necessary
