@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { projectRequestService, TeamMember as ServiceTeamMember } from "@/lib/projectService"; // Import TeamMember
-
+import { emailService } from "../../../../lib/emailService";
 // Types
 interface Milestone {
     id: string;
@@ -165,6 +165,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     const handleSave = async () => {
         if (!project) return;
         try {
+            // Check previous status to avoid duplicate emails
+            const currentProgress = await projectRequestService.getProjectProgress(project.id);
+            const isActivating = (currentProgress?.status !== 'active') && (project.status === 'active');
+
             await projectRequestService.updateProjectProgress(project.id, {
                 status: project.status,
                 progress: project.progress,
@@ -178,14 +182,47 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 assignedDevelopers: project.teamMembers.map(m => ({
                     uid: m.id,
                     name: m.name,
-                    email: m.email || "unknown@example.com", // Upsert email
+                    email: m.email || "unknown@example.com", 
                     role: m.role
-                    // photoURL missing in local TeamMember, ideally sync better
                 })),
                 teamSize: project.teamMembers.length
             });
+
+            // Send Email if activating
+            if (isActivating) {
+                // Fetch latest client details (in case they weren't in local state fully)
+                // We have client email in projectRequest usually? 
+                // We can use the project data we have.
+                // NOTE: We need the CLIENT's email.
+                // The `project` object in this file doesn't explicitly store client email in the top level type?
+                // Let's check getProjectData or the interface.
+                // The interface `ProjectDetail` doesn't have clientEmail.
+                // However, `projectRequestService.getProjectById(id)` returns `userName` and `userEmail`.
+                // We should fetch that to be sure.
+                
+                const requestData = await projectRequestService.getProjectById(project.id);
+                if (requestData && requestData.userEmail) {
+                    await emailService.sendProjectActiveEmail({
+                        projectName: project.projectName,
+                        clientName: requestData.userName || "Valued Client",
+                        clientEmail: requestData.userEmail,
+                        developers: project.teamMembers.map(m => ({
+                            name: m.name,
+                            email: m.email || "",
+                            role: m.role
+                        }))
+                    });
+                    setSnackbarMessage("Project activated & email sent to client!");
+                } else {
+                     setSnackbarMessage("Project active, but could not find client email.");
+                }
+                 setShowSnackbar(true);
+            } else {
+                 setSnackbarMessage("Changes saved successfully.");
+                 setShowSnackbar(true);
+            }
+
             setIsEditing(false);
-            alert("Changes saved!");
         } catch (error) {
             console.error("Failed to save:", error);
             alert("Failed to save changes.");
@@ -553,9 +590,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     {/* Left Column */}
                     <div className="lg:col-span-7 space-y-4">
 
-                        {/* Browser Preview (Optional based on data) */}
+                        {/* Browser Preview */}
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                            className="rounded-lg border border-[#27272a] bg-[#18181b] overflow-hidden hover:border-[#3f3f46] transition-colors">
+                            className="rounded-lg border border-[#27272a] bg-[#18181b] overflow-hidden hover:border-[#3f3f46] transition-colors group/preview">
+                            {/* Browser Tollbar */}
                             <div className="flex items-center gap-2 px-4 py-3 border-b border-[#27272a] bg-[#0f0f10]">
                                 <div className="flex gap-1.5">
                                     <div className="h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
@@ -563,45 +601,80 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     <div className="h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
                                 </div>
                                 <div className="flex-1 mx-4">
-                                    <div className="h-6 rounded bg-[#27272a] flex items-center px-3">
+                                    <div className="h-6 rounded bg-[#27272a] flex items-center px-3 group-focus-within/preview:ring-1 ring-emerald-500/50 transition-all">
+                                        <div className="mr-2 text-zinc-500">
+                                            <Globe className="h-3 w-3" />
+                                        </div>
                                         {isEditing ? (
                                              <input 
                                                 value={project.liveUrl || ""}
                                                 onChange={(e) => setProject({ ...project, liveUrl: e.target.value })}
                                                 placeholder="https://your-app.com"
-                                                className="w-full bg-transparent text-[10px] text-white focus:outline-none"
+                                                className="w-full bg-transparent text-[10px] text-white focus:outline-none placeholder:text-zinc-600"
                                             />
                                         ) : (
-                                            <span className="text-[10px] text-[#52525b]">{project.liveUrl?.replace('https://', '') || 'Waiting for deploy...'}</span>
+                                            <a 
+                                                href={project.liveUrl || "#"} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className={`text-[10px] block w-full truncate ${project.liveUrl ? 'text-zinc-300 hover:text-white' : 'text-zinc-600'}`}
+                                            >
+                                                {project.liveUrl || 'No live URL configured'}
+                                            </a>
                                         )}
                                     </div>
                                 </div>
+                                {project.liveUrl && !isEditing && (
+                                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="p-1 hover:bg-zinc-800 rounded transition-colors text-zinc-400 hover:text-white">
+                                        <ExternalLink className="h-3.5 w-3.5" />
+                                    </a>
+                                )}
                             </div>
-                            <div className="aspect-video bg-gradient-to-br from-[#1a1a2e] via-[#16162a] to-[#0f0f1a] relative overflow-hidden">
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="text-center">
-                                        <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-violet-500/20 to-emerald-500/10 border border-white/5 flex items-center justify-center">
-                                            <TrendingUp className="h-7 w-7 text-white/30" />
+                            
+                            {/* Preview Area */}
+                            <div className="aspect-video bg-[#0f0f1a] relative overflow-hidden group/frame">
+                                {project.liveUrl ? (
+                                    <iframe 
+                                        src={project.liveUrl}
+                                        className="w-full h-full border-none opacity-90 transition-opacity hover:opacity-100"
+                                        title="Live Preview"
+                                        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                                        loading="lazy"
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#1a1a2e] via-[#16162a] to-[#0f0f1a]">
+                                        <div className="text-center p-6">
+                                            <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-zinc-800/50 border border-white/5 flex items-center justify-center">
+                                                <Globe className="h-7 w-7 text-zinc-600" />
+                                            </div>
+                                            <p className="text-sm text-zinc-400 font-medium">No Live Preview Available</p>
+                                            <p className="text-xs text-zinc-600 mt-1">Add a Live URL to see the preview here</p>
                                         </div>
-                                        <p className="text-sm text-[#52525b]">
-                                            {project.liveUrl ? "Preview available" : "Preview loading..."}
-                                        </p>
                                     </div>
-                                </div>
+                                )}
+                                
+                                {/* Overlay to prevent blocking interactions when not focused, but allow scrolling */}
+                                {project.liveUrl && (
+                                     <div className="absolute inset-0 bg-transparent pointer-events-none group-hover/frame:pointer-events-auto" />
+                                )}
                             </div>
-                             {/* ... Footer Bar ... */}
+                             
+                             {/* Footer Bar */}
                              <div className="px-4 py-3 border-t border-[#27272a] flex items-center justify-between bg-[#0f0f10]">
                                 <div className="flex items-center gap-3">
                                     <div className="flex -space-x-1.5">
                                         {project.teamMembers.map((m) => (
-                                            <div key={m.id} className={`w-6 h-6 rounded-full bg-gradient-to-br ${m.color} border-2 border-[#18181b] flex items-center justify-center text-[8px] font-bold text-white`}>
+                                            <div key={m.id} className={`w-6 h-6 rounded-full bg-gradient-to-br ${m.color} border-2 border-[#18181b] flex items-center justify-center text-[8px] font-bold text-white shadow-sm`}>
                                                 {m.name.charAt(0)}
                                             </div>
                                         ))}
                                     </div>
                                     <span className="text-[11px] text-[#52525b]">{project.stats.teamSize} contributors</span>
                                 </div>
-                                <span className="text-[10px] text-[#3f3f46]">Live preview updates automatically</span>
+                                <span className="flex items-center gap-1.5 text-[10px] text-[#3f3f46]">
+                                    <div className={`h-1.5 w-1.5 rounded-full ${project.liveUrl ? 'bg-emerald-500 animate-pulse' : 'bg-zinc-700'}`} />
+                                    {project.liveUrl ? 'Live Preview Active' : 'Offline'}
+                                </span>
                             </div>
                         </motion.div>
 
