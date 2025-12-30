@@ -1,5 +1,6 @@
 import { db, auth } from './firebase'; // Ensure db and auth are exported from firebase.ts
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import { telegramService } from './telegramService';
 
 // Firebase Realtime Database service for project requests
 const FIREBASE_DB_URL = 'https://codegang-v2-default-rtdb.firebaseio.com';
@@ -127,9 +128,13 @@ export const projectRequestService = {
     });
   },
 
+
+
+// ... inside projectRequestService ...
+
   // Publish project (convert draft to published)
   async publishProject(projectData: Omit<ProjectRequest, 'id'>): Promise<string> {
-    return this.createProject({
+    const projectId = await this.createProject({
       ...projectData,
       isDraft: false,
       initiatedAt: new Date().toISOString(),
@@ -159,6 +164,26 @@ export const projectRequestService = {
         }
       ]
     });
+
+    // Send Telegram Notification
+    try {
+        const message = telegramService.formatProjectNotification({
+            projectName: projectData.projectName,
+            description: projectData.description,
+            budget: projectData.budget,
+            currency: projectData.currency,
+            userName: projectData.userName,
+            userEmail: projectData.userEmail,
+            projectType: projectData.projectType,
+            deliveryTime: projectData.deliveryTime
+        });
+        await telegramService.sendMessage(message);
+    } catch (error) {
+        console.error("Failed to send Telegram notification:", error);
+        // Don't partially fail the publish operation if notification fails
+    }
+
+    return projectId;
   },
 
   // Update existing project
