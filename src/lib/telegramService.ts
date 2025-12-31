@@ -8,34 +8,20 @@ const TELEGRAM_CHAT_ID = TELEGRAM_CONFIG.CHAT_ID;
 
 export const telegramService = {
   // Send a message to the configured Telegram chat
+  // Send a message via our internal API route (Server-Side Proxy)
+  // This avoids CORS issues and hides the Bot Token from the client network tab
   async sendMessage(message: string): Promise<boolean> {
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-      console.warn('Telegram Bot Token or Chat ID not configured');
-      return false;
-    }
-
     try {
-      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-      const response = await fetch(url, {
+      const response = await fetch('/api/telegram-notification', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: message,
-          parse_mode: 'Markdown', // Optional: enables bold/italic
-        }),
+        body: JSON.stringify({ message }),
       });
 
       if (!response.ok) {
-        let errorData;
-        try {
-            errorData = await response.json();
-        } catch (e) {
-            errorData = { error: "Could not parse JSON response" };
-        }
-        console.error(`Failed to send Telegram message (Status: ${response.status} ${response.statusText}):`, errorData);
+        console.error(`Failed to send Telegram message (Status: ${response.status})`);
         return false;
       }
 
