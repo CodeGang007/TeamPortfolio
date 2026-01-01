@@ -25,8 +25,9 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
-import { projectRequestService, TeamMember as ServiceTeamMember } from "@/lib/projectService"; // Import TeamMember
+import { projectRequestService, TeamMember as ServiceTeamMember } from "@/lib/projectService";
 import { emailService } from "../../../../lib/emailService";
+import { FeedbackEditor } from "@/components/FeedbackEditor";
 // Types
 interface Milestone {
     id: string;
@@ -67,7 +68,7 @@ interface ProjectDetail {
     teamMembers: TeamMember[];
     startDate: string;
     dueDate: string;
-    
+
     // New fields from ProjectRequest
     currency: string;
     budget: string;
@@ -148,19 +149,32 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     const [project, setProject] = useState<ProjectDetail | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+    const [isFeedbackEditorOpen, setIsFeedbackEditorOpen] = useState(false);
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
-    
+
     // Admin Edit States
     const [isEditing, setIsEditing] = useState(false);
     const [allDevelopers, setAllDevelopers] = useState<ServiceTeamMember[]>([]);
-    
+
     // Fetch developers if admin
     useEffect(() => {
         if (role === 'admin') {
             projectRequestService.getDevelopers().then(setAllDevelopers);
         }
     }, [role]);
+
+    // Prevent body scroll when modal is open
+    useEffect(() => {
+        if (isDetailsModalOpen || isFeedbackEditorOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isDetailsModalOpen, isFeedbackEditorOpen]);
 
     const handleSave = async () => {
         if (!project) return;
@@ -182,7 +196,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 assignedDevelopers: project.teamMembers.map(m => ({
                     uid: m.id,
                     name: m.name,
-                    email: m.email || "unknown@example.com", 
+                    email: m.email || "unknown@example.com",
                     role: m.role
                 })),
                 teamSize: project.teamMembers.length
@@ -199,7 +213,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 // The interface `ProjectDetail` doesn't have clientEmail.
                 // However, `projectRequestService.getProjectById(id)` returns `userName` and `userEmail`.
                 // We should fetch that to be sure.
-                
+
                 const requestData = await projectRequestService.getProjectById(project.id);
                 if (requestData && requestData.userEmail) {
                     await emailService.sendProjectActiveEmail({
@@ -214,12 +228,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     });
                     setSnackbarMessage("Project activated & email sent to client!");
                 } else {
-                     setSnackbarMessage("Project active, but could not find client email.");
+                    setSnackbarMessage("Project active, but could not find client email.");
                 }
-                 setShowSnackbar(true);
+                setShowSnackbar(true);
             } else {
-                 setSnackbarMessage("Changes saved successfully.");
-                 setShowSnackbar(true);
+                setSnackbarMessage("Changes saved successfully.");
+                setShowSnackbar(true);
             }
 
             setIsEditing(false);
@@ -269,7 +283,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             try {
                 // Fetch basic project request data
                 const projectRequest = await projectRequestService.getProjectById(id);
-                
+
                 if (!projectRequest) {
                     setProject(null);
                     return;
@@ -297,7 +311,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                         category: projectRequest.category,
                         startDate: progressData.startDate,
                         dueDate: progressData.dueDate || "TBD",
-                        
+
                         // New fields
                         currency: projectRequest.currency,
                         budget: projectRequest.budget,
@@ -330,8 +344,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                         }))
                     });
                 } else {
-                     // Fallback if progress init failed or draft
-                     setProject({
+                    // Fallback if progress init failed or draft
+                    setProject({
                         id: projectRequest.id || id,
                         title: projectRequest.projectName,
                         projectName: projectRequest.projectName,
@@ -362,7 +376,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             documentation: "",
                             other: ""
                         }
-                     });
+                    });
                 }
 
             } catch (error) {
@@ -408,7 +422,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
     return (
         <div className="min-h-screen bg-[#09090b] text-white">
-             {/* ... Header ... */}
+            {/* ... Header ... */}
             <header className="border-b border-[#27272a] bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-50">
                 <div className="mx-auto max-w-7xl px-6 py-3">
                     <div className="flex items-center justify-between">
@@ -423,7 +437,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
-                             {/* Only show Discuss/Live if active */}
+                            {/* Only show Discuss/Live if active */}
                             {/* Only show Discuss/Live if active */}
                             {project.status === 'active' && !isEditing && (
                                 <>
@@ -435,21 +449,21 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     </Button>
                                 </>
                             )}
-                            
+
                             {/* Admin Controls */}
                             {role === 'admin' ? (
                                 isEditing ? (
                                     <div className="flex items-center gap-2">
-                                        <Button 
-                                            size="sm" 
-                                            variant="ghost" 
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
                                             onClick={() => setIsEditing(false)}
                                             className="text-white hover:bg-zinc-800 text-xs h-8"
                                         >
                                             <X className="h-3.5 w-3.5 mr-1.5" /> Cancel
                                         </Button>
-                                        <Button 
-                                            size="sm" 
+                                        <Button
+                                            size="sm"
                                             onClick={handleSave}
                                             className="bg-brand-green text-black hover:bg-brand-green/90 font-medium text-xs h-8"
                                         >
@@ -465,7 +479,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                     if (confirm("Approve closure? This will schedule deletion in 3 days.")) {
                                                         const deletionDate = new Date();
                                                         deletionDate.setDate(deletionDate.getDate() + 3);
-                                                        
+
                                                         try {
                                                             await projectRequestService.updateProjectProgress(project.id, {
                                                                 status: 'closed',
@@ -484,11 +498,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                 Approve Closure
                                             </Button>
                                         )}
-                                        <Button 
-                                            size="sm" 
+                                        <Button
+                                            size="sm"
                                             variant="outline"
                                             onClick={() => setIsEditing(true)}
-                                            className="border-[#27272a] text-[#a1a1aa] hover:text-white hover:border-[#3f3f46] text-xs h-8"
+                                            className="border-[#3f3f46] bg-[#27272a] text-white hover:bg-[#3f3f46] hover:border-[#52525b] text-xs h-8 font-medium"
                                         >
                                             <Edit className="h-3.5 w-3.5 mr-1.5" /> Edit Project
                                         </Button>
@@ -499,7 +513,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                 <>
                                     {/* Allow closure request if not already closed/completed/pending-closure */}
                                     {!['completed', 'closed', 'pending-closure'].includes(project.status) && (
-                                         <Button 
+                                        <Button
                                             size="sm"
                                             variant="outline"
                                             onClick={async () => {
@@ -538,8 +552,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
                         <div className="flex-1 max-w-2xl">
-                            <div className="flex items-center gap-2 mb-3">
-                                {/* Outlined Chips */}
+                            {/* Title with inline badges */}
+                            <div className="flex flex-wrap items-center gap-3 mb-3">
+                                <h1 className="text-3xl font-bold text-[#f4f4f5] tracking-[-0.02em]">{project.title}</h1>
+                                {/* Status Badge */}
                                 {isEditing ? (
                                     <select
                                         value={project.status}
@@ -557,29 +573,24 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         {project.status.toUpperCase()}
                                     </span>
                                 )}
+                                {/* Category Badge */}
                                 <span className="px-2 py-0.5 rounded text-[10px] font-medium border border-[#3f3f46] text-[#a1a1aa]">
                                     {project.category}
                                 </span>
                             </div>
-                            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">{project.title}</h1>
-                            <p className="text-[#a1a1aa] leading-relaxed" style={{ maxWidth: '60ch' }}>{project.description}</p>
+                            <p className="text-[#a1a1aa] leading-relaxed text-sm" style={{ maxWidth: '60ch' }}>{project.description}</p>
                         </div>
 
-                        {/* Clean Stats - No Container */}
-                        <div className="flex items-center gap-6 text-center">
-                            <div>
-                                <p className="text-2xl font-bold text-white">{project.progress}%</p>
-                                <p className="text-[10px] text-[#71717a] uppercase tracking-wider mt-0.5">Complete</p>
+                        {/* Stats with proper hierarchy */}
+                        <div className="flex items-center gap-4 text-center">
+                            <div className="flex flex-col items-center">
+                                <p className="text-3xl font-bold text-[#f4f4f5]">{project.progress}%</p>
+                                <p className="text-[10px] text-[#71717a] uppercase tracking-[0.1em] mt-1 font-medium">Complete</p>
                             </div>
-                            <div className="h-8 w-px bg-[#27272a]" />
-                            <div>
-                                <p className="text-2xl font-bold text-white">{project.stats.hoursSpent}h</p>
-                                <p className="text-[10px] text-[#71717a] uppercase tracking-wider mt-0.5">Invested</p>
-                            </div>
-                            <div className="h-8 w-px bg-[#27272a]" />
-                            <div>
-                                <p className="text-2xl font-bold text-white">{project.stats.teamSize}</p>
-                                <p className="text-[10px] text-[#71717a] uppercase tracking-wider mt-0.5">Team</p>
+                            <div className="h-10 w-px bg-[#27272a]" />
+                            <div className="flex flex-col items-center">
+                                <p className="text-3xl font-bold text-[#f4f4f5]">{project.stats.teamSize}</p>
+                                <p className="text-[10px] text-[#71717a] uppercase tracking-[0.1em] mt-1 font-medium">Team</p>
                             </div>
                         </div>
                     </div>
@@ -592,30 +603,30 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
                         {/* Browser Preview */}
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                            className="rounded-lg border border-[#27272a] bg-[#18181b] overflow-hidden hover:border-[#3f3f46] transition-colors group/preview">
-                            {/* Browser Tollbar */}
-                            <div className="flex items-center gap-2 px-4 py-3 border-b border-[#27272a] bg-[#0f0f10]">
+                            className="rounded-xl border border-[#27272a] bg-[#18181b] overflow-hidden hover:border-[#3f3f46] transition-colors group/preview">
+                            {/* Browser Toolbar */}
+                            <div className="flex items-center gap-2 px-4 py-3 border-b border-[#27272a] bg-[#27272a]">
                                 <div className="flex gap-1.5">
                                     <div className="h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
                                     <div className="h-2.5 w-2.5 rounded-full bg-[#eab308]" />
                                     <div className="h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
                                 </div>
                                 <div className="flex-1 mx-4">
-                                    <div className="h-6 rounded bg-[#27272a] flex items-center px-3 group-focus-within/preview:ring-1 ring-emerald-500/50 transition-all">
+                                    <div className="h-6 rounded bg-[#18181b] flex items-center px-3 group-focus-within/preview:ring-1 ring-emerald-500/50 transition-all">
                                         <div className="mr-2 text-zinc-500">
                                             <Globe className="h-3 w-3" />
                                         </div>
                                         {isEditing ? (
-                                             <input 
+                                            <input
                                                 value={project.liveUrl || ""}
                                                 onChange={(e) => setProject({ ...project, liveUrl: e.target.value })}
                                                 placeholder="https://your-app.com"
                                                 className="w-full bg-transparent text-[10px] text-white focus:outline-none placeholder:text-zinc-600"
                                             />
                                         ) : (
-                                            <a 
-                                                href={project.liveUrl || "#"} 
-                                                target="_blank" 
+                                            <a
+                                                href={project.liveUrl || "#"}
+                                                target="_blank"
                                                 rel="noopener noreferrer"
                                                 className={`text-[10px] block w-full truncate ${project.liveUrl ? 'text-zinc-300 hover:text-white' : 'text-zinc-600'}`}
                                             >
@@ -625,16 +636,16 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     </div>
                                 </div>
                                 {project.liveUrl && !isEditing && (
-                                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="p-1 hover:bg-zinc-800 rounded transition-colors text-zinc-400 hover:text-white">
+                                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="p-1 hover:bg-zinc-700 rounded transition-colors text-zinc-400 hover:text-white">
                                         <ExternalLink className="h-3.5 w-3.5" />
                                     </a>
                                 )}
                             </div>
-                            
+
                             {/* Preview Area */}
-                            <div className="aspect-video bg-[#0f0f1a] relative overflow-hidden group/frame">
+                            <div className="aspect-video bg-[#09090b] relative overflow-hidden group/frame">
                                 {project.liveUrl ? (
-                                    <iframe 
+                                    <iframe
                                         src={project.liveUrl}
                                         className="w-full h-full border-none opacity-90 transition-opacity hover:opacity-100"
                                         title="Live Preview"
@@ -642,25 +653,48 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         loading="lazy"
                                     />
                                 ) : (
-                                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#1a1a2e] via-[#16162a] to-[#0f0f1a]">
-                                        <div className="text-center p-6">
-                                            <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-zinc-800/50 border border-white/5 flex items-center justify-center">
-                                                <Globe className="h-7 w-7 text-zinc-600" />
-                                            </div>
-                                            <p className="text-sm text-zinc-400 font-medium">No Live Preview Available</p>
-                                            <p className="text-xs text-zinc-600 mt-1">Add a Live URL to see the preview here</p>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        {/* Diagonal stripe pattern */}
+                                        <div
+                                            className="absolute inset-0 opacity-[0.03]"
+                                            style={{
+                                                backgroundImage: `repeating-linear-gradient(
+                                                    -45deg,
+                                                    transparent,
+                                                    transparent 10px,
+                                                    #ffffff 10px,
+                                                    #ffffff 11px
+                                                )`
+                                            }}
+                                        />
+                                        {/* Subtle radial gradient overlay */}
+                                        <div className="absolute inset-0 bg-gradient-radial from-[#18181b] via-transparent to-transparent opacity-50" />
+
+                                        <div className="text-center p-6 relative z-10">
+                                            {/* Large thin-line Globe icon */}
+                                            <Globe className="h-20 w-20 mx-auto mb-6 text-zinc-600/50 stroke-[0.5]" />
+                                            <p className="text-sm text-[#a1a1aa] font-medium mb-1">No Live Preview Available</p>
+                                            <p className="text-xs text-[#52525b] mb-4">Add a Live URL to see the preview here</p>
+                                            {role === 'admin' && (
+                                                <button
+                                                    onClick={() => setIsEditing(true)}
+                                                    className="px-4 py-2 text-xs font-medium text-white bg-brand-green/10 border border-brand-green/30 rounded-lg hover:bg-brand-green/20 hover:border-brand-green/50 transition-all"
+                                                >
+                                                    Configure Live URL
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 )}
-                                
+
                                 {/* Overlay to prevent blocking interactions when not focused, but allow scrolling */}
                                 {project.liveUrl && (
-                                     <div className="absolute inset-0 bg-transparent pointer-events-none group-hover/frame:pointer-events-auto" />
+                                    <div className="absolute inset-0 bg-transparent pointer-events-none group-hover/frame:pointer-events-auto" />
                                 )}
                             </div>
-                             
-                             {/* Footer Bar */}
-                             <div className="px-4 py-3 border-t border-[#27272a] flex items-center justify-between bg-[#0f0f10]">
+
+                            {/* Footer Bar */}
+                            <div className="px-4 py-3 border-t border-[#27272a] flex items-center justify-between bg-[#0f0f10]">
                                 <div className="flex items-center gap-3">
                                     <div className="flex -space-x-1.5">
                                         {project.teamMembers.map((m) => (
@@ -678,134 +712,223 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             </div>
                         </motion.div>
 
-                        {/* Timeline */}
+                        {/* Timeline - Vertical Stepper */}
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                            className="rounded-lg border border-[#27272a] bg-[#18181b] p-5 hover:border-[#3f3f46] transition-colors">
-                            <div className="flex items-center justify-between mb-5">
-                                <h3 className="text-sm font-medium text-white">Timeline</h3>
-                                {isEditing && (
-                                    <Button size="sm" variant="ghost" className="h-6 w-6 p-0 hover:bg-zinc-800" onClick={() => {
-                                        if(!project) return;
-                                        setProject({
-                                            ...project,
-                                            milestones: [
-                                                ...project.milestones,
-                                                { 
-                                                    id: Date.now().toString(), 
-                                                    title: "New Milestone", 
-                                                    date: "TBD", 
-                                                    status: "upcoming",
-                                                    icon: "circle",
-                                                    description: "Description"
-                                                }
-                                            ]
-                                        })
-                                    }}>
-                                        <Plus className="h-3.5 w-3.5" />
-                                    </Button>
-                                )}
-                                <span className="text-[10px] text-[#52525b]">{project.startDate} → {project.dueDate}</span>
+                            className="rounded-xl border border-[#27272a] bg-[#18181b] p-5 hover:border-[#3f3f46] transition-colors">
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-sm font-semibold text-white tracking-tight">Timeline</h3>
+                                <div className="flex items-center gap-2">
+                                    {isEditing && (
+                                        <Button size="sm" variant="ghost" className="h-6 w-6 p-0 hover:bg-zinc-800" onClick={() => {
+                                            if (!project) return;
+                                            setProject({
+                                                ...project,
+                                                milestones: [
+                                                    ...project.milestones,
+                                                    {
+                                                        id: Date.now().toString(),
+                                                        title: "New Milestone",
+                                                        date: "TBD",
+                                                        status: "upcoming",
+                                                        icon: "circle",
+                                                        description: "Description"
+                                                    }
+                                                ]
+                                            })
+                                        }}>
+                                            <Plus className="h-3.5 w-3.5" />
+                                        </Button>
+                                    )}
+                                    <span className="text-[10px] text-[#71717a] font-mono">{project.startDate} → {project.dueDate}</span>
+                                </div>
                             </div>
 
-                            <div className="relative pl-6">
+                            <div className="relative pl-8">
                                 {project.milestones.length > 0 ? (
                                     <>
-                                        <div className="absolute left-[7px] top-1 bottom-1 w-px">
-                                             <div className="absolute top-0 w-full bg-emerald-500/60" style={{ height: `${(completedCount / project.milestones.length) * 100}%` }} />
-                                             <div className="absolute w-full border-l border-dashed border-[#3f3f46]" style={{ top: `${(completedCount / project.milestones.length) * 100}%`, bottom: 0 }} />
-                                        </div>
-                                        <div className="space-y-5">
+                                        {/* Dynamic line segments */}
+                                        {/* Dynamic line segments */}
+
+
+                                        <div className="relative pl-4 space-y-0">
                                             {project.milestones.map((m, i) => {
+                                                const isLast = i === project.milestones.length - 1;
                                                 const done = m.status === "completed";
                                                 const active = m.status === "current";
+
+                                                // Determine styles based on status
+                                                let dotStyle = "";
+                                                let lineStyle = "";
+
+                                                if (done) {
+                                                    dotStyle = "bg-emerald-500 ring-4 ring-[#18181b]"; // Green filled
+                                                    lineStyle = "border-l-2 border-emerald-500"; // Solid Green
+                                                } else if (active) {
+                                                    dotStyle = "bg-blue-600 ring-4 ring-[#18181b] shadow-[0_0_0_4px_#3f3f46]"; // Blue with border/ring
+                                                    // Check the NEXT status to determine line style.
+                                                    // If next is Future, this line is Dotted Grey.
+                                                    lineStyle = "border-l-2 border-dashed border-[#3f3f46]";
+                                                } else {
+                                                    dotStyle = "bg-zinc-700 ring-4 ring-[#18181b]"; // Grey filled
+                                                    lineStyle = "border-l-2 border-dashed border-[#3f3f46]";
+                                                }
+
+                                                // Connector override:
+                                                // If we are DONE, check if next node exists.
+                                                // If next is ALSO done or CURRENT, path should be green.
+                                                if (done) {
+                                                    const nextMilestone = !isLast ? project.milestones[i + 1] : null;
+                                                    // If next milestone exists and is either Completed or Current, line is Green.
+                                                    if (nextMilestone && (nextMilestone.status === 'completed' || nextMilestone.status === 'current')) {
+                                                        lineStyle = "border-l-2 border-emerald-500";
+                                                    } else {
+                                                        // Else (next is upcoming?), maybe dotted? Or still green if we delivered?
+                                                        // Usually if I'm done, path to next is done.
+                                                        // Let's stick to Green if I am done.
+                                                        lineStyle = "border-l-2 border-emerald-500";
+                                                    }
+                                                }
+
+                                                // Calculate duration
+                                                let durationDisplay = "";
+                                                if (i > 0) {
+                                                    try {
+                                                        const prevDateStr = project.milestones[i - 1]?.date;
+                                                        const currDateStr = m.date;
+
+                                                        if (prevDateStr && currDateStr && prevDateStr !== 'TBD' && currDateStr !== 'TBD') {
+                                                            const prevDate = new Date(prevDateStr);
+                                                            const currDate = new Date(currDateStr);
+                                                            const diffTime = Math.abs(currDate.getTime() - prevDate.getTime());
+                                                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                                                            durationDisplay = `${diffDays} Day${diffDays !== 1 ? 's' : ''}`;
+                                                        }
+                                                    } catch (e) {
+                                                        // ignore
+                                                    }
+                                                }
+
                                                 return (
-                                                    <div key={m.id} className="relative flex gap-4 group/milestone">
-                                                        <div className={`relative z-10 -ml-6 flex h-[14px] w-[14px] items-center justify-center rounded-full transition-all ${done ? "bg-emerald-500 text-black" :
-                                                                active ? "bg-emerald-500 text-black shadow-[0_0_12px_rgba(34,197,94,0.5)]" :
-                                                                    "bg-[#27272a] text-[#52525b]"
-                                                            }`}>
-                                                            {done ? <CheckCircle2 className="h-2.5 w-2.5" /> : <Circle className="h-2 w-2" />}
-                                                        </div>
-                                                        <div className="flex-1 -mt-0.5">
-                                                            <div className="flex items-center justify-between">
-                                                                {isEditing ? (
-                                                                    <div className="flex flex-col gap-1 w-full mr-2">
-                                                                        <input 
-                                                                            value={m.title} 
-                                                                            onChange={(e) => {
-                                                                                const newMilestones = [...project.milestones];
-                                                                                newMilestones[i] = { ...m, title: e.target.value };
-                                                                                setProject({...project, milestones: newMilestones});
-                                                                            }}
-                                                                            className="bg-transparent text-sm font-medium text-white focus:outline-none border-b border-transparent focus:border-emerald-500/50"
-                                                                        />
-                                                                        <div className="flex gap-2">
-                                                                            <input 
-                                                                                value={m.date}
-                                                                                onChange={(e) => {
-                                                                                    const newMilestones = [...project.milestones];
-                                                                                    newMilestones[i] = { ...m, date: e.target.value };
-                                                                                    setProject({...project, milestones: newMilestones});
-                                                                                }}
-                                                                                className="bg-transparent text-[10px] text-[#52525b] focus:outline-none w-20"
-                                                                            />
-                                                                            <select 
-                                                                                value={m.status}
-                                                                                onChange={(e) => {
-                                                                                    const newMilestones = [...project.milestones];
-                                                                                    newMilestones[i] = { ...m, status: e.target.value as any };
-                                                                                    setProject({...project, milestones: newMilestones});
-                                                                                }}
-                                                                                className="bg-transparent text-[10px] text-[#52525b] focus:outline-none"
-                                                                            >
-                                                                                <option value="upcoming">Upcoming</option>
-                                                                                <option value="current">Current</option>
-                                                                                <option value="completed">Completed</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                ) : (
-                                                                    <>
-                                                                    <span className={`text-sm font-medium ${active ? "text-white" : done ? "text-[#a1a1aa]" : "text-[#52525b]"}`}>
-                                                                        {m.title}
-                                                                    </span>
-                                                                    <span className="text-[10px] text-[#3f3f46]">{m.date}</span>
-                                                                    </>
-                                                                )}
-                                                                
-                                                                {isEditing && (
-                                                                    <button 
-                                                                        onClick={() => {
-                                                                            setProject({
-                                                                                ...project,
-                                                                                milestones: project.milestones.filter(x => x.id !== m.id)
-                                                                            })
-                                                                        }}
-                                                                        className="text-zinc-600 hover:text-red-400 opacity-0 group-hover/milestone:opacity-100 transition-opacity"
-                                                                    >
-                                                                        <Trash2 className="h-3.5 w-3.5" />
-                                                                    </button>
-                                                                )}
-                                                            </div>
-                                                            {m.description && !isEditing && <p className="text-[11px] text-[#52525b] mt-0.5">{m.description}</p>}
-                                                            {isEditing && (
-                                                                <input 
-                                                                    value={m.description || ""}
-                                                                    onChange={(e) => {
-                                                                        const newMilestones = [...project.milestones];
-                                                                        newMilestones[i] = { ...m, description: e.target.value };
-                                                                        setProject({...project, milestones: newMilestones});
-                                                                    }}
-                                                                    placeholder="Description"
-                                                                    className="w-full bg-transparent text-[11px] text-[#52525b] mt-0.5 focus:outline-none"
+                                                    <div key={m.id} className="relative flex gap-4">
+                                                        {/* Left Column: Timeline Graphic */}
+                                                        <div className="flex flex-col items-center">
+                                                            {/* The Dot - Syncfusion exact colors + special last item styling */}
+                                                            {isLast ? (
+                                                                /* Last item: Larger green dot with glow effect */
+                                                                <div className="relative shrink-0">
+                                                                    {/* Outer glow rings */}
+                                                                    <div className="absolute inset-0 w-6 h-6 -translate-x-[5px] -translate-y-[5px] rounded-full bg-emerald-500/10 blur-sm" />
+                                                                    <div className="absolute inset-0 w-5 h-5 -translate-x-[3px] -translate-y-[3px] rounded-full bg-emerald-500/20 blur-[2px]" />
+                                                                    {/* Main dot */}
+                                                                    <div className="w-4 h-4 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)]" />
+                                                                </div>
+                                                            ) : done ? (
+                                                                <div className="w-3.5 h-3.5 rounded-full bg-[#4CAF50] shrink-0" />
+                                                            ) : active ? (
+                                                                <div className="w-5 h-5 rounded-full bg-[#2196F3] border-[3px] border-white shrink-0 shadow-sm" />
+                                                            ) : (
+                                                                <div className="w-3.5 h-3.5 rounded-full bg-[#D1D5DB] shrink-0" />
+                                                            )}
+
+                                                            {/* The Line (only if not last) */}
+                                                            {!isLast && (
+                                                                <div
+                                                                    className={`flex-1 w-0 ${done ? 'border-l-2 border-[#4CAF50]' : 'border-l-2 border-dashed border-[#9CA3AF]'}`}
+                                                                    style={{ minHeight: '3.5rem' }}
                                                                 />
                                                             )}
-                                                            {active && !isEditing && (
-                                                                <span className="inline-flex items-center gap-1 mt-1.5 text-[9px] font-semibold text-emerald-400">
-                                                                    <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
-                                                                    IN PROGRESS
-                                                                </span>
-                                                            )}
+                                                        </div>
+
+                                                        {/* Right Column: Content */}
+                                                        <div className={`flex-1 pb-8 ${isLast ? 'pb-0' : ''}`}>
+                                                            <div className="flex flex-col gap-1 -mt-1">
+                                                                {/* Header Row: Title + Date + Duration */}
+                                                                <div className="flex items-start justify-between">
+                                                                    {isEditing ? (
+                                                                        <div className="flex flex-col gap-2 w-full">
+                                                                            <input
+                                                                                value={m.title}
+                                                                                onChange={(e) => {
+                                                                                    const newMilestones = [...project.milestones];
+                                                                                    newMilestones[i] = { ...m, title: e.target.value };
+                                                                                    setProject({ ...project, milestones: newMilestones });
+                                                                                }}
+                                                                                className="bg-transparent text-sm font-semibold text-white focus:outline-none border-b border-transparent focus:border-emerald-500/50"
+                                                                            />
+                                                                            <div className="flex gap-2">
+                                                                                <input
+                                                                                    value={m.date}
+                                                                                    onChange={(e) => {
+                                                                                        const newMilestones = [...project.milestones];
+                                                                                        newMilestones[i] = { ...m, date: e.target.value };
+                                                                                        setProject({ ...project, milestones: newMilestones });
+                                                                                    }}
+                                                                                    placeholder="YYYY-MM-DD"
+                                                                                    className="bg-transparent text-xs text-[#71717a] font-mono border border-[#3f3f46] rounded px-1 w-24"
+                                                                                />
+                                                                                <select
+                                                                                    value={m.status}
+                                                                                    onChange={(e) => {
+                                                                                        const newMilestones = [...project.milestones];
+                                                                                        newMilestones[i] = { ...m, status: e.target.value as any };
+                                                                                        setProject({ ...project, milestones: newMilestones });
+                                                                                    }}
+                                                                                    className="bg-[#18181b] text-xs text-[#71717a] border border-[#3f3f46] rounded px-1"
+                                                                                >
+                                                                                    <option value="upcoming">Upcoming</option>
+                                                                                    <option value="current">Current</option>
+                                                                                    <option value="completed">Completed</option>
+                                                                                </select>
+                                                                                <button
+                                                                                    onClick={() => {
+                                                                                        const newMilestones = project.milestones.filter((_, idx) => idx !== i);
+                                                                                        setProject({ ...project, milestones: newMilestones });
+                                                                                    }}
+                                                                                    className="text-red-400 hover:text-red-300"
+                                                                                >
+                                                                                    <Trash2 className="h-4 w-4" />
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="space-y-0.5">
+                                                                            <h4 className={`text-sm font-medium ${active ? 'text-white' : 'text-[#e4e4e7]'}`}>
+                                                                                {m.title}
+                                                                            </h4>
+                                                                            <div className="flex items-center gap-3">
+                                                                                <span className="text-xs text-[#71717a] font-mono">
+                                                                                    {m.date === 'TBD' ? 'TBD' : new Date(m.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                                                                </span>
+                                                                                {durationDisplay && (
+                                                                                    <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-[#27272a] text-[#a1a1aa] border border-[#3f3f46]">
+                                                                                        {durationDisplay}
+                                                                                    </span>
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+
+                                                                {/* Description */}
+                                                                {!isEditing && m.description && (
+                                                                    <p className="text-xs text-[#71717a] leading-relaxed mt-1">
+                                                                        {m.description}
+                                                                    </p>
+                                                                )}
+
+                                                                {isEditing && (
+                                                                    <textarea
+                                                                        value={m.description || ""}
+                                                                        onChange={(e) => {
+                                                                            const newMilestones = [...project.milestones];
+                                                                            newMilestones[i] = { ...m, description: e.target.value };
+                                                                            setProject({ ...project, milestones: newMilestones });
+                                                                        }}
+                                                                        className="w-full bg-transparent text-xs text-[#71717a] mt-1 border border-[#3f3f46] rounded p-1"
+                                                                        rows={2}
+                                                                    />
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 );
@@ -813,7 +936,18 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         </div>
                                     </>
                                 ) : (
-                                    <p className="text-sm text-zinc-500">No milestones yet.</p>
+                                    <div className="text-center py-8">
+                                        <Target className="h-8 w-8 mx-auto mb-2 text-zinc-700" />
+                                        <p className="text-sm text-zinc-500">No milestones yet</p>
+                                        {role === 'admin' && (
+                                            <button
+                                                onClick={() => setIsEditing(true)}
+                                                className="mt-2 text-xs text-brand-green hover:underline"
+                                            >
+                                                Add milestone
+                                            </button>
+                                        )}
+                                    </div>
                                 )}
                             </div>
                         </motion.div>
@@ -824,15 +958,15 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
                         {/* Progress */}
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-                            className="rounded-lg border border-[#27272a] bg-[#18181b] p-5 hover:border-[#3f3f46] transition-colors">
+                            className="rounded-xl border border-[#27272a] bg-[#18181b] p-5 hover:border-[#3f3f46] transition-colors">
                             <div className="flex items-center justify-between mb-3">
                                 <span className="text-xs text-[#71717a]">Overall Progress</span>
                                 {isEditing ? (
-                                    <input 
-                                        type="number" 
-                                        min="0" 
-                                        max="100" 
-                                        value={project.progress} 
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        max="100"
+                                        value={project.progress}
                                         onChange={(e) => setProject({ ...project, progress: parseInt(e.target.value) })}
                                         className="w-12 bg-zinc-900 border border-[#27272a] rounded text-right text-sm font-bold text-white p-0.5 focus:outline-none"
                                     />
@@ -841,10 +975,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                 )}
                             </div>
                             {isEditing ? (
-                                <input 
-                                    type="range" 
-                                    min="0" 
-                                    max="100" 
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="100"
                                     value={project.progress}
                                     onChange={(e) => setProject({ ...project, progress: parseInt(e.target.value) })}
                                     className="w-full h-1.5 bg-[#27272a] rounded-lg appearance-none cursor-pointer accent-emerald-500"
@@ -859,36 +993,42 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                         </motion.div>
 
 
-                        {/* Project Specs (Replaces Stats Bento) */}
+                        {/* Project Specs Card */}
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                             onClick={() => setIsDetailsModalOpen(true)}
-                            className="rounded-lg border border-[#27272a] bg-[#18181b] p-5 hover:border-[#3f3f46] transition-all cursor-pointer group"
+                            className="rounded-xl border border-[#27272a] bg-[#18181b] p-5 hover:border-[#3f3f46] transition-all cursor-pointer group"
                         >
-                            <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-2">
-                                    <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-9 w-9 rounded-lg bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
                                         <FileText className="h-4 w-4 text-blue-400" />
                                     </div>
                                     <div>
-                                        <h3 className="text-sm font-semibold text-white">Project Details</h3>
+                                        <h3 className="text-sm font-semibold text-[#f4f4f5]">Project Details</h3>
                                         <p className="text-[10px] text-[#71717a]">Submitted Information</p>
                                     </div>
                                 </div>
                                 <ArrowUpRight className="h-4 w-4 text-[#52525b] group-hover:text-white transition-colors" />
                             </div>
-                            
-                            <div className="space-y-2 mt-4">
-                                <div className="flex justify-between items-center text-xs">
-                                    <span className="text-[#a1a1aa]">Budget</span>
-                                    <span className="text-white font-medium">{project.currency} {project.budget}</span>
+
+                            <div className="divide-y divide-[#27272a]">
+                                <div className="flex justify-between items-center py-2.5">
+                                    <span className="text-xs text-[#a1a1aa]">Budget</span>
+                                    <span className="text-xs text-[#f4f4f5] font-medium font-mono text-right">
+                                        {project.currency === 'INR' ? '₹' : project.currency === 'USD' ? '$' : project.currency} {parseFloat(project.budget).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </span>
                                 </div>
-                                <div className="flex justify-between items-center text-xs">
-                                    <span className="text-[#a1a1aa]">Deadline</span>
-                                    <span className="text-white font-medium">{project.deliveryTime}</span>
+                                <div className="flex justify-between items-center py-2.5">
+                                    <span className="text-xs text-[#a1a1aa]">Deadline</span>
+                                    <span className="text-xs text-[#f4f4f5] font-medium text-right">
+                                        {project.dueDate && project.dueDate !== 'TBD'
+                                            ? new Date(project.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                                            : project.deliveryTime}
+                                    </span>
                                 </div>
-                                <div className="flex justify-between items-center text-xs">
-                                    <span className="text-[#a1a1aa]">Type</span>
-                                    <span className="text-white font-medium">{project.projectType}</span>
+                                <div className="flex justify-between items-center py-2.5">
+                                    <span className="text-xs text-[#a1a1aa]">Type</span>
+                                    <span className="text-xs text-[#f4f4f5] font-medium text-right capitalize">{project.projectType?.replace(/_/g, ' ') || 'N/A'}</span>
                                 </div>
                             </div>
                         </motion.div>
@@ -897,92 +1037,106 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                         <AnimatePresence>
                             {isDetailsModalOpen && (
                                 <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6">
-                                    <motion.div 
-                                        initial={{ opacity: 0 }} 
-                                        animate={{ opacity: 1 }} 
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
                                         onClick={() => setIsDetailsModalOpen(false)}
-                                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                                        className="absolute inset-0 bg-black/80 backdrop-blur-md"
                                     />
-                                    <motion.div 
-                                        initial={{ opacity: 0, scale: 0.95, y: 20 }} 
-                                        animate={{ opacity: 1, scale: 1, y: 0 }} 
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                                        className="relative w-full max-w-2xl bg-[#18181b] border border-[#27272a] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
+                                        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                                        className="relative w-full max-w-xl bg-[#0f0f12] border border-[#27272a] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
                                     >
-                                        <div className="flex items-center justify-between px-6 py-4 border-b border-[#27272a] bg-[#18181b]">
-                                            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                                                <FileText className="h-5 w-5 text-blue-400" />
-                                                Project Specifications
-                                            </h2>
-                                            <button 
-                                                onClick={() => setIsDetailsModalOpen(false)}
-                                                className="p-2 rounded-full hover:bg-[#27272a] text-[#a1a1aa] hover:text-white transition-colors"
-                                            >
-                                                <X className="h-5 w-5" />
-                                            </button>
-                                        </div>
-                                        
-                                        <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
-                                            <div className="space-y-4">
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <div className="p-4 rounded-xl bg-[#09090b] border border-[#27272a]">
-                                                        <span className="text-xs text-[#71717a] block mb-1">Project Name</span>
-                                                        <span className="text-sm text-white font-medium">{project.projectName}</span>
+                                        {/* Header with gradient accent */}
+                                        <div className="relative px-6 py-5 border-b border-[#27272a]">
+                                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5" />
+                                            <div className="relative flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                                                        <FileText className="h-5 w-5 text-blue-400" />
                                                     </div>
-                                                    <div className="p-4 rounded-xl bg-[#09090b] border border-[#27272a]">
-                                                        <span className="text-xs text-[#71717a] block mb-1">Category</span>
-                                                        <span className="text-sm text-white font-medium">{project.category}</span>
+                                                    <div>
+                                                        <h2 className="text-lg font-bold text-[#f4f4f5]">Project Specifications</h2>
+                                                        <p className="text-xs text-[#71717a]">Submitted project details</p>
                                                     </div>
                                                 </div>
-
-                                                <div className="p-4 rounded-xl bg-[#09090b] border border-[#27272a]">
-                                                    <span className="text-xs text-[#71717a] block mb-1">Description</span>
-                                                    <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{project.description}</p>
-                                                </div>
-
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <div className="p-4 rounded-xl bg-[#09090b] border border-[#27272a]">
-                                                        <span className="text-xs text-[#71717a] block mb-1">Budget</span>
-                                                        <span className="text-sm text-brand-green font-medium">{project.currency} {project.budget}</span>
-                                                    </div>
-                                                    <div className="p-4 rounded-xl bg-[#09090b] border border-[#27272a]">
-                                                        <span className="text-xs text-[#71717a] block mb-1">Timeline</span>
-                                                        <span className="text-sm text-white font-medium">{project.deliveryTime}</span>
-                                                    </div>
-                                                </div>
-
-                                                {project.additionalNotes && (
-                                                    <div className="p-4 rounded-xl bg-[#09090b] border border-[#27272a]">
-                                                        <span className="text-xs text-[#71717a] block mb-1">Additional Notes</span>
-                                                        <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{project.additionalNotes}</p>
-                                                    </div>
-                                                )}
-                                                
-                                                {/* Links Section */}
-                                                {(project.projectLinks?.github || project.projectLinks?.figma || project.projectLinks?.website) && (
-                                                    <div className="p-4 rounded-xl bg-[#09090b] border border-[#27272a]">
-                                                        <span className="text-xs text-[#71717a] block mb-3">Project Links</span>
-                                                        <div className="flex flex-wrap gap-3">
-                                                            {project.projectLinks.github && (
-                                                                <a href={project.projectLinks.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] text-xs text-white transition-colors">
-                                                                    <Github className="h-3.5 w-3.5" /> GitHub
-                                                                </a>
-                                                            )}
-                                                            {project.projectLinks.figma && (
-                                                                <a href={project.projectLinks.figma} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] text-xs text-white transition-colors">
-                                                                    <Figma className="h-3.5 w-3.5" /> Figma
-                                                                </a>
-                                                            )}
-                                                            {project.projectLinks.website && (
-                                                                <a href={project.projectLinks.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] text-xs text-white transition-colors">
-                                                                    <Globe className="h-3.5 w-3.5" /> Website
-                                                                </a>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                )}
+                                                <button
+                                                    onClick={() => setIsDetailsModalOpen(false)}
+                                                    className="p-2 rounded-lg hover:bg-[#27272a] text-[#71717a] hover:text-white transition-colors"
+                                                >
+                                                    <X className="h-5 w-5" />
+                                                </button>
                                             </div>
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="flex-1 overflow-y-auto p-6 space-y-4" style={{ overscrollBehavior: 'contain' }}>
+                                            {/* Project Name & Category */}
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
+                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Project Name</span>
+                                                    <span className="text-sm text-[#f4f4f5] font-semibold">{project.projectName}</span>
+                                                </div>
+                                                <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
+                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Category</span>
+                                                    <span className="text-sm text-[#f4f4f5] font-semibold">{project.category}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Description */}
+                                            <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
+                                                <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Description</span>
+                                                <p className="text-sm text-[#a1a1aa] leading-relaxed whitespace-pre-wrap">{project.description}</p>
+                                            </div>
+
+                                            {/* Budget & Timeline */}
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/5 to-transparent border border-emerald-500/20 hover:border-emerald-500/40 transition-colors">
+                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Budget</span>
+                                                    <span className="text-lg text-emerald-400 font-bold font-mono">
+                                                        {project.currency === 'INR' ? '₹' : project.currency === 'USD' ? '$' : project.currency}{project.budget}
+                                                    </span>
+                                                </div>
+                                                <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/5 to-transparent border border-blue-500/20 hover:border-blue-500/40 transition-colors">
+                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Timeline</span>
+                                                    <span className="text-lg text-blue-400 font-bold">{project.deliveryTime}</span>
+                                                </div>
+                                            </div>
+
+                                            {project.additionalNotes && (
+                                                <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
+                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Additional Notes</span>
+                                                    <p className="text-sm text-[#a1a1aa] leading-relaxed whitespace-pre-wrap">{project.additionalNotes}</p>
+                                                </div>
+                                            )}
+
+                                            {/* Links Section */}
+                                            {(project.projectLinks?.github || project.projectLinks?.figma || project.projectLinks?.website) && (
+                                                <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
+                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-3">Project Links</span>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {project.projectLinks.github && (
+                                                            <a href={project.projectLinks.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] text-xs text-white transition-colors">
+                                                                <Github className="h-3.5 w-3.5" /> GitHub
+                                                            </a>
+                                                        )}
+                                                        {project.projectLinks.figma && (
+                                                            <a href={project.projectLinks.figma} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] text-xs text-white transition-colors">
+                                                                <Figma className="h-3.5 w-3.5" /> Figma
+                                                            </a>
+                                                        )}
+                                                        {project.projectLinks.website && (
+                                                            <a href={project.projectLinks.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] text-xs text-white transition-colors">
+                                                                <Globe className="h-3.5 w-3.5" /> Website
+                                                            </a>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     </motion.div>
                                 </div>
@@ -1012,78 +1166,93 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             )}
                         </AnimatePresence>
 
-                            <div className="rounded-lg border border-[#27272a] bg-[#18181b] p-4 hover:border-[#3f3f46] transition-colors">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex -space-x-2">
-                                            {project.teamMembers.map((m) => (
-                                                <div key={m.id} className="relative group/avatar">
-                                                    <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${m.color} border-2 border-[#18181b] flex items-center justify-center text-xs font-bold text-white`} title={m.name}>
-                                                        {m.name.charAt(0)}
-                                                    </div>
-                                                    {isEditing && (
-                                                        <button 
-                                                            onClick={() => handleRemoveDeveloper(m.id)}
-                                                            className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover/avatar:opacity-100 transition-opacity"
-                                                        >
-                                                            <X className="h-2 w-2" />
-                                                        </button>
-                                                    )}
+                        <div className="rounded-xl border border-[#27272a] bg-[#18181b] p-4 hover:border-[#3f3f46] transition-colors">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex -space-x-2">
+                                        {project.teamMembers.map((m) => (
+                                            <div key={m.id} className="relative group/avatar">
+                                                <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${m.color} border-2 border-[#18181b] flex items-center justify-center text-xs font-bold text-white`} title={m.name}>
+                                                    {m.name.charAt(0)}
                                                 </div>
-                                            ))}
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-white">Project Team</p>
-                                            <p className="text-[10px] text-[#52525b]">
-                                                {project.teamMembers.length > 0 ? project.teamMembers.map(m => m.name.split(' ')[0]).join(', ') : "No members yet"}
-                                            </p>
-                                        </div>
+                                                {isEditing && (
+                                                    <button
+                                                        onClick={() => handleRemoveDeveloper(m.id)}
+                                                        className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover/avatar:opacity-100 transition-opacity"
+                                                    >
+                                                        <X className="h-2 w-2" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-white">Project Team</p>
+                                        <p className="text-[10px] text-[#52525b]">
+                                            {project.teamMembers.length > 0 ? project.teamMembers.map(m => m.name.split(' ')[0]).join(', ') : "No members yet"}
+                                        </p>
                                     </div>
                                 </div>
-                                
-                                {isEditing && (
-                                    <div className="mt-3 pt-3 border-t border-[#27272a]">
-                                        <p className="text-[10px] text-[#71717a] mb-2 uppercase font-medium">Add Developer</p>
-                                        <select 
-                                            className="w-full bg-zinc-900 border border-[#27272a] rounded text-xs text-white p-2 focus:outline-none focus:border-brand-green"
-                                            onChange={(e) => {
-                                                if (e.target.value) {
-                                                    handleAddDeveloper(e.target.value);
-                                                    e.target.value = ""; // Reset
-                                                }
-                                            }}
-                                        >
-                                            <option value="">Select a developer...</option>
-                                            {allDevelopers
-                                                .filter(d => !project.teamMembers.find(m => m.id === d.uid))
-                                                .map(d => (
-                                                <option key={d.uid} value={d.uid}>{d.name} ({d.email})</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )}
                             </div>
 
-                        {/* CTA with Gradient Border */}
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
-                            className="relative rounded-lg p-[1px] bg-gradient-to-r from-violet-500/50 via-purple-500/30 to-violet-500/50 hover:from-violet-500 hover:via-purple-500/50 hover:to-violet-500 transition-all cursor-pointer group">
-                             {/* ... CTA Content ... */}
-                             <div className="rounded-lg bg-[#18181b] p-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded-lg bg-violet-500/10 flex items-center justify-center group-hover:bg-violet-500/20 transition-colors">
-                                        <MessageSquare className="h-5 w-5 text-violet-400" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <p className="text-sm font-medium text-white">Need changes?</p>
-                                        <p className="text-[10px] text-[#52525b]">Send feedback to the team</p>
-                                    </div>
-                                    <ChevronRight className="h-4 w-4 text-[#52525b] group-hover:text-white transition-colors" />
+                            {isEditing && (
+                                <div className="mt-3 pt-3 border-t border-[#27272a]">
+                                    <p className="text-[10px] text-[#71717a] mb-2 uppercase font-medium">Add Developer</p>
+                                    <select
+                                        className="w-full bg-zinc-900 border border-[#27272a] rounded text-xs text-white p-2 focus:outline-none focus:border-brand-green"
+                                        onChange={(e) => {
+                                            if (e.target.value) {
+                                                handleAddDeveloper(e.target.value);
+                                                e.target.value = ""; // Reset
+                                            }
+                                        }}
+                                    >
+                                        <option value="">Select a developer...</option>
+                                        {allDevelopers
+                                            .filter(d => !project.teamMembers.find(m => m.id === d.uid))
+                                            .map(d => (
+                                                <option key={d.uid} value={d.uid}>{d.name} ({d.email})</option>
+                                            ))}
+                                    </select>
                                 </div>
-                            </div>
-                        </motion.div>
+                            )}
+                        </div>
+
+                        {/* Feedback Link - Subtle Ghost Button */}
+                        <motion.button
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.35 }}
+                            onClick={() => setIsFeedbackEditorOpen(true)}
+                            className="w-full flex items-center justify-center gap-2 py-3 text-xs text-[#71717a] hover:text-[#a1a1aa] border border-transparent hover:border-[#27272a] rounded-lg transition-all group"
+                        >
+                            <MessageSquare className="h-4 w-4 text-violet-400/50 group-hover:text-violet-400 transition-colors" />
+                            <span>Need changes? Send feedback</span>
+                            <ChevronRight className="h-3 w-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                        </motion.button>
                     </div>
-                </div>
-            </main>
-        </div>
+                </div >
+            </main >
+
+            {/* Feedback Editor Modal */}
+            <AnimatePresence>
+                {isFeedbackEditorOpen && project && (
+                    <FeedbackEditor
+                        projectId={project.id}
+                        projectName={project.title}
+                        onClose={() => setIsFeedbackEditorOpen(false)}
+                        onSave={async (content, htmlContent) => {
+                            // Save feedback to the project
+                            console.log('Saving feedback:', { projectId: project.id, content, htmlContent });
+
+                            // Show success snackbar
+                            setSnackbarMessage("Feedback sent successfully!");
+                            setShowSnackbar(true);
+                            setTimeout(() => setShowSnackbar(false), 3000);
+                        }}
+                    />
+                )}
+            </AnimatePresence>
+        </div >
     );
 }
