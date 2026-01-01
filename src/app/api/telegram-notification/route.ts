@@ -24,13 +24,13 @@ export async function POST(request: Request) {
             body: JSON.stringify({
                 chat_id: TELEGRAM_CHAT_ID,
                 text: message,
-                parse_mode: 'Markdown',
+                parse_mode: 'HTML',
             }),
         });
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error('Telegram API Error:', errorData);
+            console.error('Telegram API Error:', JSON.stringify(errorData, null, 2));
             return NextResponse.json(
                 { error: 'Failed to send message to Telegram', details: errorData },
                 { status: response.status }
