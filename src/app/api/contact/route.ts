@@ -17,14 +17,14 @@ export async function POST(request: NextRequest) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.SMTP_EMAIL,
+        pass: process.env.SMTP_PASSWORD,
       },
     });
 
     // Email to admin
     const adminMailOptions = {
-      from: process.env.EMAIL_USER,
+      from: process.env.SMTP_EMAIL,
       to: 'codegang0077@gmail.com',
       subject: `New Contact Form Submission from ${firstName} ${lastName}`,
       html: `
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     // Auto-reply to user
     const userMailOptions = {
-      from: process.env.EMAIL_USER,
+      from: process.env.SMTP_EMAIL,
       to: email,
       subject: 'Thank you for contacting us - CodeGang',
       html: `
