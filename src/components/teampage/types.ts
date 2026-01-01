@@ -5,17 +5,14 @@ export interface SocialLinks {
 }
 
 export interface TeamMember {
+  id?: string;
   name: string;
   role: string;
   imageUrl: string;
-
   rating: number; // 0–5
-
   description: string;
-
   techStack: string[];
-
   socials: SocialLinks;
-
   projectUrl: string;
+  active: boolean;
 }

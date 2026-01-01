@@ -452,6 +452,16 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
+        if (!formData.deliveryTime) {
+            setValidationError("Delivery date is required.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        if (!formData.budget.trim()) {
+            setValidationError("Budget is required.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
 
         setIsSubmitting(true);
 
@@ -462,11 +472,9 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                 ...formData,
                 templateId,
                 userId: user.uid,
-                userName: user.displayName || "Unknown Client", // Added
-                userEmail: user.email || "No Email", // Added
-                isDraft: false, // Publish!
-                initiatedAt: timestamp,
-                // Ensure draft fields are cleared/overwritten if necessary
+                userName: user.displayName || "Unknown Client",
+                userEmail: user.email || "No Email",
+                isDraft: false,
                 priority: "medium"
             };
 
@@ -474,10 +482,13 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                 // Update and Publish existing draft
                  await projectRequestService.updateProject(draftId, {
                     ...projectData,
-                    collectedAt: null,
-                    inProgressAt: null,
-                    inTransactionAt: null,
-                    completedAt: null,
+                    workflowStatus: {
+                        initiatedAt: timestamp,
+                        collectedAt: "",
+                        inProgressAt: "",
+                        inTransactionAt: "",
+                        completedAt: ""
+                    },
                     assignedTo: null,
                  });
             } else {
@@ -700,6 +711,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 <div className="relative group">
                                     <input
                                         type="date"
+                                        min={new Date().toISOString().split('T')[0]}
                                         className={`w-full rounded-xl border px-4 py-3.5 focus:outline-none focus:ring-4 transition-all group-hover:border-zinc-700 [color-scheme:dark] ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/10' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/10'}`}
                                         value={formData.deliveryTime}
                                         onChange={e => updateFormData({ deliveryTime: e.target.value })}
@@ -886,7 +898,6 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 </div>
                             </div>
                         </div>
-
 
 
                          {/* Project Links Section */}
