@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Calendar, User } from "lucide-react";
-import Link from "next/link";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Calendar, User, Folder, MoreVertical, Pencil, BarChart3, Trash2, Clock } from "lucide-react";
+import Image from "next/image";
 
 export type ProjectStatus = "active" | "completed" | "on-hold" | "pending" | "pending-closure" | "closed";
 
@@ -16,53 +17,104 @@ interface DashboardProjectCardProps {
     status: ProjectStatus;
     category?: string;
     gradientIndex?: number;
+    progress?: number; // 0-100 completion percentage
+    startDate?: string; // ISO date string
+    dueDate?: string; // ISO date string
+    currentMilestone?: string; // Current phase name like "initiated"
+    onEdit?: (id: string) => void;
+    onDelete?: (id: string) => void;
+    onViewStats?: (id: string) => void;
 }
 
-// Unique gradients for each card
-const cardGradients = [
-    "from-violet-900/60 via-purple-900/40 to-black",
-    "from-emerald-900/50 via-teal-900/30 to-black",
-    "from-rose-900/50 via-pink-900/30 to-black",
-    "from-amber-900/50 via-orange-900/30 to-black",
-    "from-sky-900/50 via-blue-900/30 to-black",
-    "from-fuchsia-900/50 via-purple-900/30 to-black",
+// Format date to short format like "Dec 30"
+function formatShortDate(dateStr?: string): string {
+    if (!dateStr) return '';
+    try {
+        const date = new Date(dateStr);
+        // Check if date is valid
+        if (isNaN(date.getTime())) return '';
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    } catch {
+        return '';
+    }
+}
+
+// Color palette for pattern generation (similar to GitHub)
+const patternColors = [
+    { bg: "#1a1a2e", fg: "#4a4a6e" },
+    { bg: "#16213e", fg: "#3a5a7c" },
+    { bg: "#1b2838", fg: "#3d5a6a" },
+    { bg: "#2d132c", fg: "#5a3d5c" },
+    { bg: "#1a1a1a", fg: "#3a3a3a" },
+    { bg: "#0d1b2a", fg: "#2d4a5a" },
+    { bg: "#1c1c1c", fg: "#4c4c4c" },
+    { bg: "#2c1810", fg: "#5c4030" },
 ];
+
+// Generate a simple hash from string
+function hashString(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash);
+}
+
+// Generate a 5x5 identicon-style pattern based on project name
+function generatePattern(name: string): boolean[][] {
+    const hash = hashString(name);
+    const pattern: boolean[][] = [];
+
+    for (let row = 0; row < 5; row++) {
+        pattern[row] = [];
+        for (let col = 0; col < 3; col++) {
+            const bit = (hash >> (row * 3 + col)) & 1;
+            pattern[row][col] = bit === 1;
+            // Mirror for symmetry
+            pattern[row][4 - col] = bit === 1;
+        }
+    }
+
+    return pattern;
+}
 
 const statusConfig: Record<ProjectStatus, { label: string; dotClass: string; bgClass: string; textClass: string }> = {
     active: {
         label: "ACTIVE",
         dotClass: "bg-emerald-400",
-        bgClass: "bg-emerald-950/80",
+        bgClass: "bg-emerald-950/70 backdrop-blur-md border border-emerald-800/50",
         textClass: "text-emerald-400",
     },
     completed: {
         label: "COMPLETED",
         dotClass: "bg-purple-400",
-        bgClass: "bg-purple-950/80",
+        bgClass: "bg-purple-950/70 backdrop-blur-md border border-purple-800/50",
         textClass: "text-purple-400",
     },
     "on-hold": {
         label: "ON HOLD",
         dotClass: "bg-amber-400",
-        bgClass: "bg-amber-950/80",
+        bgClass: "bg-amber-950/70 backdrop-blur-md border border-amber-800/50",
         textClass: "text-amber-400",
     },
     pending: {
         label: "PENDING",
         dotClass: "bg-zinc-400",
-        bgClass: "bg-zinc-800/80",
+        bgClass: "bg-zinc-800/70 backdrop-blur-md border border-zinc-700/50",
         textClass: "text-zinc-400",
     },
     "pending-closure": {
         label: "CLOSING...",
         dotClass: "bg-red-400",
-        bgClass: "bg-red-950/80",
+        bgClass: "bg-red-950/70 backdrop-blur-md border border-red-800/50",
         textClass: "text-red-400 animate-pulse",
     },
     closed: {
         label: "CLOSED",
         dotClass: "bg-zinc-600",
-        bgClass: "bg-zinc-900/80",
+        bgClass: "bg-zinc-900/70 backdrop-blur-md border border-zinc-800/50",
         textClass: "text-zinc-600",
     }
 };
@@ -77,79 +129,251 @@ export default function DashboardProjectCard({
     status,
     category,
     gradientIndex = 0,
+    progress,
+    startDate,
+    dueDate,
+    currentMilestone,
+    onEdit,
+    onDelete,
+    onViewStats,
 }: DashboardProjectCardProps) {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
     const statusStyle = statusConfig[status];
     const isActive = status === "active";
-    const gradient = cardGradients[gradientIndex % cardGradients.length];
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setMenuOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    // Generate pattern and colors based on project title
+    const hash = hashString(title);
+    const colorScheme = patternColors[hash % patternColors.length];
+    const pattern = generatePattern(title);
 
     return (
         <motion.div
             whileHover={{ y: -2 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
         >
-                <div
-                    className={`group relative overflow-hidden rounded-xl border bg-[#18181b] transition-all duration-200 cursor-pointer ${isActive
-                            ? "border-brand-green"
-                            : "border-[#27272a] hover:border-[#52525b]"
-                        }`}
-                >
-                    {/* Gradient Header Area - The "Album Art" */}
-                    <div className={`relative aspect-[16/10] overflow-hidden bg-gradient-to-br ${gradient}`}>
-                        {/* Subtle noise texture overlay */}
-                        <div className="absolute inset-0 opacity-20" style={{
-                            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
-                        }} />
-
-                        {/* Radial glow */}
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.05),transparent_60%)]" />
-
-                        {/* Status Badge - Top Right */}
-                        <div className="absolute top-3 right-3">
-                            <div className={`flex items-center gap-1.5 px-2 py-1 rounded backdrop-blur-md ${statusStyle.bgClass}`}>
-                                <span className={`h-1.5 w-1.5 rounded-full ${statusStyle.dotClass} ${isActive ? "animate-pulse" : ""}`} />
-                                <span className={`text-[10px] font-semibold tracking-wider ${statusStyle.textClass}`}>
-                                    {statusStyle.label}
-                                </span>
+            <div
+                className={`group relative overflow-hidden rounded-xl border border-[#333] bg-[#1E1E1E] transition-all duration-200 cursor-pointer hover:border-brand-green hover:shadow-lg hover:shadow-brand-green/10`}
+            >
+                {/* Thumbnail Area - Strict 16:9 aspect ratio */}
+                <div className="relative aspect-video overflow-hidden" style={{ backgroundColor: colorScheme.bg }}>
+                    {thumbnail ? (
+                        // User uploaded image
+                        <Image
+                            src={thumbnail}
+                            alt={title}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                    ) : (
+                        // Generated pattern (GitHub-style identicon)
+                        <>
+                            {/* Pattern Grid */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <div
+                                    className="grid gap-1 opacity-40"
+                                    style={{
+                                        gridTemplateColumns: 'repeat(5, 1fr)',
+                                        width: '60%',
+                                        aspectRatio: '1'
+                                    }}
+                                >
+                                    {pattern.flat().map((filled, index) => (
+                                        <div
+                                            key={index}
+                                            className="rounded-sm transition-all duration-300"
+                                            style={{
+                                                backgroundColor: filled ? colorScheme.fg : 'transparent',
+                                                aspectRatio: '1'
+                                            }}
+                                        />
+                                    ))}
+                                </div>
                             </div>
+
+                            {/* Centered Folder Icon */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <Folder
+                                    className="h-12 w-12 opacity-30 transition-opacity duration-300 group-hover:opacity-50"
+                                    style={{ color: colorScheme.fg }}
+                                />
+                            </div>
+
+                            {/* Subtle radial glow */}
+                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.03),transparent_70%)]" />
+                        </>
+                    )}
+                </div>
+
+                {/* Kebab Menu - Top Right */}
+                <div className="absolute top-3 right-3 z-10" ref={menuRef}>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setMenuOpen(!menuOpen);
+                        }}
+                        className="p-1.5 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-white/70 hover:text-white hover:bg-black/60 transition-all duration-200 opacity-0 group-hover:opacity-100"
+                    >
+                        <MoreVertical className="h-4 w-4" />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    <AnimatePresence>
+                        {menuOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, y: -4 }}
+                                transition={{ duration: 0.15 }}
+                                className="absolute right-0 top-full mt-1 w-36 bg-[#1c1c1e] border border-[#333] rounded-lg shadow-xl overflow-hidden"
+                            >
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onEdit?.(id);
+                                        setMenuOpen(false);
+                                    }}
+                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#e5e5e5] hover:bg-white/10 transition-colors"
+                                >
+                                    <Pencil className="h-3.5 w-3.5" />
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onViewStats?.(id);
+                                        setMenuOpen(false);
+                                    }}
+                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#e5e5e5] hover:bg-white/10 transition-colors"
+                                >
+                                    <BarChart3 className="h-3.5 w-3.5" />
+                                    View Stats
+                                </button>
+                                <div className="border-t border-[#333]" />
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDelete?.(id);
+                                        setMenuOpen(false);
+                                    }}
+                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
+                                >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                    Delete
+                                </button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+
+                {/* Content Area - Fixed height for consistency */}
+                <div className="p-4 flex flex-col h-[180px]">
+                    {/* Status Badge + Category Row */}
+                    <div className="flex items-center gap-2 mb-2 flex-shrink-0">
+                        {/* Status Badge - Glassmorphism style */}
+                        <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full ${statusStyle.bgClass}`}>
+                            <span className={`h-1.5 w-1.5 rounded-full ${statusStyle.dotClass} ${isActive ? "animate-pulse" : ""}`} />
+                            <span className={`text-[9px] font-semibold tracking-wider uppercase ${statusStyle.textClass}`}>
+                                {statusStyle.label}
+                            </span>
                         </div>
+
+                        {/* Category Tag - Subtle pill */}
+                        {category && (
+                            <span className="px-2 py-0.5 rounded-full text-[8px] font-medium bg-white/5 text-[#71717a] tracking-wide truncate max-w-[120px]">
+                                {category}
+                            </span>
+                        )}
                     </div>
 
-                    {/* Content Area - Tight Metadata */}
-                    <div className="p-4">
-                        {/* Title + Category Tag */}
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                            <h3 className="text-sm font-semibold text-[#fafafa] line-clamp-1 group-hover:text-white transition-colors">
-                                {title}
-                            </h3>
-                            {category && (
-                                <span className="shrink-0 px-2 py-0.5 rounded text-[10px] font-medium border border-[#333] text-[#999]">
-                                    {category}
-                                </span>
-                            )}
-                        </div>
+                    {/* Title - Dominant element */}
+                    <h3 className="text-base font-bold text-[#fafafa] line-clamp-1 group-hover:text-white transition-colors mb-1 flex-shrink-0">
+                        {title}
+                    </h3>
 
-                        {/* Description - 2 lines max */}
-                        {description && (
-                            <p className="text-xs text-[#a1a1aa] line-clamp-2 mb-3 leading-relaxed">
+                    {/* Description - Fixed height area with ellipsis */}
+                    <div className="h-[18px] mb-2 flex-shrink-0">
+                        {description ? (
+                            <p className="text-[12px] text-[#71717a] line-clamp-1 leading-relaxed">
                                 {description}
                             </p>
+                        ) : (
+                            <p className="text-[12px] text-[#52525b] italic">No description</p>
                         )}
+                    </div>
 
-                        {/* Meta Footer - No View Link */}
-                        <div className="flex items-center gap-4 text-[11px] text-[#71717a]">
+                    {/* Progress Bar - Always show for non-pending status, default to 0% */}
+                    <div className="mb-2 flex-shrink-0">
+                        {status !== 'pending' ? (
+                            <>
+                                <div className="flex items-center justify-between mb-1">
+                                    <span className="text-[10px] text-[#71717a] font-medium">Progress</span>
+                                    <span className="text-[10px] font-semibold text-brand-green">{progress ?? 0}%</span>
+                                </div>
+                                <div className="h-1.5 bg-[#27272a] rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-gradient-to-r from-brand-green to-emerald-400 rounded-full transition-all duration-500"
+                                        style={{ width: `${Math.min(Math.max(progress ?? 0, 0), 100)}%` }}
+                                    />
+                                </div>
+                            </>
+                        ) : (
+                            <div className="h-[26px]" /> // Placeholder height for pending cards
+                        )}
+                    </div>
+
+                    {/* Spacer to push footer to bottom */}
+                    <div className="flex-grow" />
+
+                    {/* Meta Footer with Timeline - Two rows for better alignment */}
+                    <div className="flex-shrink-0 space-y-1.5">
+                        {/* Row 1: Client Name + Milestone Badge */}
+                        <div className="flex items-center gap-2 text-[10px] text-[#71717a] min-h-[18px]">
                             {clientName && (
-                                <div className="flex items-center gap-1.5">
-                                    <User className="h-3 w-3" />
-                                    <span>{clientName}</span>
+                                <div className="flex items-center gap-1 flex-shrink-0">
+                                    <User className="h-3 w-3 flex-shrink-0" />
+                                    <span className="truncate max-w-[100px]">{clientName}</span>
                                 </div>
                             )}
-                            <div className="flex items-center gap-1.5">
-                                <Calendar className="h-3 w-3" />
-                                <span>{lastUpdated}</span>
-                            </div>
+                            {/* Current Milestone Badge */}
+                            {currentMilestone && (
+                                <span className="px-1.5 py-0.5 rounded bg-brand-green/10 text-brand-green text-[9px] font-medium capitalize flex-shrink-0 whitespace-nowrap">
+                                    {currentMilestone}
+                                </span>
+                            )}
                         </div>
+
+                        {/* Row 2: Timeline - only show if we have valid formatted dates */}
+                        {(() => {
+                            const formattedStart = formatShortDate(startDate);
+                            const formattedDue = formatShortDate(dueDate);
+                            if (!formattedStart && !formattedDue) return <div className="h-[16px]" />;
+                            return (
+                                <div className="flex items-center gap-1 text-[10px] text-[#52525b]">
+                                    <Clock className="h-3 w-3 flex-shrink-0" />
+                                    <span>
+                                        {formattedStart}
+                                        {formattedStart && formattedDue && ' → '}
+                                        {formattedDue}
+                                    </span>
+                                </div>
+                            );
+                        })()}
                     </div>
                 </div>
+            </div>
         </motion.div>
     );
 }
+
