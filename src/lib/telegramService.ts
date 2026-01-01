@@ -32,6 +32,14 @@ export const telegramService = {
     }
   },
 
+  // Helper to escape HTML special characters for Telegram
+  escapeHtml(text: string): string {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  },
+
   // Helper to format a new project notification
   formatProjectNotification(project: { 
       projectName: string; 
@@ -43,20 +51,31 @@ export const telegramService = {
       projectType?: string;
       deliveryTime?: string;
   }): string {
+      const projectName = this.escapeHtml(project.projectName);
+      const userName = this.escapeHtml(project.userName || 'Unknown');
+      const userEmail = this.escapeHtml(project.userEmail || 'No Email');
+      const budget = this.escapeHtml(`${project.currency} ${project.budget}`); 
+      const projectType = this.escapeHtml(project.projectType || 'Not specified');
+      const deliveryTime = this.escapeHtml(project.deliveryTime || 'Not specified');
+      
+      let desc = project.description || '';
+      if (desc.length > 300) desc = desc.substring(0, 300) + '...';
+      const description = this.escapeHtml(desc);
+
       return `
-🚀 *New Project Published!*
+🚀 <b>New Project Published!</b>
 
-*Project:* ${project.projectName}
-*Client:* ${project.userName || 'Unknown'} 
-*Email:* ${project.userEmail || 'No Email'}
-*Budget:* ${project.currency} ${project.budget}
-*Type:* ${project.projectType || 'Not specified'}
-*Timeline:* ${project.deliveryTime || 'Not specified'}
+<b>Project:</b> ${projectName}
+<b>Client:</b> ${userName} 
+<b>Email:</b> ${userEmail}
+<b>Budget:</b> ${budget}
+<b>Type:</b> ${projectType}
+<b>Timeline:</b> ${deliveryTime}
 
-*Description:*
-${project.description.substring(0, 300)}${project.description.length > 300 ? '...' : ''}
+<b>Description:</b>
+${description}
 
-[View in Dashboard](https://team-portfolio-cg3e.vercel.app/dashboard/projects)
+<a href="https://team-portfolio-cg3e.vercel.app/dashboard/projects">View in Dashboard</a>
       `.trim();
   }
 };
