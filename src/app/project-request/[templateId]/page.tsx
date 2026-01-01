@@ -104,6 +104,21 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
     const [validationError, setValidationError] = useState("");
     const [toastMessage, setToastMessage] = useState("");
 
+    // Link validation state
+    const [linkWarnings, setLinkWarnings] = useState<{
+        github: string;
+        figma: string;
+        website: string;
+        documentation: string;
+        other: string;
+    }>({
+        github: "",
+        figma: "",
+        website: "",
+        documentation: "",
+        other: ""
+    });
+
 
     // Initial Load
     useEffect(() => {
@@ -225,6 +240,50 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
         setFormData(prev => ({ ...prev, ...updates }));
     };
 
+    // Link validation helper function
+    const validateLink = (linkType: keyof typeof linkWarnings, url: string): string => {
+        if (!url.trim()) return ""; // Empty is OK (not required)
+
+        // Check if it's a valid URL format first
+        try {
+            const parsedUrl = new URL(url);
+            const hostname = parsedUrl.hostname.toLowerCase();
+
+            switch (linkType) {
+                case 'github':
+                    if (!hostname.includes('github.com') && !hostname.includes('github.io')) {
+                        return "Please enter a valid GitHub URL (github.com)";
+                    }
+                    break;
+                case 'figma':
+                    if (!hostname.includes('figma.com')) {
+                        return "Please enter a valid Figma URL (figma.com)";
+                    }
+                    break;
+                case 'documentation':
+                case 'website':
+                case 'other':
+                    // Any valid URL is fine for these
+                    break;
+            }
+            return ""; // Valid
+        } catch {
+            return "Please enter a valid URL (starting with https://)";
+        }
+    };
+
+    // Update project link with validation
+    const updateProjectLink = (linkType: keyof typeof linkWarnings, value: string) => {
+        // Update the form data
+        updateFormData({
+            projectLinks: { ...formData.projectLinks, [linkType]: value }
+        });
+
+        // Validate and update warning (only show warning after typing pause)
+        const warning = validateLink(linkType, value);
+        setLinkWarnings(prev => ({ ...prev, [linkType]: warning }));
+    };
+
     // --- Helper: Format Bytes ---
     const formatBytes = (bytes: number, decimals = 2) => {
         if (!+bytes) return '0 Bytes';
@@ -325,7 +384,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
     useEffect(() => {
         const loadDraft = async () => {
             if (!draftId) return;
-            
+
             setIsLoadingDraft(true);
             try {
                 const draft = await projectRequestService.getProjectById(draftId);
@@ -351,7 +410,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         communicationPreference: draft.communicationPreference || "",
                         priority: draft.priority || "medium"
                     });
-                    
+
                     // Note: Handling images/attachments files from URL is tricky as input type='file' requires File objects.
                     // For now, we rely on the service to keep URLs, but we might show them as "existing files".
                     // This is a known limitation for this iteration.
@@ -371,8 +430,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
     const handleSaveDraft = async () => {
         if (!user) {
-             openLoginModal();
-             return;
+            openLoginModal();
+            return;
         }
 
         setIsSaving(true);
@@ -405,13 +464,13 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             } else {
                 // Create new draft
                 savedId = await projectRequestService.saveDraft({
-                     ...projectData,
-                     assignedTo: null,
-                     imageUrls: [],
-                     attachmentUrls: []
+                    ...projectData,
+                    assignedTo: null,
+                    imageUrls: [],
+                    attachmentUrls: []
                 });
             }
-            
+
             // Show toast instead of redirect
             // Assuming we might not have a toast component ready, let's look for one or implement a simple one.
             // But wait, the user said "snackbar or a toaster".
@@ -420,9 +479,9 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             setTimeout(() => setToastMessage(""), 3000);
 
             // If it was a new draft, we might want to update the URL to include the draftId so subsequent saves are updates
-             if (!draftId && savedId) {
-                 const newUrl = `/project-request/${templateId}?draftId=${savedId}`;
-                 window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl);
+            if (!draftId && savedId) {
+                const newUrl = `/project-request/${templateId}?draftId=${savedId}`;
+                window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl);
             }
 
         } catch (error) {
@@ -452,6 +511,21 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
+        if (!formData.projectType) {
+            setValidationError("Project type is required. Please select Fixed Price or Hourly Rate.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        if (!formData.deliveryTime.trim()) {
+            setValidationError("Delivery date is required.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        if (!formData.budget.trim()) {
+            setValidationError("Budget is required.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
 
         setIsSubmitting(true);
 
@@ -472,24 +546,24 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
             if (draftId) {
                 // Update and Publish existing draft
-                 await projectRequestService.updateProject(draftId, {
+                await projectRequestService.updateProject(draftId, {
                     ...projectData,
                     collectedAt: null,
                     inProgressAt: null,
                     inTransactionAt: null,
                     completedAt: null,
                     assignedTo: null,
-                 });
+                });
             } else {
                 // Create new Published Project
                 await projectRequestService.publishProject({
                     ...projectData,
-                     assignedTo: null,
-                     imageUrls: [],
-                     attachmentUrls: []
+                    assignedTo: null,
+                    imageUrls: [],
+                    attachmentUrls: []
                 });
             }
-            
+
             setIsSuccess(true);
             setTimeout(() => {
                 router.push('/dashboard/projects');
@@ -507,20 +581,21 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
     // --- Dynamic Sub-Categories Logic ---
     // --- Dynamic Sub-Categories Logic ---
     const SUB_CATEGORIES_MAP: Record<string, string[]> = {
-        "Full Stack Development": ["React", "Next.js", "Node.js", "Vue.js", "Angular", "Python", "Django", "Flask", "Java", "Spring Boot", ".NET", "PHP", "Laravel", "PostgreSQL", "MongoDB", "Redis", "GraphQL", "Ruby on Rails", "Go"],
-        "Mobile App Development": ["iOS (Swift)", "Android (Kotlin)", "React Native", "Flutter", "Ionic", "Xamarin", "Java", "Objective-C", "Maui"],
-        "Cloud Computing": ["AWS", "Google Cloud (GCP)", "Azure", "Docker", "Kubernetes", "Terraform", "Serverless", "Lambda", "Microservices", "CI/CD", "OpenStack"],
-        "Cyber Security": ["Penetration Testing", "Network Security", "Application Security", "Ethical Hacking", "Cryptography", "Security Auditing", "Incident Response", "Firewall Configuration", "SIEM", "SOC Analyst"],
-        "AI & Machine Learning": ["Python", "TensorFlow", "PyTorch", "OpenCV", "NLP", "Computer Vision", "Data Science", "Scikit-Learn", "Deep Learning", "Chatbots (LLMs)", "Generative AI", "RAG"],
-        "Data & Analytics": ["Data Engineering", "Big Data (Hadoop/Spark)", "Power BI", "Tableau", "SQL", "ETL Pipelines", "Snowflake", "Data Warehousing", "Apache Kafka", "Databricks"],
-        "Game Development": ["Unity 3D", "Unreal Engine", "Godot", "C#", "C++", "2D Game Design", "3D Modeling", "AR/VR Development", "Blender"],
-        "DevOps & QA": ["Jenkins", "GitLab CI", "Ansible", "Chef", "Puppet", "Prometheus", "Grafana", "Linux Admin", "Selenium", "Cypress", "Appium", "Performance Testing", "Manual Testing"],
-        "Blockchain": ["Smart Contracts", "Solidity", "Ethereum", "Web3.js", "DeFi", "NFTs", "Hyperledger", "Crypto Wallet Dev", "Rust (Solana)"],
-        "E-commerce & CMS": ["Shopify", "WooCommerce", "Magento", "WordPress", "Webflow", "Wix", "PrestaShop", "BigCommerce", "Squarespace"],
-        "ERP & CRM": ["Salesforce", "SAP", "Oracle ERP", "Zoho CRM", "HubSpot", "Odoo", "Microsoft Dynamics 365", "NetSuite"],
-        "Embedded & IoT": ["Arduino", "Raspberry Pi", "Firmware Development", "IoT Sensors", "C/C++ Embedded", "RTOS", "PCB Design"],
-        "Design": ["UI/UX Design", "Figma", "Adobe XD", "Photoshop", "Illustrator", "Brand Identity", "Prototyping", "Wireframing", "Motion Graphics"],
-        "Digital Marketing": ["SEO", "Content Marketing", "Social Media Marketing", "PPC", "Email Marketing", "Google Analytics", "Growth Hacking", "ASO"]
+        "Brand & Growth": ["Brand Strategy", "Market Research", "Competitor Analysis", "Local Business Marketing", "Restaurant Marketing", "Retail Branding", "Franchise Solutions", "Loyalty Programs", "Review Management", "Google My Business", "Zomato/Swiggy Optimization", "D2C Strategy", "Omnichannel Marketing"],
+        "Full Stack Development": ["React", "Next.js", "Node.js", "Vue.js", "Angular", "Python", "Django", "Flask", "Java", "Spring Boot", ".NET", "PHP", "Laravel", "PostgreSQL", "MongoDB", "Redis", "GraphQL", "Ruby on Rails", "Go", "Supabase", "Firebase"],
+        "Digital Marketing": ["SEO", "Local SEO", "Content Marketing", "Social Media Marketing", "PPC", "Google Ads", "Meta Ads", "Email Marketing", "Google Analytics", "Growth Hacking", "ASO", "Performance Marketing", "Social Commerce", "Influencer Marketing", "WhatsApp Business", "Lead Generation"],
+        "Mobile App Development": ["iOS (Swift)", "Android (Kotlin)", "React Native", "Flutter", "Ionic", "Xamarin", "Java", "Objective-C", "Maui", "PWA"],
+        "E-commerce & CMS": ["Shopify", "WooCommerce", "Magento", "WordPress", "Webflow", "Wix", "PrestaShop", "BigCommerce", "Squarespace", "Strapi", "Sanity", "Headless CMS", "Product Catalog", "Inventory Management"],
+        "Design": ["UI/UX Design", "Figma", "Adobe XD", "Photoshop", "Illustrator", "Brand Identity", "Prototyping", "Wireframing", "Motion Graphics", "Logo Design", "Packaging Design", "Social Media Creatives"],
+        "AI & Machine Learning": ["Python", "TensorFlow", "PyTorch", "OpenCV", "NLP", "Computer Vision", "Data Science", "Scikit-Learn", "Deep Learning", "Chatbots (LLMs)", "Generative AI", "RAG", "LangChain", "OpenAI API", "Hugging Face", "AI Agents", "Vector Databases", "Fine-tuning Models"],
+        "Data & Analytics": ["Data Engineering", "Big Data (Hadoop/Spark)", "Power BI", "Tableau", "SQL", "ETL Pipelines", "Snowflake", "Data Warehousing", "Apache Kafka", "Databricks", "dbt", "Looker", "Metabase", "Data Lakehouse", "Real-time Analytics"],
+        "Cloud Computing": ["AWS", "Google Cloud (GCP)", "Azure", "Docker", "Kubernetes", "Terraform", "Serverless", "Lambda", "Microservices", "CI/CD", "OpenStack", "Vercel", "Netlify"],
+        "ERP & CRM": ["Salesforce", "SAP", "Oracle ERP", "Zoho CRM", "HubSpot", "Odoo", "Microsoft Dynamics 365", "NetSuite", "Freshsales", "Pipedrive", "Custom CRM"],
+        "DevOps & QA": ["Jenkins", "GitLab CI", "GitHub Actions", "Ansible", "Chef", "Puppet", "Prometheus", "Grafana", "Linux Admin", "Selenium", "Cypress", "Playwright", "Appium", "Performance Testing", "Manual Testing", "ArgoCD"],
+        "Cyber Security": ["Penetration Testing", "Network Security", "Application Security", "Ethical Hacking", "Cryptography", "Security Auditing", "Incident Response", "Firewall Configuration", "SIEM", "SOC Analyst", "Vulnerability Assessment"],
+        "Blockchain": ["Smart Contracts", "Solidity", "Ethereum", "Web3.js", "DeFi", "NFTs", "Hyperledger", "Crypto Wallet Dev", "Rust (Solana)", "Move (Sui/Aptos)"],
+        "Game Development": ["Unity 3D", "Unreal Engine", "Godot", "C#", "C++", "2D Game Design", "3D Modeling", "AR/VR Development", "Blender", "WebGL", "PlayCanvas"],
+        "Embedded & IoT": ["Arduino", "Raspberry Pi", "Firmware Development", "IoT Sensors", "C/C++ Embedded", "RTOS", "PCB Design", "Edge Computing", "Smart Home"]
     };
 
     const categories = Object.keys(SUB_CATEGORIES_MAP);
@@ -663,26 +738,24 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <button
                                     onClick={() => updateFormData({ projectType: "fixed_price" })}
-                                    className={`p-4 rounded-xl border text-left transition-all duration-200 ${
-                                        formData.projectType === "fixed_price"
-                                            ? isOnline
-                                                ? "bg-brand-green/10 border-brand-green text-white"
-                                                : "bg-red-500/10 border-red-500/50 text-red-200"
-                                            : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300"
-                                    }`}
+                                    className={`p-4 rounded-xl border text-left transition-all duration-200 ${formData.projectType === "fixed_price"
+                                        ? isOnline
+                                            ? "bg-brand-green/10 border-brand-green text-white"
+                                            : "bg-red-500/10 border-red-500/50 text-red-200"
+                                        : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300"
+                                        }`}
                                 >
                                     <div className="font-bold text-sm mb-1">Fixed Price</div>
                                     <div className="text-xs opacity-80">One agreed price for the entire project scope</div>
                                 </button>
                                 <button
                                     onClick={() => updateFormData({ projectType: "hourly" })}
-                                    className={`p-4 rounded-xl border text-left transition-all duration-200 ${
-                                        formData.projectType === "hourly"
-                                            ? isOnline
-                                                ? "bg-brand-green/10 border-brand-green text-white"
-                                                : "bg-red-500/10 border-red-500/50 text-red-200"
-                                            : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300"
-                                    }`}
+                                    className={`p-4 rounded-xl border text-left transition-all duration-200 ${formData.projectType === "hourly"
+                                        ? isOnline
+                                            ? "bg-brand-green/10 border-brand-green text-white"
+                                            : "bg-red-500/10 border-red-500/50 text-red-200"
+                                        : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300"
+                                        }`}
                                 >
                                     <div className="font-bold text-sm mb-1">Hourly Rate</div>
                                     <div className="text-xs opacity-80">Pay per hour worked (minimum 5-6 hours)</div>
@@ -692,7 +765,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
 
 
-                       
+
 
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                             <div className="space-y-3">
@@ -704,7 +777,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                         value={formData.deliveryTime}
                                         onChange={e => updateFormData({ deliveryTime: e.target.value })}
                                     />
-                                    
+
                                 </div>
                             </div>
                             <div className="space-y-3">
@@ -889,65 +962,139 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
 
 
-                         {/* Project Links Section */}
+                        {/* Project Links Section */}
                         <div className="space-y-4">
                             <label className="text-base font-semibold text-zinc-300">Project Links</label>
                             <p className="text-xs text-zinc-500 -mt-2">Share relevant project resources and references</p>
-                            
+
                             <div className="space-y-4">
-                                <div className="space-y-2">
+                                {/* GitHub Repository */}
+                                <div className="space-y-1.5">
                                     <label className="text-sm font-medium text-zinc-400">GitHub Repository</label>
                                     <input
                                         type="url"
-                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${linkWarnings.github
+                                            ? 'border-amber-500/50 bg-zinc-900/50 text-white focus:border-amber-500 focus:ring-amber-500/20'
+                                            : isOnline
+                                                ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
+                                                : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'
+                                            }`}
                                         placeholder="https://github.com/username/repository"
                                         value={formData.projectLinks.github}
-                                        onChange={e => updateFormData({ projectLinks: { ...formData.projectLinks, github: e.target.value } })}
+                                        onChange={e => updateProjectLink('github', e.target.value)}
                                     />
+                                    {linkWarnings.github && (
+                                        <p className="text-xs text-amber-500 flex items-center gap-1">
+                                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                            {linkWarnings.github}
+                                        </p>
+                                    )}
                                 </div>
-                                <div className="space-y-2">
+
+                                {/* Figma Design */}
+                                <div className="space-y-1.5">
                                     <label className="text-sm font-medium text-zinc-400">Figma Design</label>
                                     <input
                                         type="url"
-                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${linkWarnings.figma
+                                            ? 'border-amber-500/50 bg-zinc-900/50 text-white focus:border-amber-500 focus:ring-amber-500/20'
+                                            : isOnline
+                                                ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
+                                                : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'
+                                            }`}
                                         placeholder="https://figma.com/file/..."
                                         value={formData.projectLinks.figma}
-                                        onChange={e => updateFormData({ projectLinks: { ...formData.projectLinks, figma: e.target.value } })}
+                                        onChange={e => updateProjectLink('figma', e.target.value)}
                                     />
+                                    {linkWarnings.figma && (
+                                        <p className="text-xs text-amber-500 flex items-center gap-1">
+                                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                            {linkWarnings.figma}
+                                        </p>
+                                    )}
                                 </div>
-                                <div className="space-y-2">
+
+                                {/* Live Website/Demo */}
+                                <div className="space-y-1.5">
                                     <label className="text-sm font-medium text-zinc-400">Live Website/Demo</label>
                                     <input
                                         type="url"
-                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${linkWarnings.website
+                                            ? 'border-amber-500/50 bg-zinc-900/50 text-white focus:border-amber-500 focus:ring-amber-500/20'
+                                            : isOnline
+                                                ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
+                                                : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'
+                                            }`}
                                         placeholder="https://yourproject.com"
                                         value={formData.projectLinks.website}
-                                        onChange={e => updateFormData({ projectLinks: { ...formData.projectLinks, website: e.target.value } })}
+                                        onChange={e => updateProjectLink('website', e.target.value)}
                                     />
+                                    {linkWarnings.website && (
+                                        <p className="text-xs text-amber-500 flex items-center gap-1">
+                                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                            {linkWarnings.website}
+                                        </p>
+                                    )}
                                 </div>
-                                <div className="space-y-2">
+
+                                {/* Documentation/Requirements */}
+                                <div className="space-y-1.5">
                                     <label className="text-sm font-medium text-zinc-400">Documentation/Requirements</label>
                                     <input
                                         type="url"
-                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${linkWarnings.documentation
+                                            ? 'border-amber-500/50 bg-zinc-900/50 text-white focus:border-amber-500 focus:ring-amber-500/20'
+                                            : isOnline
+                                                ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
+                                                : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'
+                                            }`}
                                         placeholder="https://docs.google.com/... or Notion link"
                                         value={formData.projectLinks.documentation}
-                                        onChange={e => updateFormData({ projectLinks: { ...formData.projectLinks, documentation: e.target.value } })}
+                                        onChange={e => updateProjectLink('documentation', e.target.value)}
                                     />
+                                    {linkWarnings.documentation && (
+                                        <p className="text-xs text-amber-500 flex items-center gap-1">
+                                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                            {linkWarnings.documentation}
+                                        </p>
+                                    )}
                                 </div>
-                                <div className="space-y-2">
+
+                                {/* Other Resources */}
+                                <div className="space-y-1.5">
                                     <label className="text-sm font-medium text-zinc-400">Other Resources</label>
                                     <input
                                         type="url"
-                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                        className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${linkWarnings.other
+                                            ? 'border-amber-500/50 bg-zinc-900/50 text-white focus:border-amber-500 focus:ring-amber-500/20'
+                                            : isOnline
+                                                ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
+                                                : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'
+                                            }`}
                                         placeholder="Any other relevant links"
                                         value={formData.projectLinks.other}
-                                        onChange={e => updateFormData({ projectLinks: { ...formData.projectLinks, other: e.target.value } })}
+                                        onChange={e => updateProjectLink('other', e.target.value)}
                                     />
+                                    {linkWarnings.other && (
+                                        <p className="text-xs text-amber-500 flex items-center gap-1">
+                                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                            {linkWarnings.other}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
-                          {/* Additional Notes Section */}
+                        {/* Additional Notes Section */}
                         <div className="space-y-4 pt-4 border-t border-zinc-800">
                             <div>
                                 <h3 className="text-base font-semibold text-zinc-300">Additional Notes</h3>
@@ -971,7 +1118,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                 </div>
 
                 <div className="mt-12 flex flex-col items-center gap-4 pb-12">
-                     <button
+                    <button
                         onClick={handleSaveDraft}
                         disabled={isSaving || isSubmitting}
                         className={`w-full max-w-md rounded-xl py-4 font-bold transition-all active:scale-[0.98] ${isOnline
@@ -1088,7 +1235,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 <CheckCircle className="h-5 w-5" />
                             </div>
                             <p className="font-medium text-white">{toastMessage}</p>
-                            <button 
+                            <button
                                 onClick={() => setToastMessage("")}
                                 className="ml-2 text-zinc-500 hover:text-white"
                             >

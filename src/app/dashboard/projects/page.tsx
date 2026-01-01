@@ -388,7 +388,10 @@ export default function ProjectDashboard() {
                                             </div>
 
                                             {/* Options List */}
-                                            <div className="max-h-64 overflow-y-auto py-1">
+                                            <div
+                                                className="max-h-64 dropdown-scroll py-1"
+                                                onWheel={(e) => e.stopPropagation()}
+                                            >
                                                 {/* All Users Option */}
                                                 <button
                                                     onClick={() => {
@@ -601,17 +604,9 @@ export default function ProjectDashboard() {
 
                                             {/* Footer with result count */}
                                             <div className="px-4 py-3 border-t border-[#333] bg-[#18181b]">
-                                                <div className="flex items-center justify-between">
-                                                    <span className="text-[11px] text-[#71717a]">
-                                                        Showing <span className="text-white font-medium">{filteredProjects.length}</span> of {displayProjects.length} projects
-                                                    </span>
-                                                    <button
-                                                        onClick={() => setFilterDropdownOpen(false)}
-                                                        className="text-xs text-brand-green hover:text-brand-green/80 font-medium transition-colors"
-                                                    >
-                                                        Done
-                                                    </button>
-                                                </div>
+                                                <span className="text-[11px] text-[#71717a]">
+                                                    Showing <span className="text-white font-medium">{filteredProjects.length}</span> of {displayProjects.length} projects
+                                                </span>
                                             </div>
                                         </div>
                                     )}
