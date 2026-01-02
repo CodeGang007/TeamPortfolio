@@ -18,6 +18,8 @@ import {
   DocumentData
 } from "firebase/firestore";
 
+import { useSearchParams } from "next/navigation";
+
 
 export function TeamSection() {
   const { isAuthenticated, triggerAuth, role } = useAuth();
@@ -32,7 +34,7 @@ export function TeamSection() {
   const toggleMemberStatus = async (memberId: string, currentStatus: boolean) => {
     try {
       await developerService.updateDeveloper(memberId, { active: !currentStatus });
-      setMembers(prev => prev.map(member => 
+      setMembers(prev => prev.map(member =>
         member.id === memberId ? { ...member, active: !currentStatus } : member
       ));
     } catch (error) {
@@ -98,24 +100,27 @@ export function TeamSection() {
           active: data.active !== false
         } as TeamMember;
       });
-      
+
       // Filter out inactive members for non-admin users
-      const visibleMembers = isOnline && role === 'admin' 
-        ? fetchedMembers 
+      const visibleMembers = isOnline && role === 'admin'
+        ? fetchedMembers
         : fetchedMembers.filter((member: TeamMember) => member.active);
-      
+
       setMembers(visibleMembers);
       setDebugLog(""); // Clear errors if successful
     }
     setLoading(false);
   };
 
+  const searchParams = useSearchParams();
+  const [highlightedId, setHighlightedId] = useState<string | null>(null);
+
   useEffect(() => {
     let isMounted = true;
-    
+
     const loadTeam = async () => {
       if (!isMounted) return;
-      
+
       setLoading(true);
       try {
         const teamCollection = collection(db, "team");
@@ -126,7 +131,7 @@ export function TeamSection() {
           const snapshot = await getDocs(q);
           if (isMounted) handleSnapshot(snapshot);
         } catch (idxError) {
-          // If Index fails, fallback to basic se
+          // If Index fails, fallback to basic fetch
           console.warn("Index query failed, falling back to basic fetch:", idxError);
           const snapshot = await getDocs(teamCollection);
           if (isMounted) handleSnapshot(snapshot);
@@ -140,20 +145,37 @@ export function TeamSection() {
         }
       }
     };
-    
+
     loadTeam();
-    
+
     return () => {
       isMounted = false;
     };
   }, []);
 
+  // Handle Scroll to Member from URL
+  useEffect(() => {
+    const memberId = searchParams.get("id");
+    if (memberId && !loading && members.length > 0) {
+      // Find member by ID
+      const targetElement = document.getElementById(`member-${memberId}`);
+      if (targetElement) {
+        setTimeout(() => {
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setHighlightedId(memberId);
+          // Remove highlight after animation
+          setTimeout(() => setHighlightedId(null), 3000);
+        }, 500); // Slight delay for render/animation
+      }
+    }
+  }, [searchParams, loading, members]);
+
 
   const filteredMembers = activeCategory === "All"
     ? members
     : members.filter((member) =>
-        member.role.toLowerCase().includes(activeCategory.toLowerCase())
-      );
+      member.role.toLowerCase().includes(activeCategory.toLowerCase())
+    );
 
   const handleInteraction = (action: () => void) => {
     if (!isOnline) {
@@ -187,31 +209,30 @@ export function TeamSection() {
               {filteredMembers.map((member, index) => (
                 <motion.div
                   key={member.id || index}
+                  id={`member-${member.id}`}
                   layout
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="relative group"
+                  className={`relative group rounded-xl transition-all duration-500 ${highlightedId === member.id ? 'ring-2 ring-brand-green ring-offset-4 ring-offset-black scale-105 z-10' : ''}`}
                 >
                   <TeamMemberCard member={member} isOnline={isOnline} />
-                  
+
                   {/* Admin Controls */}
                   {isOnline && role === 'admin' && (
                     <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                       <button
                         onClick={() => toggleMemberStatus(member.id!, member.active)}
-                        className={`p-2 rounded-lg backdrop-blur-md transition-all shadow-lg ${
-                          member.active 
-                            ? 'bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 hover:bg-yellow-500 hover:text-white'
-                            : 'bg-green-500/10 border border-green-500/20 text-green-400 hover:bg-green-500 hover:text-white'
-                        }`}
+                        className={`p-2 rounded-lg backdrop-blur-md transition-all shadow-lg ${member.active
+                          ? 'bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 hover:bg-yellow-500 hover:text-white'
+                          : 'bg-green-500/10 border border-green-500/20 text-green-400 hover:bg-green-500 hover:text-white'
+                          }`}
                         title={member.active ? 'Deactivate' : 'Activate'}
                       >
-                        <div className={`w-4 h-4 rounded-full border-2 transition-colors ${
-                          member.active ? 'bg-yellow-400 border-yellow-400' : 'border-current'
-                        }`} />
+                        <div className={`w-4 h-4 rounded-full border-2 transition-colors ${member.active ? 'bg-yellow-400 border-yellow-400' : 'border-current'
+                          }`} />
                       </button>
-                      
+
                       <button
                         onClick={() => deleteMember(member.id!)}
                         className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500 hover:text-white backdrop-blur-md transition-all shadow-lg"
@@ -223,7 +244,7 @@ export function TeamSection() {
                       </button>
                     </div>
                   )}
-                  
+
                   {/* Inactive Overlay for Admin */}
                   {!member.active && isOnline && role === 'admin' && (
                     <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center backdrop-blur-sm">

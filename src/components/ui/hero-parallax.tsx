@@ -39,52 +39,29 @@ export const HeroParallax = ({
     const springConfig = { stiffness: 100, damping: 30, mass: 1 };
 
     const translateX = useSpring(
-        useTransform(scrollYProgress, [0, 1], [0, 1500]),
+        useTransform(scrollYProgress, [0, 1], [0, 1000]),
         springConfig
     );
     const translateXReverse = useSpring(
-        useTransform(scrollYProgress, [0, 1], [0, -1500]),
+        useTransform(scrollYProgress, [0, 1], [0, -1000]),
         springConfig
     );
-    const rotateX = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [15, 0]),
-        springConfig
-    );
-    const opacity = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [0.2, 1]),
-        springConfig
-    );
-    const rotateZ = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [20, 0]),
-        springConfig
-    );
-    const translateY = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [-1100, 0]),
-        springConfig
-    );
+
     return (
         <div
             ref={ref}
-            className="h-[600vh] py-10 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+            className="h-[400vh] py-10 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
         >
-            <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full left-0 top-0">
+            <div className="max-w-7xl relative mx-auto py-20 px-4 w-full left-0 top-0">
                 {header}
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 w-full mb-20 z-20 relative">
+            <div className="max-w-7xl mx-auto px-4 w-full mb-10 z-20 relative">
                 {projectHeader}
             </div>
 
-            <motion.div
-                style={{
-                    rotateX,
-                    rotateZ,
-                    translateY,
-                    opacity,
-                }}
-                className=""
-            >
-                <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
+            <motion.div className="">
+                <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-32">
                     {firstRow.map((product, idx) => (
                         <ProductCard
                             product={product}
@@ -93,7 +70,7 @@ export const HeroParallax = ({
                         />
                     ))}
                 </motion.div>
-                <motion.div className="flex flex-row mb-20 space-x-20 ">
+                <motion.div className="flex flex-row mb-32 space-x-20 ">
                     {secondRow.map((product, idx) => (
                         <ProductCard
                             product={product}
@@ -172,7 +149,7 @@ export const ProductCard = ({
                     <CardItem
                         translateZ="50"
                         as="h3"
-                        className={`text-xl font-bold mt-6 mb-2 transition-colors duration-500 line-clamp-1 ${isOnline ? 'text-white' : 'text-red-100'
+                        className={`text-xl font-bold mt-8 mb-2 transition-colors duration-500 line-clamp-1 ${isOnline ? 'text-white' : 'text-red-100'
                             }`}
                     >
                         {product.title}
@@ -182,7 +159,7 @@ export const ProductCard = ({
                     <CardItem
                         translateZ="60"
                         as="p"
-                        className={`text-sm mb-4 line-clamp-2 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'
+                        className={`text-sm mb-6 line-clamp-2 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'
                             }`}
                     >
                         {product.description}
@@ -191,12 +168,12 @@ export const ProductCard = ({
                     {/* Tags - Depth 40 */}
                     <CardItem
                         translateZ="40"
-                        className="flex flex-wrap gap-2 mt-2"
+                        className="flex flex-wrap gap-2 mt-auto"
                     >
                         {product.tags.slice(0, 3).map((tag) => (
                             <span
                                 key={tag}
-                                className={`text-xs px-2 py-1 rounded-full font-medium transition-all duration-500 ${isOnline
+                                className={`text-xs px-3 py-1 rounded-full font-medium transition-all duration-500 ${isOnline
                                     ? 'bg-brand-green/10 text-brand-green border border-brand-green/20'
                                     : 'bg-red-500/10 text-red-400 border border-red-500/20'
                                     }`}
@@ -207,7 +184,7 @@ export const ProductCard = ({
                     </CardItem>
 
                     {/* Links - Button Depth 20 - Wrapped in div for layout, items FLOAT */}
-                    <div className="flex gap-3 mt-auto pt-4">
+                    <div className="flex gap-4 mt-8 pt-6 border-t border-zinc-800/50">
                         {product.link && (
                             <CardItem
                                 translateZ="20"

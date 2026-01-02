@@ -38,9 +38,10 @@ interface PhoneInputProps {
     onChange: (value: string) => void;
     placeholder?: string;
     className?: string;
+    disabled?: boolean;
 }
 
-export default function PhoneInput({ value, onChange, placeholder = "Enter phone number", className }: PhoneInputProps) {
+export default function PhoneInput({ value, onChange, placeholder = "Enter phone number", className, disabled }: PhoneInputProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCountry, setSelectedCountry] = useState(countries[0]); // Default to India
@@ -73,7 +74,7 @@ export default function PhoneInput({ value, onChange, placeholder = "Enter phone
                 setSelectedCountry(matchingCountry);
             }
         }
-    }, []);
+    }, [value]);
 
     const filteredCountries = countries.filter(
         (country) =>
@@ -83,15 +84,16 @@ export default function PhoneInput({ value, onChange, placeholder = "Enter phone
     );
 
     const handleCountrySelect = (country: typeof countries[0]) => {
+        if (disabled) return; // Prevent selection if disabled
         setSelectedCountry(country);
         setIsOpen(false);
         setSearchQuery("");
-        // Update the full value with new country code
         onChange(`${country.dialCode} ${phoneNumber}`);
         inputRef.current?.focus();
     };
 
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (disabled) return;
         const input = e.target.value.replace(/[^\d]/g, ""); // Only digits
         if (input.length <= 10) {
             onChange(`${selectedCountry.dialCode} ${input}`);
@@ -99,13 +101,14 @@ export default function PhoneInput({ value, onChange, placeholder = "Enter phone
     };
 
     return (
-        <div className={`relative ${className}`} ref={dropdownRef}>
+        <div className={`relative ${className} ${disabled ? "opacity-50 pointer-events-none" : ""}`} ref={dropdownRef}>
             <div className="flex rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden focus-within:border-brand-green focus-within:ring-1 focus-within:ring-brand-green/20 transition-all">
                 {/* Country Selector */}
                 <button
                     type="button"
-                    onClick={() => setIsOpen(!isOpen)}
-                    className="flex items-center gap-1.5 px-3 py-3 bg-zinc-900/50 border-r border-zinc-800 hover:bg-zinc-800/50 transition-colors min-w-[90px]"
+                    onClick={() => !disabled && setIsOpen(!isOpen)}
+                    className="flex items-center gap-1.5 px-3 py-3 bg-zinc-900/50 border-r border-zinc-800 hover:bg-zinc-800/50 transition-colors min-w-[90px] disabled:cursor-not-allowed"
+                    disabled={disabled}
                 >
                     <span className="text-xl">{selectedCountry.flag}</span>
                     <span className="text-sm font-medium text-zinc-300">{selectedCountry.dialCode}</span>
@@ -120,7 +123,8 @@ export default function PhoneInput({ value, onChange, placeholder = "Enter phone
                     onChange={handlePhoneChange}
                     placeholder={placeholder}
                     maxLength={10}
-                    className="flex-1 bg-transparent px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none"
+                    disabled={disabled}
+                    className="flex-1 bg-transparent px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none disabled:cursor-not-allowed"
                 />
             </div>
 
