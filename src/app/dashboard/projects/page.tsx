@@ -394,7 +394,10 @@ export default function ProjectDashboard() {
                                             </div>
 
                                             {/* Options List */}
-                                            <div className="max-h-64 overflow-y-auto py-1">
+                                            <div
+                                                className="max-h-64 dropdown-scroll py-1"
+                                                onWheel={(e) => e.stopPropagation()}
+                                            >
                                                 {/* All Users Option */}
                                                 <button
                                                     onClick={() => {
