@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, User, Folder, MoreVertical, Pencil, BarChart3, Trash2, Clock } from "lucide-react";
+import { motion } from "framer-motion";
+import { User, Folder, Clock } from "lucide-react";
 import Image from "next/image";
 
 export type ProjectStatus = "active" | "completed" | "on-hold" | "pending" | "pending-closure" | "closed";
@@ -133,25 +132,9 @@ export default function DashboardProjectCard({
     startDate,
     dueDate,
     currentMilestone,
-    onEdit,
-    onDelete,
-    onViewStats,
 }: DashboardProjectCardProps) {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null);
     const statusStyle = statusConfig[status];
     const isActive = status === "active";
-
-    // Close menu when clicking outside
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setMenuOpen(false);
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
 
     // Generate pattern and colors based on project title
     const hash = hashString(title);
@@ -216,66 +199,7 @@ export default function DashboardProjectCard({
                     )}
                 </div>
 
-                {/* Kebab Menu - Top Right */}
-                <div className="absolute top-3 right-3 z-10" ref={menuRef}>
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setMenuOpen(!menuOpen);
-                        }}
-                        className="p-1.5 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-white/70 hover:text-white hover:bg-black/60 transition-all duration-200 opacity-0 group-hover:opacity-100"
-                    >
-                        <MoreVertical className="h-4 w-4" />
-                    </button>
 
-                    {/* Dropdown Menu */}
-                    <AnimatePresence>
-                        {menuOpen && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.95, y: -4 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.95, y: -4 }}
-                                transition={{ duration: 0.15 }}
-                                className="absolute right-0 top-full mt-1 w-36 bg-[#1c1c1e] border border-[#333] rounded-lg shadow-xl overflow-hidden"
-                            >
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onEdit?.(id);
-                                        setMenuOpen(false);
-                                    }}
-                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#e5e5e5] hover:bg-white/10 transition-colors"
-                                >
-                                    <Pencil className="h-3.5 w-3.5" />
-                                    Edit
-                                </button>
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onViewStats?.(id);
-                                        setMenuOpen(false);
-                                    }}
-                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#e5e5e5] hover:bg-white/10 transition-colors"
-                                >
-                                    <BarChart3 className="h-3.5 w-3.5" />
-                                    View Stats
-                                </button>
-                                <div className="border-t border-[#333]" />
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onDelete?.(id);
-                                        setMenuOpen(false);
-                                    }}
-                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
-                                >
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                    Delete
-                                </button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
 
                 {/* Content Area - Fixed height for consistency */}
                 <div className="p-4 flex flex-col h-[180px]">
