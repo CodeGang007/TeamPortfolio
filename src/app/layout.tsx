@@ -25,6 +25,7 @@ export default function RootLayout({
           <SmoothScroll />
           <AnimatedBackground />
           {children}
+
           <ModalWrapper />
           <AuthToast />
           <FooterWrapper />

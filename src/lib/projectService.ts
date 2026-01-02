@@ -40,6 +40,14 @@ export interface ProjectRequest {
   priority: string;
   isDraft: boolean;
   draftSavedAt?: string;
+  workflowStatus?: {
+    initiatedAt: string;
+    collectedAt: string;
+    inProgressAt: string;
+    inTransactionAt: string;
+    completedAt: string;
+  };
+  // Legacy fields for backward compatibility
   initiatedAt?: string;
   collectedAt?: string | null;
   inProgressAt?: string | null;
@@ -47,8 +55,8 @@ export interface ProjectRequest {
   completedAt?: string | null;
   assignedTo: string[] | null;
   userId: string;
-  userName?: string; // Added
-  userEmail?: string; // Added
+  userName?: string;
+  userEmail?: string;
   imageUrls: string[];
   attachmentUrls: Array<{
     name: string;
@@ -137,11 +145,13 @@ export const projectRequestService = {
     const projectId = await this.createProject({
       ...projectData,
       isDraft: false,
-      initiatedAt: new Date().toISOString(),
-      collectedAt: null,
-      inProgressAt: null,
-      inTransactionAt: null,
-      completedAt: null,
+      workflowStatus: {
+        initiatedAt: new Date().toISOString(),
+        collectedAt: "",
+        inProgressAt: "",
+        inTransactionAt: "",
+        completedAt: ""
+      },
       assignedTo: null,
       priority: "medium",
       // Hardcoded images and attachments for now
@@ -236,17 +246,24 @@ export const projectRequestService = {
       const response = await fetch(url);
       
       if (!response.ok) {
+        console.error('Response not OK:', response.status, response.statusText);
         throw new Error('Failed to fetch project requests');
       }
 
       const data = await response.json();
+      console.log('Raw Firebase data:', data);
       
-      if (!data) return [];
+      if (!data) {
+        console.log('No data found in Firebase');
+        return [];
+      }
 
-      return Object.entries(data).map(([id, project]) => ({
+      const projects = Object.entries(data).map(([id, project]) => ({
         id,
         ...(project as Omit<ProjectRequest, 'id'>)
       }));
+      console.log('Processed projects:', projects);
+      return projects;
     } catch (error) {
       console.error('Error fetching project requests:', error);
       throw error;
@@ -259,7 +276,11 @@ export const projectRequestService = {
         // Note: For efficient filtering in real apps, use Firebase queries. 
         // Here we fetch all and filter client-side for simplicity with REST API.
         const allProjects = await this.getAllProjects();
-        return allProjects.filter(p => p.userId === userId);
+        console.log('Filtering projects for userId:', userId);
+        console.log('All projects userIds:', allProjects.map(p => ({ id: p.id, userId: p.userId })));
+        const filtered = allProjects.filter(p => p.userId === userId);
+        console.log('Filtered projects:', filtered);
+        return filtered;
     } catch (error) {
         console.error('Error fetching user projects:', error);
         throw error;

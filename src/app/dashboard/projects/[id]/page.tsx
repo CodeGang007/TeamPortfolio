@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { projectRequestService, TeamMember as ServiceTeamMember } from "@/lib/projectService";
+import { developerService } from "@/lib/developerService";
 import { emailService } from "../../../../lib/emailService";
 import { FeedbackEditor } from "@/components/FeedbackEditor";
 // Types
@@ -52,6 +53,8 @@ interface TeamMember {
     role: string;
     color: string;
     email?: string;
+    imageUrl?: string;
+    projectUrl?: string;
 }
 
 interface ProjectDetail {
@@ -335,12 +338,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             teamSize: progressData.teamSize || (projectRequest.assignedTo?.length || 0)
                         },
                         // Map assigned developers to local TeamMember format
-                        teamMembers: (progressData.assignedDevelopers || []).map(d => ({
-                            id: d.uid,
-                            name: d.name,
-                            role: d.role,
-                            email: d.email,
-                            color: "from-violet-500 to-purple-600"
+                        teamMembers: await Promise.all((progressData.assignedDevelopers || []).map(async (d) => {
+                            const devProfile = await developerService.getDeveloperById(d.uid);
+                            return {
+                                id: d.uid,
+                                name: devProfile?.name || d.name,
+                                role: devProfile?.role || d.role,
+                                email: d.email,
+                                color: "from-violet-500 to-purple-600",
+                                imageUrl: devProfile?.imageUrl,
+                                projectUrl: devProfile?.projectUrl
+                            };
                         }))
                     });
                 } else {
@@ -698,9 +706,20 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                 <div className="flex items-center gap-3">
                                     <div className="flex -space-x-1.5">
                                         {project.teamMembers.map((m) => (
-                                            <div key={m.id} className={`w-6 h-6 rounded-full bg-gradient-to-br ${m.color} border-2 border-[#18181b] flex items-center justify-center text-[8px] font-bold text-white shadow-sm`}>
-                                                {m.name.charAt(0)}
-                                            </div>
+                                            <Link
+                                                href={`/team?id=${m.id}`}
+                                                key={m.id}
+                                                className="block transition-transform hover:scale-110 hover:z-10 relative"
+                                                title={`View ${m.name}'s Profile`}
+                                            >
+                                                <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${m.color} border-2 border-[#18181b] flex items-center justify-center text-[8px] font-bold text-white shadow-sm overflow-hidden`}>
+                                                    {m.imageUrl ? (
+                                                        <img src={m.imageUrl} alt={m.name} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        m.name.charAt(0)
+                                                    )}
+                                                </div>
+                                            </Link>
                                         ))}
                                     </div>
                                     <span className="text-[11px] text-[#52525b]">{project.stats.teamSize} contributors</span>
@@ -1172,13 +1191,27 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     <div className="flex -space-x-2">
                                         {project.teamMembers.map((m) => (
                                             <div key={m.id} className="relative group/avatar">
-                                                <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${m.color} border-2 border-[#18181b] flex items-center justify-center text-xs font-bold text-white`} title={m.name}>
-                                                    {m.name.charAt(0)}
-                                                </div>
+                                                <Link
+                                                    href={`/team?id=${m.id}`}
+                                                    title={`${m.name} - ${m.role}`}
+                                                    className="block relative transition-transform hover:scale-110 hover:z-10"
+                                                >
+                                                    <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${m.color} border-2 border-[#18181b] flex items-center justify-center text-xs font-bold text-white overflow-hidden`}>
+                                                        {m.imageUrl ? (
+                                                            <img src={m.imageUrl} alt={m.name} className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            m.name.charAt(0)
+                                                        )}
+                                                    </div>
+                                                </Link>
                                                 {isEditing && (
                                                     <button
-                                                        onClick={() => handleRemoveDeveloper(m.id)}
-                                                        className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover/avatar:opacity-100 transition-opacity"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            handleRemoveDeveloper(m.id);
+                                                        }}
+                                                        className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover/avatar:opacity-100 transition-opacity z-20"
                                                     >
                                                         <X className="h-2 w-2" />
                                                     </button>
@@ -1188,9 +1221,19 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     </div>
                                     <div>
                                         <p className="text-sm font-medium text-white">Project Team</p>
-                                        <p className="text-[10px] text-[#52525b]">
-                                            {project.teamMembers.length > 0 ? project.teamMembers.map(m => m.name.split(' ')[0]).join(', ') : "No members yet"}
-                                        </p>
+                                        <div className="flex flex-col gap-0.5 mt-0.5">
+                                            {project.teamMembers.length > 0 ? (
+                                                project.teamMembers.map(m => (
+                                                    <p key={m.id} className="text-[10px] text-[#71717a]">
+                                                        <span className="text-zinc-400">{m.name}</span>
+                                                        <span className="mx-1.5 opacity-50">|</span>
+                                                        <span className="text-brand-green/70">{m.role}</span>
+                                                    </p>
+                                                ))
+                                            ) : (
+                                                <p className="text-[10px] text-[#52525b]">No members assigned</p>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

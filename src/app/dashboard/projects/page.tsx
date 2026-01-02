@@ -28,8 +28,13 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import DashboardProjectCard, { ProjectStatus } from "@/components/DashboardProjectCard";
-import { projectRequestService, ProjectRequest as BaseProjectRequest } from "@/lib/projectService";
+import DashboardProjectCard, {
+    ProjectStatus,
+} from "@/components/DashboardProjectCard";
+import {
+    projectRequestService,
+    ProjectRequest as BaseProjectRequest,
+} from "@/lib/projectService";
 
 interface ProjectRequest extends BaseProjectRequest {
     dynamicStatus?: string;
@@ -110,6 +115,7 @@ export default function ProjectDashboard() {
                     return dateB - dateA;
                 });
                 setProjects(sorted);
+                console.log('Fetched projects:', sorted);
 
                 // If Admin, fetch user details for these projects
                 if (role === 'admin' && fetchedProjects.length > 0) {
@@ -149,6 +155,35 @@ export default function ProjectDashboard() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    if (!loading && !isAuthenticated) {
+        router.push("/");
+        return null;
+    }
+
+    if (loading || isLoadingData) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-[#121212]">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-green border-t-transparent" />
+                    <p className="text-zinc-500 text-sm">Loading your projects...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Filter Logic
+    const draftProjects = projects.filter((p) => p.isDraft);
+    const publishedProjects = projects.filter((p) => !p.isDraft);
+    const displayProjects = activeTab === "all" ? publishedProjects : draftProjects;
+
+    // Get unique authors for filter dropdown
+    const authors = Array.from(new Set(displayProjects.map((p) => p.userId))).map(
+        (uid) => ({
+            id: uid,
+            name: userMap[uid]?.name || "Unknown User",
+        })
+    );
+
     // Filter authors based on search query
     const getFilteredAuthors = () => {
         const allAuthors = Array.from(new Set(displayProjects.map(p => p.userId))).map(uid => ({
@@ -171,28 +206,6 @@ export default function ProjectDashboard() {
         if (selectedUserFilter === "all") return "All Users";
         return userMap[selectedUserFilter]?.name || "Unknown User";
     };
-
-    if (!loading && !isAuthenticated) {
-        router.push("/");
-        return null;
-    }
-
-    if (loading || isLoadingData) {
-        return (
-            <div className="flex min-h-screen items-center justify-center bg-[#121212]">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-green border-t-transparent" />
-                    <p className="text-zinc-500 text-sm">Loading your projects...</p>
-                </div>
-            </div>
-        );
-    }
-
-    // Filter Logic
-    const draftProjects = projects.filter(p => p.isDraft);
-    const publishedProjects = projects.filter(p => !p.isDraft);
-
-    const displayProjects = activeTab === "all" ? publishedProjects : draftProjects;
 
     // Helper to get project date for filtering/sorting
     const getProjectDate = (p: ProjectRequest): Date => {
@@ -240,16 +253,11 @@ export default function ProjectDashboard() {
             return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
         });
 
-    // Get unique authors for filter dropdown
-    const authors = Array.from(new Set(displayProjects.map(p => p.userId))).map(uid => ({
-        id: uid,
-        name: userMap[uid]?.name || "Unknown User"
-    }));
-
     // Get count of active filters (only count non-default values)
     const getActiveFilterCount = () => {
         let count = 0;
-        if (sortOrder === "oldest") count++; // Only count if explicitly set to oldest
+        // Only count oldest as a filter since newest is the default
+        if (sortOrder === "oldest") count++;
         // Count date range as ONE filter (not separate start/end)
         if (dateRangeStart || dateRangeEnd) count++;
         return count;
@@ -296,16 +304,17 @@ export default function ProjectDashboard() {
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            {/* Mobile hide create button text if needed */}
-                            <Button
-                                onClick={() => router.push("/project-request/new")} // Default to generic new
-                                className="bg-gradient-to-b from-brand-green to-brand-green-dim hover:from-brand-green/90 hover:to-brand-green-dim/90 text-black font-bold text-sm px-4 shadow-lg shadow-brand-green/25 border border-brand-green/20"
-                            >
-                                <Plus className="h-4 w-4 md:mr-1.5" />
-                                <span className="hidden md:inline">New Project</span>
-                            </Button>
-                        </div>
+                        {role !== 'admin' && (
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    onClick={() => router.push("/project-request/new")}
+                                    className="bg-gradient-to-b from-brand-green to-brand-green-dim hover:from-brand-green/90 hover:to-brand-green-dim/90 text-black font-bold text-sm px-4 shadow-lg shadow-brand-green/25 border border-brand-green/20"
+                                >
+                                    <Plus className="h-4 w-4 md:mr-1.5" />
+                                    <span className="hidden md:inline">New Project</span>
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </header>
@@ -342,280 +351,227 @@ export default function ProjectDashboard() {
                         {/* Search - Aligned to right */}
                         <div className="flex items-center gap-3 pb-2 md:pb-0 ml-auto">
                             {role === 'admin' && (
-                                <div className="relative" ref={userDropdownRef}>
-                                    {/* Dropdown Trigger Button */}
-                                    <button
-                                        onClick={() => {
-                                            setUserDropdownOpen(!userDropdownOpen);
-                                            if (!userDropdownOpen) setUserSearchQuery("");
-                                        }}
-                                        className={`flex items-center gap-2 w-full md:w-56 rounded-lg bg-[#18181b] border ${userDropdownOpen ? 'border-brand-green' : 'border-[#27272a]'} px-3 py-2 text-sm text-white hover:border-[#3f3f46] transition-colors cursor-pointer`}
-                                    >
-                                        <Users className="h-4 w-4 text-[#52525b] flex-shrink-0" />
-                                        <span className="truncate flex-1 text-left">
-                                            {getSelectedUserName()}
-                                        </span>
-                                        {selectedUserFilter !== "all" && (
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setSelectedUserFilter("all");
-                                                }}
-                                                className="p-0.5 rounded hover:bg-white/10 text-[#71717a] hover:text-white transition-colors"
-                                            >
-                                                <X className="h-3 w-3" />
-                                            </button>
-                                        )}
-                                        <ChevronDown className={`h-4 w-4 text-[#52525b] transition-transform flex-shrink-0 ${userDropdownOpen ? 'rotate-180' : ''}`} />
-                                    </button>
+                                <>
+                                    <div className="relative" ref={userDropdownRef}>
+                                        {/* Dropdown Trigger Button */}
+                                        <button
+                                            onClick={() => {
+                                                setUserDropdownOpen(!userDropdownOpen);
+                                                if (!userDropdownOpen) setUserSearchQuery("");
+                                            }}
+                                            className={`flex items-center gap-2 w-full md:w-56 rounded-lg bg-[#18181b] border ${userDropdownOpen ? 'border-brand-green' : 'border-[#27272a]'} px-3 py-2 text-sm text-white hover:border-[#3f3f46] transition-colors cursor-pointer`}
+                                        >
+                                            <Users className="h-4 w-4 text-[#52525b] flex-shrink-0" />
+                                            <span className="truncate flex-1 text-left">
+                                                {getSelectedUserName()}
+                                            </span>
+                                            {selectedUserFilter !== "all" && (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedUserFilter("all");
+                                                    }}
+                                                    className="p-0.5 rounded hover:bg-white/10 text-[#71717a] hover:text-white transition-colors"
+                                                >
+                                                    <X className="h-3 w-3" />
+                                                </button>
+                                            )}
+                                            <ChevronDown className={`h-4 w-4 text-[#52525b] transition-transform flex-shrink-0 ${userDropdownOpen ? 'rotate-180' : ''}`} />
+                                        </button>
 
-                                    {/* Dropdown Menu */}
-                                    {userDropdownOpen && (
-                                        <div className="absolute right-0 top-full mt-2 w-72 rounded-xl bg-[#1c1c1e] border border-[#333] shadow-2xl shadow-black/50 overflow-hidden z-50">
-                                            {/* Search Input */}
-                                            <div className="p-2 border-b border-[#333]">
-                                                <div className="relative">
-                                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#52525b]" />
-                                                    <input
-                                                        type="text"
-                                                        value={userSearchQuery}
-                                                        onChange={(e) => setUserSearchQuery(e.target.value)}
-                                                        placeholder="Search users..."
-                                                        className="w-full rounded-lg bg-[#27272a] border border-[#3f3f46] pl-9 pr-4 py-2 text-sm text-white placeholder:text-[#52525b] focus:outline-none focus:border-brand-green transition-colors"
-                                                        autoFocus
-                                                    />
+                                        {/* Dropdown Menu */}
+                                        {userDropdownOpen && (
+                                            <div className="absolute right-0 top-full mt-2 w-72 rounded-xl bg-[#1c1c1e] border border-[#333] shadow-2xl shadow-black/50 overflow-hidden z-50">
+                                                {/* Search Input */}
+                                                <div className="p-2 border-b border-[#333]">
+                                                    <div className="relative">
+                                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#52525b]" />
+                                                        <input
+                                                            type="text"
+                                                            value={userSearchQuery}
+                                                            onChange={(e) => setUserSearchQuery(e.target.value)}
+                                                            placeholder="Search users..."
+                                                            className="w-full rounded-lg bg-[#27272a] border border-[#3f3f46] pl-9 pr-4 py-2 text-sm text-white placeholder:text-[#52525b] focus:outline-none focus:border-brand-green transition-colors"
+                                                            autoFocus
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* Options List */}
+                                                <div
+                                                    className="max-h-64 dropdown-scroll py-1"
+                                                    onWheel={(e) => e.stopPropagation()}
+                                                >
+                                                    {/* All Users Option */}
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedUserFilter("all");
+                                                            setUserDropdownOpen(false);
+                                                        }}
+                                                        className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors ${selectedUserFilter === "all" ? 'bg-brand-green/10 text-brand-green' : 'text-[#e5e5e5] hover:bg-white/5'}`}
+                                                    >
+                                                        <div className={`w-7 h-7 rounded-full flex items-center justify-center ${selectedUserFilter === "all" ? 'bg-brand-green/20' : 'bg-[#27272a]'}`}>
+                                                            <Users className="h-3.5 w-3.5" />
+                                                        </div>
+                                                        <div className="flex-1 text-left">
+                                                            <div className="font-medium">All Users</div>
+                                                            <div className="text-[10px] text-[#71717a]">
+                                                                {authors.length} users with projects
+                                                            </div>
+                                                        </div>
+                                                        {selectedUserFilter === "all" && (
+                                                            <Check className="h-4 w-4 text-brand-green flex-shrink-0" />
+                                                        )}
+                                                    </button>
+
+                                                    {/* Divider */}
+                                                    <div className="border-t border-[#333] my-1" />
+
+                                                    {/* User List */}
+                                                    {getFilteredAuthors().length > 0 ? (
+                                                        getFilteredAuthors().map(author => (
+                                                            <button
+                                                                key={author.id}
+                                                                onClick={() => {
+                                                                    setSelectedUserFilter(author.id);
+                                                                    setUserDropdownOpen(false);
+                                                                }}
+                                                                className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors ${selectedUserFilter === author.id ? 'bg-brand-green/10 text-brand-green' : 'text-[#e5e5e5] hover:bg-white/5'}`}
+                                                            >
+                                                                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${selectedUserFilter === author.id ? 'bg-brand-green text-black' : 'bg-gradient-to-br from-[#3f3f46] to-[#27272a] text-white'}`}>
+                                                                    {author.name.charAt(0).toUpperCase()}
+                                                                </div>
+                                                                <div className="flex-1 text-left min-w-0">
+                                                                    <div className="font-medium truncate">{author.name}</div>
+                                                                    {author.email && (
+                                                                        <div className="text-[10px] text-[#71717a] truncate">
+                                                                            {author.email}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                                {selectedUserFilter === author.id && (
+                                                                    <Check className="h-4 w-4 text-brand-green flex-shrink-0" />
+                                                                )}
+                                                            </button>
+                                                        ))
+                                                    ) : (
+                                                        <div className="px-3 py-4 text-center text-sm text-[#71717a]">
+                                                            No users found matching &quot;{userSearchQuery}&quot;
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
-
-                                            {/* Options List */}
-                                            <div className="max-h-64 overflow-y-auto py-1">
-                                                {/* All Users Option */}
-                                                <button
-                                                    onClick={() => {
-                                                        setSelectedUserFilter("all");
-                                                        setUserDropdownOpen(false);
-                                                    }}
-                                                    className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors ${selectedUserFilter === "all" ? 'bg-brand-green/10 text-brand-green' : 'text-[#e5e5e5] hover:bg-white/5'}`}
-                                                >
-                                                    <div className={`w-7 h-7 rounded-full flex items-center justify-center ${selectedUserFilter === "all" ? 'bg-brand-green/20' : 'bg-[#27272a]'}`}>
-                                                        <Users className="h-3.5 w-3.5" />
-                                                    </div>
-                                                    <div className="flex-1 text-left">
-                                                        <div className="font-medium">All Users</div>
-                                                        <div className="text-[10px] text-[#71717a]">
-                                                            {authors.length} users with projects
-                                                        </div>
-                                                    </div>
-                                                    {selectedUserFilter === "all" && (
-                                                        <Check className="h-4 w-4 text-brand-green flex-shrink-0" />
-                                                    )}
-                                                </button>
-
-                                                {/* Divider */}
-                                                <div className="border-t border-[#333] my-1" />
-
-                                                {/* User List */}
-                                                {getFilteredAuthors().length > 0 ? (
-                                                    getFilteredAuthors().map(author => (
-                                                        <button
-                                                            key={author.id}
-                                                            onClick={() => {
-                                                                setSelectedUserFilter(author.id);
-                                                                setUserDropdownOpen(false);
-                                                            }}
-                                                            className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors ${selectedUserFilter === author.id ? 'bg-brand-green/10 text-brand-green' : 'text-[#e5e5e5] hover:bg-white/5'}`}
-                                                        >
-                                                            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${selectedUserFilter === author.id ? 'bg-brand-green text-black' : 'bg-gradient-to-br from-[#3f3f46] to-[#27272a] text-white'}`}>
-                                                                {author.name.charAt(0).toUpperCase()}
-                                                            </div>
-                                                            <div className="flex-1 text-left min-w-0">
-                                                                <div className="font-medium truncate">{author.name}</div>
-                                                                {author.email && (
-                                                                    <div className="text-[10px] text-[#71717a] truncate">
-                                                                        {author.email}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            {selectedUserFilter === author.id && (
-                                                                <Check className="h-4 w-4 text-brand-green flex-shrink-0" />
-                                                            )}
-                                                        </button>
-                                                    ))
-                                                ) : (
-                                                    <div className="px-3 py-4 text-center text-sm text-[#71717a]">
-                                                        No users found matching "{userSearchQuery}"
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Advanced Filters Dropdown - Only for Admin */}
-                            {role === 'admin' && (
-                                <div className="relative" ref={filterDropdownRef}>
-                                    <button
-                                        onClick={() => setFilterDropdownOpen(!filterDropdownOpen)}
-                                        className={`flex items-center gap-2 rounded-lg bg-[#18181b] border ${filterDropdownOpen ? 'border-brand-green' : 'border-[#27272a]'} px-3 py-2 text-sm text-white hover:border-[#3f3f46] transition-colors cursor-pointer`}
-                                    >
-                                        <SlidersHorizontal className="h-4 w-4 text-[#52525b]" />
-                                        <span className="hidden md:inline">Filters</span>
-                                        {getActiveFilterCount() > 0 && (
-                                            <span className="flex items-center justify-center h-4 min-w-[16px] px-1 rounded-full bg-brand-green text-black text-[10px] font-bold">
-                                                {getActiveFilterCount()}
-                                            </span>
                                         )}
-                                        <ChevronDown className={`h-4 w-4 text-[#52525b] transition-transform ${filterDropdownOpen ? 'rotate-180' : ''}`} />
-                                    </button>
+                                    </div>
 
-                                    {/* Filter Dropdown Panel */}
-                                    {filterDropdownOpen && (
-                                        <div className="absolute right-0 top-full mt-2 w-80 rounded-xl bg-[#1c1c1e] border border-[#333] shadow-2xl shadow-black/50 overflow-hidden z-50">
-                                            {/* Header */}
-                                            <div className="flex items-center justify-between px-4 py-3 border-b border-[#333]">
-                                                <h4 className="text-sm font-semibold text-white">Filter & Sort</h4>
-                                                {(getActiveFilterCount() > 0 || selectedUserFilter !== "all") && (
-                                                    <button
-                                                        onClick={clearAllFilters}
-                                                        className="text-[10px] text-brand-green hover:text-brand-green/80 transition-colors"
-                                                    >
-                                                        Clear all
-                                                    </button>
-                                                )}
-                                            </div>
+                                    {/* Filter Dropdown */}
+                                    <div className="relative" ref={filterDropdownRef}>
+                                        <button
+                                            onClick={() => setFilterDropdownOpen(!filterDropdownOpen)}
+                                            className={`flex items-center gap-2 rounded-lg bg-[#18181b] border ${filterDropdownOpen ? 'border-brand-green' : 'border-[#27272a]'} px-3 py-2 text-sm text-white hover:border-[#3f3f46] transition-colors cursor-pointer`}
+                                        >
+                                            <SlidersHorizontal className="h-4 w-4 text-[#52525b]" />
+                                            <span className="hidden md:inline">Filters</span>
+                                            {getActiveFilterCount() > 0 && (
+                                                <span className="flex items-center justify-center h-5 w-5 rounded-full bg-brand-green text-black text-[10px] font-bold">
+                                                    {getActiveFilterCount()}
+                                                </span>
+                                            )}
+                                            <ChevronDown className={`h-4 w-4 text-[#52525b] transition-transform ${filterDropdownOpen ? 'rotate-180' : ''}`} />
+                                        </button>
 
-                                            <div className="p-4 space-y-4">
-                                                {/* Sort Order */}
-                                                <div>
-                                                    <div className="flex items-center justify-between mb-2">
-                                                        <label className="text-[11px] font-medium text-[#71717a] uppercase tracking-wider">
+                                        {filterDropdownOpen && (
+                                            <div className="absolute right-0 top-full mt-2 w-80 rounded-xl bg-[#1c1c1e] border border-[#333] shadow-2xl shadow-black/50 overflow-hidden z-50">
+                                                {/* Header */}
+                                                <div className="flex items-center justify-between p-3 border-b border-[#333]">
+                                                    <span className="text-sm font-medium text-white">Filters & Sorting</span>
+                                                    {getActiveFilterCount() > 0 && (
+                                                        <button
+                                                            onClick={() => {
+                                                                clearAllFilters();
+                                                            }}
+                                                            className="text-xs text-brand-green hover:text-brand-green/80 transition-colors"
+                                                        >
+                                                            Clear all
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                                <div className="p-3 space-y-4">
+                                                    {/* Sort Options */}
+                                                    <div>
+                                                        <label className="block text-[10px] uppercase tracking-wider text-[#71717a] font-medium mb-2">
                                                             Sort by Date
                                                         </label>
-                                                        {sortOrder && (
+                                                        <div className="grid grid-cols-2 gap-2">
                                                             <button
-                                                                onClick={() => setSortOrder(null)}
-                                                                className="text-[10px] text-[#71717a] hover:text-white transition-colors"
+                                                                onClick={() => setSortOrder(sortOrder === 'newest' ? null : 'newest')}
+                                                                className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${sortOrder === 'newest'
+                                                                    ? 'bg-brand-green text-black'
+                                                                    : 'bg-[#27272a] text-[#a1a1aa] hover:bg-[#3f3f46] hover:text-white'
+                                                                    }`}
                                                             >
-                                                                Clear
+                                                                <ArrowDown className="h-3.5 w-3.5" />
+                                                                Newest
+                                                            </button>
+                                                            <button
+                                                                onClick={() => setSortOrder(sortOrder === 'oldest' ? null : 'oldest')}
+                                                                className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${sortOrder === 'oldest'
+                                                                    ? 'bg-brand-green text-black'
+                                                                    : 'bg-[#27272a] text-[#a1a1aa] hover:bg-[#3f3f46] hover:text-white'
+                                                                    }`}
+                                                            >
+                                                                <ArrowUp className="h-3.5 w-3.5" />
+                                                                Oldest
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Date Range */}
+                                                    <div>
+                                                        <label className="block text-[10px] uppercase tracking-wider text-[#71717a] font-medium mb-2">
+                                                            Date Range
+                                                        </label>
+                                                        <div className="grid grid-cols-2 gap-2">
+                                                            <div className="relative">
+                                                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#a1a1aa] pointer-events-none z-10" />
+                                                                <input
+                                                                    type="date"
+                                                                    value={dateRangeStart}
+                                                                    onChange={(e) => setDateRangeStart(e.target.value)}
+                                                                    className="w-full rounded-lg bg-[#27272a] border border-[#3f3f46] pl-9 pr-2 py-2 text-sm text-white focus:outline-none focus:border-brand-green transition-colors cursor-pointer"
+                                                                    style={{ colorScheme: 'dark' }}
+                                                                />
+                                                            </div>
+                                                            <div className="relative">
+                                                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#a1a1aa] pointer-events-none z-10" />
+                                                                <input
+                                                                    type="date"
+                                                                    value={dateRangeEnd}
+                                                                    onChange={(e) => setDateRangeEnd(e.target.value)}
+                                                                    className="w-full rounded-lg bg-[#27272a] border border-[#3f3f46] pl-9 pr-2 py-2 text-sm text-white focus:outline-none focus:border-brand-green transition-colors cursor-pointer"
+                                                                    style={{ colorScheme: 'dark' }}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        {(dateRangeStart || dateRangeEnd) && (
+                                                            <button
+                                                                onClick={() => {
+                                                                    setDateRangeStart('');
+                                                                    setDateRangeEnd('');
+                                                                }}
+                                                                className="mt-2 text-xs text-[#71717a] hover:text-white transition-colors flex items-center gap-1"
+                                                            >
+                                                                <X className="h-3 w-3" />
+                                                                Clear dates
                                                             </button>
                                                         )}
                                                     </div>
-                                                    <div className="flex gap-2">
-                                                        <button
-                                                            onClick={() => setSortOrder(sortOrder === "newest" ? null : "newest")}
-                                                            className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${sortOrder === "newest"
-                                                                ? 'bg-brand-green/10 text-brand-green border border-brand-green/30'
-                                                                : 'bg-[#27272a] text-[#a1a1aa] border border-transparent hover:bg-[#3f3f46] hover:text-white'
-                                                                }`}
-                                                        >
-                                                            <ArrowDown className="h-3.5 w-3.5" />
-                                                            Newest First
-                                                        </button>
-                                                        <button
-                                                            onClick={() => setSortOrder(sortOrder === "oldest" ? null : "oldest")}
-                                                            className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${sortOrder === "oldest"
-                                                                ? 'bg-brand-green/10 text-brand-green border border-brand-green/30'
-                                                                : 'bg-[#27272a] text-[#a1a1aa] border border-transparent hover:bg-[#3f3f46] hover:text-white'
-                                                                }`}
-                                                        >
-                                                            <ArrowUp className="h-3.5 w-3.5" />
-                                                            Oldest First
-                                                        </button>
-                                                    </div>
-                                                    <p className="mt-1.5 text-[9px] text-[#52525b]">
-                                                        Click again to deselect. No selection uses default order.
-                                                    </p>
-                                                </div>
-
-                                                {/* Date Range */}
-                                                <div>
-                                                    <label className="text-[11px] font-medium text-[#71717a] uppercase tracking-wider mb-2 block">
-                                                        Date Range
-                                                    </label>
-                                                    <div className="grid grid-cols-2 gap-2">
-                                                        <div className="relative">
-                                                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#52525b]" />
-                                                            <input
-                                                                type="date"
-                                                                value={dateRangeStart}
-                                                                onChange={(e) => setDateRangeStart(e.target.value)}
-                                                                className="w-full rounded-lg bg-[#27272a] border border-[#3f3f46] pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-brand-green transition-colors [color-scheme:dark]"
-                                                                placeholder="Start date"
-                                                            />
-                                                        </div>
-                                                        <div className="relative">
-                                                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#52525b]" />
-                                                            <input
-                                                                type="date"
-                                                                value={dateRangeEnd}
-                                                                onChange={(e) => setDateRangeEnd(e.target.value)}
-                                                                className="w-full rounded-lg bg-[#27272a] border border-[#3f3f46] pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-brand-green transition-colors [color-scheme:dark]"
-                                                                placeholder="End date"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    {(dateRangeStart || dateRangeEnd) && (
-                                                        <button
-                                                            onClick={() => {
-                                                                setDateRangeStart("");
-                                                                setDateRangeEnd("");
-                                                            }}
-                                                            className="mt-2 text-[10px] text-[#71717a] hover:text-white transition-colors flex items-center gap-1"
-                                                        >
-                                                            <X className="h-3 w-3" />
-                                                            Clear date filter
-                                                        </button>
-                                                    )}
-                                                </div>
-
-                                                {/* Quick Presets */}
-                                                <div>
-                                                    <label className="text-[11px] font-medium text-[#71717a] uppercase tracking-wider mb-2 block">
-                                                        Quick Select
-                                                    </label>
-                                                    <div className="flex flex-wrap gap-1.5">
-                                                        {[
-                                                            { label: "Last 7 days", days: 7 },
-                                                            { label: "Last 30 days", days: 30 },
-                                                            { label: "Last 90 days", days: 90 },
-                                                            { label: "This year", days: 365 }
-                                                        ].map((preset) => (
-                                                            <button
-                                                                key={preset.label}
-                                                                onClick={() => {
-                                                                    const end = new Date();
-                                                                    const start = new Date();
-                                                                    start.setDate(start.getDate() - preset.days);
-                                                                    setDateRangeStart(start.toISOString().split('T')[0]);
-                                                                    setDateRangeEnd(end.toISOString().split('T')[0]);
-                                                                }}
-                                                                className="px-2.5 py-1.5 rounded-md text-[10px] font-medium bg-[#27272a] text-[#a1a1aa] hover:bg-[#3f3f46] hover:text-white transition-colors"
-                                                            >
-                                                                {preset.label}
-                                                            </button>
-                                                        ))}
-                                                    </div>
                                                 </div>
                                             </div>
-
-                                            {/* Footer with result count */}
-                                            <div className="px-4 py-3 border-t border-[#333] bg-[#18181b]">
-                                                <div className="flex items-center justify-between">
-                                                    <span className="text-[11px] text-[#71717a]">
-                                                        Showing <span className="text-white font-medium">{filteredProjects.length}</span> of {displayProjects.length} projects
-                                                    </span>
-                                                    <button
-                                                        onClick={() => setFilterDropdownOpen(false)}
-                                                        className="text-xs text-brand-green hover:text-brand-green/80 font-medium transition-colors"
-                                                    >
-                                                        Done
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
+                                        )}
+                                    </div>
+                                </>
                             )}
 
                             <div className="relative w-full md:w-auto">
@@ -731,6 +687,6 @@ export default function ProjectDashboard() {
                     </div>
                 )}
             </main>
-        </div>
+        </div >
     );
 }
