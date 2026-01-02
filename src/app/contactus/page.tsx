@@ -6,10 +6,47 @@ import { Input, Textarea } from "@nextui-org/input";
 import { Mail, MapPin, Phone, Send, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
 
 export default function ContactUsPage() {
   const { isAuthenticated } = useAuth();
   const isOnline = isAuthenticated;
+  
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({ firstName: '', lastName: '', email: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <AppLayout>
@@ -43,7 +80,7 @@ export default function ContactUsPage() {
               Get in <span className={`transition-colors duration-500 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>Touch</span>
             </h1>
             <p className={`max-w-2xl mx-auto text-lg transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>
-              Have a project in mind? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+              Have a project in mind? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
             </p>
           </motion.div>
 
@@ -63,9 +100,9 @@ export default function ContactUsPage() {
                 <h3 className={`text-2xl font-bold mb-6 transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'}`}>Contact Information</h3>
                 <div className="space-y-6">
                   {[
-                    { icon: Mail, label: "Email us", value: "hello@codegang.com" },
-                    { icon: Phone, label: "Call us", value: "+1 (555) 000-0000" },
-                    { icon: MapPin, label: "Visit us", value: "123 Innovation Dr,\nTech City, TC 90210" }
+                    { icon: Mail, label: "Email us", value: "codegang0077@gmail.com" },
+                    // { icon: Phone, label: "Call us", value: "+1 (555) 000-0000" },
+                    // { icon: MapPin, label: "Visit us", value: "123 Innovation Dr,\nTech City, TC 90210" }
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-start gap-4">
                       <div className={`p-3 rounded-xl transition-colors duration-500 ${isOnline
@@ -115,12 +152,25 @@ export default function ContactUsPage() {
                 : 'bg-red-950/10 border-red-900/20'
                 }`}
             >
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {submitStatus === 'success' && (
+                  <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400">
+                    Message sent successfully! We&#39;ll get back to you soon.
+                  </div>
+                )}
+                {submitStatus === 'error' && (
+                  <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400">
+                    Failed to send message. Please try again.
+                  </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className={`text-sm font-medium ml-1 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>First Name</label>
                     <Input
                       placeholder="John"
+                      value={formData.firstName}
+                      onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                      required
                       classNames={{
                         inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
                           ? "bg-black/50 border border-white/10 hover:border-brand-green/50 focus-within:border-brand-green"
@@ -134,6 +184,9 @@ export default function ContactUsPage() {
                     <label className={`text-sm font-medium ml-1 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>Last Name</label>
                     <Input
                       placeholder="Doe"
+                      value={formData.lastName}
+                      onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                      required
                       classNames={{
                         inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
                           ? "bg-black/50 border border-white/10 hover:border-brand-green/50 focus-within:border-brand-green"
@@ -149,6 +202,9 @@ export default function ContactUsPage() {
                   <Input
                     placeholder="john@example.com"
                     type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    required
                     classNames={{
                       inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
                         ? "bg-black/50 border border-white/10 hover:border-brand-green/50 focus-within:border-brand-green"
@@ -165,6 +221,9 @@ export default function ContactUsPage() {
                   <Textarea
                     placeholder="Tell us about your project..."
                     minRows={6}
+                    value={formData.message}
+                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    required
                     classNames={{
                       inputWrapper: `transition-colors rounded-2xl p-4 ${isOnline
                         ? "bg-black/50 border border-white/10 hover:border-brand-green/50 focus-within:border-brand-green"
@@ -176,14 +235,16 @@ export default function ContactUsPage() {
                 </div>
 
                 <Button
+                  type="submit"
                   size="lg"
+                  disabled={isSubmitting || !isOnline}
                   className={`w-full font-bold h-14 rounded-2xl transition-colors ${isOnline
                     ? "bg-white text-black hover:bg-zinc-200"
                     : "bg-red-500/20 text-red-300 border border-red-500/40 hover:bg-red-500/30"}`}
-                  endContent={<Send size={18} />}
+                  endContent={isSubmitting ? null : <Send size={18} />}
 
                 >
-                  {isOnline ? 'Send Message' : 'Authentication Required'}
+                  {isSubmitting ? 'Sending...' : isOnline ? 'Send Message' : 'Authentication Required'}
                 </Button>
               </form>
             </motion.div>

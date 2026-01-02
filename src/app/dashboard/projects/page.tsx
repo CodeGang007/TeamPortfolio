@@ -28,8 +28,13 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import DashboardProjectCard, { ProjectStatus } from "@/components/DashboardProjectCard";
-import { projectRequestService, ProjectRequest as BaseProjectRequest } from "@/lib/projectService";
+import DashboardProjectCard, {
+  ProjectStatus,
+} from "@/components/DashboardProjectCard";
+import {
+  projectRequestService,
+  ProjectRequest as BaseProjectRequest,
+} from "@/lib/projectService";
 
 interface ProjectRequest extends BaseProjectRequest {
     dynamicStatus?: string;
@@ -110,6 +115,7 @@ export default function ProjectDashboard() {
                     return dateB - dateA;
                 });
                 setProjects(sorted);
+                console.log('Fetched projects:', sorted);
 
                 // If Admin, fetch user details for these projects
                 if (role === 'admin' && fetchedProjects.length > 0) {
@@ -149,6 +155,35 @@ export default function ProjectDashboard() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    if (!loading && !isAuthenticated) {
+        router.push("/");
+        return null;
+    }
+
+    if (loading || isLoadingData) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-[#121212]">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-green border-t-transparent" />
+                    <p className="text-zinc-500 text-sm">Loading your projects...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Filter Logic
+    const draftProjects = projects.filter((p) => p.isDraft);
+    const publishedProjects = projects.filter((p) => !p.isDraft);
+    const displayProjects = activeTab === "all" ? publishedProjects : draftProjects;
+
+    // Get unique authors for filter dropdown
+    const authors = Array.from(new Set(displayProjects.map((p) => p.userId))).map(
+        (uid) => ({
+            id: uid,
+            name: userMap[uid]?.name || "Unknown User",
+        })
+    );
+
     // Filter authors based on search query
     const getFilteredAuthors = () => {
         const allAuthors = Array.from(new Set(displayProjects.map(p => p.userId))).map(uid => ({
@@ -171,28 +206,6 @@ export default function ProjectDashboard() {
         if (selectedUserFilter === "all") return "All Users";
         return userMap[selectedUserFilter]?.name || "Unknown User";
     };
-
-    if (!loading && !isAuthenticated) {
-        router.push("/");
-        return null;
-    }
-
-    if (loading || isLoadingData) {
-        return (
-            <div className="flex min-h-screen items-center justify-center bg-[#121212]">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-green border-t-transparent" />
-                    <p className="text-zinc-500 text-sm">Loading your projects...</p>
-                </div>
-            </div>
-        );
-    }
-
-    // Filter Logic
-    const draftProjects = projects.filter(p => p.isDraft);
-    const publishedProjects = projects.filter(p => !p.isDraft);
-
-    const displayProjects = activeTab === "all" ? publishedProjects : draftProjects;
 
     // Helper to get project date for filtering/sorting
     const getProjectDate = (p: ProjectRequest): Date => {
@@ -239,12 +252,6 @@ export default function ProjectDashboard() {
             const dateB = getProjectDate(b).getTime();
             return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
         });
-
-    // Get unique authors for filter dropdown
-    const authors = Array.from(new Set(displayProjects.map(p => p.userId))).map(uid => ({
-        id: uid,
-        name: userMap[uid]?.name || "Unknown User"
-    }));
 
     // Get count of active filters (only count non-default values)
     const getActiveFilterCount = () => {
@@ -297,9 +304,8 @@ export default function ProjectDashboard() {
                         </div>
 
                         <div className="flex items-center gap-3">
-                            {/* Mobile hide create button text if needed */}
                             <Button
-                                onClick={() => router.push("/project-request/new")} // Default to generic new
+                                onClick={() => router.push("/project-request/new")}
                                 className="bg-gradient-to-b from-brand-green to-brand-green-dim hover:from-brand-green/90 hover:to-brand-green-dim/90 text-black font-bold text-sm px-4 shadow-lg shadow-brand-green/25 border border-brand-green/20"
                             >
                                 <Plus className="h-4 w-4 md:mr-1.5" />
@@ -446,167 +452,9 @@ export default function ProjectDashboard() {
                                                     ))
                                                 ) : (
                                                     <div className="px-3 py-4 text-center text-sm text-[#71717a]">
-                                                        No users found matching "{userSearchQuery}"
+                                                        No users found matching &quot;{userSearchQuery}&quot;
                                                     </div>
                                                 )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Advanced Filters Dropdown - Only for Admin */}
-                            {role === 'admin' && (
-                                <div className="relative" ref={filterDropdownRef}>
-                                    <button
-                                        onClick={() => setFilterDropdownOpen(!filterDropdownOpen)}
-                                        className={`flex items-center gap-2 rounded-lg bg-[#18181b] border ${filterDropdownOpen ? 'border-brand-green' : 'border-[#27272a]'} px-3 py-2 text-sm text-white hover:border-[#3f3f46] transition-colors cursor-pointer`}
-                                    >
-                                        <SlidersHorizontal className="h-4 w-4 text-[#52525b]" />
-                                        <span className="hidden md:inline">Filters</span>
-                                        {getActiveFilterCount() > 0 && (
-                                            <span className="flex items-center justify-center h-4 min-w-[16px] px-1 rounded-full bg-brand-green text-black text-[10px] font-bold">
-                                                {getActiveFilterCount()}
-                                            </span>
-                                        )}
-                                        <ChevronDown className={`h-4 w-4 text-[#52525b] transition-transform ${filterDropdownOpen ? 'rotate-180' : ''}`} />
-                                    </button>
-
-                                    {/* Filter Dropdown Panel */}
-                                    {filterDropdownOpen && (
-                                        <div className="absolute right-0 top-full mt-2 w-80 rounded-xl bg-[#1c1c1e] border border-[#333] shadow-2xl shadow-black/50 overflow-hidden z-50">
-                                            {/* Header */}
-                                            <div className="flex items-center justify-between px-4 py-3 border-b border-[#333]">
-                                                <h4 className="text-sm font-semibold text-white">Filter & Sort</h4>
-                                                {(getActiveFilterCount() > 0 || selectedUserFilter !== "all") && (
-                                                    <button
-                                                        onClick={clearAllFilters}
-                                                        className="text-[10px] text-brand-green hover:text-brand-green/80 transition-colors"
-                                                    >
-                                                        Clear all
-                                                    </button>
-                                                )}
-                                            </div>
-
-                                            <div className="p-4 space-y-4">
-                                                {/* Sort Order */}
-                                                <div>
-                                                    <div className="flex items-center justify-between mb-2">
-                                                        <label className="text-[11px] font-medium text-[#71717a] uppercase tracking-wider">
-                                                            Sort by Date
-                                                        </label>
-                                                        {sortOrder && (
-                                                            <button
-                                                                onClick={() => setSortOrder(null)}
-                                                                className="text-[10px] text-[#71717a] hover:text-white transition-colors"
-                                                            >
-                                                                Clear
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex gap-2">
-                                                        <button
-                                                            onClick={() => setSortOrder(sortOrder === "newest" ? null : "newest")}
-                                                            className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${sortOrder === "newest"
-                                                                ? 'bg-brand-green/10 text-brand-green border border-brand-green/30'
-                                                                : 'bg-[#27272a] text-[#a1a1aa] border border-transparent hover:bg-[#3f3f46] hover:text-white'
-                                                                }`}
-                                                        >
-                                                            <ArrowDown className="h-3.5 w-3.5" />
-                                                            Newest First
-                                                        </button>
-                                                        <button
-                                                            onClick={() => setSortOrder(sortOrder === "oldest" ? null : "oldest")}
-                                                            className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${sortOrder === "oldest"
-                                                                ? 'bg-brand-green/10 text-brand-green border border-brand-green/30'
-                                                                : 'bg-[#27272a] text-[#a1a1aa] border border-transparent hover:bg-[#3f3f46] hover:text-white'
-                                                                }`}
-                                                        >
-                                                            <ArrowUp className="h-3.5 w-3.5" />
-                                                            Oldest First
-                                                        </button>
-                                                    </div>
-                                                    <p className="mt-1.5 text-[9px] text-[#52525b]">
-                                                        Click again to deselect. No selection uses default order.
-                                                    </p>
-                                                </div>
-
-                                                {/* Date Range */}
-                                                <div>
-                                                    <label className="text-[11px] font-medium text-[#71717a] uppercase tracking-wider mb-2 block">
-                                                        Date Range
-                                                    </label>
-                                                    <div className="grid grid-cols-2 gap-2">
-                                                        <div className="relative">
-                                                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#52525b]" />
-                                                            <input
-                                                                type="date"
-                                                                value={dateRangeStart}
-                                                                onChange={(e) => setDateRangeStart(e.target.value)}
-                                                                className="w-full rounded-lg bg-[#27272a] border border-[#3f3f46] pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-brand-green transition-colors [color-scheme:dark]"
-                                                                placeholder="Start date"
-                                                            />
-                                                        </div>
-                                                        <div className="relative">
-                                                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#52525b]" />
-                                                            <input
-                                                                type="date"
-                                                                value={dateRangeEnd}
-                                                                onChange={(e) => setDateRangeEnd(e.target.value)}
-                                                                className="w-full rounded-lg bg-[#27272a] border border-[#3f3f46] pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-brand-green transition-colors [color-scheme:dark]"
-                                                                placeholder="End date"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    {(dateRangeStart || dateRangeEnd) && (
-                                                        <button
-                                                            onClick={() => {
-                                                                setDateRangeStart("");
-                                                                setDateRangeEnd("");
-                                                            }}
-                                                            className="mt-2 text-[10px] text-[#71717a] hover:text-white transition-colors flex items-center gap-1"
-                                                        >
-                                                            <X className="h-3 w-3" />
-                                                            Clear date filter
-                                                        </button>
-                                                    )}
-                                                </div>
-
-                                                {/* Quick Presets */}
-                                                <div>
-                                                    <label className="text-[11px] font-medium text-[#71717a] uppercase tracking-wider mb-2 block">
-                                                        Quick Select
-                                                    </label>
-                                                    <div className="flex flex-wrap gap-1.5">
-                                                        {[
-                                                            { label: "Last 7 days", days: 7 },
-                                                            { label: "Last 30 days", days: 30 },
-                                                            { label: "Last 90 days", days: 90 },
-                                                            { label: "This year", days: 365 }
-                                                        ].map((preset) => (
-                                                            <button
-                                                                key={preset.label}
-                                                                onClick={() => {
-                                                                    const end = new Date();
-                                                                    const start = new Date();
-                                                                    start.setDate(start.getDate() - preset.days);
-                                                                    setDateRangeStart(start.toISOString().split('T')[0]);
-                                                                    setDateRangeEnd(end.toISOString().split('T')[0]);
-                                                                }}
-                                                                className="px-2.5 py-1.5 rounded-md text-[10px] font-medium bg-[#27272a] text-[#a1a1aa] hover:bg-[#3f3f46] hover:text-white transition-colors"
-                                                            >
-                                                                {preset.label}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Footer with result count */}
-                                            <div className="px-4 py-3 border-t border-[#333] bg-[#18181b]">
-                                                <span className="text-[11px] text-[#71717a]">
-                                                    Showing <span className="text-white font-medium">{filteredProjects.length}</span> of {displayProjects.length} projects
-                                                </span>
                                             </div>
                                         </div>
                                     )}

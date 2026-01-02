@@ -8,34 +8,20 @@ const TELEGRAM_CHAT_ID = TELEGRAM_CONFIG.CHAT_ID;
 
 export const telegramService = {
   // Send a message to the configured Telegram chat
+  // Send a message via our internal API route (Server-Side Proxy)
+  // This avoids CORS issues and hides the Bot Token from the client network tab
   async sendMessage(message: string): Promise<boolean> {
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-      console.warn('Telegram Bot Token or Chat ID not configured');
-      return false;
-    }
-
     try {
-      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-      const response = await fetch(url, {
+      const response = await fetch('/api/telegram-notification', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: message,
-          parse_mode: 'Markdown', // Optional: enables bold/italic
-        }),
+        body: JSON.stringify({ message }),
       });
 
       if (!response.ok) {
-        let errorData;
-        try {
-            errorData = await response.json();
-        } catch (e) {
-            errorData = { error: "Could not parse JSON response" };
-        }
-        console.error(`Failed to send Telegram message (Status: ${response.status} ${response.statusText}):`, errorData);
+        console.error(`Failed to send Telegram message (Status: ${response.status})`);
         return false;
       }
 
@@ -44,6 +30,14 @@ export const telegramService = {
       console.error('Error sending Telegram message:', error);
       return false;
     }
+  },
+
+  // Helper to escape HTML special characters for Telegram
+  escapeHtml(text: string): string {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
   },
 
   // Helper to format a new project notification
@@ -57,20 +51,31 @@ export const telegramService = {
       projectType?: string;
       deliveryTime?: string;
   }): string {
+      const projectName = this.escapeHtml(project.projectName);
+      const userName = this.escapeHtml(project.userName || 'Unknown');
+      const userEmail = this.escapeHtml(project.userEmail || 'No Email');
+      const budget = this.escapeHtml(`${project.currency} ${project.budget}`); 
+      const projectType = this.escapeHtml(project.projectType || 'Not specified');
+      const deliveryTime = this.escapeHtml(project.deliveryTime || 'Not specified');
+      
+      let desc = project.description || '';
+      if (desc.length > 300) desc = desc.substring(0, 300) + '...';
+      const description = this.escapeHtml(desc);
+
       return `
-🚀 *New Project Published!*
+🚀 <b>New Project Published!</b>
 
-*Project:* ${project.projectName}
-*Client:* ${project.userName || 'Unknown'} 
-*Email:* ${project.userEmail || 'No Email'}
-*Budget:* ${project.currency} ${project.budget}
-*Type:* ${project.projectType || 'Not specified'}
-*Timeline:* ${project.deliveryTime || 'Not specified'}
+<b>Project:</b> ${projectName}
+<b>Client:</b> ${userName} 
+<b>Email:</b> ${userEmail}
+<b>Budget:</b> ${budget}
+<b>Type:</b> ${projectType}
+<b>Timeline:</b> ${deliveryTime}
 
-*Description:*
-${project.description.substring(0, 300)}${project.description.length > 300 ? '...' : ''}
+<b>Description:</b>
+${description}
 
-[View in Dashboard](https://team-portfolio-cg3e.vercel.app/dashboard/projects)
+<a href="https://team-portfolio-cg3e.vercel.app/dashboard/projects">View in Dashboard</a>
       `.trim();
   }
 };
