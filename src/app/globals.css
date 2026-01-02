@@ -21,7 +21,8 @@
     color: white;
     font-family: 'Inter', sans-serif;
     scroll-behavior: smooth;
-    font-size: 90%; /* Global 90% scale as requested */
+    font-size: 90%;
+    /* Global 90% scale as requested */
   }
 }
 
