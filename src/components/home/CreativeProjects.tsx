@@ -51,6 +51,8 @@ const FEATURED_PROJECTS: Project[] = [
     },
 ];
 
+import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
+
 export default function CreativeProjects() {
     const { isAuthenticated, triggerAuth } = useAuth();
     const isOnline = isAuthenticated;
@@ -64,41 +66,59 @@ export default function CreativeProjects() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    className="group relative"
+                    className="group relative h-[40rem]"
                 >
-                    {/* Card Container */}
-                    <div className={`relative h-[400px] rounded-2xl overflow-hidden border transition-all duration-500 ${isOnline
-                        ? 'bg-zinc-900/50 border-zinc-800 hover:border-brand-green/50'
-                        : 'bg-zinc-900/30 border-red-900/50 hover:border-red-500/50'
-                        }`}>
-                        {/* Image */}
-                        <div className="relative h-48 overflow-hidden">
-                            <img
-                                src={project.image}
-                                alt={project.title}
-                                className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${isOnline ? '' : 'grayscale sepia hue-rotate-[-20deg] saturate-150'
+                    <CardContainer className="inter-var w-full h-full" containerClassName="h-full">
+                        <CardBody className={`relative group/card w-full h-full rounded-xl p-6 border transition-all duration-500 flex flex-col ${isOnline
+                            ? 'bg-zinc-900/50 border-zinc-800 hover:border-brand-green/50 hover:shadow-2xl hover:shadow-brand-green/10'
+                            : 'bg-zinc-900/30 border-red-900/50 hover:border-red-500/50'
+                            }`}>
+
+                            {/* Image - Highest Depth - POPUP EFFECT */}
+                            <CardItem
+                                translateZ="100"
+                                className="w-full shrink-0"
+                            >
+                                <div className="relative h-48 w-full overflow-hidden rounded-xl shadow-md group-hover/card:shadow-xl transition-all duration-300">
+                                    <img
+                                        src={project.image}
+                                        alt={project.title}
+                                        className={`h-full w-full object-cover transition-all duration-700 ${isOnline ? '' : 'grayscale sepia hue-rotate-[-20deg] saturate-150'
+                                            }`}
+                                    />
+                                    <div className={`absolute inset-0 transition-opacity duration-500 ${isOnline
+                                        ? 'bg-gradient-to-t from-zinc-900 via-zinc-900/20 to-transparent'
+                                        : 'bg-gradient-to-t from-zinc-950 via-red-950/30 to-transparent'
+                                        }`} />
+                                </div>
+                            </CardItem>
+
+                            {/* Title - Depth 50 */}
+                            <CardItem
+                                translateZ="50"
+                                as="h3"
+                                className={`text-xl font-bold mt-6 mb-2 transition-colors duration-500 line-clamp-1 ${isOnline ? 'text-white' : 'text-red-100'
                                     }`}
-                            />
-                            <div className={`absolute inset-0 transition-opacity duration-500 ${isOnline
-                                ? 'bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent'
-                                : 'bg-gradient-to-t from-zinc-950 via-red-950/30 to-transparent'
-                                }`} />
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-6 relative z-10">
-                            <h3 className={`text-xl font-bold mb-2 transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'
-                                }`}>
+                            >
                                 {project.title}
-                            </h3>
-                            <p className={`text-sm mb-4 line-clamp-2 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'
-                                }`}>
-                                {project.description}
-                            </p>
+                            </CardItem>
 
-                            {/* Tags */}
-                            <div className="flex flex-wrap gap-2 mb-4">
-                                {project.tags.map((tag) => (
+                            {/* Description - Depth 60 */}
+                            <CardItem
+                                translateZ="60"
+                                as="p"
+                                className={`text-sm mb-4 line-clamp-2 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'
+                                    }`}
+                            >
+                                {project.description}
+                            </CardItem>
+
+                            {/* Tags - Depth 40 */}
+                            <CardItem
+                                translateZ="40"
+                                className="flex flex-wrap gap-2 mt-2"
+                            >
+                                {project.tags.slice(0, 3).map((tag) => (
                                     <span
                                         key={tag}
                                         className={`text-xs px-2 py-1 rounded-full font-medium transition-all duration-500 ${isOnline
@@ -109,63 +129,53 @@ export default function CreativeProjects() {
                                         {tag}
                                     </span>
                                 ))}
-                            </div>
+                            </CardItem>
 
-                            {/* Links */}
-                            <div className="flex gap-3 mt-auto">
+                            {/* Links - Button Depth 20 - Wrapped in div for layout, items FLOAT */}
+                            <div className="flex gap-3 mt-auto pt-4">
                                 {project.link && (
-                                    <a
+                                    <CardItem
+                                        translateZ="20"
+                                        as="a"
                                         href={isOnline ? project.link : "#"}
-                                        onClick={(e) => {
+                                        onClick={(e: React.MouseEvent) => {
                                             if (!isOnline) {
                                                 e.preventDefault();
                                                 triggerAuth();
                                             }
                                         }}
-                                        className={`flex items-center gap-2 text-sm font-medium transition-colors duration-500 ${isOnline
+                                        className={`w-auto flex items-center gap-2 text-sm font-medium transition-colors duration-500 ${isOnline
                                             ? 'text-brand-green hover:text-green-400'
                                             : 'text-red-400 hover:text-red-300'
                                             }`}
                                     >
                                         <ExternalLink size={16} />
                                         <span>View</span>
-                                    </a>
+                                    </CardItem>
                                 )}
                                 {project.github && (
-                                    <a
+                                    <CardItem
+                                        translateZ="20"
+                                        as="a"
                                         href={isOnline ? project.github : "#"}
-                                        onClick={(e) => {
+                                        onClick={(e: React.MouseEvent) => {
                                             if (!isOnline) {
                                                 e.preventDefault();
                                                 triggerAuth();
                                             }
                                         }}
-                                        className={`flex items-center gap-2 text-sm font-medium transition-colors duration-500 ${isOnline
+                                        className={`w-auto flex items-center gap-2 text-sm font-medium transition-colors duration-500 ${isOnline
                                             ? 'text-zinc-400 hover:text-white'
                                             : 'text-red-300/50 hover:text-red-200'
                                             }`}
                                     >
                                         <Github size={16} />
                                         <span>Code</span>
-                                    </a>
+                                    </CardItem>
                                 )}
                             </div>
-                        </div>
-
-                        {/* Scan Line Effect */}
-                        <motion.div
-                            className={`absolute inset-0 h-0.5 bg-gradient-to-r from-transparent via-current to-transparent opacity-0 group-hover:opacity-100 pointer-events-none ${isOnline ? 'text-brand-green' : 'text-red-500'
-                                }`}
-                            animate={{
-                                top: ["-10%", "110%"],
-                            }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                ease: "linear",
-                            }}
-                        />
-                    </div>
+                        </CardBody>
+                    </CardContainer>
                 </motion.div>
             ))}
         </div>

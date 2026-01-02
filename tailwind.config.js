@@ -14,8 +14,18 @@ module.exports = {
           dark: "#0a0a0a",
           green: "#00ff41", // Matrix/Cyber green
           "green-dim": "#008F11",
-        }
-      }
+        },
+      },
+      animation: {
+        scroll: "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+      },
+      keyframes: {
+        scroll: {
+          to: {
+            transform: "translate(calc(-50% - 0.5rem))",
+          },
+        },
+      },
     },
   },
   darkMode: "class",

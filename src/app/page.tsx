@@ -3,7 +3,9 @@
 import AppLayout from "@/components/AppLayout";
 import AskForProject from "@/components/home/AskForProject";
 import FloatingHero from "@/components/home/FloatingHero";
-import CreativeProjects from "@/components/home/CreativeProjects";
+
+import UserStories from "@/components/UserStories";
+import FAQ from "@/components/FAQ";
 import TrilemmaGame from "@/components/TrilemmaGame";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -51,70 +53,46 @@ export default function HomePage() {
         </motion.div>
 
         <motion.div
-          className="absolute bottom-[15%] left-[10%] w-40 h-40 opacity-20 pointer-events-none z-0 transition-all duration-1000"
-          style={{
-            filter: isOnline
-              ? 'hue-rotate(0deg) brightness(1)'
-              : 'hue-rotate(290deg) brightness(0.8) saturate(1.5)',
-            willChange: "transform"
-          }}
+          className="absolute bottom-[15%] left-[8%] w-64 h-64 z-0 pointer-events-none"
+          initial={{ opacity: 0 }}
           animate={{
-            rotate: [0, 15, 0],
-            x: [0, -20, 0]
+            opacity: [0.5, 0.8, 0.5], // Pulsing opacity
+            y: [0, -30, 0],
+            rotate: [0, 10, -10, 0],
+            scale: [1, 1.05, 1]
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          transition={{
+            opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+            y: { duration: 8, repeat: Infinity, ease: "easeInOut" },
+            rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+            scale: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+          }}
         >
-          <img src="/3d_cube.png" alt="" className="w-full h-full object-contain mix-blend-screen" />
+          <img
+            src="/3d_cube.png"
+            alt="Tesseract Cube"
+            className="w-full h-full object-contain"
+          />
         </motion.div>
 
         <FloatingHero />
 
         <div className="container mx-auto px-6 md:px-12 relative z-10">
-          {/* Projects Section with State-Responsive Header */}
-          <section className="py-24">
-            <div className="text-center mb-16">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="inline-block"
-              >
-                <div className={`inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full border transition-all duration-500 ${isOnline
-                  ? 'bg-zinc-900 border-brand-green/30'
-                  : 'bg-zinc-950 border-red-500/30'
-                  }`}>
-                  <span className={`w-2 h-2 rounded-full animate-pulse transition-colors duration-500 ${isOnline ? 'bg-brand-green' : 'bg-red-500'
-                    }`}></span>
-                  <span className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isOnline ? 'text-brand-green' : 'text-red-500'
-                    }`}>
-                    {isOnline ? 'Featured Work' : 'System Archive'}
-                  </span>
-                </div>
-              </motion.div>
 
-              <h2 className={`text-4xl md:text-6xl font-black tracking-tight mb-4 italic transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'
-                }`}>
-                Latest <span className={`text-transparent bg-clip-text transition-all duration-500 ${isOnline
-                  ? 'bg-gradient-to-r from-brand-green to-green-400'
-                  : 'bg-gradient-to-r from-red-500 to-orange-500'
-                  }`}>Projects</span>
-              </h2>
-              <p className={`text-lg max-w-2xl mx-auto font-light transition-colors duration-500 ${isOnline ? 'text-zinc-500' : 'text-red-300/50'
-                }`}>
-                {isOnline
-                  ? 'Explore our most recent work showcasing innovation, design excellence, and technical mastery.'
-                  : 'Archived project data - awaiting system activation...'}
-              </p>
-            </div>
+          {/* Vision Section */}
+          <AskForProject />
 
-            <CreativeProjects />
-          </section>
+          {/* User Stories Sections */}
+          <UserStories />
 
           {/* Call to Action Section */}
           <section className="pb-24">
             <TrilemmaGame />
-            <AskForProject />
           </section>
+
+          {/* FAQ Section */}
+          <FAQ />
+
         </div>
 
         {/* Additional 3D Ornaments at bottom */}
