@@ -1,5 +1,7 @@
 "use client";
 
+
+
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
@@ -13,12 +15,14 @@ import styles from "./TeamMemberCard.module.css";
 interface TeamMemberCardProps {
   member: TeamMember;
   isOnline?: boolean;
+  onClick?: () => void;
 }
 
-export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isOnline = true }) => {
+export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isOnline = true, onClick }) => {
   return (
     <motion.div
-      className={`${styles.card} transition-all duration-300 ${!isOnline && 'border-red-900/40 shadow-[0_0_20px_rgba(220,38,38,0.1)] !bg-black/80'}`}
+      onClick={onClick}
+      className={`${styles.card} cursor-pointer transition-all duration-300 ${!isOnline && 'border-red-900/40 shadow-[0_0_20px_rgba(220,38,38,0.1)] !bg-black/80'}`}
       whileHover={{ y: -5 }}
       transition={{ type: "spring", stiffness: 260, damping: 18 }}
     >
@@ -52,18 +56,16 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isOnline
       </div>
 
       {/* Footer */}
-      <div className={styles.footer}>
+      <div className={styles.footer} onClick={(e) => e.stopPropagation()}>
         <SocialLinks links={member.socials} />
 
-        <a
-          href={member.projectUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={onClick}
           className={`${styles.projectBtn} group transition-all duration-300 ${!isOnline && '!bg-red-500/10 !border-red-500/30 !text-red-400 hover:!bg-red-500/20 hover:!border-red-500'}`}
         >
           <span>Projects</span>
           <ArrowUpRight size={14} strokeWidth={2.5} className={`transition-colors ${!isOnline && 'text-red-500'}`} />
-        </a>
+        </button>
       </div>
     </motion.div>
   );

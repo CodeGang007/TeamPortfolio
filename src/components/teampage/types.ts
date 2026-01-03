@@ -15,4 +15,16 @@ export interface TeamMember {
   socials: SocialLinks;
   projectUrl: string;
   active: boolean;
+  // New Fields for Modal
+  experienceLevel?: string;
+  hourlyRate?: string;
+  languages?: string[];
+  availability?: string;
+  email?: string;
+  phone?: string;
+  projects?: {
+    title: string;
+    description: string;
+    githubUrl: string;
+  }[];
 }

@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
     User, Mail, Phone, Building2, Save,
     Briefcase, MapPin, Loader2, ArrowLeft, Camera, X, Upload,
-    Code, Github, Linkedin, Instagram, Crown, ShieldCheck, Lock, Search, Users
+    Code, Github, Linkedin, Instagram, Crown, ShieldCheck, Lock, Search, Users, Ban
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -103,7 +103,8 @@ function ProfileContent() {
         description: "",
         techStack: [],
         socials: { github: "", linkedin: "", instagram: "" },
-        projectUrl: "" // Portfolio URL
+        projectUrl: "", // Portfolio URL
+        projects: [] // Showcase Projects
     });
 
     // Check if we should open avatar modal from URL
@@ -195,6 +196,7 @@ function ProfileContent() {
                                 hourlyRate: devProfile.hourlyRate,
                                 languages: devProfile.languages,
                                 availability: devProfile.availability,
+                                projects: devProfile.projects || []
                             });
                         }
                     }
@@ -232,6 +234,22 @@ function ProfileContent() {
         }
     };
 
+    const disableDeveloper = async () => {
+        if (!targetUserId) return;
+
+        try {
+            // Revert User Role to 'client'
+            await setDoc(doc(db, "users", targetUserId), { role: 'client' }, { merge: true });
+
+            setTargetRole('client');
+            setSuccessMessage("Developer access disabled. User is now a client.");
+            setTimeout(() => setSuccessMessage(""), 3000);
+        } catch (error: any) {
+            console.error("Disable Error:", error);
+            alert(`Failed to disable: ${error.message || "Unknown error"}`);
+        }
+    };
+
     const handleSave = async () => {
         if (!targetUserId) return;
 
@@ -259,10 +277,12 @@ function ProfileContent() {
                     projectUrl: developerForm.projectUrl,
                     imageUrl: displayPhoto || "", // Ensure photo synced
                     // New Fields
-                    experienceLevel: developerForm.experienceLevel,
-                    hourlyRate: developerForm.hourlyRate,
-                    languages: developerForm.languages,
-                    availability: developerForm.availability,
+                    // New Fields (Ensure no undefined)
+                    experienceLevel: developerForm.experienceLevel || "Junior",
+                    hourlyRate: developerForm.hourlyRate || "",
+                    languages: developerForm.languages || [],
+                    availability: developerForm.availability || "Freelance",
+                    projects: developerForm.projects || []
                 });
             }
 
@@ -303,9 +323,9 @@ function ProfileContent() {
     return (
         <div className="min-h-screen bg-black text-white selection:bg-brand-green/30">
             {/* Header */}
-            <header className="sticky top-0 z-50 border-b border-zinc-800 bg-black/90 px-4 py-4 backdrop-blur-md md:px-8">
-                <div className="mx-auto flex max-w-4xl items-center justify-between">
-                    <div className="flex items-center gap-4">
+            <header className="sticky top-0 z-50 border-b border-zinc-800 bg-black/90 px-4 py-3 md:py-4 backdrop-blur-md md:px-8">
+                <div className="mx-auto flex max-w-7xl items-center justify-between">
+                    <div className="flex items-center gap-3 md:gap-4">
                         <Link
                             href="/"
                             className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors"
@@ -336,11 +356,11 @@ function ProfileContent() {
 
             {/* ... Existing Profile Content ... */}
 
-            <main className="mx-auto max-w-4xl px-4 py-12 md:px-8">
-                <div className="grid gap-8 md:grid-cols-12">
+            <main className="mx-auto max-w-7xl px-3 py-6 md:px-8 md:py-8">
+                <div className="grid gap-4 md:gap-6 md:grid-cols-12">
 
                     {/* Left Column: Read-only Identity */}
-                    <div className="md:col-span-4 space-y-6">
+                    <div className="md:col-span-4 lg:col-span-3 space-y-6">
 
                         {/* ADMIN ONLY: User Selector */}
                         {isAdmin && (
@@ -416,7 +436,7 @@ function ProfileContent() {
                             </div>
                         )}
 
-                        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 flex flex-col items-center text-center">
+                        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 md:p-6 flex flex-col items-center text-center">
                             {/* ... Avatar Logic (keep as is, maybe disable upload if viewing another user) ... */}
                             {/* Simplified for brevity in this replace block, ideally would keep existing and just patch around it, but easier to replace the structure if needed. 
                                 Actually, I will just INSERT the Admin Logic below the Avatar/Name section in the Left Column.
@@ -464,6 +484,15 @@ function ProfileContent() {
                                 </Button>
                             )}
 
+                            {isAdmin && !isOwnProfile && targetRole === 'developer' && (
+                                <Button
+                                    onClick={disableDeveloper}
+                                    className="mt-4 w-full bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20"
+                                >
+                                    <Ban className="mr-2 h-4 w-4" /> Disable Developer
+                                </Button>
+                            )}
+
                             {/* Read-only Fields */}
                             <div className="mt-6 w-full space-y-4">
                                 {/* ... Name/Email Inputs ... */}
@@ -496,7 +525,7 @@ function ProfileContent() {
                     </div>
 
                     {/* Right Column: Editable Details */}
-                    <div className="md:col-span-8 space-y-6">
+                    <div className="md:col-span-8 lg:col-span-9 space-y-4 md:space-y-6">
 
                         {/* Success Message */}
                         {successMessage && (
@@ -509,10 +538,10 @@ function ProfileContent() {
                             </motion.div>
                         )}
 
-                        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-8 space-y-8">
+                        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-4 md:p-6 space-y-5 md:space-y-6">
 
                             {/* Personal Details */}
-                            <div className="space-y-6">
+                            <div className="space-y-4">
                                 <div className="flex items-center gap-3 pb-2 border-b border-zinc-800">
                                     <Briefcase className="h-5 w-5 text-brand-green" />
                                     <h3 className="text-lg font-semibold text-white">Professional Details</h3>
@@ -617,7 +646,7 @@ function ProfileContent() {
 
                         {/* DEVELOPER SECTION */}
                         {(targetRole === 'developer' || isAdmin) && (
-                            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-8 space-y-8 relative overflow-hidden">
+                            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-4 md:p-6 space-y-5 md:space-y-6 relative overflow-hidden">
 
                                 {/* LOCKED OVERLAY */}
                                 {targetRole !== 'developer' && (
@@ -820,15 +849,91 @@ function ProfileContent() {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-300">Professional Bio</label>
+                                        <label className="text-sm font-medium text-zinc-300">Short Bio</label>
                                         <textarea
                                             value={developerForm.description || ""}
                                             onChange={(e) => setDeveloperForm({ ...developerForm, description: e.target.value })}
-                                            placeholder="Brief description of your expertise and what you build..."
-                                            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 min-h-[120px] text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20"
+                                            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 min-h-[100px] text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20"
+                                            placeholder="Tell us about your experience and skills..."
                                         />
                                     </div>
 
+                                    {/* Showcase Projects */}
+                                    <div className="space-y-4 pt-4 border-t border-zinc-800/50">
+                                        <div className="flex items-center justify-between">
+                                            <h4 className="text-base font-semibold text-white">Showcase Projects (Max 3)</h4>
+                                            {(!developerForm.projects || developerForm.projects.length < 3) && (
+                                                <Button
+                                                    type="button"
+                                                    onClick={() => setDeveloperForm({
+                                                        ...developerForm,
+                                                        projects: [...(developerForm.projects || []), { title: "", description: "", githubUrl: "" }]
+                                                    })}
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="h-8 text-xs border-brand-green/20 text-brand-green hover:bg-brand-green/10"
+                                                >
+                                                    <Briefcase className="mr-2 h-3 w-3" /> Add Project
+                                                </Button>
+                                            )}
+                                        </div>
+
+                                        <div className="grid gap-4">
+                                            {developerForm.projects?.map((project, index) => (
+                                                <div key={index} className="relative rounded-xl border border-zinc-800 bg-zinc-950/50 p-4 space-y-3">
+                                                    <button
+                                                        onClick={() => setDeveloperForm({
+                                                            ...developerForm,
+                                                            projects: developerForm.projects?.filter((_, i) => i !== index)
+                                                        })}
+                                                        className="absolute top-2 right-2 p-1 text-zinc-500 hover:text-red-400 transition-colors"
+                                                    >
+                                                        <X className="h-4 w-4" />
+                                                    </button>
+
+                                                    <div className="grid md:grid-cols-2 gap-3">
+                                                        <input
+                                                            type="text"
+                                                            value={project.title}
+                                                            onChange={(e) => {
+                                                                const newProjects = [...(developerForm.projects || [])];
+                                                                newProjects[index].title = e.target.value;
+                                                                setDeveloperForm({ ...developerForm, projects: newProjects });
+                                                            }}
+                                                            placeholder="Project Title"
+                                                            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-brand-green focus:outline-none"
+                                                        />
+                                                        <input
+                                                            type="text"
+                                                            value={project.githubUrl}
+                                                            onChange={(e) => {
+                                                                const newProjects = [...(developerForm.projects || [])];
+                                                                newProjects[index].githubUrl = e.target.value;
+                                                                setDeveloperForm({ ...developerForm, projects: newProjects });
+                                                            }}
+                                                            placeholder="GitHub URL"
+                                                            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-brand-green focus:outline-none"
+                                                        />
+                                                    </div>
+                                                    <textarea
+                                                        value={project.description}
+                                                        onChange={(e) => {
+                                                            const newProjects = [...(developerForm.projects || [])];
+                                                            newProjects[index].description = e.target.value;
+                                                            setDeveloperForm({ ...developerForm, projects: newProjects });
+                                                        }}
+                                                        placeholder="Short description of the project..."
+                                                        className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-brand-green focus:outline-none min-h-[60px]"
+                                                    />
+                                                </div>
+                                            ))}
+                                            {(!developerForm.projects || developerForm.projects.length === 0) && (
+                                                <div className="text-center py-6 border border-dashed border-zinc-800 rounded-xl text-zinc-500 text-sm">
+                                                    No projects added yet. Add up to 3 projects to showcase your work.
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                     {/* Portfolio URL */}
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-zinc-300">Portfolio / Website</label>
