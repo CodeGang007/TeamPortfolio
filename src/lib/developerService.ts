@@ -25,6 +25,12 @@ export interface Developer {
         instagram: string;
         twitter?: string; // Added Twitter
     };
+    // New Projects Field
+    projects?: {
+        title: string;
+        description: string;
+        githubUrl: string;
+    }[];
     createdAt?: string;
     updatedAt?: string;
 }
@@ -171,6 +177,7 @@ class DeveloperService {
                         instagram: '',
                         twitter: ''
                     },
+                    projects: data.projects || [], // Ensure projects are saved on creation
                     createdAt: timestamp,
                     updatedAt: timestamp
                 });
