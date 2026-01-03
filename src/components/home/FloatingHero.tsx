@@ -3,274 +3,265 @@
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
-import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
-
-import { HeroParallax } from "@/components/ui/hero-parallax";
+import { Star, ArrowRight, ArrowUpRight, CheckCircle2 } from "lucide-react";
 
 export default function FloatingHero() {
     const { isAuthenticated } = useAuth();
     const isOnline = isAuthenticated;
 
-    const products = [
+    const services = [
         {
-            title: "AI-Powered Analytics Dashboard",
-            description: "Real-time data visualization platform with machine learning insights",
-            thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-            tags: ["React", "Python", "TensorFlow"],
-            link: "#",
-            github: "#"
+            title: "Web Design",
+            description: "Award-winning UI/UX interfaces.",
+            image: "https://images.unsplash.com/photo-1558655146-d09347e0c7a8?w=800&q=80",
+            tags: ["UI/UX", "Figma"],
         },
         {
-            title: "E-Commerce Platform",
-            description: "Modern shopping experience with seamless checkout and inventory management",
-            thumbnail: "https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80",
-            tags: ["Next.js", "Stripe", "PostgreSQL"],
-            link: "#"
+            title: "App Development",
+            description: "Native & Cross-platform solutions.",
+            image: "https://images.unsplash.com/photo-1551650975-87bd5c8e2282?w=800&q=80",
+            tags: ["iOS", "Android"],
         },
         {
-            title: "Blockchain Wallet",
-            description: "Secure cryptocurrency wallet with multi-chain support",
-            thumbnail: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80",
-            tags: ["Web3", "Solidity", "React"],
-            github: "#"
+            title: "SEO Boost",
+            description: "Rank #1 on Google Search.",
+            image: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
+            tags: ["Growth", "Analytics"],
         },
         {
-            title: "Smart Home IoT System",
-            description: "Connected home automation with voice control and AI scheduling",
-            thumbnail: "https://images.unsplash.com/photo-1558002038-1055907df827?w=800&q=80",
-            tags: ["IoT", "Node.js", "AWS"],
-            link: "#"
+            title: "Branding",
+            description: "Identity that tells your story.",
+            image: "https://images.unsplash.com/photo-1600607686527-6fb886090705?w=800&q=80",
+            tags: ["Logo", "Strategy"],
         },
         {
-            title: "AI-Powered Analytics Dashboard",
-            description: "Real-time data visualization platform with machine learning insights",
-            thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-            tags: ["React", "Python", "TensorFlow"],
-            link: "#",
-            github: "#"
+            title: "Cloud Solutions",
+            description: "Scalable infrastructure.",
+            image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
+            tags: ["AWS", "Azure"],
         },
         {
-            title: "E-Commerce Platform",
-            description: "Modern shopping experience with seamless checkout and inventory management",
-            thumbnail: "https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80",
-            tags: ["Next.js", "Stripe", "PostgreSQL"],
-            link: "#"
-        },
-        {
-            title: "Blockchain Wallet",
-            description: "Secure cryptocurrency wallet with multi-chain support",
-            thumbnail: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80",
-            tags: ["Web3", "Solidity", "React"],
-            github: "#"
-        },
-        {
-            title: "Smart Home IoT System",
-            description: "Connected home automation with voice control and AI scheduling",
-            thumbnail: "https://images.unsplash.com/photo-1558002038-1055907df827?w=800&q=80",
-            tags: ["IoT", "Node.js", "AWS"],
-            link: "#"
-        },
-        {
-            title: "AI-Powered Analytics Dashboard",
-            description: "Real-time data visualization platform with machine learning insights",
-            thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-            tags: ["React", "Python", "TensorFlow"],
-            link: "#",
-            github: "#"
-        },
-        {
-            title: "E-Commerce Platform",
-            description: "Modern shopping experience with seamless checkout and inventory management",
-            thumbnail: "https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80",
-            tags: ["Next.js", "Stripe", "PostgreSQL"],
-            link: "#"
-        },
-        {
-            title: "Blockchain Wallet",
-            description: "Secure cryptocurrency wallet with multi-chain support",
-            thumbnail: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80",
-            tags: ["Web3", "Solidity", "React"],
-            github: "#"
-        },
-        {
-            title: "Smart Home IoT System",
-            description: "Connected home automation with voice control and AI scheduling",
-            thumbnail: "https://images.unsplash.com/photo-1558002038-1055907df827?w=800&q=80",
-            tags: ["IoT", "Node.js", "AWS"],
-            link: "#"
+            title: "Maintenance",
+            description: "24/7 Support & Updates.",
+            image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80",
+            tags: ["Security", "Uptime"],
         },
     ];
 
     return (
-        <HeroParallax
-            products={products}
-            projectHeader={
-                <div className="text-center mt-20 md:mt-0">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="inline-block"
-                    >
-                        <div className={`inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full border transition-all duration-500 ${isOnline
-                            ? 'bg-zinc-900 border-brand-green/30'
-                            : 'bg-zinc-950 border-red-500/30'
-                            }`}>
-                            <span className={`w-2 h-2 rounded-full animate-pulse transition-colors duration-500 ${isOnline ? 'bg-brand-green' : 'bg-red-500'
-                                }`}></span>
-                            <span className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isOnline ? 'text-brand-green' : 'text-red-500'
-                                }`}>
-                                {isOnline ? 'Innovation Gallery' : 'System Locked'}
+        <section className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden flex flex-col justify-center">
+            {/* Background Texture */}
+            <div className="absolute inset-0 opacity-20 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+
+            {/* 3D Bloom Effect */}
+            <div className={`absolute top-[-20%] right-[-10%] w-[800px] h-[800px] blur-[120px] rounded-full mix-blend-screen pointer-events-none opacity-20 transition-colors duration-700 ${isOnline ? 'bg-brand-green' : 'bg-red-600'
+                }`} />
+
+            <div className="container mx-auto px-6 md:px-12 relative z-10">
+                {/* Hero Content */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-32">
+
+                    {/* Left Column (7 cols) */}
+                    <div className="lg:col-span-7">
+                        {/* Status Pill */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className={`inline-flex items-center gap-2 pl-1 pr-3 py-1 rounded-full border mb-8 transition-colors duration-300 ${isOnline
+                                ? 'bg-zinc-900 border-zinc-800 text-zinc-300'
+                                : 'bg-red-950/20 border-red-900/30 text-red-300'
+                                }`}
+                        >
+                            <span className={`flex h-2 w-2 rounded-full ${isOnline ? 'bg-brand-green' : 'bg-red-500'}`}>
+                                <span className={`animate-ping absolute inline-flex h-2 w-2 rounded-full opacity-75 ${isOnline ? 'bg-brand-green' : 'bg-red-500'}`} />
                             </span>
-                        </div>
-                    </motion.div>
+                            <span className="text-xs font-bold tracking-widest uppercase">
+                                {isOnline ? 'Available for new projects' : 'System Locked'}
+                            </span>
+                        </motion.div>
 
-                    <h2 className={`text-4xl md:text-6xl font-black tracking-tight mb-4 italic transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'
-                        }`}>
-                        Curated <span className={`text-transparent bg-clip-text transition-all duration-500 ${isOnline
-                            ? 'bg-gradient-to-r from-brand-green to-green-400'
-                            : 'bg-gradient-to-r from-red-500 to-orange-500'
-                            }`}>Showcase</span>
-                    </h2>
-                    <p className={`text-lg max-w-2xl mx-auto font-light transition-colors duration-500 ${isOnline ? 'text-zinc-500' : 'text-red-300/50'
-                        }`}>
-                        {isOnline
-                            ? 'A visual testament to our engineering capabilities. We turn complex problems into elegant digital solutions.'
-                            : 'Access restricted. Authentication required to view portfolio data.'}
-                    </p>
-                </div>
-            }
-            header={
-                <div className="relative w-full h-[80vh] flex items-center justify-center -mt-20">
-                    {/* Single Clean 3D Object - Right Edge Only - Transitions color with state */}
-                    <motion.div
-                        className="absolute top-[20%] right-[-18%] w-[600px] h-[600px] opacity-40 pointer-events-none z-0 transition-all duration-1000"
-                        style={{
-                            filter: isOnline
-                                ? 'hue-rotate(0deg) brightness(1)'
-                                : 'hue-rotate(290deg) brightness(0.8) saturate(1.5)',
-                            willChange: "transform"
-                        }}
-                        animate={{
-                            scale: [1, 1.05, 1],
-                            rotate: [0, -10, 0],
-                        }}
-                        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                    >
-                        <img src="/3d_blob.png" alt="" className="w-full h-full object-contain mix-blend-screen" />
-                    </motion.div>
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 }}
+                            className={`text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[0.9] mb-8 ${isOnline ? 'text-white' : 'text-red-50'}`}
+                        >
+                            WE BUILD <br />
+                            <span className="outline-text text-transparent" style={{ WebkitTextStroke: isOnline ? '1px rgba(255,255,255,0.3)' : '1px rgba(255,100,100,0.3)' }}>
+                                DIGITAL
+                            </span> <br />
+                            <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isOnline ? 'from-brand-green via-white to-brand-green' : 'from-red-500 via-white to-red-500'}`}>
+                                LEGACIES
+                            </span>
+                        </motion.h1>
 
-                    {/* Hero Content with Interactive State - Wrapped in 3D Container */}
-                    <CardContainer className="relative z-10 w-full max-w-7xl px-6" containerClassName="py-0">
-                        <CardBody className="relative w-full flex flex-col items-center justify-center text-center">
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className={`text-xl md:text-2xl max-w-xl leading-relaxed mb-10 ${isOnline ? 'text-zinc-400' : 'text-red-200/60'}`}
+                        >
+                            Helping ambitious brands scale their vision with world-class design & engineering.
+                        </motion.p>
 
-                            {/* Status Badge - Depth 50 */}
-                            <CardItem translateZ="50" className="w-full flex justify-center">
-                                <motion.div
-                                    className={`inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full backdrop-blur-sm transition-all duration-300 ${isOnline
-                                        ? 'bg-zinc-950/90 border border-brand-green/30 shadow-[0_0_20px_rgba(34,197,94,0.08)]'
-                                        : 'bg-zinc-950/90 border border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.08)]'
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="flex flex-wrap items-center gap-6"
+                        >
+                            <Link href="/project-request/custom">
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className={`group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${isOnline
+                                        ? 'bg-brand-green text-black hover:bg-brand-green/90'
+                                        : 'bg-red-500 text-white hover:bg-red-600'
                                         }`}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ delay: 1.5 }}
                                 >
-                                    <span className="relative flex h-2 w-2">
-                                        <span
-                                            className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isOnline ? 'bg-brand-green' : 'bg-red-500'
-                                                }`}
-                                        />
-                                        <span
-                                            className={`relative inline-flex rounded-full h-2 w-2 ${isOnline ? 'bg-brand-green' : 'bg-red-500'
-                                                }`}
-                                        />
-                                    </span>
-                                    <span
-                                        className={`text-xs font-bold uppercase tracking-wider transition-colors duration-500 ${isOnline ? 'text-brand-green' : 'text-red-500'
-                                            }`}
-                                    >
-                                        {isOnline ? 'System Online' : 'System Offline'}
-                                    </span>
-                                </motion.div>
-                            </CardItem>
+                                    <span>Start a Project</span>
+                                    <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1">
+                                        <ArrowRight size={16} />
+                                    </div>
+                                </motion.button>
+                            </Link>
 
-                            {/* Brand Introduction - Depth 40 */}
-                            <CardItem translateZ="40" className="w-full flex justify-center">
-                                <motion.div
-                                    className="mb-6"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 2 }}
-                                >
-                                    <p className="text-sm md:text-base text-zinc-600 tracking-[0.3em] uppercase font-bold">
-                                        CodeGang Presents You
+                            <div className="flex -space-x-4">
+                                {[1, 2, 3].map((i) => (
+                                    <div key={i} className={`w-12 h-12 rounded-full border-2 border-black bg-zinc-800 overflow-hidden`}>
+                                        <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="Client" className="w-full h-full object-cover" />
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="flex flex-col">
+                                <div className="flex text-yellow-500">
+                                    {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
+                                </div>
+                                <span className={`text-sm font-medium ${isOnline ? 'text-zinc-400' : 'text-red-300/50'}`}>Trusted by 50+ clients</span>
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    {/* Right Column (5 cols) - Professional Visual */}
+                    <div className="lg:col-span-5 relative hidden lg:block h-[500px]">
+                        {/* Layer 1: Code Snippet (Behind) */}
+                        <motion.div
+                            initial={{ opacity: 0, x: 20, rotate: 6 }}
+                            animate={{ opacity: 1, x: 0, rotate: 6 }}
+                            transition={{ delay: 0.5, duration: 0.8 }}
+                            className={`absolute top-10 right-10 w-[350px] p-6 rounded-2xl border backdrop-blur-md z-10 ${isOnline
+                                ? 'bg-zinc-900/90 border-zinc-800 shadow-2xl'
+                                : 'bg-red-950/90 border-red-900/50'
+                                }`}
+                        >
+                            <div className="flex gap-2 mb-4">
+                                <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                                <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                                <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                            </div>
+                            <div className="font-mono text-xs space-y-1">
+                                <p className="text-pink-400">const <span className="text-blue-300">future</span> = <span className="text-yellow-300">await</span> build({'{'}</p>
+                                <p className="pl-4 text-zinc-400">vision: <span className="text-green-300">"Limitless"</span>,</p>
+                                <p className="pl-4 text-zinc-400">stack: [<span className="text-orange-300">"Next.js"</span>, <span className="text-blue-400">"React"</span>],</p>
+                                <p className="pl-4 text-zinc-400">performance: <span className="text-purple-400">100</span></p>
+                                <p className="text-zinc-500">{'}'});</p>
+                            </div>
+                        </motion.div>
+
+                        {/* Layer 2: UI Preview (Front) */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.2, duration: 0.8 }}
+                            className={`absolute top-28 left-0 w-[400px] aspect-[4/3] rounded-2xl overflow-hidden border shadow-2xl z-20 ${isOnline
+                                ? 'bg-black border-zinc-800 shadow-brand-green/10'
+                                : 'bg-black border-red-900/50 shadow-red-500/10'
+                                }`}
+                        >
+                            {/* Browser Header */}
+                            <div className={`h-8 w-full border-b flex items-center px-4 gap-2 ${isOnline ? 'bg-zinc-900 border-zinc-800' : 'bg-red-950/30 border-red-900/30'}`}>
+                                <div className="flex-1 flex justify-center">
+                                    <div className={`w-32 h-4 rounded-full ${isOnline ? 'bg-zinc-800' : 'bg-red-900/30'}`} />
+                                </div>
+                            </div>
+
+                            {/* Preview Content */}
+                            <div className="relative w-full h-full">
+                                <img
+                                    src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80"
+                                    className="w-full h-full object-cover opacity-80"
+                                    alt="Dashboard Preview"
+                                />
+
+                                {/* Overlay Stats */}
+                                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl border backdrop-blur-md bg-black/50 border-white/10 flex items-center justify-between">
+                                    <div>
+                                        <p className="text-[10px] uppercase tracking-wider text-zinc-400">Conversion</p>
+                                        <p className={`text-xl font-bold ${isOnline ? 'text-white' : 'text-red-100'}`}>+84.5%</p>
+                                    </div>
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${isOnline ? 'bg-brand-green/20 border-brand-green/50 text-brand-green' : 'bg-red-500/20 border-red-500/50 text-red-500'}`}>
+                                        <CheckCircle2 size={20} />
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+
+                {/* Professional Services Grid (6 Items) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {services.map((service, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.1 * index }}
+                            className={`group relative h-[320px] rounded-2xl overflow-hidden border transition-all duration-300 ${isOnline
+                                ? 'bg-zinc-900 border-zinc-800 hover:border-brand-green/50 hover:shadow-2xl hover:shadow-brand-green/5'
+                                : 'bg-red-950 border-red-900/20 hover:border-red-500/50'
+                                }`}
+                        >
+                            {/* Background Image with Overlay */}
+                            <div className="absolute inset-0 z-0">
+                                <img
+                                    src={service.image}
+                                    alt={service.title}
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80"
+                                />
+                                <div className={`absolute inset-0 bg-gradient-to-t ${isOnline ? 'from-black/95 via-black/50 to-transparent' : 'from-red-950/95 via-red-950/50 to-transparent'}`} />
+                            </div>
+
+                            {/* Content */}
+                            <div className="relative z-10 p-8 h-full flex flex-col justify-end">
+                                <div className="transform transition-transform duration-300 translate-y-2 group-hover:translate-y-0">
+                                    <h3 className={`text-2xl font-bold mb-2 ${isOnline ? 'text-white' : 'text-red-100'} drop-shadow-lg`}>
+                                        {service.title}
+                                    </h3>
+                                    <p className={`text-sm mb-4 line-clamp-2 ${isOnline ? 'text-zinc-300' : 'text-red-200/90'} drop-shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300`}>
+                                        {service.description}
                                     </p>
-                                </motion.div>
-                            </CardItem>
 
-                            {/* Main Heading - Depth 100 (Highest) */}
-                            <CardItem translateZ="100" className="w-full flex justify-center">
-                                <motion.h1
-                                    className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 tracking-tight relative"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 2.3 }}
-                                >
-                                    <span className={`relative z-10 block mb-2 transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'
-                                        }`}>
-                                        THE FUTURE OF
-                                    </span>
-                                    <span className={`relative z-10 block italic text-transparent bg-clip-text transition-all duration-500 ${isOnline
-                                        ? 'bg-gradient-to-r from-brand-green via-green-400 to-emerald-500 drop-shadow-[0_0_25px_rgba(34,197,94,0.6)]'
-                                        : 'bg-gradient-to-r from-red-500 via-red-400 to-orange-500 drop-shadow-[0_0_25px_rgba(239,68,68,0.6)]'
-                                        }`}>
-                                        DIGITAL INNOVATION
-                                    </span>
+                                    {/* Link / Arrow */}
+                                    <div className={`flex items-center gap-2 text-sm font-medium ${isOnline ? 'text-brand-green' : 'text-red-400'}`}>
+                                        <span>View Details</span>
+                                        <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+                                    </div>
+                                </div>
 
-                                    {/* Glitch overlay bars */}
-                                    <motion.div
-                                        className="absolute inset-0 overflow-hidden"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: [0, 0.8, 0, 0.6, 0] }}
-                                        transition={{ delay: 2.5, duration: 1.5 }}
-                                    >
-                                        <div className={`absolute top-[20%] left-0 right-0 h-0.5 ${isOnline ? 'bg-brand-green/60' : 'bg-red-500/60'
-                                            }`} />
-                                        <div className={`absolute top-[40%] left-0 right-0 h-px ${isOnline ? 'bg-brand-green/40' : 'bg-red-500/40'
-                                            }`} />
-                                        <div className={`absolute top-[60%] left-0 right-0 h-0.5 ${isOnline ? 'bg-brand-green/60' : 'bg-red-500/60'
-                                            }`} />
-                                        <div className={`absolute top-[80%] left-0 right-0 h-px ${isOnline ? 'bg-brand-green/40' : 'bg-red-500/40'
-                                            }`} />
-                                    </motion.div>
-                                </motion.h1>
-                            </CardItem>
-
-                            {/* Description - Depth 60 */}
-                            <CardItem translateZ="60" className="w-full flex justify-center">
-                                <motion.p
-                                    className={`text-lg md:text-xl max-w-3xl mx-auto mb-12 leading-relaxed font-light transition-colors duration-500 ${isOnline ? 'text-zinc-500' : 'text-zinc-600'
-                                        }`}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 2.6 }}
-                                >
-                                    Building <span className={`font-medium transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-200'
-                                        }`}>next-generation digital experiences</span> that merge cutting-edge technology with breathtaking design.
-                                </motion.p>
-                            </CardItem>
-
-
-                        </CardBody>
-                    </CardContainer>
-
-                    {/* Bottom accent glow */}
-                    <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-48 blur-3xl transition-colors duration-1000 ${isOnline
-                        ? 'bg-brand-green/10'
-                        : 'bg-red-500/10'
-                        }`} />
+                                {/* Tags (Absolute Top) */}
+                                <div className="absolute top-6 left-6 flex gap-2">
+                                    {service.tags.map((tag, i) => (
+                                        <span key={i} className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full backdrop-blur-md border ${isOnline ? 'bg-black/40 text-white border-white/20' : 'bg-red-900/40 text-red-100 border-red-500/30'}`}>
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
                 </div>
-            }
-        />
+            </div>
+        </section>
     );
 }
