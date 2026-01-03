@@ -7,11 +7,14 @@ import { Mail, MapPin, Phone, Send, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
+import { ThemeFlipHeading } from "@/components/ui/ThemeFlipHeading";
+import { ConsultationModal } from "@/components/contact/ConsultationModal";
 
 export default function ContactUsPage() {
   const { isAuthenticated } = useAuth();
   const isOnline = isAuthenticated;
-  
+  const [isConsultationOpen, setIsConsultationOpen] = useState(false);
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -76,9 +79,12 @@ export default function ContactUsPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-              Get in <span className={`transition-colors duration-500 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>Touch</span>
-            </h1>
+            <div className="mb-6">
+              <ThemeFlipHeading
+                prefix="Get in "
+                words={["Touch.", "Sync.", "Connect."]}
+              />
+            </div>
             <p className={`max-w-2xl mx-auto text-lg transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>
               Have a project in mind? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
             </p>
@@ -136,11 +142,14 @@ export default function ContactUsPage() {
                     ? 'bg-brand-green text-black shadow-[0_0_20px_rgba(0,255,65,0.3)]'
                     : 'bg-red-500/20 text-red-200 border border-red-500/50 hover:bg-red-500/30'
                     }`}
+                  onClick={() => isOnline && setIsConsultationOpen(true)}
                 >
                   {isOnline ? 'Book Consultation' : 'Authentication Required'}
                 </Button>
               </div>
             </motion.div>
+
+            <ConsultationModal isOpen={isConsultationOpen} onClose={() => setIsConsultationOpen(false)} />
 
             {/* Right Column: Form */}
             <motion.div
@@ -169,7 +178,7 @@ export default function ContactUsPage() {
                     <Input
                       placeholder="John"
                       value={formData.firstName}
-                      onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                       required
                       classNames={{
                         inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
@@ -185,7 +194,7 @@ export default function ContactUsPage() {
                     <Input
                       placeholder="Doe"
                       value={formData.lastName}
-                      onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                       required
                       classNames={{
                         inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
@@ -203,7 +212,7 @@ export default function ContactUsPage() {
                     placeholder="john@example.com"
                     type="email"
                     value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
                     classNames={{
                       inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
@@ -222,7 +231,7 @@ export default function ContactUsPage() {
                     placeholder="Tell us about your project..."
                     minRows={6}
                     value={formData.message}
-                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     required
                     classNames={{
                       inputWrapper: `transition-colors rounded-2xl p-4 ${isOnline
