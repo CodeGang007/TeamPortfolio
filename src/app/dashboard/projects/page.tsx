@@ -76,6 +76,9 @@ export default function ProjectDashboard() {
                 if (role === 'admin') {
                     // Admin sees all projects
                     fetchedProjects = await projectRequestService.getAllProjects();
+                } else if (role === 'developer') {
+                    // Developers see assigned projects
+                    fetchedProjects = await projectRequestService.getAssignedProjects(user.uid);
                 } else {
                     // Clients see only their own
                     fetchedProjects = await projectRequestService.getProjectsByUserId(user.uid);
@@ -118,7 +121,8 @@ export default function ProjectDashboard() {
                 console.log('Fetched projects:', sorted);
 
                 // If Admin, fetch user details for these projects
-                if (role === 'admin' && fetchedProjects.length > 0) {
+                if ((role === 'admin' || role === 'developer') && fetchedProjects.length > 0) {
+                     // Fetch client names for developers too
                     const uniqueUserIds = Array.from(new Set(fetchedProjects.map(p => p.userId).filter(Boolean)));
                     if (uniqueUserIds.length > 0) {
                         try {
@@ -646,7 +650,7 @@ export default function ProjectDashboard() {
                                                 dueDate={project.dueDate}
                                                 currentMilestone={project.currentMilestone}
                                                 clientName={
-                                                    role === 'admin'
+                                                    (role === 'admin' || role === 'developer')
                                                         ? (userMap[project.userId]?.name || project.userName || project.userEmail || "User")
                                                         : undefined
                                                 }
