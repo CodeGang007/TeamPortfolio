@@ -3,6 +3,7 @@
 import AppLayout from "@/components/AppLayout";
 import AskForProject from "@/components/home/AskForProject";
 import FloatingHero from "@/components/home/FloatingHero";
+import MarqueeSection from "@/components/home/MarqueeSection";
 
 import UserStories from "@/components/UserStories";
 import FAQ from "@/components/FAQ";
@@ -76,6 +77,9 @@ export default function HomePage() {
         </motion.div>
 
         <FloatingHero />
+
+
+        <MarqueeSection />
 
         <div className="container mx-auto px-6 md:px-12 relative z-10">
 

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { TeamFilter } from "./TeamFilter";
 import { TeamMemberCard } from "./TeamMemberCard";
+import { DeveloperDetailsModal } from "./DeveloperDetailsModal";
 import { TeamMember } from "./types";
 import { useAuth } from "@/contexts/AuthContext";
 import { db } from "@/lib/firebase";
@@ -29,6 +30,7 @@ export function TeamSection() {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [debugLog, setDebugLog] = useState<string>("");
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
   // Admin functions
   const toggleMemberStatus = async (memberId: string, currentStatus: boolean) => {
@@ -97,7 +99,15 @@ export function TeamSection() {
           techStack: data.techStack || [],
           projectUrl: data.projectUrl || "#",
           socials: data.socials || {},
-          active: data.active !== false
+          active: data.active !== false,
+          // New Fields
+          experienceLevel: data.experienceLevel,
+          hourlyRate: data.hourlyRate,
+          languages: data.languages,
+          availability: data.availability,
+          email: data.email,
+          phone: data.phone,
+          projects: data.projects || [] // Map projects
         } as TeamMember;
       });
 
@@ -204,7 +214,7 @@ export function TeamSection() {
             isOnline={isOnline}
           />
 
-          <motion.div layout className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 mt-8">
+          <motion.div layout className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-3 mt-8">
             <AnimatePresence mode="popLayout">
               {filteredMembers.map((member, index) => (
                 <motion.div
@@ -216,7 +226,11 @@ export function TeamSection() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   className={`relative group rounded-xl transition-all duration-500 ${highlightedId === member.id ? 'ring-2 ring-brand-green ring-offset-4 ring-offset-black scale-105 z-10' : ''}`}
                 >
-                  <TeamMemberCard member={member} isOnline={isOnline} />
+                  <TeamMemberCard
+                    member={member}
+                    isOnline={isOnline}
+                    onClick={() => setSelectedMember(member)}
+                  />
 
                   {/* Admin Controls */}
                   {isOnline && role === 'admin' && (
@@ -269,6 +283,12 @@ export function TeamSection() {
           </p>
         </div>
       )}
+
+      <DeveloperDetailsModal
+        member={selectedMember}
+        isOpen={!!selectedMember}
+        onClose={() => setSelectedMember(null)}
+      />
     </div>
   );
 }

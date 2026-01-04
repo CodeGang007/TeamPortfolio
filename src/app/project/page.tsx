@@ -1,22 +1,15 @@
 import AppLayout from "@/components/AppLayout";
 import { ProjectsSection } from "@/components/projectPage/ProjectsSection";
-import TypingHeading from "@/components/projectPage/TypingHeading";
+import { ThemeFlipHeading } from "@/components/ui/ThemeFlipHeading";
 
 export default function ProjectPage() {
-  const headingPrefix = "Dive into Our ";
-  const headingSuffixes = [
-    "Innovations.", 
-    "Creativities.", 
-    "Projects."
-  ];
-
   return (
     <AppLayout>
       <div className="container mx-auto px-8 min-h-screen">
-        
-        <TypingHeading 
-          prefix={headingPrefix} 
-          suffixes={headingSuffixes} 
+
+        <ThemeFlipHeading
+          prefix="Dive into Our "
+          words={["Innovations.", "Creativities.", "Projects.", "Visions."]}
         />
 
         <ProjectsSection />
