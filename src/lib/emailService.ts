@@ -12,6 +12,81 @@ interface ProjectEmailData {
 }
 
 export const emailService = {
+  async sendTeamAssignmentEmail(data: {
+      developers: { name: string; email: string }[];
+      projectName: string;
+      projectId: string;
+      clientName: string;
+  }) {
+    const { developers, projectName, projectId, clientName } = data;
+    const projectUrl = `https://team-portfolio-cg3e.vercel.app/dashboard/projects/${projectId}`;
+    const allEmails = developers.map(d => d.email).join(", ");
+    const developerNames = developers.map(d => d.name).join(", ");
+
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #09090b; margin: 0; padding: 0; }
+            .container { max-width: 600px; margin: 0 auto; background-color: #09090b; color: #ffffff; }
+            .header { background-color: #09090b; padding: 30px; text-align: center; border-bottom: 1px solid #27272a; }
+            .content { padding: 40px 30px; }
+            .footer { background-color: #0f0f10; padding: 20px; text-align: center; font-size: 12px; color: #52525b; border-top: 1px solid #27272a; }
+            .button { display: inline-block; background-color: #00ff9d; color: #000000; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 20px; }
+            .team-list { margin-top: 20px; padding: 15px; background-color: #18181b; border-radius: 8px; border: 1px solid #27272a; }
+        </style>
+    </head>
+    <body style="background-color: #09090b; color: #ffffff;">
+        <div class="container">
+            <div class="header">
+                 <h1 style="color: #00ff9d; margin: 0; font-size: 24px;">New Team Assignment</h1>
+            </div>
+            <div class="content">
+                <h2 style="color: #ffffff; margin-top: 0;">Hello Team,</h2>
+                <p style="color: #d4d4d8; line-height: 1.6;">
+                    You have been assigned to the project <strong style="color: #ffffff;">"${projectName}"</strong> by ${clientName}.
+                </p>
+                
+                <div class="team-list">
+                    <p style="color: #a1a1aa; font-size: 12px; margin-bottom: 8px; text-transform: uppercase;">Assigned Members:</p>
+                    <p style="color: #ffffff; margin: 0; font-weight: 500;">${developerNames}</p>
+                </div>
+
+                <p style="color: #a1a1aa; font-size: 14px; margin-top: 24px;">
+                    Please collaborate and start working on the milestones.
+                </p>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="${projectUrl}" class="button">View Project Dashboard</a>
+                </div>
+            </div>
+            <div class="footer">
+                <p>&copy; ${new Date().getFullYear()} CodeGang. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+
+    try {
+        const response = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                to: allEmails,
+                subject: `👥 Team Assignment: ${projectName}`,
+                html: htmlContent
+            })
+        });
+        
+        return response.ok;
+    } catch (e) {
+        console.error("Failed to call email API", e);
+        return false;
+    }
+  },
+
   async sendProjectActiveEmail(data: ProjectEmailData) {
     const { projectName, clientName, clientEmail, developers } = data;
 

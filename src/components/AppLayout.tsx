@@ -149,7 +149,7 @@ export default function AppLayout({
                   ) : (
                       <FileText className="h-4 w-4" />
                   )}
-                  <span>{role === 'admin' ? "Manage Publications" : "My Publications"}</span>
+                  <span>{role === 'admin' ? "Manage Publications" : (role === 'developer' ? "Assigned Publications" : "My Publications")}</span>
                 </a>
               </>
             )}

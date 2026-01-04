@@ -159,6 +159,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     // Admin Edit States
     const [isEditing, setIsEditing] = useState(false);
     const [allDevelopers, setAllDevelopers] = useState<ServiceTeamMember[]>([]);
+    const [newlyAssignedDevs, setNewlyAssignedDevs] = useState<ServiceTeamMember[]>([]); // Track new assignments for email
 
     // Fetch developers if admin
     useEffect(() => {
@@ -205,18 +206,33 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 teamSize: project.teamMembers.length
             });
 
+            // SYNC ASSIGNMENTS: Ensure all team members are in the project_assignments collection
+            try {
+                await Promise.all(project.teamMembers.map(member => 
+                    projectRequestService.assignProject(project.id, member.id)
+                ));
+            } catch (assignError) {
+                console.error("Failed to sync assignments:", assignError);
+            }
+
+            // EMAIL NOTIFICATION: Send email to newly assigned developers (Batched)
+            if (newlyAssignedDevs.length > 0) {
+                 try {
+                    const requestData = await projectRequestService.getProjectById(project.id);
+                    await emailService.sendTeamAssignmentEmail({
+                        developers: newlyAssignedDevs.map(d => ({ name: d.name, email: d.email || "" })),
+                        projectName: project.projectName,
+                        projectId: project.id,
+                        clientName: requestData?.userName || "Admin"
+                    });
+                    setNewlyAssignedDevs([]); // Clear buffer
+                 } catch (emailError) {
+                     console.error("Failed to send assignment emails", emailError);
+                 }
+            }
+
             // Send Email if activating
             if (isActivating) {
-                // Fetch latest client details (in case they weren't in local state fully)
-                // We have client email in projectRequest usually? 
-                // We can use the project data we have.
-                // NOTE: We need the CLIENT's email.
-                // The `project` object in this file doesn't explicitly store client email in the top level type?
-                // Let's check getProjectData or the interface.
-                // The interface `ProjectDetail` doesn't have clientEmail.
-                // However, `projectRequestService.getProjectById(id)` returns `userName` and `userEmail`.
-                // We should fetch that to be sure.
-
                 const requestData = await projectRequestService.getProjectById(project.id);
                 if (requestData && requestData.userEmail) {
                     await emailService.sendProjectActiveEmail({
@@ -249,6 +265,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     const handleAddDeveloper = (devId: string) => {
         const dev = allDevelopers.find(d => d.uid === devId);
         if (dev && project && !project.teamMembers.find(m => m.id === dev.uid)) {
+            // Track as new
+            setNewlyAssignedDevs(prev => [...prev, dev]);
+            
             setProject({
                 ...project,
                 teamMembers: [
@@ -428,6 +447,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     const taskPercent = project.stats.tasksTotal > 0 ? Math.round((project.stats.tasksCompleted / project.stats.tasksTotal) * 100) : 0;
     const completedCount = project.milestones.filter(m => m.status === 'completed').length;
 
+    // Permissions
+    const isAssignedDeveloper = role === 'developer' && project?.teamMembers.some(m => m.id === user?.uid);
+    const canEdit = role === 'admin' || isAssignedDeveloper;
+
     return (
         <div className="min-h-screen bg-[#09090b] text-white">
             {/* ... Header ... */}
@@ -458,8 +481,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                 </>
                             )}
 
-                            {/* Admin Controls */}
-                            {role === 'admin' ? (
+                            {/* Admin/Developer Controls */}
+                            {canEdit ? (
                                 isEditing ? (
                                     <div className="flex items-center gap-2">
                                         <Button
@@ -480,7 +503,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     </div>
                                 ) : (
                                     <div className="flex items-center gap-2">
-                                        {project.status === 'pending-closure' && (
+                                        {/* Only Admin can approve closure */}
+                                        {role === 'admin' && project.status === 'pending-closure' && (
                                             <Button
                                                 size="sm"
                                                 onClick={async () => {
@@ -1204,7 +1228,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                         )}
                                                     </div>
                                                 </Link>
-                                                {isEditing && (
+                                                {isEditing && role === 'admin' && (
                                                     <button
                                                         onClick={(e) => {
                                                             e.preventDefault();
@@ -1238,7 +1262,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                 </div>
                             </div>
 
-                            {isEditing && (
+                            {isEditing && role === 'admin' && (
                                 <div className="mt-3 pt-3 border-t border-[#27272a]">
                                     <p className="text-[10px] text-[#71717a] mb-2 uppercase font-medium">Add Developer</p>
                                     <select
