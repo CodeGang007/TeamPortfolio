@@ -123,7 +123,7 @@ export default function UserMenu() {
                                     className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-900 hover:text-white transition-colors"
                                 >
                                     <FileText size={16} strokeWidth={1.75} />
-                                    <span>My Publications</span>
+                                    <span>{role === 'developer' ? "Assigned Publications" : "My Publications"}</span>
                                 </Link>
                             )}
                         </div>

@@ -1,5 +1,5 @@
 import { db, auth } from './firebase'; // Ensure db and auth are exported from firebase.ts
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { telegramService } from './telegramService';
 
 // Firebase Realtime Database service for project requests
@@ -410,40 +410,107 @@ export const projectRequestService = {
       }
   },
 
-  // Get basic user profiles for a list of UIDs (to display names in admin dashboard)
+  // Get basic user profiles for a list of UIDs
   async getUserProfiles(userIds: string[]): Promise<Record<string, { name: string; email: string }>> {
       if (!userIds.length) return {};
       
       try {
-          const q = query(collection(db, "users"));
-          const querySnapshot = await getDocs(q);
-          
           const userMap: Record<string, { name: string; email: string }> = {};
-          querySnapshot.forEach((doc) => {
-              if (userIds.includes(doc.id)) {
-                  const data = doc.data();
-                  // Try various common field names for name
-                  const name = data.display_name || 
-                               data.displayName || 
-                               data.name || 
-                               data.fullName ||
-                               data.profile?.displayName || 
-                               data.profile?.name || 
-                               ""; // Leave empty if not found, to allow fallback in UI
-
-                  const email = data.email || data.profile?.email || "";
-
-                  userMap[doc.id] = {
-                      name: name || email || "Unknown User", // Fallback to email if name missing
-                      email: email
-                  };
+          
+          await Promise.all(userIds.map(async (uid) => {
+              try {
+                  const docRef = doc(db, "users", uid);
+                  const docSnap = await getDoc(docRef);
+                  if (docSnap.exists()) {
+                      const data = docSnap.data();
+                      const name = data.display_name || 
+                                   data.displayName || 
+                                   data.name || 
+                                   data.fullName ||
+                                   data.profile?.displayName || 
+                                   data.profile?.name || 
+                                   "";
+                      const email = data.email || data.profile?.email || "";
+                      
+                      userMap[uid] = {
+                          name: name || email || "Unknown User",
+                          email: email
+                      };
+                  }
+              } catch (e) {
+                  // Ignore errors for individual users to prevent failing the whole batch
+                  console.warn(`Failed to fetch profile for ${uid}`, e);
               }
-          });
+          }));
           
           return userMap;
       } catch (error) {
           console.error("Error fetching user profiles:", error);
           return {};
+      }
+  },
+
+  // Assign a project to a developer
+  async assignProject(projectId: string, developerId: string): Promise<void> {
+      try {
+          const token = await getAuthToken();
+          // Use deterministic key for idempotency
+          const assignmentId = `${projectId}_${developerId}`;
+          const url = `${FIREBASE_DB_URL}/project_assignments/${assignmentId}.json` + (token ? `?auth=${token}` : '');
+        
+          const assignmentData = {
+              projectId,
+              developerId,
+              assignedAt: new Date().toISOString()
+          };
+
+          const response = await fetch(url, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(assignmentData),
+          });
+
+          if (!response.ok) {
+              const errorText = await response.text();
+              console.error(`Failed to assign project. Status: ${response.status} ${response.statusText}. Response: ${errorText}`);
+              throw new Error(`Failed to assign project: ${response.status} ${errorText}`);
+          }
+      } catch (error) {
+          console.error('Error assigning project:', error);
+          throw error;
+      }
+  },
+
+  // Get assigned projects for a developer
+  async getAssignedProjects(developerId: string): Promise<ProjectRequest[]> {
+      try {
+          const token = await getAuthToken();
+          // Fetch all assignments first (filtering client-side for simplicity as per existing patterns)
+          const url = `${FIREBASE_DB_URL}/project_assignments.json` + (token ? `?auth=${token}` : '');
+          const response = await fetch(url);
+          
+          if (!response.ok) return [];
+          const data = await response.json();
+          if (!data) return [];
+
+          // Filter for this developer
+          const assignmentIds = Object.values(data)
+              .filter((a: any) => a.developerId === developerId)
+              .map((a: any) => a.projectId);
+
+          if (assignmentIds.length === 0) return [];
+
+          // Fetch the actual projects
+          // Ideally we would trigger getProjectById in parallel
+          const projectPromises = assignmentIds.map(id => this.getProjectById(id));
+          const projects = await Promise.all(projectPromises);
+
+          return projects.filter((p): p is ProjectRequest => p !== null);
+      } catch (error) {
+          console.error('Error fetching assigned projects:', error);
+          return [];
       }
   }
 };
