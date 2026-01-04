@@ -19,34 +19,44 @@ interface TeamMemberCardProps {
 }
 
 export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isOnline = true, onClick }) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty("--mouse-x", `${x}px`);
+    card.style.setProperty("--mouse-y", `${y}px`);
+  };
+
   return (
     <motion.div
       onClick={onClick}
-      className={`${styles.card} cursor-pointer transition-all duration-300 ${!isOnline && 'border-red-900/40 shadow-[0_0_20px_rgba(220,38,38,0.1)] !bg-black/80'}`}
-      whileHover={{ y: -5 }}
-      transition={{ type: "spring", stiffness: 260, damping: 18 }}
+      onMouseMove={handleMouseMove}
+      className={`${styles.card} ${!isOnline ? styles.offline : ''} cursor-pointer group ${!isOnline && 'grayscale-[0.3]'}`}
+      whileHover={{ y: -6 }}
+      transition={{ type: "spring", stiffness: 200, damping: 15 }}
     >
       {/* Header: Image & Role Badge */}
       <div className={styles.header}>
-        <div className={`${styles.imageWrapper} relative overflow-hidden`}>
+        <div className={styles.imageWrapper}>
           <img
             src={member.imageUrl}
             alt={member.name}
-            className={`h-full w-full object-cover transition-all duration-300 ${!isOnline && 'grayscale sepia contrast-125'}`}
+            className={`h-full w-full object-cover transition-all duration-500 ${!isOnline && 'grayscale contrast-125 saturate-50'}`}
           />
           {!isOnline && (
-            <div className="absolute inset-0 bg-red-900/20 mix-blend-overlay" />
+            <div className="absolute inset-0 bg-red-900/10 mix-blend-overlay" />
           )}
         </div>
-        <div className={`${styles.roleBadge} transition-colors duration-300 ${!isOnline && '!bg-red-500/10 !text-red-400 !border-red-500/20'}`}>
-          {member.role.split(" ")[0]}
+        <div className={styles.roleBadge}>
+          {member.role}
         </div>
       </div>
 
       {/* Body Info */}
-      <h3 className={`${styles.name} transition-colors duration-300 ${!isOnline && '!text-red-50'}`}>{member.name}</h3>
-      <p className={`${styles.roleTitle} transition-colors duration-300 ${!isOnline && '!text-red-300/70'}`}>{member.role}</p>
-      <p className={`${styles.description} transition-colors duration-300 ${!isOnline && '!text-red-300/50'}`}>{member.description}</p>
+      <h3 className={styles.name}>{member.name}</h3>
+      <p className={styles.roleTitle}>{member.role}</p>
+      <p className={styles.description}>{member.description}</p>
 
       {/* Tech Stack */}
       <div className={styles.techStack}>
@@ -61,10 +71,10 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isOnline
 
         <button
           onClick={onClick}
-          className={`${styles.projectBtn} group transition-all duration-300 ${!isOnline && '!bg-red-500/10 !border-red-500/30 !text-red-400 hover:!bg-red-500/20 hover:!border-red-500'}`}
+          className={styles.projectBtn}
         >
           <span>Projects</span>
-          <ArrowUpRight size={14} strokeWidth={2.5} className={`transition-colors ${!isOnline && 'text-red-500'}`} />
+          <ArrowUpRight size={16} strokeWidth={2} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </button>
       </div>
     </motion.div>

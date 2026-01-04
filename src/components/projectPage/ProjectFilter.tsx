@@ -1,15 +1,24 @@
 "use client";
 
-import GlassButton from "./buttons/GlassButton"; // Adjust path as needed
+import { motion } from "framer-motion";
 
 const FILTERS = [
   "All",
-  "Web",
-  "App",
-  "Game",
-  "UI/UX",
+  "Web Development",
+  "Mobile Apps",
+  "Desktop Apps",
+  "Game Development",
+  "UI/UX Design",
+  "Machine Learning / AI",
+  "Data Science",
+  "Cloud Infrastructure",
+  "Blockchain",
+  "IoT",
+  "Cybersecurity",
+  "E-commerce",
+  "SaaS",
   "Consulting",
-  "ML / AI",
+  "Open Source",
 ];
 
 export function ProjectFilter({
@@ -22,27 +31,58 @@ export function ProjectFilter({
   isOnline?: boolean;
 }) {
   return (
-    <div className="top-24 z-10 mb-10 flex gap-4 overflow-x-auto pb-4 px-2 pt-2">
-      {FILTERS.map((filter) => {
-        const isActive = active === filter;
+    <div className="relative z-10 mb-16 w-full px-4">
+      <div className="mx-auto max-w-5xl">
+        {/* Control Panel Container */}
+        <div className={`relative flex flex-wrap justify-center gap-3 p-6 rounded-3xl backdrop-blur-2xl border transition-all duration-500 ${isOnline
+            ? "bg-zinc-900/40 border-brand-green/10 shadow-[0_0_40px_-10px_rgba(0,255,65,0.05)]"
+            : "bg-red-950/40 border-red-500/10 shadow-[0_0_40px_-10px_rgba(220,38,38,0.05)]"
+          }`}>
 
-        return (
-          <button
-            key={filter}
-            onClick={() => onChange(filter)}
-            className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 border whitespace-nowrap ${isActive
-              ? isOnline
-                ? "bg-brand-green text-black border-brand-green shadow-lg shadow-brand-green/20"
-                : "bg-red-500 text-white border-red-500 shadow-lg shadow-red-500/20"
-              : isOnline
-                ? "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-white"
-                : "bg-transparent text-red-500/50 border-red-900/30 hover:border-red-500/50 hover:text-red-400"
-              }`}
-          >
-            {filter}
-          </button>
-        );
-      })}
+          {FILTERS.map((filter) => {
+            const isActive = active === filter;
+
+            return (
+              <motion.button
+                key={filter}
+                onClick={() => onChange(filter)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`relative px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border flex items-center gap-2 ${isActive
+                    ? isOnline
+                      ? "bg-brand-green/20 border-brand-green/50 text-white shadow-[0_0_20px_rgba(0,255,65,0.25)]"
+                      : "bg-red-500/20 border-red-500/50 text-white shadow-[0_0_20px_rgba(239,68,68,0.25)]"
+                    : "bg-white/5 border-white/5 text-zinc-300 hover:bg-white/10 hover:text-white hover:border-white/20"
+                  }`}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="activeProjectDot"
+                    className={`block h-1.5 w-1.5 rounded-full shadow-[0_0_8px_currentColor] ${isOnline ? "bg-brand-green" : "bg-red-500"
+                      }`}
+                  />
+                )}
+
+                {/* Text is z-20 to sit above glow */}
+                <span className="relative z-20 tracking-wide drop-shadow-sm">{filter}</span>
+
+                {/* Background Glow - Reduced opacity and slow fade-in */}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeProjectGlow"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.2 }}
+                    exit={{ opacity: 0 }}
+                    className={`absolute inset-0 rounded-xl blur-md z-10 ${isOnline ? "bg-brand-green" : "bg-red-500"
+                      }`}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                  />
+                )}
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
