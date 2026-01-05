@@ -64,16 +64,10 @@ export function TeamSection() {
       const teamCollection = collection(db, "team");
 
       // Try with Index first
-      try {
-        const q = query(teamCollection, where("active", "==", true), orderBy("order", "asc"));
-        const snapshot = await getDocs(q);
-        handleSnapshot(snapshot);
-      } catch (idxError) {
-        // If Index fails, fallback to basic fetch
-        console.warn("Index query failed, falling back to basic fetch:", idxError);
-        const snapshot = await getDocs(teamCollection);
-        handleSnapshot(snapshot);
-      }
+      // Query without orderBy to avoid index requirement
+      const q = query(teamCollection, where("active", "==", true));
+      const snapshot = await getDocs(q);
+      handleSnapshot(snapshot);
 
     } catch (error: unknown) {
       console.error("Fetch error:", error);
@@ -107,9 +101,10 @@ export function TeamSection() {
           availability: data.availability,
           email: data.email,
           phone: data.phone,
-          projects: data.projects || [] // Map projects
+          projects: data.projects || [], // Map projects
+          order: data.order // Ensure order is captured
         } as TeamMember;
-      });
+      }).sort((a, b) => (a.order || 0) - (b.order || 0)); // Sort client-side
 
       // Filter out inactive members for non-admin users
       const visibleMembers = isOnline && role === 'admin'
@@ -136,15 +131,13 @@ export function TeamSection() {
         const teamCollection = collection(db, "team");
 
         // Try with Index first
+        // Query without orderBy to avoid index requirement
         try {
-          const q = query(teamCollection, where("active", "==", true), orderBy("order", "asc"));
+          const q = query(teamCollection, where("active", "==", true));
           const snapshot = await getDocs(q);
           if (isMounted) handleSnapshot(snapshot);
         } catch (idxError) {
-          // If Index fails, fallback to basic fetch
-          console.warn("Index query failed, falling back to basic fetch:", idxError);
-          const snapshot = await getDocs(teamCollection);
-          if (isMounted) handleSnapshot(snapshot);
+          console.warn("Query failed:", idxError);
         }
 
       } catch (error: unknown) {
