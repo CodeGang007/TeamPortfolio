@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useState } from "react";
 
@@ -54,8 +54,8 @@ export const HoverEffect = ({
           <Card>
             {item.image && (
               <div className="w-full h-56 mb-6 rounded-2xl overflow-hidden relative group-hover:shadow-2xl group-hover:shadow-brand-green/10 transition-all duration-500">
-                <img 
-                  src={item.image} 
+                <img
+                  src={item.image}
                   alt={item.title}
                   className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
                 />
