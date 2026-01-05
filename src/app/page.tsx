@@ -5,6 +5,7 @@ import AskForProject from "@/components/home/AskForProject";
 import FloatingHero from "@/components/home/FloatingHero";
 import MarqueeSection from "@/components/home/MarqueeSection";
 import ServiceWorkflow from "@/components/home/ServiceWorkflow";
+import MyTopPublications from "@/components/home/MyTopPublications";
 
 import UserStories from "@/components/UserStories";
 import FAQ from "@/components/FAQ";
@@ -79,7 +80,9 @@ export default function HomePage() {
 
         <FloatingHero />
 
+
         <ServiceWorkflow />
+        <MyTopPublications />
 
         <MarqueeSection />
 

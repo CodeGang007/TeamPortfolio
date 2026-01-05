@@ -131,7 +131,7 @@ export default function ServiceWorkflow() {
     const currentService = services[activeService];
 
     return (
-        <section className="relative py-20 overflow-hidden">
+        <section className="relative py-20 overflow-hidden pb-05">
             {/* Background Glow Effects */}
             <div className={`absolute top-1/4 left-1/4 w-96 h-96 blur-[100px] rounded-full pointer-events-none -z-10 mix-blend-screen ${isOnline ? 'bg-brand-green/10' : 'bg-red-600/10'}`} />
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none -z-10 mix-blend-screen" />
@@ -180,9 +180,9 @@ export default function ServiceWorkflow() {
                                     <span className={`text-[9px] font-bold px-2 py-0.5 rounded ${isOnline ? 'bg-brand-green/20 text-brand-green' : 'bg-red-500/20 text-red-400'}`}>
                                         STEP 1
                                     </span>
-                                    <span className={`text-[11px] font-bold uppercase tracking-wide ${isOnline ? 'text-white' : 'text-red-100'}`}>
+                                    {/* <span className={`text-[11px] font-bold uppercase tracking-wide ${isOnline ? 'text-white' : 'text-red-100'}`}>
                                         Define Requirements
-                                    </span>
+                                    </span> */}
                                 </div>
                                 <div className="flex gap-1">
                                     <div className="w-2 h-2 rounded-full bg-red-500/60" />
@@ -451,34 +451,31 @@ export default function ServiceWorkflow() {
                         transition={{ delay: 0.2 }}
                         className="flex flex-col items-center gap-4"
                     >
-                        <div className={`w-full h-[380px] max-h-[380px] rounded-xl relative overflow-hidden transition-all duration-500 border ${isOnline ? 'border-slate-700/60 hover:border-cyan-500/40' : 'border-red-900/40 hover:border-red-500/40'}`}
+                        <div className={`w-full h-[380px] max-h-[380px] rounded-xl relative overflow-hidden transition-all duration-500 border ${isOnline ? 'border-slate-700/60 hover:border-brand-green/40' : 'border-red-900/40 hover:border-red-500/40'}`}
                             style={{
                                 background: isOnline
-                                    ? 'linear-gradient(145deg, rgba(8, 15, 30, 0.98), rgba(5, 10, 25, 0.99))'
-                                    : 'linear-gradient(145deg, rgba(50, 15, 15, 0.98), rgba(35, 12, 12, 0.99))',
+                                    ? 'linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(10, 15, 30, 0.99))'
+                                    : 'linear-gradient(145deg, rgba(60, 20, 20, 0.98), rgba(40, 15, 15, 0.99))',
                                 backdropFilter: 'blur(20px)',
                                 boxShadow: isOnline
-                                    ? '0 25px 50px -15px rgba(0, 0, 0, 0.7), 0 0 60px rgba(6, 182, 212, 0.1)'
-                                    : '0 25px 50px -15px rgba(0, 0, 0, 0.7), 0 0 60px rgba(239, 68, 68, 0.1)'
+                                    ? '0 25px 50px -15px rgba(0, 0, 0, 0.7)'
+                                    : '0 25px 50px -15px rgba(0, 0, 0, 0.7)'
                             }}
                         >
                             {/* Header Bar */}
-                            <div className={`flex items-center justify-between px-4 py-2.5 border-b ${isOnline ? 'border-cyan-900/30 bg-cyan-950/20' : 'border-red-800/30 bg-red-900/20'}`}>
+                            <div className={`flex items-center justify-between px-4 py-2.5 border-b ${isOnline ? 'border-slate-700/50 bg-slate-800/30' : 'border-red-800/30 bg-red-900/20'}`}>
                                 <div className="flex items-center gap-2 whitespace-nowrap">
-                                    <span className={`text-[9px] font-bold px-2 py-0.5 rounded whitespace-nowrap ${isOnline ? 'bg-cyan-500/20 text-cyan-400' : 'bg-red-500/20 text-red-400'}`}>
+                                    <span className={`text-[9px] font-bold px-2 py-0.5 rounded whitespace-nowrap ${isOnline ? 'bg-brand-green/20 text-brand-green' : 'bg-red-500/20 text-red-400'}`}>
                                         STEP 2
                                     </span>
-                                    <span className={`text-[11px] font-bold uppercase tracking-wide whitespace-nowrap ${isOnline ? 'text-white' : 'text-red-100'}`}>
+                                    {/* <span className={`text-[11px] font-bold uppercase tracking-wide whitespace-nowrap ${isOnline ? 'text-white' : 'text-red-100'}`}>
                                         Developer Matching
-                                    </span>
+                                    </span> */}
                                 </div>
-                                <div className="flex items-center gap-1.5">
-                                    <motion.div
-                                        className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-cyan-400' : 'bg-red-400'}`}
-                                        animate={{ opacity: [1, 0.3, 1] }}
-                                        transition={{ duration: 1.5, repeat: Infinity }}
-                                    />
-                                    <span className={`text-[8px] uppercase tracking-wider ${isOnline ? 'text-cyan-400/60' : 'text-red-400/60'}`}>Processing</span>
+                                <div className="flex gap-1">
+                                    <div className="w-2 h-2 rounded-full bg-red-500/60" />
+                                    <div className="w-2 h-2 rounded-full bg-yellow-500/60" />
+                                    <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500' : 'bg-slate-500'}`} />
                                 </div>
                             </div>
 
@@ -854,10 +851,10 @@ export default function ServiceWorkflow() {
                                 })}
                             </div>
                         </div>
-                        <div className={`px-4 py-1.5 rounded-full flex items-center gap-2 border ${isOnline ? 'bg-slate-900/60 border-cyan-500/20' : 'bg-red-950/60 border-red-500/20'}`}
+                        <div className={`px-4 py-2 rounded-full border ${isOnline ? 'bg-slate-900/80 border-slate-700/50' : 'bg-red-950/80 border-red-800/50'}`}
                             style={{ backdropFilter: 'blur(20px)' }}
                         >
-                            <span className={`text-[10px] font-bold uppercase tracking-wider ${isOnline ? 'text-cyan-400' : 'text-red-400'}`}>2. Developer Matching</span>
+                            <span className={`text-[10px] font-bold uppercase tracking-wider ${isOnline ? 'text-white' : 'text-red-100'}`}>2. Developer Matching</span>
                         </div>
                     </motion.div>
 
@@ -890,9 +887,9 @@ export default function ServiceWorkflow() {
                                     <span className={`text-[9px] font-bold px-2 py-0.5 rounded ${isOnline ? 'bg-brand-green/20 text-brand-green' : 'bg-red-500/20 text-red-400'}`}>
                                         STEP 3
                                     </span>
-                                    <span className={`text-[11px] font-bold uppercase tracking-wide ${isOnline ? 'text-white' : 'text-red-100'}`}>
+                                    {/* <span className={`text-[11px] font-bold uppercase tracking-wide ${isOnline ? 'text-white' : 'text-red-100'}`}>
                                         Development & QA
-                                    </span>
+                                    </span> */}
                                     <motion.div className="relative ml-1">
                                         <span className="flex h-2 w-2">
                                             <motion.span
@@ -1136,9 +1133,9 @@ export default function ServiceWorkflow() {
                                     <span className={`text-[9px] font-bold px-2 py-0.5 rounded whitespace-nowrap inline-flex ${isOnline ? 'bg-brand-green/20 text-brand-green' : 'bg-red-500/20 text-red-400'}`}>
                                         STEP 4
                                     </span>
-                                    <span className={`text-[11px] font-bold uppercase tracking-wide ${isOnline ? 'text-white' : 'text-red-100'}`}>
+                                    {/* <span className={`text-[11px] font-bold uppercase tracking-wide ${isOnline ? 'text-white' : 'text-red-100'}`}>
                                         Delivery & Scaling
-                                    </span>
+                                    </span> */}
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <div className="flex items-center gap-1.5">
@@ -1158,7 +1155,7 @@ export default function ServiceWorkflow() {
                             </div>
 
                             {/* Main Content */}
-                            <div className="flex flex-col p-5 gap-5">
+                            <div className="flex flex-col p-3 gap-5">
                                 {/* Deployment Status */}
                                 <div className="flex flex-col gap-3">
                                     <span className={`text-xs font-bold uppercase tracking-wider ${isOnline ? 'text-slate-400' : 'text-red-400/70'}`}>
@@ -1172,11 +1169,11 @@ export default function ServiceWorkflow() {
                                         ].map((item, i) => (
                                             <motion.div
                                                 key={item.name}
-                                                className={`flex-1 p-3 rounded-lg border relative overflow-hidden ${isOnline ? 'bg-slate-800/40 border-slate-700/40' : 'bg-red-900/30 border-red-800/40'}`}
+                                                className={`flex-1 p-1 rounded-lg border relative overflow-hidden ${isOnline ? 'bg-slate-800/40 border-slate-700/40' : 'bg-red-900/30 border-red-800/40'}`}
                                                 initial={{ opacity: 0, y: 10 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ delay: i * 0.15 }}
-                                                whileHover={{ scale: 1.05, borderColor: isOnline ? 'rgba(74,222,128,0.5)' : 'rgba(239,68,68,0.5)' }}
+                                                whileHover={{ scale: 1, borderColor: isOnline ? 'rgba(74,222,128,0.5)' : 'rgba(239,68,68,0.5)' }}
                                             >
                                                 {/* Shimmer effect */}
                                                 <motion.div
@@ -1201,7 +1198,7 @@ export default function ServiceWorkflow() {
                                                 </div>
 
                                                 {/* Animated progress bar */}
-                                                <div className={`h-1 rounded-full mb-2 ${isOnline ? 'bg-slate-700' : 'bg-red-900/50'}`}>
+                                                <div className={`h-1 rounded-full mb-1 ${isOnline ? 'bg-slate-700' : 'bg-red-900/50'}`}>
                                                     <motion.div
                                                         className={`h-full rounded-full ${item.status === 'live' ? 'bg-gradient-to-r from-green-500 to-emerald-400' : isOnline ? 'bg-gradient-to-r from-cyan-500 to-blue-400' : 'bg-gradient-to-r from-red-500 to-red-400'}`}
                                                         initial={{ width: 0 }}
