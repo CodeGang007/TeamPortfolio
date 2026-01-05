@@ -77,10 +77,10 @@ class DeveloperService {
 
     async getActiveDevelopers(): Promise<Developer[]> {
         try {
+            // Removed orderBy('order', 'asc') to avoid needing a composite index
             const q = query(
                 collection(db, this.collectionName),
-                where('active', '==', true),
-                orderBy('order', 'asc')
+                where('active', '==', true)
             );
             const snapshot = await getDocs(q);
 
@@ -91,7 +91,9 @@ class DeveloperService {
                     ...doc.data()
                 } as Developer);
             });
-            return developers;
+
+            // Sort in memory
+            return developers.sort((a, b) => (a.order || 0) - (b.order || 0));
         } catch (error) {
             console.error('Error fetching active developers:', error);
             throw error;

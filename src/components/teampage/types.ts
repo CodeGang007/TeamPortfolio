@@ -27,4 +27,5 @@ export interface TeamMember {
     description: string;
     githubUrl: string;
   }[];
+  order?: number;
 }
