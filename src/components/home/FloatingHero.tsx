@@ -4,49 +4,50 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { Star, ArrowRight, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { HoverEffect } from "../ui/card-hover-effect";
+
 
 export default function FloatingHero() {
     const { isAuthenticated } = useAuth();
     const isOnline = isAuthenticated;
 
-    const services = [
-        {
-            title: "Web Design",
-            description: "Award-winning UI/UX interfaces.",
-            image: "https://images.unsplash.com/photo-1558655146-d09347e0c7a8?w=800&q=80",
-            tags: ["UI/UX", "Figma"],
-        },
-        {
-            title: "App Development",
-            description: "Native & Cross-platform solutions.",
-            image: "https://images.unsplash.com/photo-1551650975-87bd5c8e2282?w=800&q=80",
-            tags: ["iOS", "Android"],
-        },
-        {
-            title: "SEO Boost",
-            description: "Rank #1 on Google Search.",
-            image: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
-            tags: ["Growth", "Analytics"],
-        },
-        {
-            title: "Branding",
-            description: "Identity that tells your story.",
-            image: "https://images.unsplash.com/photo-1600607686527-6fb886090705?w=800&q=80",
-            tags: ["Logo", "Strategy"],
-        },
-        {
-            title: "Cloud Solutions",
-            description: "Scalable infrastructure.",
-            image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
-            tags: ["AWS", "Azure"],
-        },
-        {
-            title: "Maintenance",
-            description: "24/7 Support & Updates.",
-            image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80",
-            tags: ["Security", "Uptime"],
-        },
-    ];
+    //     {
+    //         title: "Web Design",
+    //         description: "Award-winning UI/UX interfaces.",
+    //         image: "https://images.unsplash.com/photo-1558655146-d09347e0c7a8?w=800&q=80",
+    //         tags: ["UI/UX", "Figma"],
+    //     },
+    //     {
+    //         title: "App Development",
+    //         description: "Native & Cross-platform solutions.",
+    //         image: "https://images.unsplash.com/photo-1551650975-87bd5c8e2282?w=800&q=80",
+    //         tags: ["iOS", "Android"],
+    //     },
+    //     {
+    //         title: "SEO Boost",
+    //         description: "Rank #1 on Google Search.",
+    //         image: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
+    //         tags: ["Growth", "Analytics"],
+    //     },
+    //     {
+    //         title: "Branding",
+    //         description: "Identity that tells your story.",
+    //         image: "https://images.unsplash.com/photo-1600607686527-6fb886090705?w=800&q=80",
+    //         tags: ["Logo", "Strategy"],
+    //     },
+    //     {
+    //         title: "Cloud Solutions",
+    //         description: "Scalable infrastructure.",
+    //         image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
+    //         tags: ["AWS", "Azure"],
+    //     },
+    //     {
+    //         title: "Maintenance",
+    //         description: "24/7 Support & Updates.",
+    //         image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80",
+    //         tags: ["Security", "Uptime"],
+    //     },
+    // ];
 
     return (
         <section className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden flex flex-col justify-center">
@@ -208,59 +209,7 @@ export default function FloatingHero() {
                     </div>
                 </div>
 
-                {/* Professional Services Grid (6 Items) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {services.map((service, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.1 * index }}
-                            className={`group relative h-[320px] rounded-2xl overflow-hidden border transition-all duration-300 ${isOnline
-                                ? 'bg-zinc-900 border-zinc-800 hover:border-brand-green/50 hover:shadow-2xl hover:shadow-brand-green/5'
-                                : 'bg-red-950 border-red-900/20 hover:border-red-500/50'
-                                }`}
-                        >
-                            {/* Background Image with Overlay */}
-                            <div className="absolute inset-0 z-0">
-                                <img
-                                    src={service.image}
-                                    alt={service.title}
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80"
-                                />
-                                <div className={`absolute inset-0 bg-gradient-to-t ${isOnline ? 'from-black/95 via-black/50 to-transparent' : 'from-red-950/95 via-red-950/50 to-transparent'}`} />
-                            </div>
-
-                            {/* Content */}
-                            <div className="relative z-10 p-8 h-full flex flex-col justify-end">
-                                <div className="transform transition-transform duration-300 translate-y-2 group-hover:translate-y-0">
-                                    <h3 className={`text-2xl font-bold mb-2 ${isOnline ? 'text-white' : 'text-red-100'} drop-shadow-lg`}>
-                                        {service.title}
-                                    </h3>
-                                    <p className={`text-sm mb-4 line-clamp-2 ${isOnline ? 'text-zinc-300' : 'text-red-200/90'} drop-shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300`}>
-                                        {service.description}
-                                    </p>
-
-                                    {/* Link / Arrow */}
-                                    <div className={`flex items-center gap-2 text-sm font-medium ${isOnline ? 'text-brand-green' : 'text-red-400'}`}>
-                                        <span>View Details</span>
-                                        <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-                                    </div>
-                                </div>
-
-                                {/* Tags (Absolute Top) */}
-                                <div className="absolute top-6 left-6 flex gap-2">
-                                    {service.tags.map((tag, i) => (
-                                        <span key={i} className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full backdrop-blur-md border ${isOnline ? 'bg-black/40 text-white border-white/20' : 'bg-red-900/40 text-red-100 border-red-500/30'}`}>
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
+               
             </div>
         </section>
     );
