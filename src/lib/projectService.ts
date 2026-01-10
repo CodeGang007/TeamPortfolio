@@ -57,6 +57,8 @@ export interface ProjectRequest {
   userId: string;
   userName?: string;
   userEmail?: string;
+  name?: string; // Contact Name
+  phone?: string; // Contact Phone
   imageUrls: string[];
   attachmentUrls: Array<{
     name: string;
