@@ -155,16 +155,6 @@ export const projectRequestService = {
         completedAt: ""
       },
       assignedTo: null,
-      ...projectData,
-      isDraft: false,
-      workflowStatus: {
-        initiatedAt: new Date().toISOString(),
-        collectedAt: "",
-        inProgressAt: "",
-        inTransactionAt: "",
-        completedAt: ""
-      },
-      assignedTo: null,
       priority: "medium"
     });
 
