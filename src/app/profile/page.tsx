@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { db, storage } from "@/lib/firebase";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Removed
 import { motion, AnimatePresence } from "framer-motion";
 
 import {
@@ -1154,26 +1154,55 @@ function ProfileContent() {
                                                 try {
                                                     let downloadURL = avatarPreview;
 
-                                                    // If a file is selected, upload it
+                                                    // Use Cloudinary for upload
                                                     if (selectedFile) {
-                                                        const storageRef = ref(storage, `avatars/${user.uid}`);
-                                                        await uploadBytes(storageRef, selectedFile);
-                                                        downloadURL = await getDownloadURL(storageRef);
+                                                        const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "demo";
+                                                        const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "unsigned_preset";
+
+                                                        const formData = new FormData();
+                                                        formData.append("file", selectedFile);
+                                                        formData.append("upload_preset", UPLOAD_PRESET);
+                                                        formData.append("folder", "avatars"); // Optional organization
+
+                                                        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                                                            method: "POST",
+                                                            body: formData
+                                                        });
+
+                                                        const data = await res.json();
+                                                        if (data.secure_url) {
+                                                            downloadURL = data.secure_url;
+                                                        } else {
+                                                            throw new Error(data.error?.message || "Cloudinary upload failed");
+                                                        }
                                                     }
 
                                                     if (downloadURL) {
-                                                        // Save as customPhotoURL in Firestore only
-                                                        // This preserves the original email provider photo in user.photoURL
-                                                        const userRef = doc(db, "users", user.uid);
+                                                        // 1. Save as customPhotoURL in Firestore (Users Collection)
+                                                        const userRef = doc(db, "users", targetUserId || user.uid); // Use targetUserId if admin is editing
                                                         await setDoc(userRef, { customPhotoURL: downloadURL, updatedAt: serverTimestamp() }, { merge: true });
+
+                                                        // 2. Sync to Team Collection if Developer
+                                                        // Check if the user being edited (targetUserId) is a developer
+                                                        if (targetRole === 'developer') {
+                                                            // We use targetUserId because that's who we are editing
+                                                            await developerService.createOrUpdateDeveloper(targetUserId || user.uid, {
+                                                                imageUrl: downloadURL
+                                                            });
+                                                        }
+
+                                                        // Update local state if we are editing ourselves or the current view
+                                                        setDisplayPhoto(downloadURL);
                                                     }
 
                                                     // Close modal and refresh
                                                     setShowAvatarModal(false);
                                                     setAvatarPreview(null);
                                                     setSelectedFile(null);
+                                                    // Remove query param if present
                                                     router.replace('/profile');
-                                                    setSuccessMessage("Avatar updated successfully!");
+                                                    
+                                                    setSuccessMessage("Avatar updated & synced successfully!");
                                                     setTimeout(() => setSuccessMessage(""), 3000);
                                                 } catch (error: any) {
                                                     console.error("Error uploading avatar:", error);
