@@ -85,6 +85,7 @@ interface ProjectDetail {
         documentation: string;
         other: string;
     };
+    attachmentUrls?: Array<{ name: string; url: string; type: string; size: string; }>;
 }
 
 const milestoneIcons: Record<string, React.ReactNode> = {
@@ -347,6 +348,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             documentation: "",
                             other: ""
                         },
+                        attachmentUrls: projectRequest.attachmentUrls || [],
 
                         milestones: progressData.milestones || [],
                         stats: {
@@ -402,7 +404,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             website: "",
                             documentation: "",
                             other: ""
-                        }
+                        },
+                        attachmentUrls: projectRequest.attachmentUrls || []
                     });
                 }
 
@@ -1177,6 +1180,36 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                 <Globe className="h-3.5 w-3.5" /> Website
                                                             </a>
                                                         )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Attachments Section */}
+                                            {project.attachmentUrls && project.attachmentUrls.length > 0 && (
+                                                <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
+                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-3">Attachments & Files</span>
+                                                    <div className="flex flex-col gap-2">
+                                                        {project.attachmentUrls.map((file, idx) => (
+                                                            <a 
+                                                                key={idx}
+                                                                href={file.url}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center justify-between p-3 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] transition-colors group/file text-decoration-none"
+                                                            >
+                                                                <div className="flex items-center gap-3 overflow-hidden">
+                                                                    <div className="h-8 w-8 rounded bg-[#18181b] flex items-center justify-center text-zinc-400 group-hover/file:text-brand-green transition-colors">
+                                                                        <FileText className="h-4 w-4" />
+                                                                    </div>
+                                                                    <div className="flex flex-col min-w-0">
+                                                                        <span className="text-xs text-white font-medium truncate pr-2">{file.name}</span>
+                                                                        <span className="text-[10px] text-[#71717a]">{// @ts-ignore
+                                                                        file.size ? file.size : 'Unknown size'}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <ExternalLink className="h-3.5 w-3.5 text-[#52525b] group-hover/file:text-white transition-colors flex-shrink-0" />
+                                                            </a>
+                                                        ))}
                                                     </div>
                                                 </div>
                                             )}

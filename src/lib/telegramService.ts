@@ -62,6 +62,11 @@ export const telegramService = {
       if (desc.length > 300) desc = desc.substring(0, 300) + '...';
       const description = this.escapeHtml(desc);
 
+      // Format Attachments
+      // Reverted to not include attachments in Telegram message as it causes 500/Timeout errors on user's env
+      let attachmentsHtml = '';
+
+
       return `
 🚀 <b>New Project Published!</b>
 

@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { projectRequestService } from "@/lib/projectService";
 import { useAuth } from "@/contexts/AuthContext";
 import UserMenu from "@/components/UserMenu";
+// Removed Firebase Storage imports
 
 // Storage key for session storage
 const STORAGE_KEY = 'project_request_form_data';
@@ -48,6 +49,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
         budget: "",
         currency: "INR",
         additionalNotes: "",
+        name: "",
+        phone: "",
         projectLinks: {
             github: "",
             figma: "",
@@ -125,7 +128,11 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
         params.then((resolvedParams) => {
             setTemplateId(resolvedParams.templateId);
         });
-    }, [params]);
+        // Pre-fill name if user is logged in and form is empty
+        if (user?.displayName && !formData.name) {
+            setFormData(prev => ({ ...prev, name: user.displayName! }));
+        }
+    }, [params, user]);
 
     // Load saved form data from sessionStorage
     useEffect(() => {
@@ -147,12 +154,14 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                 if (!parsed.projectType) parsed.projectType = "fixed_price";
                 if (!parsed.communicationPreference) parsed.communicationPreference = "";
                 if (!parsed.priority) parsed.priority = "medium";
+                if (!parsed.name) parsed.name = user?.displayName || "";
+                if (!parsed.phone) parsed.phone = "";
                 setFormData(parsed);
             } catch (e) {
                 console.error('Error loading saved form data:', e);
             }
         }
-    }, []);
+    }, [user]);
 
     // Auto-save to sessionStorage whenever form data changes
     useEffect(() => {
@@ -217,6 +226,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             budget: "",
             currency: "USD",
             additionalNotes: "",
+            name: "",
+            phone: "",
             projectLinks: {
                 github: "",
                 figma: "",
@@ -399,6 +410,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         budget: draft.budget || "",
                         currency: draft.currency || "INR",
                         additionalNotes: draft.additionalNotes || "",
+                        name: draft.name || "",
+                        phone: draft.phone || "",
                         projectLinks: draft.projectLinks || {
                             github: "",
                             figma: "",
@@ -501,6 +514,12 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
         }
 
         // Validation
+        if (!formData.name.trim()) {
+             setValidationError("Name is required.");
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+             return;
+        }
+        
         if (!formData.projectName.trim()) {
             setValidationError("Project name is required.");
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -511,6 +530,12 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
+        if (!formData.category) {
+            setValidationError("Category is required.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        // Documents are NOT mandatory
         if (!formData.deliveryTime) {
             setValidationError("Delivery date is required.");
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -523,18 +548,85 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
         }
 
         setIsSubmitting(true);
+        setToastMessage("Uploading...");
 
         try {
+            // Interfaces for attachment objects to match backend expectation
+            interface AttachmentObject {
+                name: string;
+                url: string;
+                type: string;
+                size: string;
+            }
+            const uploadedAttachments: AttachmentObject[] = [];
             const timestamp = new Date().toISOString();
+
+            // Cloudinary Configuration
+            const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "demo"; 
+            const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "unsigned_preset";
+
+            // Helper to upload file to Cloudinary
+            const uploadFileToCloudinary = async (file: File) => {
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("upload_preset", UPLOAD_PRESET);
+
+                try {
+                    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, {
+                        method: "POST",
+                        body: formData
+                    });
+                    const data = await res.json();
+                    if (data.secure_url) {
+                        return data.secure_url;
+                    } else {
+                        console.error("Cloudinary error:", data);
+                        return null;
+                    }
+                } catch (err) {
+                    console.error("Upload failed for", file.name, err);
+                    return null;
+                }
+            };
+
+            // Process Attachments (Docs)
+            for (const doc of attachments) {
+                const url = await uploadFileToCloudinary(doc.file);
+                if (url) {
+                    uploadedAttachments.push({
+                        name: doc.name,
+                        url: url,
+                        type: doc.type,
+                        size: doc.size
+                    });
+                }
+            }
+            // Process Images
+            for (const img of images) {
+                const url = await uploadFileToCloudinary(img.file);
+                if (url) {
+                     uploadedAttachments.push({
+                        name: img.file.name,
+                        url: url,
+                        type: img.file.type,
+                        size: (img.file.size / 1024 / 1024).toFixed(2) + " MB"
+                    });
+                }
+            }
+
+            setToastMessage("Publishing project...");
+
             // Prepare project data
             const projectData = {
                 ...formData,
                 templateId,
                 userId: user.uid,
-                userName: user.displayName || "Unknown Client",
+                userName: user.displayName || user.email || "Unknown Client", // Fallback for safety
                 userEmail: user.email || "No Email",
                 isDraft: false,
-                priority: "medium"
+                priority: "medium",
+                attachmentUrls: uploadedAttachments, // Now passing objects
+                imageUrls: [] // Keeping this empty or we could map images here if needed separately
             };
 
             if (draftId) {
@@ -556,7 +648,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                     ...projectData,
                     assignedTo: null,
                     imageUrls: [],
-                    attachmentUrls: []
+                    attachmentUrls: uploadedAttachments
                 });
             }
 
@@ -571,6 +663,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } finally {
             setIsSubmitting(false);
+            setToastMessage("");
         }
     };
 
@@ -646,6 +739,31 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 </motion.div>
                             )}
                         </AnimatePresence>
+                        
+                        {/* Contact Info Section */}
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            <div className="space-y-2">
+                                <label className="text-base font-semibold text-zinc-300">Name<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
+                                <input
+                                    type="text"
+                                    className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                    placeholder="Your Name"
+                                    value={formData.name}
+                                    onChange={e => updateFormData({ name: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-base font-semibold text-zinc-300">Phone Number<span className="ml-0.5 text-zinc-600 text-xs font-normal">(Optional)</span></label>
+                                <input
+                                    type="tel"
+                                    className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                    placeholder="+1 (555) 000-0000"
+                                    value={formData.phone}
+                                    onChange={e => updateFormData({ phone: e.target.value })}
+                                />
+                            </div>
+                        </div>
+
                         {/* Project Name */}
                         <div className="space-y-2">
                             <label className="text-base font-semibold text-zinc-300">Project name<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
