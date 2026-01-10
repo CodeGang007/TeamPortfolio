@@ -129,7 +129,7 @@ export const NavItems = ({ items, className, onItemClick, isOnline = true }: Nav
       )}
     >
       {items.map((item, idx) => (
-        <a
+        <Link
           onMouseEnter={() => setHovered(idx)}
           onClick={(e) => {
             if (onItemClick) onItemClick();
@@ -151,7 +151,7 @@ export const NavItems = ({ items, className, onItemClick, isOnline = true }: Nav
             />
           )}
           <span className="relative z-20">{item.name}</span>
-        </a>
+        </Link>
       ))}
     </motion.div>
   );
