@@ -49,6 +49,15 @@ export default function AppLayout({
             items={navItems}
             isOnline={isAuthenticated}
           />
+          {!isAuthenticated && (
+            <NavbarButton
+                variant="secondary" 
+                className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                onClick={openLoginModal}
+            >
+                System Offline
+            </NavbarButton>
+          )}
           {isAuthenticated && (
             <div className="ml-2">
               <UserMenu />
@@ -86,6 +95,19 @@ export default function AppLayout({
             ))}
 
             <div className="mt-4 w-full h-px bg-white/10" />
+
+            {/* Mobile Sign In (if not authenticated) */}
+            {!isAuthenticated && (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  openLoginModal();
+                }}
+                className="mt-4 w-full rounded-md px-4 py-3 text-sm font-bold shadow-md transition-all active:scale-95 bg-red-500/20 text-red-200 border border-red-500/50 hover:bg-red-500/30"
+              >
+                System Offline
+              </button>
+            )}
 
             {/* Mobile User Links (if authenticated) */}
             {isAuthenticated && (
