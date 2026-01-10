@@ -1,216 +1,235 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
-import { Star, ArrowRight, ArrowUpRight, CheckCircle2 } from "lucide-react";
-import { HoverEffect } from "../ui/card-hover-effect";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { useEffect } from "react";
+import { Cpu, Zap, Cloud, Box, Code, Layers, Globe, Terminal, Monitor, Database } from "lucide-react";
 
+const companies = [
+    { name: 'TechCorp', icon: Cpu },
+    { name: 'InnovateLabs', icon: Zap },
+    { name: 'CloudNine', icon: Cloud },
+    { name: 'DigitalForge', icon: Box },
+    { name: 'ByteWorks', icon: Code },
+    { name: 'NextGen Systems', icon: Database },
+    { name: 'FutureStack', icon: Layers },
+    { name: 'QuantumDev', icon: Globe },
+    { name: 'CodeCraft', icon: Terminal },
+    { name: 'DevStudio', icon: Monitor },
+];
 
 export default function FloatingHero() {
     const { isAuthenticated } = useAuth();
     const isOnline = isAuthenticated;
 
-    //     {
-    //         title: "Web Design",
-    //         description: "Award-winning UI/UX interfaces.",
-    //         image: "https://images.unsplash.com/photo-1558655146-d09347e0c7a8?w=800&q=80",
-    //         tags: ["UI/UX", "Figma"],
-    //     },
-    //     {
-    //         title: "App Development",
-    //         description: "Native & Cross-platform solutions.",
-    //         image: "https://images.unsplash.com/photo-1551650975-87bd5c8e2282?w=800&q=80",
-    //         tags: ["iOS", "Android"],
-    //     },
-    //     {
-    //         title: "SEO Boost",
-    //         description: "Rank #1 on Google Search.",
-    //         image: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
-    //         tags: ["Growth", "Analytics"],
-    //     },
-    //     {
-    //         title: "Branding",
-    //         description: "Identity that tells your story.",
-    //         image: "https://images.unsplash.com/photo-1600607686527-6fb886090705?w=800&q=80",
-    //         tags: ["Logo", "Strategy"],
-    //     },
-    //     {
-    //         title: "Cloud Solutions",
-    //         description: "Scalable infrastructure.",
-    //         image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
-    //         tags: ["AWS", "Azure"],
-    //     },
-    //     {
-    //         title: "Maintenance",
-    //         description: "24/7 Support & Updates.",
-    //         image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80",
-    //         tags: ["Security", "Uptime"],
-    //     },
-    // ];
+    // Developer/Company names for marquee
+    const trustedNames = [
+        "Alex Martinez", "TechCorp Inc", "Sarah Chen", "DevStudio Pro",
+        "Michael Johnson", "CloudNine Labs", "Emma Williams", "CodeCraft Solutions",
+        "Jason Lee", "InnovateTech", "Lisa Wang", "DigitalForge Co",
+        "David Park", "NextGen Systems", "Rachel Kim", "ByteWorks Studio",
+        "Chris Anderson", "FutureStack Inc", "Maya Patel", "QuantumDev Labs"
+    ];
 
     return (
-        <section className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden flex flex-col justify-center">
-            {/* Background Texture */}
-            <div className="absolute inset-0 opacity-20 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-
-            {/* 3D Bloom Effect */}
-            <div className={`absolute top-[-20%] right-[-10%] w-[800px] h-[800px] blur-[120px] rounded-full mix-blend-screen pointer-events-none opacity-20 transition-colors duration-700 ${isOnline ? 'bg-brand-green' : 'bg-red-600'
-                }`} />
-
-            <div className="container mx-auto px-6 md:px-12 relative z-10">
-                {/* Hero Content */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-32">
-
-                    {/* Left Column (7 cols) */}
-                    <div className="lg:col-span-7">
-                        {/* Status Pill */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className={`inline-flex items-center gap-2 pl-1 pr-3 py-1 rounded-full border mb-8 transition-colors duration-300 ${isOnline
-                                ? 'bg-zinc-900 border-zinc-800 text-zinc-300'
-                                : 'bg-red-950/20 border-red-900/30 text-red-300'
-                                }`}
-                        >
-                            <span className={`flex h-2 w-2 rounded-full ${isOnline ? 'bg-brand-green' : 'bg-red-500'}`}>
-                                <span className={`animate-ping absolute inline-flex h-2 w-2 rounded-full opacity-75 ${isOnline ? 'bg-brand-green' : 'bg-red-500'}`} />
-                            </span>
-                            <span className="text-xs font-bold tracking-widest uppercase">
-                                {isOnline ? 'Available for new projects' : 'System Locked'}
-                            </span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className={`text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[0.9] mb-8 ${isOnline ? 'text-white' : 'text-red-50'}`}
-                        >
-                            WE BUILD <br />
-                            <span className="outline-text text-transparent" style={{ WebkitTextStroke: isOnline ? '1px rgba(255,255,255,0.3)' : '1px rgba(255,100,100,0.3)' }}>
-                                DIGITAL
-                            </span> <br />
-                            <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isOnline ? 'from-brand-green via-white to-brand-green' : 'from-red-500 via-white to-red-500'}`}>
-                                LEGACIES
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className={`text-xl md:text-2xl max-w-xl leading-relaxed mb-10 ${isOnline ? 'text-zinc-400' : 'text-red-200/60'}`}
-                        >
-                            Helping ambitious brands scale their vision with world-class design & engineering.
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="flex flex-wrap items-center gap-6"
-                        >
-                            <Link href="/project-request/custom">
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className={`group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${isOnline
-                                        ? 'bg-brand-green text-black hover:bg-brand-green/90'
-                                        : 'bg-red-500 text-white hover:bg-red-600'
-                                        }`}
-                                >
-                                    <span>Start a Project</span>
-                                    <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1">
-                                        <ArrowRight size={16} />
-                                    </div>
-                                </motion.button>
-                            </Link>
-
-                            <div className="flex -space-x-4">
-                                {[1, 2, 3].map((i) => (
-                                    <div key={i} className={`w-12 h-12 rounded-full border-2 border-black bg-zinc-800 overflow-hidden`}>
-                                        <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="Client" className="w-full h-full object-cover" />
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="flex flex-col">
-                                <div className="flex text-yellow-500">
-                                    {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
-                                </div>
-                                <span className={`text-sm font-medium ${isOnline ? 'text-zinc-400' : 'text-red-300/50'}`}>Trusted by 50+ clients</span>
-                            </div>
-                        </motion.div>
+        <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-transparent py-20">
+            {/* Content Container */}
+            <div className="container mx-auto px-6 relative z-10 max-w-5xl">
+                
+                {/* Status Badge */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="flex justify-center mb-8"
+                >
+                    <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border backdrop-blur-md transition-colors duration-300 ${
+                        isOnline 
+                            ? 'bg-brand-green/10 border-brand-green/30 text-brand-green' 
+                            : 'bg-red-600/10 border-red-600/30 text-red-500'
+                    }`}>
+                        <span className="relative flex h-2 w-2">
+                            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isOnline ? 'bg-brand-green' : 'bg-red-500'}`}></span>
+                            <span className={`relative inline-flex rounded-full h-2 w-2 ${isOnline ? 'bg-brand-green' : 'bg-red-500'}`}></span>
+                        </span>
+                        <span className="text-xs font-bold tracking-widest uppercase">
+                            {isOnline ? 'Available for new projects' : 'System Locked'}
+                        </span>
                     </div>
+                </motion.div>
 
-                    {/* Right Column (5 cols) - Professional Visual */}
-                    <div className="lg:col-span-5 relative hidden lg:block h-[500px]">
-                        {/* Layer 1: Code Snippet (Behind) */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20, rotate: 6 }}
-                            animate={{ opacity: 1, x: 0, rotate: 6 }}
-                            transition={{ delay: 0.5, duration: 0.8 }}
-                            className={`absolute top-10 right-10 w-[350px] p-6 rounded-2xl border backdrop-blur-md z-10 ${isOnline
-                                ? 'bg-zinc-900/90 border-zinc-800 shadow-2xl'
-                                : 'bg-red-950/90 border-red-900/50'
-                                }`}
+                {/* Main Headline */}
+                <motion.h1 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-center mb-6 leading-tight"
+                >
+                    <span className="text-white">WE BUILD</span>{" "}
+                    <span className={`text-transparent bg-clip-text bg-gradient-to-r ${
+                        isOnline 
+                            ? 'from-brand-green via-white to-brand-green' 
+                            : 'from-red-500 via-white to-red-500'
+                    }`}>
+                        SCALABLE
+                    </span>{" "}
+                    <span className="text-white">SOLUTIONS</span>
+                </motion.h1>
+
+                {/* Subtitle */}
+                <motion.p 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="text-center text-zinc-400 text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed"
+                >
+                    High-performance websites and applications with cutting-edge optimizations.
+                    Sub-300ms guaranteed latency, infinite scale, and no infrastructure headaches.
+                </motion.p>
+
+                {/* CTA Buttons */}
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                    className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+                >
+                    <Link href="/project-request/custom">
+                        <motion.button 
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`group inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-base transition-all duration-300 ${
+                                isOnline 
+                                    ? 'bg-brand-green text-black hover:bg-brand-green/90 shadow-lg shadow-brand-green/20' 
+                                    : 'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-600/20'
+                            }`}
                         >
-                            <div className="flex gap-2 mb-4">
-                                <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                                <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                                <div className="w-3 h-3 rounded-full bg-green-500/50" />
-                            </div>
-                            <div className="font-mono text-xs space-y-1">
-                                <p className="text-pink-400">const <span className="text-blue-300">future</span> = <span className="text-yellow-300">await</span> build({'{'}</p>
-                                <p className="pl-4 text-zinc-400">vision: <span className="text-green-300">"Limitless"</span>,</p>
-                                <p className="pl-4 text-zinc-400">stack: [<span className="text-orange-300">"Next.js"</span>, <span className="text-blue-400">"React"</span>],</p>
-                                <p className="pl-4 text-zinc-400">performance: <span className="text-purple-400">100</span></p>
-                                <p className="text-zinc-500">{'}'});</p>
-                            </div>
-                        </motion.div>
+                            <span>Start a Project</span>
+                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                        </motion.button>
+                    </Link>
 
-                        {/* Layer 2: UI Preview (Front) */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.2, duration: 0.8 }}
-                            className={`absolute top-28 left-0 w-[400px] aspect-[4/3] rounded-2xl overflow-hidden border shadow-2xl z-20 ${isOnline
-                                ? 'bg-black border-zinc-800 shadow-brand-green/10'
-                                : 'bg-black border-red-900/50 shadow-red-500/10'
-                                }`}
+                    <Link href="/project">
+                        <motion.button 
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-base text-white border border-white/10 hover:bg-white/5 transition-all duration-300 backdrop-blur-md"
                         >
-                            {/* Browser Header */}
-                            <div className={`h-8 w-full border-b flex items-center px-4 gap-2 ${isOnline ? 'bg-zinc-900 border-zinc-800' : 'bg-red-950/30 border-red-900/30'}`}>
-                                <div className="flex-1 flex justify-center">
-                                    <div className={`w-32 h-4 rounded-full ${isOnline ? 'bg-zinc-800' : 'bg-red-900/30'}`} />
-                                </div>
-                            </div>
+                            <span>View Projects</span>
+                        </motion.button>
+                    </Link>
+                </motion.div>
 
-                            {/* Preview Content */}
-                            <div className="relative w-full h-full">
-                                <img
-                                    src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80"
-                                    className="w-full h-full object-cover opacity-80"
-                                    alt="Dashboard Preview"
-                                />
+                {/* Central Visual Element */}
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                    className="relative mx-auto mb-16 max-w-2xl"
+                >
+                    <div className={`relative aspect-[16/9] rounded-3xl border overflow-hidden ${
+                        isOnline 
+                            ? 'border-brand-green/20 bg-brand-green/5' 
+                            : 'border-red-600/20 bg-red-600/5'
+                    }`}>
+                        {/* Animated Blob */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <motion.div 
+                                animate={{
+                                    scale: [1, 1.2, 1],
+                                    rotate: [0, 180, 360],
+                                }}
+                                transition={{
+                                    duration: 20,
+                                    repeat: Infinity,
+                                    ease: "linear"
+                                }}
+                                className={`w-64 h-64 rounded-full blur-3xl opacity-40 ${
+                                    isOnline ? 'bg-brand-green' : 'bg-red-600'
+                                }`}
+                            />
+                        </div>
 
-                                {/* Overlay Stats */}
-                                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl border backdrop-blur-md bg-black/50 border-white/10 flex items-center justify-between">
-                                    <div>
-                                        <p className="text-[10px] uppercase tracking-wider text-zinc-400">Conversion</p>
-                                        <p className={`text-xl font-bold ${isOnline ? 'text-white' : 'text-red-100'}`}>+84.5%</p>
-                                    </div>
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${isOnline ? 'bg-brand-green/20 border-brand-green/50 text-brand-green' : 'bg-red-500/20 border-red-500/50 text-red-500'}`}>
-                                        <CheckCircle2 size={20} />
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
+                        {/* Interactive Button */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm bg-white text-black shadow-xl`}
+                            >
+                                <Sparkles className="w-4 h-4" />
+                                <span>Explore Demo</span>
+                            </motion.button>
+                        </div>
+
+                        {/* Corner accent */}
+                        <div className={`absolute top-4 right-4 w-3 h-3 rounded-full ${
+                            isOnline ? 'bg-brand-green' : 'bg-red-600'
+                        } animate-pulse`} />
                     </div>
-                </div>
+                </motion.div>
 
-               
+                {/* Trusted By Section */}
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.6 }}
+                    className="text-center mb-8"
+                >
+                    <p className="text-zinc-500 text-sm mb-6">
+                        Trusted by <span className={`font-bold ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>50+</span> clients worldwide
+                    </p>
+                </motion.div>
             </div>
+
+            {/* Scrolling Company Ribbon */}
+            <div className="relative w-full overflow-hidden py-10">
+                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-10" />
+                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-10" />
+                
+                <div className="flex gap-20 animate-marquee-slow whitespace-nowrap items-center">
+                    {/* First set */}
+                    {companies.map((company, i) => {
+                        const Icon = company.icon;
+                        return (
+                            <div key={`first-${i}`} className="inline-flex items-center gap-4 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default group">
+                                <Icon className={`w-8 h-8 ${isOnline ? 'text-zinc-400 group-hover:text-white' : 'text-red-400/70 group-hover:text-red-300'} transition-colors duration-300`} />
+                                <span className={`text-2xl font-bold tracking-tight ${
+                                    isOnline ? 'text-zinc-500 group-hover:text-white' : 'text-red-400/60 group-hover:text-red-300'
+                                } transition-colors duration-300`}>{company.name}</span>
+                            </div>
+                        );
+                    })}
+                    {/* Duplicate for seamless loop */}
+                    {companies.map((company, i) => {
+                        const Icon = company.icon;
+                        return (
+                            <div key={`second-${i}`} className="inline-flex items-center gap-4 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default group">
+                                <Icon className={`w-8 h-8 ${isOnline ? 'text-zinc-400 group-hover:text-white' : 'text-red-400/70 group-hover:text-red-300'} transition-colors duration-300`} />
+                                <span className={`text-2xl font-bold tracking-tight ${
+                                    isOnline ? 'text-zinc-500 group-hover:text-white' : 'text-red-400/60 group-hover:text-red-300'
+                                } transition-colors duration-300`}>{company.name}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            <style jsx>{`
+                @keyframes marquee-slow {
+                    0% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-50%);
+                    }
+                }
+                .animate-marquee-slow {
+                    animation: marquee-slow 60s linear infinite;
+                }
+            `}</style>
         </section>
     );
 }

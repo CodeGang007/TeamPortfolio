@@ -49,29 +49,6 @@ export default function FAQ() {
 
     return (
         <section id="faq" className="py-24 relative overflow-hidden">
-            {/* Animated Background */}
-            <div className="absolute inset-0 pointer-events-none">
-                <motion.div 
-                    animate={{ 
-                        scale: [1, 1.1, 1],
-                        opacity: [0.1, 0.15, 0.1]
-                    }}
-                    transition={{ duration: 8, repeat: Infinity }}
-                    className={`absolute top-20 right-10 w-72 h-72 rounded-full blur-3xl transition-colors duration-500 ${
-                        isOnline ? 'bg-brand-green' : 'bg-red-500'
-                    }`} 
-                />
-                <motion.div 
-                    animate={{ 
-                        scale: [1, 0.9, 1],
-                        opacity: [0.05, 0.1, 0.05]
-                    }}
-                    transition={{ duration: 10, repeat: Infinity, delay: 2 }}
-                    className={`absolute bottom-20 left-10 w-96 h-96 rounded-full blur-3xl transition-colors duration-500 ${
-                        isOnline ? 'bg-blue-500' : 'bg-red-600'
-                    }`} 
-                />
-            </div>
             
             <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
                 {/* Header */}
