@@ -49,20 +49,6 @@ export default function AppLayout({
             items={navItems}
             isOnline={isAuthenticated}
           />
-          <NavbarButton
-            variant={isAuthenticated ? "primary" : "secondary"}
-            className={isAuthenticated ? "" : "border-red-500/50 text-red-400 hover:bg-red-500/10"}
-            onClick={() => {
-              if (isAuthenticated) {
-                router.push('/contactus');
-              } else {
-                openLoginModal();
-              }
-            }}
-          >
-            {isAuthenticated ? "Book a call" : "System Offline"}
-          </NavbarButton>
-
           {isAuthenticated && (
             <div className="ml-2">
               <UserMenu />
@@ -100,24 +86,6 @@ export default function AppLayout({
             ))}
 
             <div className="mt-4 w-full h-px bg-white/10" />
-
-            {/* Mobile CTA Button */}
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                if (isAuthenticated) {
-                  router.push('/contactus');
-                } else {
-                  openLoginModal();
-                }
-              }}
-              className={`mt-4 w-full rounded-md px-4 py-3 text-sm font-bold shadow-md transition-all active:scale-95 ${isAuthenticated
-                ? "bg-white text-black hover:bg-zinc-200"
-                : "bg-red-500/20 text-red-200 border border-red-500/50 hover:bg-red-500/30"
-                }`}
-            >
-              {isAuthenticated ? "Book a call" : "System Offline"}
-            </button>
 
             {/* Mobile User Links (if authenticated) */}
             {isAuthenticated && (

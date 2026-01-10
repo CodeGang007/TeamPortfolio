@@ -3,121 +3,145 @@
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
-import { Star, ArrowRight, ArrowUpRight, CheckCircle2 } from "lucide-react";
-import { HoverEffect } from "../ui/card-hover-effect";
+import { 
+    Code2, 
+    Smartphone, 
+    Palette, 
+    ShoppingCart, 
+    Cloud, 
+    TrendingUp,
+    ArrowUpRight 
+} from "lucide-react";
 
-const projects = [
+const services = [
     {
+        icon: Code2,
         title: "Web Development",
         description: "Full-stack web applications with modern frameworks like Next.js, React, and Node.js.",
-        link: "/web-development",
-        image: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800&q=80",
+        link: "/project",
     },
     {
+        icon: Smartphone,
         title: "Mobile Apps",
         description: "Native and cross-platform mobile applications for iOS and Android using React Native.",
-        link: "/mobile-apps",
-        image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80",
+        link: "/project",
     },
     {
+        icon: Palette,
         title: "UI/UX Design",
         description: "User-centered design solutions that create engaging and intuitive digital experiences.",
-        link: "/ui-ux-design",
-        image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80",
+        link: "/project",
     },
     {
+        icon: ShoppingCart,
         title: "E-commerce",
         description: "Scalable online stores with payment integration and inventory management systems.",
-        link: "/e-commerce",
-        image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
+        link: "/project",
     },
     {
+        icon: Cloud,
         title: "Cloud Solutions",
         description: "AWS and Azure cloud infrastructure for scalable and secure application deployment.",
-        link: "/cloud-solutions",
-        image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
+        link: "/project",
     },
     {
+        icon: TrendingUp,
         title: "SEO & Analytics",
         description: "Search engine optimization and data analytics to boost your online presence.",
-        link: "/seo-analytics",
-        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+        link: "/project",
     },
 ];
 
-export default function FloatingHero() {
+export default function MyTopPublications() {
     const { isAuthenticated } = useAuth();
     const isOnline = isAuthenticated;
 
-    // const services = [
-    //     {
-    //         title: "Web Design",
-    //         description: "Award-winning UI/UX interfaces.",
-    //         image: "https://images.unsplash.com/photo-1558655146-d09347e0c7a8?w=800&q=80",
-    //         tags: ["UI/UX", "Figma"],
-    //     },
-    //     {
-    //         title: "App Development",
-    //         description: "Native & Cross-platform solutions.",
-    //         image: "https://images.unsplash.com/photo-1551650975-87bd5c8e2282?w=800&q=80",
-    //         tags: ["iOS", "Android"],
-    //     },
-    //     {
-    //         title: "SEO Boost",
-    //         description: "Rank #1 on Google Search.",
-    //         image: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
-    //         tags: ["Growth", "Analytics"],
-    //     },
-    //     {
-    //         title: "Branding",
-    //         description: "Identity that tells your story.",
-    //         image: "https://images.unsplash.com/photo-1600607686527-6fb886090705?w=800&q=80",
-    //         tags: ["Logo", "Strategy"],
-    //     },
-    //     {
-    //         title: "Cloud Solutions",
-    //         description: "Scalable infrastructure.",
-    //         image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
-    //         tags: ["AWS", "Azure"],
-    //     },
-    //     {
-    //         title: "Maintenance",
-    //         description: "24/7 Support & Updates.",
-    //         image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80",
-    //         tags: ["Security", "Uptime"],
-    //     },
-    // ];
-
     return (
-        <section className="relative min-h-[90vh] overflow-hidden flex flex-col justify-center">
-
+        <section className="relative py-24 overflow-hidden bg-transparent">
             <div className="container mx-auto px-6 md:px-12 relative z-10">
+                {/* Section Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 40 }}
+                    initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.4 }}
-                    className="mt-32"
+                    transition={{ duration: 0.6 }}
+                    className="text-center mb-16"
                 >
-                    <div className="text-center mb-16">
-                        <h2 className={`text-4xl md:text-5xl font-bold mb-4 transition-colors duration-500 ${
-                            isOnline ? 'text-white' : 'text-red-50'
+                    <h2 className="text-4xl md:text-5xl font-black mb-4 text-white">
+                        What you can build with{" "}
+                        <span className={`text-transparent bg-clip-text bg-gradient-to-r ${
+                            isOnline ? 'from-brand-green to-white' : 'from-red-500 to-white'
                         }`}>
-                            Our <span className={`text-transparent bg-clip-text bg-gradient-to-r ${
-                                isOnline ? 'from-brand-green to-blue-400' : 'from-red-400 to-red-300'
-                            }`}>Publications</span>
-                        </h2>
-                        <p className={`text-lg max-w-2xl mx-auto transition-colors duration-500 ${
-                            isOnline ? 'text-zinc-400' : 'text-red-300/70'
-                        }`}>
-                            Explore our expertise across different domains and technologies
-                        </p>
-                    </div>
-                    
-                    <HoverEffect items={projects} />
+                            optimizations
+                        </span>
+                    </h2>
+                    <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
+                        Lightning-fast websites, mobile apps, and digital solutions engineered for peak performance
+                    </p>
                 </motion.div>
 
-               
+                {/* Services Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {services.map((service, index) => {
+                        const Icon = service.icon;
+                        return (
+                            <motion.div
+                                key={service.title}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                            >
+                                <Link href={service.link}>
+                                    <div className={`group relative p-8 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] ${
+                                        isOnline 
+                                            ? 'bg-zinc-900/50 border-zinc-800 hover:border-brand-green/50 hover:bg-zinc-900/70' 
+                                            : 'bg-red-950/20 border-red-900/30 hover:border-red-500/50 hover:bg-red-950/30'
+                                    }`}>
+                                        {/* Icon */}
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 transition-colors duration-300 ${
+                                            isOnline 
+                                                ? 'bg-brand-green/10 text-brand-green group-hover:bg-brand-green/20' 
+                                                : 'bg-red-500/10 text-red-500 group-hover:bg-red-500/20'
+                                        }`}>
+                                            <Icon className="w-6 h-6" />
+                                        </div>
+
+                                        {/* Title */}
+                                        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-brand-green transition-colors duration-300">
+                                            {service.title}
+                                        </h3>
+
+                                        {/* Description */}
+                                        <p className="text-zinc-400 text-sm leading-relaxed mb-4">
+                                            {service.description}
+                                        </p>
+
+                                        {/* Arrow Icon */}
+                                        <div className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 ${
+                                            isOnline 
+                                                ? 'bg-brand-green/0 group-hover:bg-brand-green/10' 
+                                                : 'bg-red-500/0 group-hover:bg-red-500/10'
+                                        }`}>
+                                            <ArrowUpRight className={`w-4 h-4 transition-all duration-300 ${
+                                                isOnline 
+                                                    ? 'text-zinc-600 group-hover:text-brand-green group-hover:translate-x-0.5 group-hover:-translate-y-0.5' 
+                                                    : 'text-red-400/50 group-hover:text-red-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
+                                            }`} />
+                                        </div>
+
+                                        {/* Glow effect on hover */}
+                                        <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ${
+                                            isOnline 
+                                                ? 'bg-gradient-to-br from-brand-green/5 to-transparent' 
+                                                : 'bg-gradient-to-br from-red-500/5 to-transparent'
+                                        }`} />
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        );
+                    })}
+                </div>
             </div>
         </section>
     );

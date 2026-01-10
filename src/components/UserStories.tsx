@@ -64,9 +64,6 @@ export default function UserStories() {
 
     return (
         <section className="py-24 relative overflow-visible">
-            {/* Background elements */}
-            <div className={`absolute inset-0 opacity-30 pointer-events-none ${isOnline ? 'bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-800/20 via-transparent to-transparent' : 'bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-900/10 via-transparent to-transparent'}`} />
-
             <div className="container mx-auto px-6 md:px-12 relative z-10">
                 <div className="text-center mb-16">
                     <motion.div

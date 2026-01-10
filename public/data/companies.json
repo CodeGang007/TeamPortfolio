@@ -1,0 +1,42 @@
+[
+  {
+    "name": "TechCorp",
+    "logo": "/logos/techcorp.png"
+  },
+  {
+    "name": "InnovateLabs",
+    "logo": "/logos/innovatelabs.png"
+  },
+  {
+    "name": "CloudNine",
+    "logo": "/logos/cloudnine.png"
+  },
+  {
+    "name": "DigitalForge",
+    "logo": "/logos/digitalforge.png"
+  },
+  {
+    "name": "ByteWorks",
+    "logo": "/logos/byteworks.png"
+  },
+  {
+    "name": "NextGen Systems",
+    "logo": "/logos/nextgen.png"
+  },
+  {
+    "name": "FutureStack",
+    "logo": "/logos/futurestack.png"
+  },
+  {
+    "name": "QuantumDev",
+    "logo": "/logos/quantumdev.png"
+  },
+  {
+    "name": "CodeCraft Solutions",
+    "logo": "/logos/codecraft.png"
+  },
+  {
+    "name": "DevStudio Pro",
+    "logo": "/logos/devstudio.png"
+  }
+]
