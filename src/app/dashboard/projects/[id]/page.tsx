@@ -85,6 +85,7 @@ interface ProjectDetail {
         documentation: string;
         other: string;
     };
+    attachmentUrls?: Array<{ name: string; url: string; type: string; size: string; }>;
 }
 
 const milestoneIcons: Record<string, React.ReactNode> = {
@@ -155,6 +156,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     const [isFeedbackEditorOpen, setIsFeedbackEditorOpen] = useState(false);
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [selectedDocument, setSelectedDocument] = useState<{ name: string; url: string; type: string } | null>(null);
 
     // Admin Edit States
     const [isEditing, setIsEditing] = useState(false);
@@ -170,15 +172,18 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
     // Prevent body scroll when modal is open
     useEffect(() => {
-        if (isDetailsModalOpen || isFeedbackEditorOpen) {
+        if (isDetailsModalOpen || isFeedbackEditorOpen || !!selectedDocument) {
+            document.documentElement.style.overflow = 'hidden';
             document.body.style.overflow = 'hidden';
         } else {
-            document.body.style.overflow = 'unset';
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
         }
         return () => {
-            document.body.style.overflow = 'unset';
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
         };
-    }, [isDetailsModalOpen, isFeedbackEditorOpen]);
+    }, [isDetailsModalOpen, isFeedbackEditorOpen, selectedDocument]);
 
     const handleSave = async () => {
         if (!project) return;
@@ -347,6 +352,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             documentation: "",
                             other: ""
                         },
+                        attachmentUrls: projectRequest.attachmentUrls || [],
 
                         milestones: progressData.milestones || [],
                         stats: {
@@ -402,7 +408,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             website: "",
                             documentation: "",
                             other: ""
-                        }
+                        },
+                        attachmentUrls: projectRequest.attachmentUrls || []
                     });
                 }
 
@@ -1117,7 +1124,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         </div>
 
                                         {/* Content */}
-                                        <div className="flex-1 overflow-y-auto p-6 space-y-4" style={{ overscrollBehavior: 'contain' }}>
+                                        <div className="flex-1 overflow-y-auto p-6 space-y-4 overscroll-contain" style={{ overscrollBehavior: 'contain' }}>
                                             {/* Project Name & Category */}
                                             <div className="grid grid-cols-2 gap-3">
                                                 <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
@@ -1177,6 +1184,40 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                 <Globe className="h-3.5 w-3.5" /> Website
                                                             </a>
                                                         )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Attachments Section */}
+                                            {project.attachmentUrls && project.attachmentUrls.length > 0 && (
+                                                <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
+                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-3">Attachments & Files</span>
+                                                    <div className="flex flex-col gap-2">
+                                                        {project.attachmentUrls.map((file, idx) => (
+                                                            <div 
+                                                                key={idx}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    setSelectedDocument(file);
+                                                                }}
+                                                                className="flex items-center justify-between p-3 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] transition-colors group/file cursor-pointer"
+                                                            >
+                                                                <div className="flex items-center gap-3 overflow-hidden">
+                                                                    <div className="h-8 w-8 rounded bg-[#18181b] flex items-center justify-center text-zinc-400 group-hover/file:text-brand-green transition-colors">
+                                                                        <FileText className="h-4 w-4" />
+                                                                    </div>
+                                                                    <div className="flex flex-col min-w-0">
+                                                                        <span className="text-xs text-white font-medium truncate pr-2">{file.name}</span>
+                                                                        <span className="text-[10px] text-[#71717a]">{// @ts-ignore
+                                                                        file.size ? file.size : 'Unknown size'}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className="text-[10px] text-zinc-500 group-hover/file:text-zinc-300">Preview</span>
+                                                                    <ExternalLink className="h-3.5 w-3.5 text-[#52525b] group-hover/file:text-white transition-colors flex-shrink-0" />
+                                                                </div>
+                                                            </div>
+                                                        ))}
                                                     </div>
                                                 </div>
                                             )}
@@ -1300,6 +1341,86 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     </div>
                 </div >
             </main >
+
+            {/* Document Preview Modal */}
+            <AnimatePresence>
+                {selectedDocument && (
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6" style={{ pointerEvents: 'auto' }}>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setSelectedDocument(null)}
+                            className="absolute inset-0 bg-black/90 backdrop-blur-md"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="relative w-full h-full max-w-5xl max-h-[90vh] bg-[#0f0f12] border border-[#27272a] rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+                        >
+                            {/* Header */}
+                            <div className="flex items-center justify-between px-6 py-4 border-b border-[#27272a] bg-[#18181b]">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-8 w-8 rounded bg-[#27272a] flex items-center justify-center">
+                                        <FileText className="h-4 w-4 text-zinc-400" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-white">{selectedDocument.name}</h3>
+                                        <p className="text-xs text-[#71717a]">Preview Mode</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <a
+                                        href={selectedDocument.url}
+                                        download
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="p-2 rounded-lg hover:bg-[#27272a] text-[#71717a] hover:text-white transition-colors"
+                                        title="Download original"
+                                    >
+                                        <ExternalLink className="h-5 w-5" />
+                                    </a>
+                                    <button
+                                        onClick={() => setSelectedDocument(null)}
+                                        className="p-2 rounded-lg hover:bg-[#27272a] text-[#71717a] hover:text-white transition-colors"
+                                    >
+                                        <X className="h-5 w-5" />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Content */}
+                            <div className="flex-1 bg-[#09090b] relative w-full h-full overflow-hidden flex items-center justify-center overscroll-contain" style={{ overscrollBehavior: 'contain' }}>
+                                {/* Loading Spinner (behind content) */}
+                                <div className="absolute inset-0 flex items-center justify-center z-0">
+                                    <div className="h-8 w-8 rounded-full border-2 border-[#27272a] border-t-emerald-500 animate-spin" />
+                                </div>
+
+                                {selectedDocument.type.toLowerCase().includes('image') ||  selectedDocument.url.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i) ? (
+                                    <div className="relative w-full h-full overflow-auto flex items-center justify-center p-4 z-10 bg-[#09090b] overscroll-contain" style={{ overscrollBehavior: 'contain' }}>
+                                        <img 
+                                            src={selectedDocument.url} 
+                                            alt={selectedDocument.name}
+                                            className="max-w-full max-h-full object-contain rounded shadow-xl"
+                                        />
+                                    </div>
+                                ) : (
+                                    <iframe 
+                                        src={selectedDocument.url.includes('cloudinary') && selectedDocument.url.endsWith('.pdf') ? 
+                                            selectedDocument.url.replace('.pdf', '.pdf#view=FitH') : // Optimize PDF view params
+                                            selectedDocument.url
+                                        }
+                                        className="w-full h-full border-none z-10 relative bg-white"
+                                        title="Document Preview"
+                                    />
+                                )}
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
 
             {/* Feedback Editor Modal */}
             <AnimatePresence>

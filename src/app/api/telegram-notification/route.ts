@@ -7,13 +7,12 @@ const TELEGRAM_CHAT_ID = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID || process.env
 export async function POST(request: Request) {
     try {
         const { message } = await request.json();
-
-        if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-            return NextResponse.json(
-                { error: 'Telegram configuration missing' },
-                { status: 500 }
-            );
-        }
+        
+        console.log("Telegram Notification API called");
+        
+        console.log("Telegram Notification API called");
+        
+        // Direct attempt without pre-check (reverted validation)
 
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
         const response = await fetch(url, {

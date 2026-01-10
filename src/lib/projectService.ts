@@ -57,6 +57,8 @@ export interface ProjectRequest {
   userId: string;
   userName?: string;
   userEmail?: string;
+  name?: string; // Contact Name
+  phone?: string; // Contact Phone
   imageUrls: string[];
   attachmentUrls: Array<{
     name: string;
@@ -153,26 +155,7 @@ export const projectRequestService = {
         completedAt: ""
       },
       assignedTo: null,
-      priority: "medium",
-      // Hardcoded images and attachments for now
-      imageUrls: [
-        "https://example.com/project-image-1.jpg",
-        "https://example.com/project-image-2.jpg"
-      ],
-      attachmentUrls: [
-        {
-          name: "requirements.pdf",
-          url: "https://example.com/requirements.pdf",
-          type: "application/pdf",
-          size: "2.5 MB"
-        },
-        {
-          name: "project-brief.docx",
-          url: "https://example.com/project-brief.docx",
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          size: "1.2 MB"
-        }
-      ]
+      priority: "medium"
     });
 
     // Send Telegram Notification
@@ -183,7 +166,7 @@ export const projectRequestService = {
             budget: projectData.budget,
             currency: projectData.currency,
             userName: projectData.userName,
-            userEmail: projectData.userEmail,
+            userEmail: projectData.userEmail || projectData.userName, // Fallback if needed
             projectType: projectData.projectType,
             deliveryTime: projectData.deliveryTime
         });
