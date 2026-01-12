@@ -48,9 +48,8 @@ export default function PerformanceStats() {
                 >
                     <h2 className="text-4xl md:text-5xl font-black mb-4 text-white">
                         Scale without{" "}
-                        <span className={`text-transparent bg-clip-text bg-gradient-to-r ${
-                            isOnline ? 'from-brand-green to-white' : 'from-red-500 to-white'
-                        }`}>
+                        <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isOnline ? 'from-brand-green to-white' : 'from-red-500 to-white'
+                            }`}>
                             thinking
                         </span>
                     </h2>
@@ -73,20 +72,18 @@ export default function PerformanceStats() {
                                 className="group text-center"
                             >
                                 {/* Icon */}
-                                <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl flex items-center justify-center transition-all duration-300 ${
-                                    isOnline 
-                                        ? 'bg-brand-green/10 text-brand-green group-hover:bg-brand-green/20 group-hover:scale-110' 
-                                        : 'bg-red-500/10 text-red-500 group-hover:bg-red-500/20 group-hover:scale-110'
-                                }`}>
+                                <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl flex items-center justify-center transition-all duration-300 ${isOnline
+                                    ? 'bg-brand-green/10 text-brand-green group-hover:bg-brand-green/20 group-hover:scale-110'
+                                    : 'bg-red-500/10 text-red-500 group-hover:bg-red-500/20 group-hover:scale-110'
+                                    }`}>
                                     <Icon className="w-8 h-8" />
                                 </div>
 
                                 {/* Value */}
-                                <h3 className={`text-4xl md:text-5xl font-black mb-2 transition-colors duration-300 ${
-                                    isOnline 
-                                        ? 'text-brand-green' 
-                                        : 'text-red-500'
-                                }`}>
+                                <h3 className={`text-4xl md:text-5xl font-black mb-2 transition-colors duration-300 ${isOnline
+                                    ? 'text-brand-green'
+                                    : 'text-red-500'
+                                    }`}>
                                     {stat.value}
                                 </h3>
 
@@ -112,13 +109,12 @@ export default function PerformanceStats() {
                     transition={{ duration: 0.6, delay: 0.4 }}
                     className="text-center mt-12"
                 >
-                    <a 
-                        href="/project" 
-                        className={`inline-flex items-center gap-2 text-sm font-bold transition-colors duration-300 ${
-                            isOnline 
-                                ? 'text-brand-green hover:text-white' 
-                                : 'text-red-500 hover:text-white'
-                        }`}
+                    <a
+                        href="/project"
+                        className={`inline-flex items-center gap-2 text-sm font-bold transition-colors duration-300 ${isOnline
+                            ? 'text-brand-green hover:text-white'
+                            : 'text-red-500 hover:text-white'
+                            }`}
                     >
                         <span>See how we compare</span>
                         <span>→</span>
