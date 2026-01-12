@@ -124,7 +124,7 @@ export const NavItems = ({ items, className, onItemClick, isOnline = true }: Nav
     <motion.div
       onMouseLeave={() => setHovered(null)}
       className={cn(
-        "hidden flex-row items-center justify-center space-x-6 text-sm font-medium transition duration-200 lg:flex",
+        "hidden flex-row items-center justify-center space-x-2 lg:flex", // Reduced spacing: space-x-6 -> space-x-2
         className,
       )}
     >
@@ -135,22 +135,28 @@ export const NavItems = ({ items, className, onItemClick, isOnline = true }: Nav
             if (onItemClick) onItemClick();
           }}
           className={cn(
-            "relative px-3 py-1.5 transition-colors whitespace-nowrap",
-            isOnline ? "text-zinc-400 hover:text-white" : "text-red-300/60 hover:text-red-200"
+            "relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border flex items-center justify-center",
+            isOnline
+              ? "bg-white/5 border-white/5 text-zinc-400 hover:text-white hover:border-brand-green/30 hover:shadow-[0_0_15px_rgba(34,197,94,0.15)] hover:bg-white/10"
+              : "bg-red-950/10 border-red-500/10 text-red-500/70 hover:text-red-400 hover:border-red-500/30 hover:shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:bg-red-950/20"
           )}
           key={`link-${idx}`}
           href={item.link}
         >
+          {/* Active/Hover Background - Keeping it subtle or removing if the border style is enough. Let's keep a very subtle internal glow */}
           {hovered === idx && (
             <motion.div
               layoutId="hovered"
               className={cn(
-                "absolute inset-0 h-full w-full rounded-full",
-                isOnline ? "bg-white/5" : "bg-red-500/10"
+                "absolute inset-0 h-full w-full rounded-full z-0",
+                isOnline ? "bg-brand-green/5" : "bg-red-500/5"
               )}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             />
           )}
-          <span className="relative z-20">{item.name}</span>
+          <span className="relative z-10">{item.name}</span>
         </Link>
       ))}
     </motion.div>
