@@ -5,7 +5,7 @@ import { ThemeFlipHeading } from "@/components/ui/ThemeFlipHeading";
 export default function ProjectPage() {
   return (
     <AppLayout>
-      <div className="container mx-auto px-8 min-h-screen">
+      <div className="container mx-auto px-8 min-h-screen pb-32">
 
         <ThemeFlipHeading
           prefix="Dive into Our "

@@ -6,7 +6,7 @@ import { TeamSection } from "@/components/teampage/TeamSection";
 export default function TeamPage() {
   return (
     <AppLayout>
-      <div className="container mx-auto px-8 min-h-screen">
+      <div className="container mx-auto px-8 min-h-screen pb-32">
         <ThemeFlipHeading
           prefix="Meet Our "
           words={["Team.", "Creators.", "Innovators.", "Wizards."]}
