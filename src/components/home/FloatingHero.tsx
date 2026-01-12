@@ -123,11 +123,10 @@ export default function FloatingHero() {
 
     return (
         <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-transparent py-20">
-            {/* Vignette Effect - Fades grid at edges */}
-            <div className="absolute inset-0 pointer-events-none z-[1]">
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-60" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-60" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,black_80%)]" />
+            {/* Vignette Effect - Subtle fade at edges, not covering bottom ribbon */}
+            <div className="absolute inset-0 pointer-events-none z-[1]" style={{ bottom: '200px' }}>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,black_90%)] opacity-50" />
             </div>
 
             {/* Floating Notification Badge - Professional Style */}
@@ -308,7 +307,7 @@ export default function FloatingHero() {
             </div>
 
             {/* Scrolling Company Ribbon */}
-            <div className="relative w-full overflow-hidden py-10">
+            <div className="relative w-full overflow-hidden py-10 z-20">
                 <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-10" />
                 <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-10" />
 
@@ -317,9 +316,9 @@ export default function FloatingHero() {
                     {companies.map((company, i) => {
                         const Icon = company.icon;
                         return (
-                            <div key={`first-${i}`} className="inline-flex items-center gap-4 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default group">
-                                <Icon className={`w-8 h-8 ${isOnline ? 'text-zinc-400 group-hover:text-white' : 'text-red-400/70 group-hover:text-red-300'} transition-colors duration-300`} />
-                                <span className={`text-2xl font-bold tracking-tight ${isOnline ? 'text-zinc-500 group-hover:text-white' : 'text-red-400/60 group-hover:text-red-300'
+                            <div key={`first-${i}`} className="inline-flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-default group">
+                                <Icon className={`w-8 h-8 ${isOnline ? 'text-zinc-300 group-hover:text-white' : 'text-red-400/70 group-hover:text-red-300'} transition-colors duration-300`} />
+                                <span className={`text-2xl font-bold tracking-tight ${isOnline ? 'text-zinc-400 group-hover:text-white' : 'text-red-400/60 group-hover:text-red-300'
                                     } transition-colors duration-300`}>{company.name}</span>
                             </div>
                         );
@@ -328,9 +327,9 @@ export default function FloatingHero() {
                     {companies.map((company, i) => {
                         const Icon = company.icon;
                         return (
-                            <div key={`second-${i}`} className="inline-flex items-center gap-4 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default group">
-                                <Icon className={`w-8 h-8 ${isOnline ? 'text-zinc-400 group-hover:text-white' : 'text-red-400/70 group-hover:text-red-300'} transition-colors duration-300`} />
-                                <span className={`text-2xl font-bold tracking-tight ${isOnline ? 'text-zinc-500 group-hover:text-white' : 'text-red-400/60 group-hover:text-red-300'
+                            <div key={`second-${i}`} className="inline-flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-default group">
+                                <Icon className={`w-8 h-8 ${isOnline ? 'text-zinc-300 group-hover:text-white' : 'text-red-400/70 group-hover:text-red-300'} transition-colors duration-300`} />
+                                <span className={`text-2xl font-bold tracking-tight ${isOnline ? 'text-zinc-400 group-hover:text-white' : 'text-red-400/60 group-hover:text-red-300'
                                     } transition-colors duration-300`}>{company.name}</span>
                             </div>
                         );
