@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Github, Linkedin, Mail, ArrowRight, Check, Send } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +19,19 @@ const XIcon = ({ size, className }: { size?: number; className?: string }) => (
     xmlns="http://www.w3.org/2000/svg"
   >
     <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+  </svg>
+);
+
+// Custom X (formerly Twitter) icon
+const XIcon = ({ size = 18 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
   </svg>
 );
 
@@ -166,7 +180,12 @@ export default function Footer() {
               Architecting the digital future. We combine aesthetic precision with engineering resilience to build products that last and brands that lead.
             </p>
 
+<<<<<<< HEAD
             <div className="flex gap-3 mt-4">
+=======
+            {/* Social Links */}
+            <div className="flex gap-4 mt-6">
+>>>>>>> 2b4ec496516ab30b1deec54b3a2bc8e235599d2c
               {[Github, Linkedin, XIcon, Mail].map((Icon, i) => (
                 <a
                   key={i}
