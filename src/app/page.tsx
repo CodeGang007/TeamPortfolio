@@ -6,7 +6,6 @@ import FloatingHero from "@/components/home/FloatingHero";
 import PerformanceStats from "@/components/home/PerformanceStats";
 import ServiceWorkflow from "@/components/home/ServiceWorkflow";
 import MyTopPublications from "@/components/home/MyTopPublications";
-import FeedbackButton from "@/components/FeedbackButton";
 
 import UserStories from "@/components/UserStories";
 import FAQ from "@/components/FAQ";
@@ -42,9 +41,8 @@ export default function HomePage() {
 
         </div>
       </div>
-      
-      {/* Floating Feedback Button */}
-      <FeedbackButton />
+
+
     </AppLayout>
   );
 }

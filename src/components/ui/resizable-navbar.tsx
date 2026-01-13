@@ -253,9 +253,13 @@ export const NavbarLogo = ({ isOnline = true }: { isOnline?: boolean }) => {
     >
       <div className={cn(
         "h-6 w-6 rounded flex items-center justify-center font-bold text-black text-xs transition-colors duration-500",
-        isOnline ? "bg-brand-green" : "bg-red-500"
+        isOnline ? "bg-transparent" : "bg-red-500/20"
       )}>
-        CG
+        <img
+          src="/assets/cg-logo.png"
+          alt="CodeGang Logo"
+          className="w-full h-full object-contain"
+        />
       </div>
       <span className={cn(
         "font-medium transition-colors duration-500",

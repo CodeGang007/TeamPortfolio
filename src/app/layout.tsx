@@ -7,6 +7,16 @@ import ModalWrapper from "@/components/shared/ModalWrapper";
 import AuthGuard from "@/components/auth/AuthGuard";
 import AuthToast from "@/components/auth/AuthToast";
 import SmoothScroll from "@/components/ui/SmoothScroll";
+import FeedbackButton from "@/components/FeedbackButton";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'CodeGang',
+  description: 'Architecting the digital future.',
+  icons: {
+    icon: '/assets/cg-logo.png',
+  },
+};
 
 export default function RootLayout({
   children,
@@ -28,6 +38,7 @@ export default function RootLayout({
 
           <ModalWrapper />
           <AuthToast />
+          <FeedbackButton />
           <FooterWrapper />
         </AuthProvider>
       </body>
