@@ -41,6 +41,8 @@ export default function HomePage() {
 
         </div>
       </div>
+
+
     </AppLayout>
   );
 }

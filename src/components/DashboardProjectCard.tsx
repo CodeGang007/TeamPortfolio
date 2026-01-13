@@ -20,10 +20,13 @@ interface DashboardProjectCardProps {
     startDate?: string; // ISO date string
     dueDate?: string; // ISO date string
     currentMilestone?: string; // Current phase name like "initiated"
+    rating?: number;
     onEdit?: (id: string) => void;
     onDelete?: (id: string) => void;
     onViewStats?: (id: string) => void;
 }
+
+import { Star } from "lucide-react";
 
 // Format date to short format like "Dec 30"
 function formatShortDate(dateStr?: string): string {
@@ -132,6 +135,7 @@ export default function DashboardProjectCard({
     startDate,
     dueDate,
     currentMilestone,
+    rating,
 }: DashboardProjectCardProps) {
     const statusStyle = statusConfig[status];
     const isActive = status === "active";
@@ -238,24 +242,34 @@ export default function DashboardProjectCard({
                     </div>
 
                     {/* Progress Bar - Always show for non-pending status, default to 0% */}
-                    <div className="mb-2 flex-shrink-0">
-                        {status !== 'pending' ? (
-                            <>
-                                <div className="flex items-center justify-between mb-1">
-                                    <span className="text-[10px] text-[#71717a] font-medium">Progress</span>
+                    {status !== 'pending' ? (
+                        <>
+                            <div className="flex items-center justify-between mb-1">
+                                <span className="text-[10px] text-[#71717a] font-medium">Progress</span>
+                                {rating ? (
+                                    <div className="flex gap-0.5">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <Star
+                                                key={star}
+                                                className={`w-3 h-3 ${star <= rating ? "fill-brand-green text-brand-green" : "fill-transparent text-zinc-700"}`}
+                                                strokeWidth={1.5}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
                                     <span className="text-[10px] font-semibold text-brand-green">{progress ?? 0}%</span>
-                                </div>
-                                <div className="h-1.5 bg-[#27272a] rounded-full overflow-hidden">
-                                    <div
-                                        className="h-full bg-gradient-to-r from-brand-green to-emerald-400 rounded-full transition-all duration-500"
-                                        style={{ width: `${Math.min(Math.max(progress ?? 0, 0), 100)}%` }}
-                                    />
-                                </div>
-                            </>
-                        ) : (
-                            <div className="h-[26px]" /> // Placeholder height for pending cards
-                        )}
-                    </div>
+                                )}
+                            </div>
+                            <div className="h-1.5 bg-[#27272a] rounded-full overflow-hidden">
+                                <div
+                                    className="h-full bg-gradient-to-r from-brand-green to-emerald-400 rounded-full transition-all duration-500"
+                                    style={{ width: `${Math.min(Math.max(progress ?? 0, 0), 100)}%` }}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <div className="h-[26px]" /> // Placeholder height for pending cards
+                    )}
 
                     {/* Spacer to push footer to bottom */}
                     <div className="flex-grow" />

@@ -42,7 +42,12 @@ interface ProjectRequest extends BaseProjectRequest {
     startDate?: string;
     dueDate?: string;
     currentMilestone?: string;
+    rating?: number;
+    feedback?: string;
+    isRated?: boolean;
 }
+
+import ProjectRatingModal from "@/components/ProjectRatingModal";
 
 type TabType = "all" | "drafts";
 
@@ -58,6 +63,43 @@ export default function ProjectDashboard() {
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const [userSearchQuery, setUserSearchQuery] = useState("");
     const userDropdownRef = useRef<HTMLDivElement>(null);
+
+    // Rating Modal State
+    const [ratingProject, setRatingProject] = useState<ProjectRequest | null>(null);
+
+    // Filter projects that need rating logic
+    useEffect(() => {
+        if (role === 'admin' || role === 'developer') return; // Admins/devs don't rate projects
+
+        // Find the first project that is completed but NOT rated
+        const projectToRate = projects.find(p =>
+            p.dynamicStatus === 'completed' && !p.rating && !p.isDraft
+        );
+
+        if (projectToRate) {
+            setRatingProject(projectToRate);
+        }
+    }, [projects, role]);
+
+    const handleRatingSubmit = async (rating: number, feedback: string) => {
+        if (!ratingProject || !ratingProject.id) return;
+
+        try {
+            await projectRequestService.rateProject(ratingProject.id, rating, feedback);
+
+            // Update local state to reflect rating immediately
+            setProjects(prev => prev.map(p =>
+                p.id === ratingProject.id
+                    ? { ...p, rating, feedback, isRated: true }
+                    : p
+            ));
+
+            setRatingProject(null);
+        } catch (error) {
+            console.error("Failed to submit rating", error);
+            alert("Failed to save rating. Please try again.");
+        }
+    };
 
     // Advanced filter states
     const [sortOrder, setSortOrder] = useState<"newest" | "oldest" | null>(null);
@@ -122,7 +164,7 @@ export default function ProjectDashboard() {
 
                 // If Admin, fetch user details for these projects
                 if ((role === 'admin' || role === 'developer') && fetchedProjects.length > 0) {
-                     // Fetch client names for developers too
+                    // Fetch client names for developers too
                     const uniqueUserIds = Array.from(new Set(fetchedProjects.map(p => p.userId).filter(Boolean)));
                     if (uniqueUserIds.length > 0) {
                         try {
@@ -358,12 +400,22 @@ export default function ProjectDashboard() {
                                 <>
                                     <div className="relative" ref={userDropdownRef}>
                                         {/* Dropdown Trigger Button */}
-                                        <button
+                                        {/* Dropdown Trigger Button */}
+                                        <div
+                                            role="button"
+                                            tabIndex={0}
                                             onClick={() => {
                                                 setUserDropdownOpen(!userDropdownOpen);
                                                 if (!userDropdownOpen) setUserSearchQuery("");
                                             }}
-                                            className={`flex items-center gap-2 w-full md:w-56 rounded-lg bg-[#18181b] border ${userDropdownOpen ? 'border-brand-green' : 'border-[#27272a]'} px-3 py-2 text-sm text-white hover:border-[#3f3f46] transition-colors cursor-pointer`}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    e.preventDefault();
+                                                    setUserDropdownOpen(!userDropdownOpen);
+                                                    if (!userDropdownOpen) setUserSearchQuery("");
+                                                }
+                                            }}
+                                            className={`flex items-center gap-2 w-full md:w-56 rounded-lg bg-[#18181b] border ${userDropdownOpen ? 'border-brand-green' : 'border-[#27272a]'} px-3 py-2 text-sm text-white hover:border-[#3f3f46] transition-colors cursor-pointer select-none`}
                                         >
                                             <Users className="h-4 w-4 text-[#52525b] flex-shrink-0" />
                                             <span className="truncate flex-1 text-left">
@@ -381,7 +433,7 @@ export default function ProjectDashboard() {
                                                 </button>
                                             )}
                                             <ChevronDown className={`h-4 w-4 text-[#52525b] transition-transform flex-shrink-0 ${userDropdownOpen ? 'rotate-180' : ''}`} />
-                                        </button>
+                                        </div>
 
                                         {/* Dropdown Menu */}
                                         {userDropdownOpen && (
@@ -654,6 +706,7 @@ export default function ProjectDashboard() {
                                                         ? (userMap[project.userId]?.name || project.userName || project.userEmail || "User")
                                                         : undefined
                                                 }
+                                                rating={project.rating}
                                             />
                                         </div>
                                     </Link>
@@ -691,6 +744,15 @@ export default function ProjectDashboard() {
                     </div>
                 )}
             </main>
+
+            {/* Mandatory Rating Modal */}
+            {ratingProject && (
+                <ProjectRatingModal
+                    isOpen={!!ratingProject}
+                    projectTitle={ratingProject.projectName}
+                    onSubmit={handleRatingSubmit}
+                />
+            )}
         </div >
     );
 }
