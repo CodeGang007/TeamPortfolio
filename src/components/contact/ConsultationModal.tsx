@@ -44,7 +44,7 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
             ...formData,
             // Convert DateValue to ISO string for API
             // Use current time if time is not selected to avoid Invalid time value error
-            time: formData.time ? formData.time.toDate(getLocalTimeZone()).toISOString() : new Date().toISOString()
+            time: formData.time ? formData.time.toDate().toISOString() : new Date().toISOString()
         };
 
         try {
