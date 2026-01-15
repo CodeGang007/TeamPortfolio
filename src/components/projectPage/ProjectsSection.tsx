@@ -23,6 +23,8 @@ interface Project {
   category: string;
   image?: string;
   link?: string;
+  active?: boolean;
+  order?: number;
 }
 
 export function ProjectsSection() {

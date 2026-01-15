@@ -190,7 +190,7 @@ export function AddProjectModal({ isOpen, onClose, onSuccess, isOnline }: AddPro
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className={`w-full rounded-lg border ${themeBorder} bg-black/50 px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all`}
-                  style={{ focusRingColor: themeColor }}
+                  style={{ '--tw-ring-color': themeColor } as React.CSSProperties}
                   placeholder="Enter project name"
                 />
               </div>
