@@ -2,24 +2,62 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { Trash2 } from "lucide-react";
 import styles from "./ProjectCard.module.css";
 
 interface ProjectCardProps {
+  id?: string;
   title: string;
   description: string;
   category: string;
+  image?: string;
+  link?: string;
   isOnline?: boolean;
+  isAdmin?: boolean;
+  onDelete?: (id: string) => void;
 }
 
-export function ProjectCard({ title, description, category, isOnline = true }: ProjectCardProps) {
-  return (
+export function ProjectCard({ 
+  id,
+  title, 
+  description, 
+  category, 
+  image, 
+  link, 
+  isOnline = true,
+  isAdmin = false,
+  onDelete 
+}: ProjectCardProps) {
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!id || !onDelete) return;
+    
+    if (confirm(`Are you sure you want to delete "${title}"? This action cannot be undone.`)) {
+      onDelete(id);
+    }
+  };
+
+  const cardContent = (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
       whileHover={{ scale: 1.02 }}
-      className={`${styles.cardWrapper} ${!isOnline ? styles.offline : ''}`}
+      className={`${styles.cardWrapper} ${!isOnline ? styles.offline : ''} relative group`}
     >
+      {/* Admin Delete Button - Shows on Hover */}
+      {isAdmin && id && onDelete && (
+        <button
+          onClick={handleDelete}
+          className="absolute top-3 right-3 z-50 opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg bg-red-500/90 hover:bg-red-500 text-white shadow-lg backdrop-blur-sm"
+          title="Delete project"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      )}
+
       <div className={styles.card}>
         {/* Image/Logo Area */}
         <div className={styles.imageContainer}>
@@ -31,12 +69,21 @@ export function ProjectCard({ title, description, category, isOnline = true }: P
           {/* Status Indicator */}
           <div className={styles.statusDot} />
 
-          {/* Project Logo/Initial */}
-          <div className={styles.projectLogo}>
-            <span className={styles.logoLetter}>
-              {title.charAt(0)}
-            </span>
-          </div>
+          {/* Project Image or Logo/Initial */}
+          {image ? (
+            <img 
+              src={image} 
+              alt={title} 
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ zIndex: 1 }}
+            />
+          ) : (
+            <div className={styles.projectLogo}>
+              <span className={styles.logoLetter}>
+                {title.charAt(0)}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Content Area */}
@@ -50,7 +97,7 @@ export function ProjectCard({ title, description, category, isOnline = true }: P
 
           {/* Footer with CTA */}
           <div className={styles.footer}>
-            <button className={styles.button}>
+            <div className={styles.button}>
               <span>View Project</span>
               <span className={styles.arrow}>
                 <svg
@@ -67,12 +114,29 @@ export function ProjectCard({ title, description, category, isOnline = true }: P
                   <path d="m12 5 7 7-7 7" />
                 </svg>
               </span>
-            </button>
+            </div>
           </div>
         </div>
       </div>
     </motion.div>
   );
+
+  // If there's a link, wrap in anchor tag
+  if (link) {
+    return (
+      <a 
+        href={link} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="block cursor-pointer"
+        style={{ textDecoration: 'none' }}
+      >
+        {cardContent}
+      </a>
+    );
+  }
+
+  return cardContent;
 }
 
 export default ProjectCard;

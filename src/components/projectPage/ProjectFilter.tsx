@@ -2,34 +2,20 @@
 
 import { motion } from "framer-motion";
 
-const FILTERS = [
-  "All",
-  "Web Development",
-  "Mobile Apps",
-  "Desktop Apps",
-  "Game Development",
-  "UI/UX Design",
-  "Machine Learning / AI",
-  "Data Science",
-  "Cloud Infrastructure",
-  "Blockchain",
-  "IoT",
-  "Cybersecurity",
-  "E-commerce",
-  "SaaS",
-  "Consulting",
-  "Open Source",
-];
-
 export function ProjectFilter({
   active,
   onChange,
   isOnline = true,
+  categories = [],
 }: {
   active: string;
   onChange: (v: string) => void;
   isOnline?: boolean;
+  categories?: string[];
 }) {
+  // Always show "All" first, then dynamic categories
+  const filters = ["All", ...categories];
+
   return (
     <div className="relative z-10 mb-16 w-full px-4">
       <div className="mx-auto max-w-5xl">
@@ -39,7 +25,7 @@ export function ProjectFilter({
             : "bg-red-950/40 border-red-500/10 shadow-[0_0_40px_-10px_rgba(220,38,38,0.05)]"
           }`}>
 
-          {FILTERS.map((filter) => {
+          {filters.map((filter) => {
             const isActive = active === filter;
 
             return (

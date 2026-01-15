@@ -10,6 +10,11 @@ import { Input, Textarea } from "@nextui-org/input";
 import { DatePicker } from "@nextui-org/date-picker";
 import { now, getLocalTimeZone } from "@internationalized/date";
 
+interface ConsultationModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
 export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { user } = useAuth();
