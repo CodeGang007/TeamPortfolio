@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase";
-import { collection, getDocs, query, limit, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, limit, orderBy, addDoc, deleteDoc, doc } from "firebase/firestore";
 
 // Structured service for efficient data fetching
 export const ProjectService = {
@@ -14,6 +14,32 @@ export const ProjectService = {
             return await getDocs(q);
         } catch (error) {
             console.error("Error fetching projects:", error);
+            throw error;
+        }
+    },
+
+    // Create a new project
+    createProject: async (projectData: any) => {
+        try {
+            const docRef = await addDoc(collection(db, "projects"), {
+                ...projectData,
+                active: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            });
+            return docRef.id;
+        } catch (error) {
+            console.error("Error creating project:", error);
+            throw error;
+        }
+    },
+
+    // Delete a project
+    deleteProject: async (projectId: string) => {
+        try {
+            await deleteDoc(doc(db, "projects", projectId));
+        } catch (error) {
+            console.error("Error deleting project:", error);
             throw error;
         }
     }

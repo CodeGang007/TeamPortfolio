@@ -228,3 +228,32 @@
   padding: 0;
   color: #a1a1aa;
 }
+
+/* Global overrides for NextUI Inputs to ensure visibility in dark mode */
+[data-slot="input-wrapper"],
+.group[data-slot="input-wrapper"] {
+  background-color: #18181b !important; /* zinc-900 */
+  border-color: #27272a !important; /* zinc-800 */
+}
+
+[data-slot="input"],
+textarea {
+  color: white !important;
+}
+
+/* Placeholder styling override */
+input::placeholder,
+textarea::placeholder {
+  color: #a1a1aa !important; /* zinc-400 */
+  opacity: 1;
+}
+
+/* Fix for Chrome/Browser Autofill sticking to white background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #18181b inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
