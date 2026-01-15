@@ -6,12 +6,12 @@ import { Input, Textarea } from "@nextui-org/input";
 import { Mail, MapPin, Phone, Send, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ThemeFlipHeading } from "@/components/ui/ThemeFlipHeading";
 import { ConsultationModal } from "@/components/contact/ConsultationModal";
 
 export default function ContactUsPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const isOnline = isAuthenticated;
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
 
@@ -23,6 +23,19 @@ export default function ContactUsPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Auto-fill user details when authenticated
+  useEffect(() => {
+    if (user) {
+      const names = user.displayName ? user.displayName.split(' ') : [];
+      setFormData(prev => ({
+        ...prev,
+        email: user.email || prev.email,
+        firstName: names[0] || prev.firstName,
+        lastName: names.length > 1 ? names.slice(1).join(' ') : prev.lastName
+      }));
+    }
+  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,6 +185,17 @@ export default function ContactUsPage() {
                     Failed to send message. Please try again.
                   </div>
                 )}
+
+                {/* Auto-filled Notice */}
+                {user && (
+                  <div className="flex items-center gap-2 mb-4 p-3 rounded-xl bg-brand-green/10 border border-brand-green/20">
+                    <div className="h-2 w-2 rounded-full bg-brand-green animate-pulse" />
+                    <p className="text-xs text-brand-green">
+                      Authenticated as <span className="font-bold">{user.email}</span>
+                    </p>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className={`text-sm font-medium ml-1 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>First Name</label>
@@ -182,9 +206,9 @@ export default function ContactUsPage() {
                       required
                       classNames={{
                         inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
-                          ? "bg-black/50 border border-white/10 hover:border-brand-green/50 focus-within:border-brand-green"
+                          ? "bg-zinc-900 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green"
                           : "bg-red-950/20 border border-red-900/30 hover:border-red-500/30 focus-within:border-red-500/50"}`,
-                        input: `placeholder:text-zinc-600 ${isOnline ? "text-white" : "text-red-200"}`
+                        input: `placeholder:text-zinc-600 !text-white ${isOnline ? "text-white" : "text-red-200"}`
                       }}
                       startContent={<User size={18} className={`transition-colors duration-500 ${isOnline ? "text-zinc-500" : "text-red-500/50"}`} />}
                     />
@@ -198,9 +222,9 @@ export default function ContactUsPage() {
                       required
                       classNames={{
                         inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
-                          ? "bg-black/50 border border-white/10 hover:border-brand-green/50 focus-within:border-brand-green"
+                          ? "bg-zinc-900 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green"
                           : "bg-red-950/20 border border-red-900/30 hover:border-red-500/30 focus-within:border-red-500/50"}`,
-                        input: `placeholder:text-zinc-600 ${isOnline ? "text-white" : "text-red-200"}`
+                        input: `placeholder:text-zinc-600 !text-white ${isOnline ? "text-white" : "text-red-200"}`
                       }}
                     />
                   </div>
@@ -212,15 +236,17 @@ export default function ContactUsPage() {
                     placeholder="john@example.com"
                     type="email"
                     value={formData.email}
+                    // If user is authenticated, disable email editing but show it
+                    isReadOnly={!!user}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
                     classNames={{
                       inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
-                        ? "bg-black/50 border border-white/10 hover:border-brand-green/50 focus-within:border-brand-green"
+                        ? `bg-zinc-900 border ${user ? 'border-brand-green/30 bg-brand-green/5' : 'border-zinc-800'} hover:border-brand-green/50 focus-within:border-brand-green`
                         : "bg-red-950/20 border border-red-900/30 hover:border-red-500/30 focus-within:border-red-500/50"}`,
-                      input: `placeholder:text-zinc-600 ${isOnline ? "text-white" : "text-red-200"}`
+                      input: `placeholder:text-zinc-600 !text-white ${isOnline ? "text-white" : "text-red-200"} ${user ? 'opacity-70 cursor-not-allowed' : ''}`
                     }}
-                    startContent={<Mail size={18} className={`transition-colors duration-500 ${isOnline ? "text-zinc-500" : "text-red-500/50"}`} />}
+                    startContent={<Mail size={18} className={`transition-colors duration-500 ${isOnline ? (user ? "text-brand-green" : "text-zinc-500") : "text-red-500/50"}`} />}
 
                   />
                 </div>
@@ -235,9 +261,9 @@ export default function ContactUsPage() {
                     required
                     classNames={{
                       inputWrapper: `transition-colors rounded-2xl p-4 ${isOnline
-                        ? "bg-black/50 border border-white/10 hover:border-brand-green/50 focus-within:border-brand-green"
+                        ? "bg-zinc-900 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green"
                         : "bg-red-950/20 border border-red-900/30 hover:border-red-500/30 focus-within:border-red-500/50"}`,
-                      input: `placeholder:text-zinc-600 ${isOnline ? "text-white" : "text-red-200"}`
+                      input: `placeholder:text-zinc-600 !text-white ${isOnline ? "text-white" : "text-red-200"}`
                     }}
 
                   />

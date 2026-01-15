@@ -2,34 +2,51 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, User, Mail } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@nextui-org/button";
 import { Input, Textarea } from "@nextui-org/input";
 
-interface ConsultationModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
+import { DatePicker } from "@nextui-org/date-picker";
+import { now, getLocalTimeZone } from "@internationalized/date";
 
 export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { user } = useAuth();
 
     const [formData, setFormData] = useState({
         name: "",
         email: "",
-        time: "",
+        time: null as any, // Store as DateValue object initially
         description: ""
     });
+
+    useEffect(() => {
+        if (isOpen && user) {
+            setFormData(prev => ({
+                ...prev,
+                name: user.displayName || prev.name,
+                email: user.email || prev.email
+            }));
+        }
+    }, [isOpen, user]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
 
+        const payload = {
+            ...formData,
+            // Convert DateValue to ISO string for API
+            // Use current time if time is not selected to avoid Invalid time value error
+            time: formData.time ? formData.time.toDate(getLocalTimeZone()).toISOString() : now(getLocalTimeZone()).toDate(getLocalTimeZone()).toISOString()
+        };
+
         try {
             const response = await fetch("/api/schedule", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(payload),
             });
 
             if (response.ok) {
@@ -79,6 +96,16 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
                             <p className="text-zinc-400 text-sm mb-6">Fill in the details below to schedule a call with our team.</p>
 
                             <form onSubmit={handleSubmit} className="space-y-4">
+                                
+                                {user && (
+                                    <div className="flex items-center gap-2 mb-2 p-2 px-3 rounded-lg bg-brand-green/10 border border-brand-green/20">
+                                        <div className="h-1.5 w-1.5 rounded-full bg-brand-green animate-pulse" />
+                                        <p className="text-[10px] text-brand-green">
+                                            Authenticated as <span className="font-bold">{user.email}</span>
+                                        </p>
+                                    </div>
+                                )}
+
                                 <div className="grid grid-cols-2 gap-4">
                                     <Input
                                         placeholder="Full Name"
@@ -86,8 +113,8 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         startContent={<User size={16} className="text-zinc-500" />}
                                         classNames={{
-                                            inputWrapper: "bg-zinc-950 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green",
-                                            input: "text-white placeholder:text-zinc-600"
+                                            inputWrapper: "!bg-zinc-950 border border-zinc-800 hover:border-brand-green/50 focus-within:!border-brand-green",
+                                            input: "!text-white placeholder:text-zinc-600"
                                         }}
                                         required
                                     />
@@ -97,25 +124,36 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         startContent={<Mail size={16} className="text-zinc-500" />}
+                                        // Read-only if authenticated
+                                        isReadOnly={!!user}
                                         classNames={{
-                                            inputWrapper: "bg-zinc-950 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green",
-                                            input: "text-white placeholder:text-zinc-600"
+                                            inputWrapper: `!bg-zinc-950 border ${user ? 'border-brand-green/30' : 'border-zinc-800'} hover:border-brand-green/50 focus-within:!border-brand-green`,
+                                            input: `!text-white placeholder:text-zinc-600 ${user ? 'opacity-70 cursor-not-allowed' : ''}`
                                         }}
                                         required
                                     />
                                 </div>
 
-                                <Input
-                                    type="datetime-local"
-                                    placeholder="Preferred Time"
-                                    value={formData.time}
-                                    onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                                    startContent={<Calendar size={16} className="text-zinc-500" />}
+                                <DatePicker 
+                                    label="Preferred Time"
+                                    hideTimeZone
+                                    showMonthAndYearPickers
+                                    defaultValue={now(getLocalTimeZone())}
+                                    onChange={(value) => setFormData({ ...formData, time: value })}
+                                    className="max-w-full"
                                     classNames={{
-                                        inputWrapper: "bg-zinc-950 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green",
-                                        input: "text-white placeholder:text-zinc-600"
+                                        base: "bg-transparent",
+                                        label: "text-zinc-500 text-xs",
+                                        inputWrapper: "!bg-zinc-950 border border-zinc-800 hover:border-brand-green/50 focus-within:!border-brand-green data-[hover=true]:bg-zinc-900",
+                                        input: "!text-white",
+                                        valuePlaceholder: "text-zinc-500",
+                                        segment: "!text-white group-data-[editable=true]:text-white",
+                                        popoverContent: "dark bg-zinc-900 border border-zinc-800",
+                                        calendar: "bg-zinc-900",
+                                        calendarContent: "bg-zinc-900 text-white",
+                                        selectorButton: "text-zinc-400 hover:text-white"
                                     }}
-                                    required
+                                    isRequired
                                 />
 
                                 <Textarea
@@ -124,8 +162,8 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     classNames={{
-                                        inputWrapper: "bg-zinc-950 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green",
-                                        input: "text-white placeholder:text-zinc-600"
+                                        inputWrapper: "!bg-zinc-950 border border-zinc-800 hover:border-brand-green/50 focus-within:!border-brand-green",
+                                        input: "!text-white placeholder:text-zinc-600"
                                     }}
                                 />
 
