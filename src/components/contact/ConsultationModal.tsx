@@ -44,7 +44,7 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
             ...formData,
             // Convert DateValue to ISO string for API
             // Use current time if time is not selected to avoid Invalid time value error
-            time: formData.time ? formData.time.toDate(getLocalTimeZone()).toISOString() : now(getLocalTimeZone()).toDate(getLocalTimeZone()).toISOString()
+            time: formData.time ? formData.time.toDate(getLocalTimeZone()).toISOString() : new Date().toISOString()
         };
 
         try {
@@ -143,16 +143,13 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
                                     label="Preferred Time"
                                     hideTimeZone
                                     showMonthAndYearPickers
-                                    defaultValue={now(getLocalTimeZone())}
                                     onChange={(value) => setFormData({ ...formData, time: value })}
                                     className="max-w-full"
                                     classNames={{
                                         base: "bg-transparent",
                                         label: "text-zinc-500 text-xs",
                                         inputWrapper: "!bg-zinc-950 border border-zinc-800 hover:border-brand-green/50 focus-within:!border-brand-green data-[hover=true]:bg-zinc-900",
-                                        input: "!text-white",
-                                        valuePlaceholder: "text-zinc-500",
-                                        segment: "!text-white group-data-[editable=true]:text-white",
+                                        input: "!text-white placeholder:text-zinc-500",
                                         popoverContent: "dark bg-zinc-900 border border-zinc-800",
                                         calendar: "bg-zinc-900",
                                         calendarContent: "bg-zinc-900 text-white",
