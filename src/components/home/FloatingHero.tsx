@@ -28,14 +28,20 @@ function TerminalTyping({ isOnline }: { isOnline: boolean }) {
     const [showCursor, setShowCursor] = useState(true);
 
     const terminalLines = [
-        { text: '$ npm run build', type: 'command' as const },
-        { text: '✓ Compiled successfully in 2.3s', type: 'success' as const },
-        { text: '$ vercel deploy --prod', type: 'command' as const },
-        { text: '▲ Deploying to production...', type: 'info' as const },
-        { text: '✓ Preview: https://your-app.vercel.app', type: 'success' as const },
-        { text: '✓ Production: https://your-domain.com', type: 'success' as const },
-        { text: '$ echo "🚀 Deployed successfully!"', type: 'command' as const },
-        { text: '🚀 Deployed successfully!', type: 'output' as const },
+        { text: '$ project init --onboarding', type: 'command' as const },
+        { text: '✓ Step 1: Onboarding completed - User profile created', type: 'success' as const },
+        { text: '▲ Initializing project workspace...', type: 'info' as const },
+        { text: '$ project create --new --template=custom', type: 'command' as const },
+        { text: '✓ Step 2: Project created successfully', type: 'success' as const },
+        { text: '▲ Setting up project requirements and specifications...', type: 'info' as const },
+        { text: '$ project publish --draft --review-ready', type: 'command' as const },
+        { text: '✓ Step 3: Project published for review', type: 'success' as const },
+        { text: '▲ Notifying team members for approval...', type: 'info' as const },
+        { text: '✓ Step 4: Project accepted by team', type: 'success' as const },
+        { text: '💬 Step 5: Discussion phase initiated - Gathering feedback', type: 'output' as const },
+        { text: '▲ Analyzing requirements and technical feasibility...', type: 'info' as const },
+        { text: '🚀 Step 6: Development in progress...', type: 'success' as const },
+        { text: '▲ Building features and implementing solutions', type: 'info' as const },
     ];
 
     useEffect(() => {
@@ -281,13 +287,13 @@ export default function FloatingHero() {
                                 <div className={`w-3 h-3 rounded-full ${isOnline ? 'bg-brand-green/80' : 'bg-zinc-600'}`} />
                             </div>
                             <div className="flex-1 text-center">
-                                <span className="text-xs text-zinc-500 font-medium">terminal — deploy.sh</span>
+                                <span className="text-xs text-zinc-500 font-medium">terminal — project-workflow.sh</span>
                             </div>
                             <div className={`w-2 h-2 rounded-full animate-pulse ${isOnline ? 'bg-brand-green' : 'bg-red-500'}`} />
                         </div>
 
                         {/* Terminal Body */}
-                        <div className="p-6 font-mono text-sm leading-relaxed h-64 overflow-hidden">
+                        <div className="p-6 font-mono text-sm leading-relaxed h-120 overflow-hidden">
                             <TerminalTyping isOnline={isOnline} />
                         </div>
                     </div>
