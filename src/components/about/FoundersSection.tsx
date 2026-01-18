@@ -4,6 +4,7 @@ import { foundersData } from "@/config/founders";
 import { TeamMember } from "@/components/teampage/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, Linkedin, Twitter, Globe, Instagram } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const SocialIcon = ({ type, url }: { type: string; url: string }) => {
     if (!url) return null;
@@ -19,12 +20,13 @@ const SocialIcon = ({ type, url }: { type: string; url: string }) => {
 
     const Icon = icons[type as keyof typeof icons] || icons.default;
 
+    const { isAuthenticated } = useAuth();
     return (
         <a
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-full bg-white/10 hover:bg-brand-green hover:text-black text-white transition-all duration-300 backdrop-blur-md border border-white/5 hover:scale-110"
+            className={`p-2 rounded-full bg-white/10 ${isAuthenticated ? "hover:bg-brand-green" : "hover:bg-red-500"} hover:text-black text-white transition-all duration-300 backdrop-blur-md border border-white/5 hover:scale-110`}
         >
             <Icon size={18} />
         </a>
@@ -33,13 +35,14 @@ const SocialIcon = ({ type, url }: { type: string; url: string }) => {
 
 export function FoundersSection() {
     const founders = foundersData;
+    const { isAuthenticated } = useAuth();
 
     return (
         <section className="relative py-32 bg-zinc-950 overflow-hidden">
             {/* Background Atmosphere */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-brand-green/5 rounded-full blur-[120px]" />
-                <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-emerald-900/10 rounded-full blur-[100px]" />
+                <div className={`absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full blur-[120px] ${isAuthenticated ? "bg-brand-green/5" : "bg-red-500/5"}`} />
+                <div className={`absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full blur-[100px] ${isAuthenticated ? "bg-emerald-900/10" : "bg-red-900/10"}`} />
             </div>
 
             <div className="container mx-auto px-6 relative z-10">
@@ -50,9 +53,9 @@ export function FoundersSection() {
                         viewport={{ once: true }}
                         className="flex items-center gap-3 mb-6"
                     >
-                        <div className="h-[1px] w-12 bg-brand-green/50"></div>
-                        <span className="text-brand-green/80 uppercase tracking-[0.2em] text-sm font-medium">Core Leadership</span>
-                        <div className="h-[1px] w-12 bg-brand-green/50"></div>
+                        <div className={`h-[1px] w-12 ${isAuthenticated ? "bg-brand-green/50" : "bg-red-500/50"}`}></div>
+                        <span className={`${isAuthenticated ? "text-brand-green/80" : "text-red-500/80"} uppercase tracking-[0.2em] text-sm font-medium`}>Core Leadership</span>
+                        <div className={`h-[1px] w-12 ${isAuthenticated ? "bg-brand-green/50" : "bg-red-500/50"}`}></div>
                     </motion.div>
 
                     <motion.h2
@@ -62,7 +65,7 @@ export function FoundersSection() {
                         transition={{ delay: 0.1 }}
                         className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight"
                     >
-                        Vision <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-green to-emerald-400">Thinkers</span>
+                        Vision <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isAuthenticated ? "from-brand-green to-emerald-400" : "from-red-500 to-orange-400"}`}>Thinkers</span>
                     </motion.h2>
 
                     <motion.p
@@ -88,10 +91,10 @@ export function FoundersSection() {
                         >
                             <div className="relative w-full h-full transition-all duration-500 transform-style-3d group-hover:rotate-x-2">
                                 {/* Layer 1: Background Glow (Behind) */}
-                                <div className="absolute inset-2 bg-brand-green/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-700" />
+                                <div className={`absolute inset-2 rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-700 ${isAuthenticated ? "bg-brand-green/20" : "bg-red-500/20"}`} />
 
                                 {/* Layer 2: Main Card Container */}
-                                <div className="relative h-full w-full rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 shadow-2xl transition-all duration-500 group-hover:border-brand-green/30">
+                                <div className={`relative h-full w-full rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 shadow-2xl transition-all duration-500 ${isAuthenticated ? "group-hover:border-brand-green/30" : "group-hover:border-red-500/30"}`}>
 
                                     {/* Layer 2a: Image (Parallax Scale) */}
                                     <div className="absolute inset-0 overflow-hidden">
@@ -111,8 +114,8 @@ export function FoundersSection() {
 
                                         {/* Name & Role Badge - Always Visible but Shifts */}
                                         <div className="transform transition-transform duration-500 ease-out group-hover:-translate-y-2">
-                                            <div className="inline-block px-3 py-1 mb-3 rounded-full bg-brand-green/10 border border-brand-green/20 backdrop-blur-sm">
-                                                <span className="text-brand-green text-xs font-bold tracking-wider uppercase">{founder.role}</span>
+                                            <div className={`inline-block px-3 py-1 mb-3 rounded-full border backdrop-blur-sm ${isAuthenticated ? "bg-brand-green/10 border-brand-green/20" : "bg-red-500/10 border-red-500/20"}`}>
+                                                <span className={`${isAuthenticated ? "text-brand-green" : "text-red-500"} text-xs font-bold tracking-wider uppercase`}>{founder.role}</span>
                                             </div>
                                             <h3 className="text-2xl font-bold text-white mb-1 leading-tight drop-shadow-lg">{founder.name}</h3>
                                         </div>
