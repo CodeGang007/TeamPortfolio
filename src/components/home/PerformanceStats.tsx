@@ -8,54 +8,54 @@ import { MaskContainer } from "@/components/ui/MaskContainer";
 const stats = [
     {
         icon: Zap,
-        value: "Lightning",
-        label: "Speed",
-        description: "Optimized for instant interactions"
+        value: "Sub-300ms",
+        label: "Response Time",
+        description: "Lightning-fast performance guaranteed"
     },
     {
         icon: Shield,
-        value: "Stable",
-        label: "Reliability",
-        description: "Systems you can count on"
+        value: "99.9%",
+        label: "Uptime",
+        description: "Enterprise-grade reliability"
     },
     {
         icon: Gauge,
-        value: "Scalable",
-        label: "Growth",
-        description: "Ready for your next milestone"
+        value: "Infinite",
+        label: "Scalability",
+        description: "Grow without limits"
     },
     {
         icon: Users,
         value: "50+",
-        label: "Projects",
-        description: "Delivered with excellence"
+        label: "Happy Clients",
+        description: "Trusted by industry leaders"
     },
 ];
 
 const technicalSpecs = [
     {
         icon: Globe,
-        value: "Global",
-        label: "Easy Access",
-        description: "Reach users anywhere instantly"
+        value: "150+ PoPs",
+        label: "Global Edge Network",
+        description: "Low-latency delivery worldwide"
     },
     {
         icon: Cpu,
-        value: "Smart",
-        label: "Architecture",
-        description: "Efficient technology that saves cost"
+        value: "Auto-Scaling",
+        label: "Compute Power",
+        description: "Resources that adapt to demand"
     },
     {
         icon: Lock,
-        value: "Secure",
-        label: "Protection",
-        description: "Enterprise-level data safety"
+        value: "E2E Encrypted",
+        label: "Zero Trust Security",
+        description: "Military-grade data protection"
     },
     {
         icon: Code2,
-        value: "Modern",
-        label: "Code Quality",
-        description: "Easy to maintain and upgrade"
+        value: "IaC Managed",
+        label: "Infrastructure",
+        description: "Code-defined reliable deployments"
     },
 ];
 
