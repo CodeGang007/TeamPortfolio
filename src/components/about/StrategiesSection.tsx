@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { AppWindow, Smartphone, BrainCircuit, Paintbrush } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Updated with detailed "Services" content
 const strategies = [
@@ -36,11 +37,12 @@ const strategies = [
 ];
 
 export function StrategiesSection() {
+    const { isAuthenticated } = useAuth();
     return (
         <section className="py-24 bg-zinc-950">
             <div className="container mx-auto px-6 text-center">
                 <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-                    Our <span className="text-brand-green">Expertise</span> Ecosystem
+                    Our <span className={`${isAuthenticated ? "text-brand-green" : "text-red-500"}`}>Expertise</span> Ecosystem
                 </h2>
                 <p className="text-zinc-400 max-w-2xl mx-auto mb-16 text-lg">
                     We provide a 360-degree digital solution. Whether it's code, design, or intelligence, we have the mastery to execute it perfectly.
@@ -52,11 +54,17 @@ export function StrategiesSection() {
                             key={index}
                             whileHover={{ y: -10 }}
                             className={`relative p-8 rounded-[30px] flex flex-col items-center min-h-[400px] transition-all duration-300 group text-left
-                        ${strat.color === 'bg-brand-green' ? 'bg-brand-green text-black shadow-[0_10px_40px_rgba(0,255,65,0.2)]' : 'bg-zinc-900 text-white border border-zinc-800'}
+                        ${strat.color === 'bg-brand-green'
+                                    ? (isAuthenticated ? 'bg-brand-green text-black shadow-[0_10px_40px_rgba(0,255,65,0.2)]' : 'bg-red-500 text-white shadow-[0_10px_40px_rgba(239,68,68,0.2)]')
+                                    : 'bg-zinc-900 text-white border border-zinc-800'
+                                }
                     `}
                         >
                             <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 text-3xl
-                        ${strat.color === 'bg-brand-green' ? 'bg-black/10 text-black' : 'bg-zinc-950 text-white border border-zinc-800'}
+                        ${strat.color === 'bg-brand-green'
+                                    ? (isAuthenticated ? 'bg-black/10 text-black' : 'bg-black/20 text-white')
+                                    : 'bg-zinc-950 text-white border border-zinc-800'
+                                }
                      `}>
                                 <strat.icon size={32} />
                             </div>
@@ -68,7 +76,7 @@ export function StrategiesSection() {
                                 <h3 className="text-2xl font-bold leading-tight mb-4">
                                     {strat.label}
                                 </h3>
-                                <p className={`text-sm leading-relaxed ${strat.color === 'bg-brand-green' ? 'text-black/80 font-medium' : 'text-zinc-400'}`}>
+                                <p className={`text-sm leading-relaxed ${strat.color === 'bg-brand-green' ? (isAuthenticated ? 'text-black/80 font-medium' : 'text-white/90 font-medium') : 'text-zinc-400'}`}>
                                     {strat.description}
                                 </p>
                             </div>

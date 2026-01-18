@@ -3,10 +3,10 @@
 import { motion } from "framer-motion";
 
 const stats = [
-    { value: "10k+", label: "Completed Projects" },
-    { value: "15k", label: "Satisfied Customers" }, // Placeholder numbers from template
-    { value: "10k+", label: "Years Of Mastery" },
-    { value: "45+", label: "Worldwide Honors" },
+    { value: "50+", label: "Completed Projects" },
+    { value: "50+", label: "Satisfied Customers" },
+    { value: "4+", label: "Years Of Experience" },
+    { value: "12+", label: "Worldwide Honors" },
 ];
 
 export function StatsSection() {
