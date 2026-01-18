@@ -55,7 +55,7 @@ export default function AppLayout({
                 className="border-red-500/50 text-red-400 hover:bg-red-500/10"
                 onClick={openLoginModal}
             >
-                System Offline
+                Sign In
             </NavbarButton>
           )}
           {isAuthenticated && (
@@ -105,7 +105,7 @@ export default function AppLayout({
                 }}
                 className="mt-4 w-full rounded-md px-4 py-3 text-sm font-bold shadow-md transition-all active:scale-95 bg-red-500/20 text-red-200 border border-red-500/50 hover:bg-red-500/30"
               >
-                System Offline
+                Sign In
               </button>
             )}
 

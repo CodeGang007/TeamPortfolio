@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { CodeGangLogo } from "../ui/CodeGangLogo";
 
 
 
@@ -157,11 +158,7 @@ export default function Footer() {
                   ? "border-brand-green/20 bg-brand-green/5 group-hover:border-brand-green/50 group-hover:shadow-[0_0_20px_rgba(34,197,94,0.15)]"
                   : "border-red-500/20 bg-red-500/5 group-hover:border-red-500/50 group-hover:shadow-[0_0_20px_rgba(239,68,68,0.15)]"
               )}>
-                <img
-                  src="/assets/cg-logo.png"
-                  alt="CodeGang Logo"
-                  className="w-full h-full object-contain p-1"
-                />
+                <CodeGangLogo isOnline={isOnline} className="p-1" />
               </div>
               <span className="text-2xl font-bold tracking-tight text-white group-hover:text-zinc-200 transition-colors">CodeGang</span>
             </Link>

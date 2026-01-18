@@ -2,8 +2,19 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function SmoothScroll() {
+    const { isAuthenticated } = useAuth();
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            document.documentElement.classList.add("offline");
+        } else {
+            document.documentElement.classList.remove("offline");
+        }
+    }, [isAuthenticated]);
+
     useEffect(() => {
         const lenis = new Lenis({
             duration: 1.2,

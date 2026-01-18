@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { CodeGangLogo } from "./CodeGangLogo";
 import { Menu, X } from "lucide-react";
 import {
   motion,
@@ -249,22 +250,19 @@ export const NavbarLogo = ({ isOnline = true }: { isOnline?: boolean }) => {
   return (
     <Link
       href="/"
-      className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal"
+      className="relative z-20 mr-4 flex items-center space-x-3 px-2 py-1 text-sm font-normal"
     >
       <div className={cn(
-        "h-6 w-6 rounded flex items-center justify-center font-bold text-black text-xs transition-colors duration-500",
-        isOnline ? "bg-transparent" : "bg-red-500/20"
+        "h-11 w-11 flex items-center justify-center transition-all duration-500",
+        isOnline ? "drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]"
       )}>
-        <img
-          src="/assets/cg-logo.png"
-          alt="CodeGang Logo"
-          className="w-full h-full object-contain"
-        />
+        <CodeGangLogo isOnline={isOnline} />
       </div>
       <span className={cn(
-        "font-medium transition-colors duration-500",
+        "font-bold text-lg tracking-tight transition-colors duration-500",
         isOnline ? "text-white" : "text-red-200"
       )}>CodeGang</span>
+
     </Link>
   );
 };
