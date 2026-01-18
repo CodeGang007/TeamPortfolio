@@ -2,12 +2,12 @@
 
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
-import { 
-    Code2, 
-    Smartphone, 
-    Palette, 
-    ShoppingCart, 
-    Cloud, 
+import {
+    Code2,
+    Smartphone,
+    Palette,
+    ShoppingCart,
+    Cloud,
     TrendingUp
 } from "lucide-react";
 
@@ -64,14 +64,12 @@ export default function MyTopPublications() {
         <section className="relative py-24 overflow-hidden bg-transparent">
             {/* Background Elements */}
             <div className="absolute inset-0 pointer-events-none">
-                <div className={`absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-10 transition-colors duration-500 ${
-                    isOnline ? 'bg-brand-green' : 'bg-red-500'
-                }`} />
-                <div className={`absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-5 transition-colors duration-500 ${
-                    isOnline ? 'bg-blue-500' : 'bg-red-600'
-                }`} />
+                <div className={`absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-10 transition-colors duration-500 ${isOnline ? 'bg-brand-green' : 'bg-red-500'
+                    }`} />
+                <div className={`absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl opacity-5 transition-colors duration-500 ${isOnline ? 'bg-blue-500' : 'bg-red-600'
+                    }`} />
             </div>
-            
+
             <div className="container mx-auto px-6 md:px-12 relative z-10">
                 {/* Enhanced Section Header */}
                 <motion.div
@@ -86,26 +84,22 @@ export default function MyTopPublications() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className={`inline-block px-4 py-2 rounded-full text-sm font-semibold mb-6 transition-colors duration-500 ${
-                            isOnline 
+                        className={`inline-block px-4 py-2 rounded-full text-sm font-semibold mb-6 transition-colors duration-500 ${isOnline
                                 ? 'bg-brand-green/10 text-brand-green border border-brand-green/20'
                                 : 'bg-red-500/10 text-red-400 border border-red-500/20'
-                        }`}
+                            }`}
                     >
                         Our Expertise
                     </motion.div>
-                    <h2 className={`text-5xl md:text-7xl font-black mb-6 transition-colors duration-500 ${
-                        isOnline ? 'text-white' : 'text-red-50'
-                    }`}>
-                        What We <span className={`text-transparent bg-clip-text bg-gradient-to-r transition-all duration-500 ${
-                            isOnline ? 'from-brand-green to-blue-400' : 'from-red-400 to-red-200'
+                    <h2 className={`text-4xl sm:text-5xl md:text-7xl font-black mb-6 transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-50'
                         }`}>
+                        What We <span className={`text-transparent bg-clip-text bg-gradient-to-r transition-all duration-500 ${isOnline ? 'from-brand-green to-blue-400' : 'from-red-400 to-red-200'
+                            }`}>
                             Build
                         </span>
                     </h2>
-                    <p className={`text-xl max-w-3xl mx-auto leading-relaxed transition-colors duration-500 ${
-                        isOnline ? 'text-zinc-400' : 'text-red-300/70'
-                    }`}>
+                    <p className={`text-xl max-w-3xl mx-auto leading-relaxed transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/70'
+                        }`}>
                         Cutting-edge digital solutions engineered for performance, scalability, and user experience
                     </p>
                 </motion.div>
@@ -124,55 +118,49 @@ export default function MyTopPublications() {
                                 whileHover={{ y: -8 }}
                                 className="group h-full"
                             >
-                                <div className={`relative p-8 rounded-3xl border backdrop-blur-md transition-all duration-500 hover:shadow-2xl h-full flex flex-col ${
-                                    isOnline 
-                                        ? 'bg-zinc-900/60 border-zinc-800/50 hover:border-brand-green/50 hover:bg-zinc-900/80 hover:shadow-brand-green/10' 
+                                <div className={`relative p-8 rounded-3xl border backdrop-blur-md transition-all duration-500 hover:shadow-2xl h-full flex flex-col ${isOnline
+                                        ? 'bg-zinc-900/60 border-zinc-800/50 hover:border-brand-green/50 hover:bg-zinc-900/80 hover:shadow-brand-green/10'
                                         : 'bg-red-950/30 border-red-900/40 hover:border-red-500/50 hover:bg-red-950/50 hover:shadow-red-500/10'
-                                }`}>
-                                    {/* Stats Badge */}
-                                    <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold transition-colors duration-300 ${
-                                        isOnline 
-                                            ? 'bg-brand-green/10 text-brand-green/80' 
-                                            : 'bg-red-500/10 text-red-400/80'
                                     }`}>
+                                    {/* Stats Badge */}
+                                    <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold transition-colors duration-300 ${isOnline
+                                            ? 'bg-brand-green/10 text-brand-green/80'
+                                            : 'bg-red-500/10 text-red-400/80'
+                                        }`}>
                                         {service.stats}
                                     </div>
 
                                     {/* Icon with enhanced styling */}
-                                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110 ${
-                                        isOnline 
-                                            ? 'bg-gradient-to-br from-brand-green/20 to-brand-green/5 text-brand-green group-hover:from-brand-green/30 group-hover:to-brand-green/10' 
+                                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110 ${isOnline
+                                            ? 'bg-gradient-to-br from-brand-green/20 to-brand-green/5 text-brand-green group-hover:from-brand-green/30 group-hover:to-brand-green/10'
                                             : 'bg-gradient-to-br from-red-500/20 to-red-500/5 text-red-400 group-hover:from-red-500/30 group-hover:to-red-500/10'
-                                    }`}>
+                                        }`}>
                                         <Icon className="w-8 h-8" />
                                     </div>
 
                                     {/* Title with better typography */}
-                                    <h3 className={`text-2xl font-bold mb-3 transition-colors duration-300 ${
-                                        isOnline 
-                                            ? 'text-white group-hover:text-brand-green' 
+                                    <h3 className={`text-2xl font-bold mb-3 transition-colors duration-300 ${isOnline
+                                            ? 'text-white group-hover:text-brand-green'
                                             : 'text-red-50 group-hover:text-red-300'
-                                    }`}>
+                                        }`}>
                                         {service.title}
                                     </h3>
 
                                     {/* Enhanced description */}
-                                    <p className={`text-base leading-relaxed mb-6 flex-grow transition-colors duration-300 ${
-                                        isOnline ? 'text-zinc-400 group-hover:text-zinc-300' : 'text-red-300/70 group-hover:text-red-200/80'
-                                    }`}>
+                                    <p className={`text-base leading-relaxed mb-6 flex-grow transition-colors duration-300 ${isOnline ? 'text-zinc-400 group-hover:text-zinc-300' : 'text-red-300/70 group-hover:text-red-200/80'
+                                        }`}>
                                         {service.description}
                                     </p>
 
                                     {/* Tech stack tags */}
                                     <div className="flex flex-wrap gap-2">
                                         {service.tech.map((tech, techIndex) => (
-                                            <span 
+                                            <span
                                                 key={techIndex}
-                                                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-300 ${
-                                                    isOnline 
+                                                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-300 ${isOnline
                                                         ? 'bg-zinc-800/50 text-zinc-400 group-hover:bg-zinc-700/50 group-hover:text-zinc-300'
                                                         : 'bg-red-900/30 text-red-400/70 group-hover:bg-red-800/40 group-hover:text-red-300/80'
-                                                }`}
+                                                    }`}
                                             >
                                                 {tech}
                                             </span>
@@ -180,11 +168,10 @@ export default function MyTopPublications() {
                                     </div>
 
                                     {/* Enhanced glow effect */}
-                                    <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none ${
-                                        isOnline 
-                                            ? 'bg-gradient-to-br from-brand-green/10 via-transparent to-blue-500/5' 
+                                    <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none ${isOnline
+                                            ? 'bg-gradient-to-br from-brand-green/10 via-transparent to-blue-500/5'
                                             : 'bg-gradient-to-br from-red-500/10 via-transparent to-red-600/5'
-                                    }`} />
+                                        }`} />
                                 </div>
                             </motion.div>
                         );

@@ -1,7 +1,7 @@
 "use client";
 
-import { foundersData } from "@/config/founders";
-import { TeamMember } from "@/components/teampage/types";
+import { useState, useEffect } from "react";
+import { founderService, Founder } from "@/services/founderService";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, Linkedin, Twitter, Globe, Instagram } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -34,8 +34,23 @@ const SocialIcon = ({ type, url }: { type: string; url: string }) => {
 };
 
 export function FoundersSection() {
-    const founders = foundersData;
+    const [founders, setFounders] = useState<Founder[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const { isAuthenticated } = useAuth();
+
+    useEffect(() => {
+        const fetchFounders = async () => {
+            try {
+                const data = await founderService.getActiveFounders();
+                setFounders(data);
+            } catch (error) {
+                console.error("Failed to fetch founders", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchFounders();
+    }, []);
 
     return (
         <section className="relative py-32 bg-zinc-950 overflow-hidden">
@@ -79,7 +94,16 @@ export function FoundersSection() {
                     </motion.p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-[90rem] mx-auto">
+                {isLoading ? (
+                    <div className="flex items-center justify-center py-20">
+                        <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-green border-t-transparent" />
+                    </div>
+                ) : founders.length === 0 ? (
+                    <div className="flex items-center justify-center py-20">
+                        <p className="text-zinc-400 text-lg">No founders to display</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-[90rem] mx-auto">
                     {founders.map((founder, index) => (
                         <motion.div
                             key={founder.id}
@@ -152,6 +176,7 @@ export function FoundersSection() {
                         </motion.div>
                     ))}
                 </div>
+                )}
             </div>
         </section>
     );
