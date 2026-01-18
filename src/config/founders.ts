@@ -4,7 +4,7 @@ export const foundersData: TeamMember[] = [
     {
         id: "founder-1",
         name: "Sushant Choudhary",
-        role: "Founder & CEO",
+        role: "Founder",
         imageUrl: "/team/sushant.jpg", // Placeholder - User to update
         description: "Visionary leader driving the strategic direction and technological innovation of the company.",
         active: true,
@@ -23,7 +23,7 @@ export const foundersData: TeamMember[] = [
     {
         id: "founder-2",
         name: "Gourav Chakraborty",
-        role: "Co-Founder & CTO",
+        role: "Founder",
         imageUrl: "/team/gourav.jpg", // Placeholder
         description: "Technical architect overseeing the development of scalable and robust software solutions.",
         active: true,
@@ -42,7 +42,7 @@ export const foundersData: TeamMember[] = [
     {
         id: "founder-3",
         name: "Sunny Srivastava",
-        role: "Co-Founder & COO",
+        role: "Founder",
         imageUrl: "/team/sunny.jpg", // Placeholder
         description: "Orchestrating operational excellence and ensuring seamless project delivery.",
         active: true,
@@ -61,7 +61,7 @@ export const foundersData: TeamMember[] = [
     {
         id: "founder-4",
         name: "Subhadip Sasmal",
-        role: "Co-Founder & Lead Designer",
+        role: "Founder",
         imageUrl: "/team/subhadip.jpg", // Placeholder
         description: "Crafting intuitive user experiences and defining the visual identity of our products.",
         active: true,
