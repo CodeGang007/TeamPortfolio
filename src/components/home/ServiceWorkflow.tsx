@@ -133,8 +133,8 @@ export default function ServiceWorkflow() {
     return (
         <section className="relative py-20 overflow-hidden pb-05">
             {/* Background Glow Effects */}
-            <div className={`absolute top-1/4 left-1/4 w-96 h-96 blur-[100px] rounded-full pointer-events-none -z-10 mix-blend-screen ${isOnline ? 'bg-brand-green/10' : 'bg-red-600/10'}`} />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none -z-10 mix-blend-screen" />
+            <div className={`absolute top-1/4 left-1/4 w-96 h-96 blur-[100px] rounded-full pointer-events-none -z-10 mix-blend-screen opacity-50 md:opacity-100 ${isOnline ? 'bg-brand-green/10' : 'bg-red-600/10'}`} />
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none -z-10 mix-blend-screen opacity-50 md:opacity-100" />
 
             <div className="container mx-auto px-6 md:px-12">
                 {/* Section Header */}
@@ -144,7 +144,7 @@ export default function ServiceWorkflow() {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <h2 className={`text-4xl md:text-5xl font-black mb-4 ${isOnline ? 'text-white' : 'text-red-50'}`}>
+                    <h2 className={`text-3xl md:text-5xl font-black mb-4 ${isOnline ? 'text-white' : 'text-red-50'}`}>
                         How We <span className={isOnline ? 'text-brand-green' : 'text-red-400'}>Work</span>
                     </h2>
                     <p className={`text-lg max-w-2xl mx-auto ${isOnline ? 'text-zinc-400' : 'text-red-200/60'}`}>
@@ -153,7 +153,7 @@ export default function ServiceWorkflow() {
                 </motion.div>
 
                 {/* Workflow Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-start">
+                <div className="grid grid-cols-1 gap-12 md:gap-6 lg:gap-8 items-start lg:grid-cols-4">
 
                     {/* Step 1: Define Requirements - Clean horizontal tabs design */}
                     <motion.div

@@ -82,7 +82,7 @@ export default function AskForProject() {
                             </motion.div>
 
                             <h2 className={cn(
-                                "text-5xl md:text-6xl font-black tracking-tighter leading-[0.85] mb-5 transition-colors duration-500",
+                                "text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[0.85] mb-5 transition-colors duration-500",
                                 isOnline ? "text-white" : "text-red-100"
                             )}>
                                 INSPIRED? <br />
