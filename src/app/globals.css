@@ -26,22 +26,31 @@
   }
 }
 
-/* Custom Scrollbar for that 'unique' feel */
+/* Custom Scrollbar - HIDDEN as per user request */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 0px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-track {
-  background: #000;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #22c55e;
+  background: transparent;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #16a34a;
+  background: transparent;
+}
+
+.offline::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.offline::-webkit-scrollbar-thumb:hover {
+  background: transparent;
 }
 
 /* Dynamic gradient animation for hero text */

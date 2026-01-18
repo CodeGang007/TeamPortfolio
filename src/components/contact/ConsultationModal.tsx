@@ -4,10 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, User, Mail } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@nextui-org/button";
-import { Input, Textarea } from "@nextui-org/input";
-
-import { DatePicker } from "@nextui-org/date-picker";
+import { Button, Input, Textarea, DatePicker } from "@nextui-org/react";
 import { now, getLocalTimeZone } from "@internationalized/date";
 
 interface ConsultationModalProps {

@@ -58,7 +58,7 @@ export default function AuthToast() {
 
                                 <div className="flex-1">
                                     <h3 className="text-lg font-bold text-red-100 mb-1">
-                                        System Offline
+                                        Sign In
                                     </h3>
                                     <p className="text-sm text-red-300/70 mb-4">
                                         You're browsing in limited mode. Sign in to unlock full features and vibrant visuals.

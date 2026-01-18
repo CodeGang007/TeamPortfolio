@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: 'CodeGang',
   description: 'Architecting the digital future.',
   icons: {
-    icon: '/assets/cg-logo.png',
+    icon: '/assets/cg-logo-online.png',
   },
 };
 
