@@ -65,12 +65,12 @@ export function StorySection() {
                         </div>
 
                         {/* Floating Badge */}
-                        <div className={`absolute -bottom-10 -left-10 bg-black/90 backdrop-blur-xl border border-zinc-800 p-8 rounded-2xl shadow-2xl z-20 transition-colors ${isAuthenticated ? "hover:border-brand-green/50" : "hover:border-red-500/50"}`}>
-                            <div className="flex items-center gap-4">
-                                <div className={`text-5xl font-bold ${isAuthenticated ? "text-brand-green" : "text-red-500"}`}>4</div>
-                                <div className="text-white text-sm font-medium leading-tight">Founding<br />Partners</div>
+                        <div className={`absolute -bottom-4 -left-4 md:-bottom-10 md:-left-10 bg-black/90 backdrop-blur-xl border border-zinc-800 p-6 md:p-8 rounded-2xl shadow-2xl z-20 transition-colors ${isAuthenticated ? "hover:border-brand-green/50" : "hover:border-red-500/50"}`}>
+                            <div className="flex items-center gap-3 md:gap-4">
+                                <div className={`text-3xl md:text-5xl font-bold ${isAuthenticated ? "text-brand-green" : "text-red-500"}`}>4</div>
+                                <div className="text-white text-xs md:text-sm font-medium leading-tight">Founding<br />Partners</div>
                             </div>
-                            <div className="mt-2 text-xs text-zinc-500 uppercase tracking-wider">United by Code</div>
+                            <div className="mt-2 text-[10px] md:text-xs text-zinc-500 uppercase tracking-wider">United by Code</div>
                         </div>
                     </motion.div>
                 </div>

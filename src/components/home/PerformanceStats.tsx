@@ -60,14 +60,14 @@ const technicalSpecs = [
 ];
 
 const StatsContent = ({ isOnline }: { isOnline: boolean }) => (
-    <div className="w-full h-full flex flex-col items-center justify-center relative">
+    <div className="w-full min-h-screen md:h-full flex flex-col items-center justify-start md:justify-center relative py-20 md:py-0">
         {/* Subtle Background for Base Layer */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
 
         <div className="relative z-10 w-full flex flex-col items-center">
             {/* Section Header */}
-            <div className="text-center mb-20 space-y-4">
-                <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-white">
+            <div className="text-center mb-10 md:mb-20 space-y-4 px-4">
+                <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter text-white">
                     Scale without{" "}
                     <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isOnline ? 'from-brand-green to-emerald-200' : 'from-red-500 to-rose-200'
                         }`}>
@@ -113,7 +113,7 @@ const StatsContent = ({ isOnline }: { isOnline: boolean }) => (
             </div>
 
             {/* Bottom CTA */}
-            <div className="text-center mt-20">
+            <div className="text-center mt-10 md:mt-20 pb-10 md:pb-0">
                 <a href="/project" className="inline-flex items-center gap-2 text-sm font-bold text-white/60 hover:text-white transition-colors duration-300 uppercase tracking-widest border-b border-transparent hover:border-brand-green p-1">
                     <span>See the comparison</span>
                     <span className="group-hover:translate-x-1 transition-transform">→</span>
@@ -124,15 +124,15 @@ const StatsContent = ({ isOnline }: { isOnline: boolean }) => (
 );
 
 const TechnicalSpecs = ({ isOnline }: { isOnline: boolean }) => (
-    <div className="w-full h-full flex flex-col items-center justify-center relative bg-black">
+    <div className="w-full min-h-screen md:h-full flex flex-col items-center justify-start md:justify-center relative bg-black py-20 md:py-0">
         {/* Technical Grid Background */}
         <div className={`absolute inset-0 bg-[size:40px_40px] pointer-events-none opacity-50 ${isOnline ? "bg-[linear-gradient(to_right,#00ff4115_1px,transparent_1px),linear-gradient(to_bottom,#00ff4115_1px,transparent_1px)]" : "bg-[linear-gradient(to_right,#ef444415_1px,transparent_1px),linear-gradient(to_bottom,#ef444415_1px,transparent_1px)]"}`} />
         <div className={`absolute inset-0 pointer-events-none ${isOnline ? "bg-[radial-gradient(circle_800px_at_50%_50%,#00ff4110,transparent)]" : "bg-[radial-gradient(circle_800px_at_50%_50%,#ef444410,transparent)]"}`} />
 
         <div className="relative z-10 w-full flex flex-col items-center">
             {/* Reveal Header */}
-            <div className="text-center mb-20 space-y-4">
-                <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white uppercase" style={{ textShadow: isOnline ? "0 0 40px rgba(0,255,65,0.3)" : "0 0 40px rgba(239,68,68,0.3)" }}>
+            <div className="text-center mb-10 md:mb-20 space-y-4 px-4">
+                <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter text-white uppercase" style={{ textShadow: isOnline ? "0 0 40px rgba(0,255,65,0.3)" : "0 0 40px rgba(239,68,68,0.3)" }}>
                     Built for{" "}
                     <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isOnline ? 'from-brand-green to-emerald-400' : 'from-red-500 to-rose-400'
                         }`}>
@@ -185,7 +185,7 @@ const TechnicalSpecs = ({ isOnline }: { isOnline: boolean }) => (
             </div>
 
             {/* Bottom CTA Placeholder */}
-            <div className="text-center mt-20">
+            <div className="text-center mt-10 md:mt-20 pb-10 md:pb-0">
                 <a href="/project" className={`inline-flex items-center gap-2 text-sm font-bold transition-colors duration-300 uppercase tracking-widest border-b p-1 ${isOnline
                     ? "text-brand-green hover:text-emerald-400 border-brand-green/30 hover:border-brand-green"
                     : "text-red-500 hover:text-orange-400 border-red-500/30 hover:border-red-500"
@@ -203,7 +203,7 @@ export default function PerformanceStats() {
     const isOnline = isAuthenticated;
 
     return (
-        <section className="relative h-screen min-h-[800px] w-full bg-transparent border-y border-white/5 overflow-hidden">
+        <section className="relative min-h-screen w-full bg-transparent border-y border-white/5 overflow-hidden">
             <MaskContainer
                 revealText={
                     <div className="w-full h-full flex items-center justify-center bg-transparent">

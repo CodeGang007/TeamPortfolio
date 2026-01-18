@@ -130,9 +130,9 @@ export default function FloatingHero() {
     return (
         <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-transparent py-20">
             {/* Vignette Effect - Subtle fade at edges, not covering bottom ribbon */}
-            <div className="absolute inset-0 pointer-events-none z-[1]" style={{ bottom: '200px' }}>
-                <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,black_90%)] opacity-50" />
+            <div className="absolute inset-0 pointer-events-none z-[1]" style={{ bottom: '100px' }}>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,black_100%)] opacity-50" />
             </div>
 
             {/* Floating Notification Badge - Professional Style */}
@@ -191,7 +191,7 @@ export default function FloatingHero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
-                    className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-center mb-6 leading-tight"
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-center mb-6 leading-tight"
                 >
                     <span className="text-white">WE BUILD</span>{" "}
                     <span
@@ -314,8 +314,8 @@ export default function FloatingHero() {
 
             {/* Scrolling Company Ribbon */}
             <div className="relative w-full overflow-hidden py-10 z-20">
-                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-10" />
-                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-10" />
+                <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-black to-transparent z-10" />
+                <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-black to-transparent z-10" />
 
                 <div className="flex gap-20 animate-marquee-slow whitespace-nowrap items-center">
                     {/* First set */}

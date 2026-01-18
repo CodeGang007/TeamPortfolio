@@ -29,7 +29,7 @@ export function AwardsSection() {
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
-                            className="flex items-center justify-between py-6 border-b border-zinc-800 hover:bg-zinc-900/50 transition-colors px-4 rounded-lg group"
+                            className="flex flex-col md:flex-row md:items-center justify-between py-6 border-b border-zinc-800 hover:bg-zinc-900/50 transition-colors px-4 rounded-lg group gap-4 md:gap-0"
                         >
                             <div className="flex items-center gap-6">
                                 <div className={`w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center group-hover:scale-110 transition-transform ${isAuthenticated ? "text-brand-green" : "text-red-500"}`}>
@@ -39,7 +39,7 @@ export function AwardsSection() {
                                     {item.title}
                                 </span>
                             </div>
-                            <div className="text-zinc-500 text-sm md:text-base uppercase tracking-wider">
+                            <div className="text-zinc-500 text-sm md:text-base uppercase tracking-wider pl-[4rem] md:pl-0">
                                 {item.org}
                             </div>
                         </motion.div>
