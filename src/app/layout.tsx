@@ -11,10 +11,53 @@ import FeedbackButton from "@/components/FeedbackButton";
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'CodeGang',
-  description: 'Architecting the digital future.',
+  title: {
+    default: 'CodeGang | Digital Architects',
+    template: '%s | CodeGang'
+  },
+  description: 'CodeGang is a premium digital agency architecting the future. We build high-performance web applications, scalable infrastructure, and stunning digital experiences.',
+  keywords: ['web development', 'digital agency', 'software engineering', 'Next.js', 'React', 'cloud infrastructure', 'UI/UX design'],
+  authors: [{ name: 'CodeGang Team' }],
+  creator: 'CodeGang',
+  metadataBase: new URL('https://codegang.online'),
   icons: {
     icon: '/assets/cg-logo-online.png',
+    shortcut: '/assets/cg-logo-online.png',
+    apple: '/assets/cg-logo-online.png',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://codegang.online',
+    title: 'CodeGang | Digital Architects',
+    description: 'Architecting the digital future with high-performance web applications and stunning designs.',
+    siteName: 'CodeGang',
+    images: [
+      {
+        url: '/assets/cg-logo-online.png',
+        width: 1200,
+        height: 630,
+        alt: 'CodeGang Digital Agency',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CodeGang | Digital Architects',
+    description: 'Architecting the digital future with high-performance web applications.',
+    images: ['/assets/cg-logo-online.png'],
+    creator: '@codegang',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
