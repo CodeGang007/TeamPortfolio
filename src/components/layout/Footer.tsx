@@ -169,10 +169,17 @@ export default function Footer() {
 
             {/* Social Links */}
             <div className="flex gap-4 mt-6">
-              {[Github, Linkedin, XIcon, Mail].map((Icon, i) => (
+              {[
+                { Icon: Github, href: "https://github.com/CodeGang007" },
+                { Icon: Linkedin, href: "https://www.linkedin.com/company/code-gang" },
+                { Icon: XIcon, href: "https://x.com/CodeGang20" },
+                { Icon: Mail, href: "mailto:contact@codegang.dev" },
+              ].map(({ Icon, href }, i) => (
                 <a
                   key={i}
-                  href="#"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={cn(
                     "p-2.5 rounded-xl border border-transparent transition-all duration-300",
                     isOnline
