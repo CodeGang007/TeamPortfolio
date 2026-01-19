@@ -22,9 +22,12 @@ export const metadata: Metadata = {
   creator: 'CodeGang',
   metadataBase: new URL('https://codegang.online'),
   icons: {
-    icon: '/assets/cg-logo-online.png',
-    shortcut: '/assets/cg-logo-online.png',
-    apple: '/assets/cg-logo-online.png',
+    icon: '/icon.png',
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  alternates: {
+    canonical: '/',
   },
   manifest: '/manifest.json',
   openGraph: {
