@@ -194,22 +194,18 @@ export default function Footer() {
           </div>
 
           {/* Links Grid */}
-          <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-10 lg:pl-12">
+          <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8 lg:gap-16 lg:pl-16">
 
             {/* Product Column */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-5">
               <h4 className="text-white font-bold tracking-wide text-sm uppercase">Product</h4>
-              <ul className="flex flex-col gap-4">
+              <ul className="flex flex-col gap-3">
                 {footerLinks.product.map(link => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-zinc-500 hover:text-white text-sm transition-colors duration-200 flex items-center gap-2 group"
+                      className="text-zinc-500 hover:text-white text-sm transition-colors duration-200"
                     >
-                      <span className={cn(
-                        "w-1 h-1 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200",
-                        isOnline ? "bg-brand-green" : "bg-red-500"
-                      )} />
                       {link.name}
                     </Link>
                   </li>
@@ -218,19 +214,15 @@ export default function Footer() {
             </div>
 
             {/* Company Column */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-5">
               <h4 className="text-white font-bold tracking-wide text-sm uppercase">Company</h4>
-              <ul className="flex flex-col gap-4">
+              <ul className="flex flex-col gap-3">
                 {footerLinks.company.map(link => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-zinc-500 hover:text-white text-sm transition-colors duration-200 flex items-center gap-2 group"
+                      className="text-zinc-500 hover:text-white text-sm transition-colors duration-200"
                     >
-                      <span className={cn(
-                        "w-1 h-1 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200",
-                        isOnline ? "bg-brand-green" : "bg-red-500"
-                      )} />
                       {link.name}
                     </Link>
                   </li>
@@ -239,20 +231,16 @@ export default function Footer() {
             </div>
 
             {/* Legal Column */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-5">
               <h4 className="text-white font-bold tracking-wide text-sm uppercase">Legal</h4>
-              <ul className="flex flex-col gap-4">
+              <ul className="flex flex-col gap-3">
                 {footerLinks.legal.map(link => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
                       onClick={(e) => handleLinkClick(e, link.href)}
-                      className="text-zinc-500 hover:text-white text-sm transition-colors duration-200 flex items-center gap-2 group"
+                      className="text-zinc-500 hover:text-white text-sm transition-colors duration-200"
                     >
-                      <span className={cn(
-                        "w-1 h-1 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200",
-                        isOnline ? "bg-brand-green" : "bg-red-500"
-                      )} />
                       {link.name}
                     </Link>
                   </li>
