@@ -516,7 +516,26 @@ export function RichTextEditor({
 
                 {/* Editor Content - Only render here when NOT expanded */}
                 {!isExpanded && (
-                    <div className="relative max-h-[280px] overflow-y-auto custom-scrollbar bg-zinc-950/30">
+                    <div
+                        className="relative max-h-[280px] overflow-y-auto custom-scrollbar bg-zinc-950/30 overscroll-contain"
+                        onWheel={(e) => {
+                            const target = e.currentTarget;
+                            const scrollTop = target.scrollTop;
+                            const scrollHeight = target.scrollHeight;
+                            const height = target.clientHeight;
+                            const delta = e.deltaY;
+
+                            // Prevent scrolling parent when at top or bottom
+                            if ((delta < 0 && scrollTop <= 0) || (delta > 0 && scrollTop + height >= scrollHeight)) {
+                                // At boundary, but let it scroll if there's room
+                                if (scrollHeight > height) {
+                                    e.stopPropagation();
+                                }
+                            } else {
+                                e.stopPropagation();
+                            }
+                        }}
+                    >
                         {EditorView}
                     </div>
                 )}
@@ -635,7 +654,25 @@ export function RichTextEditor({
                         </div>
 
                         {/* Modal Editor Content */}
-                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-zinc-950/50">
+                        <div
+                            className="flex-1 overflow-y-auto custom-scrollbar bg-zinc-950/50 overscroll-contain"
+                            onWheel={(e) => {
+                                const target = e.currentTarget;
+                                const scrollTop = target.scrollTop;
+                                const scrollHeight = target.scrollHeight;
+                                const height = target.clientHeight;
+                                const delta = e.deltaY;
+
+                                // Prevent scrolling parent when at top or bottom
+                                if ((delta < 0 && scrollTop <= 0) || (delta > 0 && scrollTop + height >= scrollHeight)) {
+                                    if (scrollHeight > height) {
+                                        e.stopPropagation();
+                                    }
+                                } else {
+                                    e.stopPropagation();
+                                }
+                            }}
+                        >
                             {EditorView}
                         </div>
 
