@@ -4,6 +4,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
 import styles from "./ProjectCard.module.css";
+import Image from "next/image";
+import Link from "next/link";
 
 interface ProjectCardProps {
   id?: string;
@@ -71,12 +73,16 @@ export function ProjectCard({
 
           {/* Project Image or Logo/Initial */}
           {image ? (
-            <img 
-              src={image} 
-              alt={title} 
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ zIndex: 1 }}
-            />
+            <div className="absolute inset-0 w-full h-full">
+              <Image 
+                src={image} 
+                alt={title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                style={{ zIndex: 1 }}
+              />
+            </div>
           ) : (
             <div className={styles.projectLogo}>
               <span className={styles.logoLetter}>
@@ -121,7 +127,20 @@ export function ProjectCard({
     </motion.div>
   );
 
-  // If there's a link, wrap in anchor tag
+  // Wrap in Link to internal detail page if ID exists
+  if (id) {
+    return (
+      <Link 
+        href={`/project/${id}`}
+        className="block cursor-pointer"
+        style={{ textDecoration: 'none' }}
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+
+  // Fallback: If no ID but has external link (legacy support)
   if (link) {
     return (
       <a 
