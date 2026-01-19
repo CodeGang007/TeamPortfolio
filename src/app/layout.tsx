@@ -9,6 +9,7 @@ import AuthToast from "@/components/auth/AuthToast";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import FeedbackButton from "@/components/FeedbackButton";
 import { Metadata } from 'next';
+import SchemaMarkup from "@/components/seo/SchemaMarkup";
 
 export const metadata: Metadata = {
   title: {
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
     shortcut: '/assets/cg-logo-online.png',
     apple: '/assets/cg-logo-online.png',
   },
+  manifest: '/manifest.json',
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -77,6 +79,7 @@ export default function RootLayout({
           <AuthGuard />
           <SmoothScroll />
           <AnimatedBackground />
+          <SchemaMarkup />
           {children}
 
           <ModalWrapper />
