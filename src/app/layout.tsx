@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   keywords: ['web development', 'digital agency', 'software engineering', 'Next.js', 'React', 'cloud infrastructure', 'UI/UX design'],
   authors: [{ name: 'CodeGang Team' }],
   creator: 'CodeGang',
-  metadataBase: new URL('https://codegang.online'),
+  metadataBase: new URL('https://www.codegang.online'),
   icons: {
     icon: '/icon.png',
     shortcut: '/favicon.ico',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://codegang.online',
+    url: 'https://www.codegang.online',
     title: 'CodeGang | Digital Architects',
     description: 'Architecting the digital future with high-performance web applications and stunning designs.',
     siteName: 'CodeGang',

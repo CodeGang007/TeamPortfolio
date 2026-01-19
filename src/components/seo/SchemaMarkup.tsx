@@ -5,8 +5,8 @@ export default function SchemaMarkup() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'CodeGang',
-    url: 'https://codegang.online',
-    logo: 'https://codegang.online/assets/cg-logo-online.png',
+    url: 'https://www.codegang.online',
+    logo: 'https://www.codegang.online/assets/cg-logo-online.png',
     sameAs: [
       'https://twitter.com/codegang',
       'https://linkedin.com/company/codegang',
