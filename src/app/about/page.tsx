@@ -6,6 +6,18 @@ export const metadata: Metadata = {
   description: 'Learn about CodeGang\'s journey, our founders, and our mission to architect the digital future with detailed strategies and awards.'
 };
 
+import Breadcrumbs from "@/components/seo/Breadcrumbs";
+
 export default function AboutPage() {
-  return <AboutPageContent />;
+  return (
+    <>
+      <Breadcrumbs 
+        items={[
+          { name: 'Home', item: '/' },
+          { name: 'About Us', item: '/about' }
+        ]} 
+      />
+      <AboutPageContent />
+    </>
+  );
 }

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
 import styles from "./ProjectCard.module.css";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProjectCardProps {
   id?: string;
@@ -126,7 +127,20 @@ export function ProjectCard({
     </motion.div>
   );
 
-  // If there's a link, wrap in anchor tag
+  // Wrap in Link to internal detail page if ID exists
+  if (id) {
+    return (
+      <Link 
+        href={`/project/${id}`}
+        className="block cursor-pointer"
+        style={{ textDecoration: 'none' }}
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+
+  // Fallback: If no ID but has external link (legacy support)
   if (link) {
     return (
       <a 
