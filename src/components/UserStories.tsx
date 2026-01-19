@@ -15,7 +15,7 @@ const TESTIMONIALS = [
         chartColor: "from-blue-500/20 to-blue-500/5",
         name: "Aarav Gupta",
         designation: "Founder, TechSagar",
-        clientImage: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200&auto=format&fit=crop",
+        clientImage: "https://plus.unsplash.com/premium_photo-1725021054837-bd4117e907b8?q=80&w=200&auto=format&fit=crop", // User selected Indian male
         rating: 4,
         story: "CodeGang has a bunch of good developers who helped in the growth of my website. They really understood what I wanted and delivered it perfectly. Highly recommended for any startup.",
     },
@@ -27,7 +27,7 @@ const TESTIMONIALS = [
         chartColor: "from-emerald-500/20 to-emerald-500/5",
         name: "Emily Carter",
         designation: "Director, Horizon Inc.",
-        clientImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop",
+        clientImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop", // Professional woman
         rating: 5,
         story: "I was struggling to find a team that could handle our complex backend requirements. This team stepped in and fixed everything in record time. Truly impressed with their problem-solving skills!",
     },
@@ -39,7 +39,9 @@ const TESTIMONIALS = [
         chartColor: "from-orange-500/20 to-orange-500/5",
         name: "Vikram Singh",
         designation: "Product Manager, StartupHub",
-        clientImage: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=200&auto=format&fit=crop",
+        clientImage: "https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?q=80&w=200&auto=format&fit=crop", // User selected Indian male professional
+
+
         rating: 4.5,
         story: "The attention to detail is amazing. They didn't just write code, they helped improve the entire user flow. My app feels so much more premium now thanks to their design inputs.",
     },
@@ -51,7 +53,7 @@ const TESTIMONIALS = [
         chartColor: "from-purple-500/20 to-purple-500/5",
         name: "David Miller",
         designation: "CEO, NextGen Solutions",
-        clientImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop",
+        clientImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop", // Authentic Western male
         rating: 3.5,
         story: "Honestly, the best dev experience I've had. Communication was smooth, updates were regular, and the final product exceeded my expectations. They define professionalism.",
     },

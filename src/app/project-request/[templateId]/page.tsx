@@ -45,7 +45,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
     const [formData, setFormData] = useState({
         projectName: "",
         description: "",
-        category: "Full Stack Development",
+        category: "",
         subCategories: [] as string[],
         deliveryTime: "",
         budget: "",
@@ -222,7 +222,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
         const clearedData = {
             projectName: "",
             description: "",
-            category: "Full Stack Development",
+            category: "",
             subCategories: [] as string[],
             deliveryTime: "",
             budget: "",
@@ -406,7 +406,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                     setFormData({
                         projectName: draft.projectName || "",
                         description: draft.description || "",
-                        category: draft.category || "Full Stack Development",
+                        category: draft.category || "",
                         subCategories: draft.subCategories || [],
                         deliveryTime: draft.deliveryTime || "",
                         budget: draft.budget || "",
