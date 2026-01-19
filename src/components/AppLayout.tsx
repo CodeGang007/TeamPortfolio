@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/resizable-navbar";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Menu, X, LogOut, User, FileText, LayoutGrid } from "lucide-react";
+import { Menu, X, LogOut, User, FileText, LayoutGrid, Camera, Users } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
@@ -141,6 +141,36 @@ export default function AppLayout({
                   )}
                   <span>{role === 'admin' ? "Manage Publications" : (role === 'developer' ? "Assigned Publications" : "My Publications")}</span>
                 </a>
+
+                {role === 'admin' && (
+                  <>
+                    <a
+                      href="/admin/projects/add"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsMobileMenuOpen(false);
+                        router.push('/admin/projects/add');
+                      }}
+                      className="mt-2 w-full rounded-md px-4 py-3 text-sm font-bold text-zinc-400 hover:bg-white/5 transition-all text-left flex items-center gap-2"
+                    >
+                      <Camera className="h-4 w-4" />
+                      <span>Add Project</span>
+                    </a>
+
+                    <a
+                      href="/dashboard/founders"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsMobileMenuOpen(false);
+                        router.push('/dashboard/founders');
+                      }}
+                      className="mt-2 w-full rounded-md px-4 py-3 text-sm font-bold text-zinc-400 hover:bg-white/5 transition-all text-left flex items-center gap-2"
+                    >
+                      <Users className="h-4 w-4" />
+                      <span>Manage Founders</span>
+                    </a>
+                  </>
+                )}
               </>
             )}
 
