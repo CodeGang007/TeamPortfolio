@@ -80,7 +80,7 @@ export const telegramService = {
 <b>Description:</b>
 ${description}
 
-<a href="https://team-portfolio-cg3e.vercel.app/dashboard/projects">View in Dashboard</a>
+<a href="https://codegang.online/dashboard/projects">View in Dashboard</a>
       `.trim();
   }
 };

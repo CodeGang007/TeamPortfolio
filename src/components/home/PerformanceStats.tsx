@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { Zap, Shield, Gauge, Users, Server, Cpu, Lock, Code2, Globe } from "lucide-react";
 import { MaskContainer } from "@/components/ui/MaskContainer";
+import Link from "next/link";
 
 const stats = [
     {
@@ -114,10 +115,10 @@ const StatsContent = ({ isOnline }: { isOnline: boolean }) => (
 
             {/* Bottom CTA */}
             <div className="text-center mt-10 md:mt-20 pb-10 md:pb-0">
-                <a href="/project" className="inline-flex items-center gap-2 text-sm font-bold text-white/60 hover:text-white transition-colors duration-300 uppercase tracking-widest border-b border-transparent hover:border-brand-green p-1">
+                <Link href="/project" className="inline-flex items-center gap-2 text-sm font-bold text-white/60 hover:text-white transition-colors duration-300 uppercase tracking-widest border-b border-transparent hover:border-brand-green p-1">
                     <span>See the comparison</span>
                     <span className="group-hover:translate-x-1 transition-transform">→</span>
-                </a>
+                </Link>
             </div>
         </div>
     </div>
@@ -186,13 +187,13 @@ const TechnicalSpecs = ({ isOnline }: { isOnline: boolean }) => (
 
             {/* Bottom CTA Placeholder */}
             <div className="text-center mt-10 md:mt-20 pb-10 md:pb-0">
-                <a href="/project" className={`inline-flex items-center gap-2 text-sm font-bold transition-colors duration-300 uppercase tracking-widest border-b p-1 ${isOnline
+                <Link href="/project" className={`inline-flex items-center gap-2 text-sm font-bold transition-colors duration-300 uppercase tracking-widest border-b p-1 ${isOnline
                     ? "text-brand-green hover:text-emerald-400 border-brand-green/30 hover:border-brand-green"
                     : "text-red-500 hover:text-orange-400 border-red-500/30 hover:border-red-500"
                     }`}>
                     <span>See the comparison</span>
                     <span className="group-hover:translate-x-1 transition-transform">→</span>
-                </a>
+                </Link>
             </div>
         </div>
     </div>

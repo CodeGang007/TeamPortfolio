@@ -19,7 +19,7 @@ export const emailService = {
         clientName: string;
     }) {
         const { developers, projectName, projectId, clientName } = data;
-        const projectUrl = `https://team-portfolio-cg3e.vercel.app/dashboard/projects/${projectId}`;
+        const projectUrl = `https://codegang.online/dashboard/projects/${projectId}`;
         const allEmails = developers.map(d => d.email).join(", ");
         const developerNames = developers.map(d => d.name).join(", ");
 
@@ -157,7 +157,7 @@ export const emailService = {
                 ${developerSectionHtml}
 
                 <div style="text-align: center; margin-top: 40px;">
-                    <a href="https://team-portfolio-cg3e.vercel.app/dashboard/projects" class="button" style="background-color: #00ff9d; color: #000000; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">View Project Dashboard</a>
+                    <a href="https://codegang.online/dashboard/projects" class="button" style="background-color: #00ff9d; color: #000000; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">View Project Dashboard</a>
                 </div>
             </div>
             <div class="footer">
@@ -193,7 +193,7 @@ export const emailService = {
         projectId: string;
     }) {
         const { projectName, clientName, clientEmail, projectId } = data;
-        const projectUrl = `https://team-portfolio-cg3e.vercel.app/dashboard/projects/${projectId}`;
+        const projectUrl = `https://codegang.online/dashboard/projects/${projectId}`;
 
         const htmlContent = `
     <!DOCTYPE html>
