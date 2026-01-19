@@ -6,13 +6,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
     ArrowLeft, Upload, FileText, X, Rocket, Zap,
-    Calendar, CalendarDays, Image as ImageIcon, Check, Trash2, Plus, FileSpreadsheet, File, Loader2, CheckCircle, RotateCcw, User, Expand, Minimize2
+    Calendar, CalendarDays, Image as ImageIcon, Check, Trash2, Plus, FileSpreadsheet, File, Loader2, CheckCircle, RotateCcw, User
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { projectRequestService } from "@/lib/projectService";
 import { useAuth } from "@/contexts/AuthContext";
 import UserMenu from "@/components/UserMenu";
+import { RichTextEditor } from "@/components/RichTextEditor";
 // Removed Firebase Storage imports
 
 // Storage key for session storage
@@ -107,7 +108,6 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
     const [historyIndex, setHistoryIndex] = useState(-1);
     const [validationError, setValidationError] = useState("");
     const [toastMessage, setToastMessage] = useState("");
-    const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
     // Link validation state
     const [linkWarnings, setLinkWarnings] = useState<{
@@ -517,13 +517,55 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
         // Validation
         if (!formData.name.trim()) {
-             setValidationError("Name is required.");
-             window.scrollTo({ top: 0, behavior: 'smooth' });
-             return;
+            setValidationError("Name is required.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
         }
-        
+
         if (!formData.projectName.trim()) {
             setValidationError("Project name is required.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        // Validate project name quality
+        const projectName = formData.projectName.trim();
+
+        // Minimum length check (at least 5 characters)
+        if (projectName.length < 5) {
+            setValidationError("Project name must be at least 5 characters long.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        // Must contain at least one vowel (filters random consonant spam)
+        const hasVowel = /[aeiouAEIOU]/.test(projectName);
+        if (!hasVowel) {
+            setValidationError("Please enter a valid project name.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        // Check for repetitive characters (e.g., "aaaa", "ssss")
+        const hasRepetitiveChars = /(.)\1{3,}/.test(projectName);
+        if (hasRepetitiveChars) {
+            setValidationError("Project name contains too many repetitive characters.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        // Must contain at least 2 separate words or be a meaningful single word (8+ chars)
+        const words = projectName.split(/\s+/).filter(word => word.length > 0);
+        if (words.length < 2 && projectName.length < 8) {
+            setValidationError("Please provide a more descriptive project name (at least 2 words or 8 characters).");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        // Check for gibberish patterns (random keyboard mashing)
+        const gibberishPatterns = /^[a-z]{2,4}$/i; // Very short random letters
+        if (gibberishPatterns.test(projectName.replace(/\s/g, ''))) {
+            setValidationError("Please enter a meaningful project name.");
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
@@ -564,7 +606,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             const timestamp = new Date().toISOString();
 
             // Cloudinary Configuration
-            const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "demo"; 
+            const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "demo";
             const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "unsigned_preset";
 
             // Helper to upload file to Cloudinary
@@ -607,7 +649,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             for (const img of images) {
                 const url = await uploadFileToCloudinary(img.file);
                 if (url) {
-                     uploadedAttachments.push({
+                    uploadedAttachments.push({
                         name: img.file.name,
                         url: url,
                         type: img.file.type,
@@ -741,7 +783,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 </motion.div>
                             )}
                         </AnimatePresence>
-                        
+
                         {/* Contact Info Section */}
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div className="space-y-2">
@@ -783,128 +825,15 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         </div>
 
                         {/* Description */}
-                        <div className="space-y-2">
-                            <label className="text-base font-semibold text-zinc-300">Description<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
-                            <div className="relative group">
-                                <textarea
-                                    className={`h-48 w-full resize-none rounded-xl border px-4 py-3 pr-12 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium leading-relaxed custom-scrollbar ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
-                                    style={{ overflowY: 'auto' }}
-                                    placeholder="Describe your project..."
-                                    maxLength={5000}
-                                    value={formData.description}
-                                    onChange={e => updateFormData({ description: e.target.value })}
-                                    onWheel={(e) => {
-                                        // Prevent scroll from bubbling to page - isolate scroll to textarea only
-                                        e.stopPropagation();
-                                        const textarea = e.currentTarget;
-                                        const { scrollTop, scrollHeight, clientHeight } = textarea;
-                                        const isScrollingDown = e.deltaY > 0;
-                                        const isScrollingUp = e.deltaY < 0;
-                                        const isAtTop = scrollTop === 0;
-                                        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-
-                                        // Prevent page scroll when at boundaries
-                                        if ((isScrollingUp && isAtTop) || (isScrollingDown && isAtBottom)) {
-                                            e.preventDefault();
-                                        }
-                                    }}
-                                />
-                                {/* Expand Button */}
-                                <button
-                                    type="button"
-                                    onClick={() => setIsDescriptionExpanded(true)}
-                                    className={`absolute right-3 top-3 p-1.5 rounded-lg transition-all opacity-50 hover:opacity-100 ${isOnline ? 'hover:bg-zinc-800 text-zinc-400 hover:text-brand-green' : 'hover:bg-red-900/30 text-red-400 hover:text-red-300'}`}
-                                    title="Expand to fullscreen"
-                                >
-                                    <Expand className="h-4 w-4" />
-                                </button>
-                                <span className="absolute right-3 bottom-3 text-xs text-zinc-600">{formData.description.length} / 5000</span>
-                            </div>
-                        </div>
-
-                        {/* Description Fullscreen Modal - Portal to body to escape stacking context */}
-                        {typeof window !== 'undefined' && createPortal(
-                            <AnimatePresence>
-                                {isDescriptionExpanded && (
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black p-4 md:p-8"
-                                        onClick={() => setIsDescriptionExpanded(false)}
-                                    >
-                                        <motion.div
-                                            initial={{ scale: 0.95, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            exit={{ scale: 0.95, opacity: 0 }}
-                                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                                            className={`w-full max-w-4xl h-[80vh] rounded-2xl border shadow-2xl flex flex-col ${isOnline ? 'bg-zinc-950 border-zinc-800' : 'bg-zinc-950 border-red-900/50'}`}
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
-                                            {/* Modal Header */}
-                                            <div className={`flex items-center justify-between px-6 py-4 border-b ${isOnline ? 'border-zinc-800' : 'border-red-900/30'}`}>
-                                                <div className="flex items-center gap-3">
-                                                    <div className={`p-2 rounded-lg ${isOnline ? 'bg-brand-green/10' : 'bg-red-500/10'}`}>
-                                                        <FileText className={`h-5 w-5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`} />
-                                                    </div>
-                                                    <div>
-                                                        <h3 className="text-lg font-semibold text-white">Project Description</h3>
-                                                        <p className="text-xs text-zinc-500">Describe your project requirements in detail</p>
-                                                    </div>
-                                                </div>
-                                                <button
-                                                    onClick={() => setIsDescriptionExpanded(false)}
-                                                    className={`p-2 rounded-lg transition-colors ${isOnline ? 'hover:bg-zinc-800 text-zinc-400 hover:text-white' : 'hover:bg-red-900/30 text-red-400 hover:text-red-300'}`}
-                                                >
-                                                    <Minimize2 className="h-5 w-5" />
-                                                </button>
-                                            </div>
-
-                                            {/* Modal Body */}
-                                            <div className="flex-1 p-6 overflow-hidden">
-                                                <textarea
-                                                    className={`w-full h-full resize-none rounded-xl border px-5 py-4 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium leading-relaxed text-base custom-scrollbar ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
-                                                    placeholder="Describe your project in detail...&#10;&#10;Include:&#10;• Project goals and objectives&#10;• Key features and functionality&#10;• Target audience&#10;• Any specific requirements or preferences"
-                                                    maxLength={5000}
-                                                    value={formData.description}
-                                                    onChange={e => updateFormData({ description: e.target.value })}
-                                                    onWheel={(e) => {
-                                                        // Prevent scroll from bubbling to modal/page - isolate scroll to textarea only
-                                                        e.stopPropagation();
-                                                        const textarea = e.currentTarget;
-                                                        const { scrollTop, scrollHeight, clientHeight } = textarea;
-                                                        const isScrollingDown = e.deltaY > 0;
-                                                        const isScrollingUp = e.deltaY < 0;
-                                                        const isAtTop = scrollTop === 0;
-                                                        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-
-                                                        // Prevent modal/page scroll when at boundaries
-                                                        if ((isScrollingUp && isAtTop) || (isScrollingDown && isAtBottom)) {
-                                                            e.preventDefault();
-                                                        }
-                                                    }}
-                                                    autoFocus
-                                                />
-                                            </div>
-
-                                            {/* Modal Footer */}
-                                            <div className={`flex items-center justify-between px-6 py-4 border-t ${isOnline ? 'border-zinc-800' : 'border-red-900/30'}`}>
-                                                <span className="text-sm text-zinc-500">
-                                                    {formData.description.length} / 5000 characters
-                                                </span>
-                                                <button
-                                                    onClick={() => setIsDescriptionExpanded(false)}
-                                                    className={`px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${isOnline ? 'bg-brand-green text-black hover:bg-brand-green/90' : 'bg-red-500 text-white hover:bg-red-600'}`}
-                                                >
-                                                    Done
-                                                </button>
-                                            </div>
-                                        </motion.div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>,
-                            document.body
-                        )}
+                        <RichTextEditor
+                            value={formData.description}
+                            onChange={(value) => updateFormData({ description: value })}
+                            placeholder="Describe your project in detail...\n\nInclude:\n• Project goals and objectives\n• Key features and functionality\n• Target audience\n• Any specific requirements or preferences"
+                            maxLength={5000}
+                            isOnline={isOnline}
+                            label="Description"
+                            required={true}
+                        />
 
                         {/* Categories */}
                         <div className="space-y-3">
