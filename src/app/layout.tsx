@@ -10,7 +10,7 @@ import SmoothScroll from "@/components/ui/SmoothScroll";
 import FeedbackButton from "@/components/FeedbackButton";
 import { Metadata } from 'next';
 import SchemaMarkup from "@/components/seo/SchemaMarkup";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: {
