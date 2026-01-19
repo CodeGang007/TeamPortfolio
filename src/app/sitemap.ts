@@ -3,7 +3,7 @@ import { db } from '@/lib/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://codegang.online';
+  const baseUrl = 'https://www.codegang.online';
 
   // Static routes
   const routes = [
