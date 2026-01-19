@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
 import styles from "./ProjectCard.module.css";
+import Image from "next/image";
 
 interface ProjectCardProps {
   id?: string;
@@ -71,12 +72,16 @@ export function ProjectCard({
 
           {/* Project Image or Logo/Initial */}
           {image ? (
-            <img 
-              src={image} 
-              alt={title} 
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ zIndex: 1 }}
-            />
+            <div className="absolute inset-0 w-full h-full">
+              <Image 
+                src={image} 
+                alt={title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                style={{ zIndex: 1 }}
+              />
+            </div>
           ) : (
             <div className={styles.projectLogo}>
               <span className={styles.logoLetter}>

@@ -1,11 +1,4 @@
 "use client";
-import { Metadata } from 'next';
-export const metadata: Metadata = {
-  title: 'Contact Us | CodeGang',
-  description: 'Get in touch with CodeGang to discuss your next digital project. We are ready to bring your vision to life.'
-};
-
-
 
 import AppLayout from "@/components/AppLayout";
 import { Button } from "@nextui-org/button";
@@ -17,7 +10,7 @@ import { useState, useEffect } from "react";
 import { ThemeFlipHeading } from "@/components/ui/ThemeFlipHeading";
 import { ConsultationModal } from "@/components/contact/ConsultationModal";
 
-export default function ContactUsPage() {
+export default function ContactUsClient() {
   const { isAuthenticated, user } = useAuth();
   const isOnline = isAuthenticated;
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);

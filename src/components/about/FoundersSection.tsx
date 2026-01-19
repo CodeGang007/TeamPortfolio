@@ -5,6 +5,7 @@ import { founderService, Founder } from "@/services/founderService";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, Linkedin, Twitter, Globe, Instagram } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import Image from "next/image";
 
 const SocialIcon = ({ type, url }: { type: string; url: string }) => {
     if (!url) return null;
@@ -123,10 +124,12 @@ export function FoundersSection() {
                                     {/* Layer 2a: Image (Parallax Scale) */}
                                     <div className="absolute inset-0 overflow-hidden">
                                         <div className="absolute inset-0 bg-zinc-900/20 z-10" />
-                                        <img
+                                        <Image
                                             src={founder.imageUrl}
                                             alt={founder.name}
-                                            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 grayscale group-hover:grayscale-0"
+                                            fill
+                                            className="object-cover transition-transform duration-700 ease-out group-hover:scale-110 grayscale group-hover:grayscale-0"
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                                         />
                                     </div>
 

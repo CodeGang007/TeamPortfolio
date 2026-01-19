@@ -1,6 +1,12 @@
 import AppLayout from "@/components/AppLayout";
 import { ProjectsSection } from "@/components/projectPage/ProjectsSection";
 import { ThemeFlipHeading } from "@/components/ui/ThemeFlipHeading";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Our Projects | CodeGang',
+  description: 'Explore our portfolio of high-performance web applications, innovative designs, and scalable digital solutions built for top clients.'
+};
 
 export default function ProjectPage() {
   return (
