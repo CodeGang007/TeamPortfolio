@@ -11,6 +11,7 @@ import FeedbackButton from "@/components/FeedbackButton";
 import { Metadata } from 'next';
 import SchemaMarkup from "@/components/seo/SchemaMarkup";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: {
@@ -86,6 +87,7 @@ export default function RootLayout({
           <SchemaMarkup />
           {children}
           <Analytics />
+          <SpeedInsights />
 
           <ModalWrapper />
           <AuthToast />
