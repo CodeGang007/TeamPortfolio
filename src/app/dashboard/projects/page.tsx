@@ -22,7 +22,13 @@ import {
     ArrowUpDown,
     SlidersHorizontal,
     ArrowUp,
-    ArrowDown
+    ArrowDown,
+    MoreVertical,
+    XCircle,
+    ExternalLink,
+    Copy,
+    Share2,
+    MessageCircle
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
@@ -48,6 +54,7 @@ interface ProjectRequest extends BaseProjectRequest {
 }
 
 import ProjectRatingModal from "@/components/ProjectRatingModal";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 type TabType = "all" | "drafts";
 
@@ -107,6 +114,20 @@ export default function ProjectDashboard() {
     const [dateRangeEnd, setDateRangeEnd] = useState<string>("");
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
     const filterDropdownRef = useRef<HTMLDivElement>(null);
+
+    // Project action menu state
+    const [openActionMenu, setOpenActionMenu] = useState<string | null>(null);
+    const actionMenuRef = useRef<HTMLDivElement>(null);
+    const [showSnackbar, setShowSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+
+    // Confirmation modal state
+    const [closureModalOpen, setClosureModalOpen] = useState(false);
+    const [projectToClose, setProjectToClose] = useState<ProjectRequest | null>(null);
+
+    // Delete confirmation modal state
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [projectToDelete, setProjectToDelete] = useState<ProjectRequest | null>(null);
 
     // Fetch projects
     useEffect(() => {
@@ -196,10 +217,14 @@ export default function ProjectDashboard() {
             if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target as Node)) {
                 setFilterDropdownOpen(false);
             }
+            // Close action menu when clicking outside
+            if (openActionMenu && !(event.target as Element).closest('[data-action-menu]')) {
+                setOpenActionMenu(null);
+            }
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    }, [openActionMenu]);
 
     if (!loading && !isAuthenticated) {
         router.push("/");
@@ -254,8 +279,10 @@ export default function ProjectDashboard() {
     };
 
     // Helper to get project date for filtering/sorting
+    // Check both top-level initiatedAt and workflowStatus.initiatedAt for creation date
     const getProjectDate = (p: ProjectRequest): Date => {
-        return new Date(p.startDate || p.draftSavedAt || p.initiatedAt || 0);
+        const initiatedDate = p.initiatedAt || p.workflowStatus?.initiatedAt;
+        return new Date(initiatedDate || p.draftSavedAt || p.startDate || 0);
     };
 
     // Apply all filters
@@ -299,11 +326,11 @@ export default function ProjectDashboard() {
             return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
         });
 
-    // Get count of active filters (only count non-default values)
+    // Get count of active filters
     const getActiveFilterCount = () => {
         let count = 0;
-        // Only count oldest as a filter since newest is the default
-        if (sortOrder === "oldest") count++;
+        // Count any explicit sort order selection (newest or oldest)
+        if (sortOrder !== null) count++;
         // Count date range as ONE filter (not separate start/end)
         if (dateRangeStart || dateRangeEnd) count++;
         return count;
@@ -315,6 +342,54 @@ export default function ProjectDashboard() {
         setDateRangeStart("");
         setDateRangeEnd("");
         setSelectedUserFilter("all");
+    };
+
+    // Handle project closure request
+    const handleClosureRequest = async () => {
+        if (!projectToClose?.id) return;
+
+        try {
+            await projectRequestService.updateProjectProgress(projectToClose.id, {
+                status: 'pending-closure'
+            });
+            // Update local state
+            setProjects(prev => prev.map(p =>
+                p.id === projectToClose.id
+                    ? { ...p, dynamicStatus: 'pending-closure' }
+                    : p
+            ));
+            setSnackbarMessage("Closure request sent to admins for review.");
+            setShowSnackbar(true);
+            setTimeout(() => setShowSnackbar(false), 3000);
+        } catch (err) {
+            setSnackbarMessage("Failed to submit closure request. Please try again.");
+            setShowSnackbar(true);
+            setTimeout(() => setShowSnackbar(false), 3000);
+        } finally {
+            setClosureModalOpen(false);
+            setProjectToClose(null);
+        }
+    };
+
+    // Handle draft deletion
+    const handleDeleteDraft = async () => {
+        if (!projectToDelete?.id) return;
+
+        try {
+            await projectRequestService.deleteProject(projectToDelete.id);
+            setProjects(prev => prev.filter(p => p.id !== projectToDelete.id));
+            setSnackbarMessage("Draft deleted successfully.");
+            setShowSnackbar(true);
+            setTimeout(() => setShowSnackbar(false), 3000);
+        } catch (error) {
+            console.error("Failed to delete draft", error);
+            setSnackbarMessage("Failed to delete draft. Please try again.");
+            setShowSnackbar(true);
+            setTimeout(() => setShowSnackbar(false), 3000);
+        } finally {
+            setDeleteModalOpen(false);
+            setProjectToDelete(null);
+        }
     };
 
     return (
@@ -718,24 +793,110 @@ export default function ProjectDashboard() {
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     e.stopPropagation();
-                                                    if (confirm("Are you sure you want to delete this draft?")) {
-                                                        const handleDelete = async () => {
-                                                            try {
-                                                                await projectRequestService.deleteProject(project.id || "");
-                                                                setProjects(prev => prev.filter(p => p.id !== project.id));
-                                                            } catch (error) {
-                                                                console.error("Failed to delete draft", error);
-                                                                alert("Failed to delete draft");
-                                                            }
-                                                        };
-                                                        handleDelete();
-                                                    }
+                                                    setProjectToDelete(project);
+                                                    setDeleteModalOpen(true);
                                                 }}
-                                                className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500 hover:text-white backdrop-blur-md transition-all shadow-lg shadow-black/50"
+                                                className="p-2.5 rounded-xl bg-gradient-to-b from-red-500/20 to-red-600/10 border border-red-500/30 text-red-400 hover:from-red-500 hover:to-red-600 hover:text-white backdrop-blur-md transition-all shadow-lg shadow-black/50 group"
                                                 title="Delete Draft"
                                             >
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash2 className="h-4 w-4 transition-transform group-hover:scale-110" />
                                             </button>
+                                        </div>
+                                    )}
+
+                                    {/* Three-dots Action Menu for Published Client Projects */}
+                                    {!project.isDraft && role !== 'admin' && role !== 'developer' && (
+                                        <div
+                                            className="absolute bottom-3 right-3 z-20"
+                                            data-action-menu
+                                        >
+                                            {/* Three dots button with better styling */}
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    setOpenActionMenu(openActionMenu === project.id ? null : project.id || null);
+                                                }}
+                                                className="p-2.5 rounded-xl bg-gradient-to-b from-[#27272a] to-[#1c1c1e] border border-[#3f3f46] text-[#a1a1aa] hover:text-white hover:border-[#52525b] hover:from-[#3f3f46] hover:to-[#27272a] backdrop-blur-md transition-all shadow-lg shadow-black/40 group"
+                                                title="More Options"
+                                            >
+                                                <MoreVertical className="h-4 w-4 transition-transform group-hover:scale-110" />
+                                            </button>
+
+                                            {/* Dropdown Menu */}
+                                            {openActionMenu === project.id && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                    transition={{ duration: 0.12, ease: "easeOut" }}
+                                                    className="absolute bottom-full right-0 mb-2 w-48 rounded-xl bg-[#1a1a1c] border border-[#2a2a2e] shadow-2xl shadow-black/70 overflow-hidden z-50"
+                                                >
+                                                    {/* Subtle top highlight */}
+                                                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+
+                                                    {/* View Details */}
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            router.push(`/dashboard/projects/${project.id}`);
+                                                        }}
+                                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] text-[#d4d4d8] hover:text-white hover:bg-white/[0.04] transition-all duration-150"
+                                                    >
+                                                        <ExternalLink className="h-4 w-4 text-[#71717a]" />
+                                                        <span>View Details</span>
+                                                    </button>
+
+                                                    {/* Copy Link */}
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            const url = `${window.location.origin}/dashboard/projects/${project.id}`;
+                                                            navigator.clipboard.writeText(url);
+                                                            setSnackbarMessage("Link copied to clipboard");
+                                                            setShowSnackbar(true);
+                                                            setTimeout(() => setShowSnackbar(false), 2500);
+                                                            setOpenActionMenu(null);
+                                                        }}
+                                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] text-[#d4d4d8] hover:text-white hover:bg-white/[0.04] transition-all duration-150"
+                                                    >
+                                                        <Copy className="h-4 w-4 text-[#71717a]" />
+                                                        <span>Copy Link</span>
+                                                    </button>
+
+                                                    {/* Close Project - Only if not already closed/completed/pending */}
+                                                    {!['completed', 'closed', 'pending-closure'].includes(status) && (
+                                                        <>
+                                                            <div className="my-1 mx-3 border-t border-[#27272a]" />
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                    setProjectToClose(project);
+                                                                    setClosureModalOpen(true);
+                                                                    setOpenActionMenu(null);
+                                                                }}
+                                                                className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] text-red-400 hover:text-red-300 hover:bg-red-500/[0.06] transition-all duration-150"
+                                                            >
+                                                                <XCircle className="h-4 w-4" />
+                                                                <span>Request Closure</span>
+                                                            </button>
+                                                        </>
+                                                    )}
+
+                                                    {/* Show pending status if applicable */}
+                                                    {status === 'pending-closure' && (
+                                                        <>
+                                                            <div className="my-1 mx-3 border-t border-[#27272a]" />
+                                                            <div className="px-4 py-2.5 text-[11px] text-amber-500/80 flex items-center gap-2">
+                                                                <div className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+                                                                <span>Pending Approval</span>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </motion.div>
+                                            )}
                                         </div>
                                     )}
                                 </div>
@@ -753,6 +914,55 @@ export default function ProjectDashboard() {
                     onSubmit={handleRatingSubmit}
                 />
             )}
+
+            {/* Snackbar Notification */}
+            {showSnackbar && (
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 50 }}
+                    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 bg-[#1c1c1e] border border-[#333] rounded-xl shadow-2xl shadow-black/50 flex items-center gap-3"
+                >
+                    <div className="h-2 w-2 rounded-full bg-brand-green animate-pulse" />
+                    <span className="text-sm text-white">{snackbarMessage}</span>
+                    <button
+                        onClick={() => setShowSnackbar(false)}
+                        className="text-[#71717a] hover:text-white transition-colors ml-2"
+                    >
+                        <X className="h-4 w-4" />
+                    </button>
+                </motion.div>
+            )}
+
+            {/* Project Closure Confirmation Modal */}
+            <ConfirmationModal
+                isOpen={closureModalOpen}
+                title="Request Project Closure"
+                message={`Are you sure you want to close "${projectToClose?.projectName}"? This request will be sent to our admin team for review. Once approved, the project will be marked as closed.`}
+                confirmText="Request Closure"
+                cancelText="Cancel"
+                variant="danger"
+                onConfirm={handleClosureRequest}
+                onCancel={() => {
+                    setClosureModalOpen(false);
+                    setProjectToClose(null);
+                }}
+            />
+
+            {/* Draft Delete Confirmation Modal */}
+            <ConfirmationModal
+                isOpen={deleteModalOpen}
+                title="Delete Draft"
+                message={`Are you sure you want to delete "${projectToDelete?.projectName}"? This action cannot be undone and the draft will be permanently removed.`}
+                confirmText="Delete Draft"
+                cancelText="Keep Draft"
+                variant="danger"
+                onConfirm={handleDeleteDraft}
+                onCancel={() => {
+                    setDeleteModalOpen(false);
+                    setProjectToDelete(null);
+                }}
+            />
         </div >
     );
 }

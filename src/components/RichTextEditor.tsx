@@ -305,6 +305,34 @@ export function RichTextEditor({
         },
     });
 
+    // Sync external value changes into the editor (e.g., when loading a draft)
+    useEffect(() => {
+        if (!editor) return;
+
+        // Get current editor content
+        const currentContent = editor.getHTML();
+
+        // Only update if the value has changed from outside
+        // and is different from current editor content
+        // Using a simple check to avoid overwriting while user is typing
+        if (value !== currentContent && value !== '<p></p>') {
+            // Check if editor is empty and we have new content
+            const editorIsEmpty = currentContent === '<p></p>' || currentContent === '';
+            if (editorIsEmpty && value) {
+                editor.commands.setContent(value);
+            } else if (value && value !== currentContent) {
+                // Only update if the change is significant (not just the user typing)
+                // This handles draft loading where value is set externally
+                const valueTextLength = value.replace(/<[^>]*>/g, '').length;
+                const currentTextLength = editor.getText().length;
+                // If the incoming value has content but editor is essentially empty
+                if (valueTextLength > 0 && currentTextLength === 0) {
+                    editor.commands.setContent(value);
+                }
+            }
+        }
+    }, [value, editor]);
+
     const closeLinkPopup = useCallback(() => {
         setShowLinkInput(false);
     }, []);
