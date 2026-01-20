@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     // Email to admin
     const adminMailOptions = {
       from: process.env.SMTP_EMAIL,
-      to: 'codegang0077@gmail.com',
+      to: 'admin@codegang.online',
       subject: `New Contact Form Submission from ${firstName} ${lastName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

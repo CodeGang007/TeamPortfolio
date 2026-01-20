@@ -119,7 +119,7 @@ export default function ContactUsPageContent() {
                 <h3 className={`text-2xl font-bold mb-6 transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'}`}>Contact Information</h3>
                 <div className="space-y-6">
                   {[
-                    { icon: Mail, label: "Email us", value: "codegang0077@gmail.com" },
+                    { icon: Mail, label: "Email us", value: "admin@codegang.online" },
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-start gap-4">
                       <div className={`p-3 rounded-xl transition-colors duration-500 ${isOnline

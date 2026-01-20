@@ -91,7 +91,7 @@ export const emailService = {
         const { projectName, clientName, clientEmail, developers } = data;
 
         // Default contact if no developers are assigned
-        const defaultContactEmail = "codegang0077@gmail.com";
+        const defaultContactEmail = "admin@codegang.online";
 
         // Construct Developer Cards HTML
         let developerSectionHtml = "";

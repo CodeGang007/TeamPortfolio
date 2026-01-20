@@ -527,48 +527,6 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
-
-        // Validate project name quality
-        const projectName = formData.projectName.trim();
-
-        // Minimum length check (at least 5 characters)
-        if (projectName.length < 5) {
-            setValidationError("Project name must be at least 5 characters long.");
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-
-        // Must contain at least one vowel (filters random consonant spam)
-        const hasVowel = /[aeiouAEIOU]/.test(projectName);
-        if (!hasVowel) {
-            setValidationError("Please enter a valid project name.");
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-
-        // Check for repetitive characters (e.g., "aaaa", "ssss")
-        const hasRepetitiveChars = /(.)\1{3,}/.test(projectName);
-        if (hasRepetitiveChars) {
-            setValidationError("Project name contains too many repetitive characters.");
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-
-        // Must contain at least 2 separate words or be a meaningful single word (8+ chars)
-        const words = projectName.split(/\s+/).filter(word => word.length > 0);
-        if (words.length < 2 && projectName.length < 8) {
-            setValidationError("Please provide a more descriptive project name (at least 2 words or 8 characters).");
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-
-        // Check for gibberish patterns (random keyboard mashing)
-        const gibberishPatterns = /^[a-z]{2,4}$/i; // Very short random letters
-        if (gibberishPatterns.test(projectName.replace(/\s/g, ''))) {
-            setValidationError("Please enter a meaningful project name.");
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
         if (!formData.description.trim()) {
             setValidationError("Description is required.");
             window.scrollTo({ top: 0, behavior: 'smooth' });

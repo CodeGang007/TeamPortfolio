@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
     ArrowLeft,
     ExternalLink,
@@ -18,7 +18,9 @@ import {
     X,
     Plus,
     Trash2,
-    FileText, ArrowUpRight, Globe, Github, Figma
+    FileText, ArrowUpRight, Globe, Github, Figma,
+    Calendar,
+    Check
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -160,8 +162,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
     // Admin Edit States
     const [isEditing, setIsEditing] = useState(false);
+    const [activeMilestoneId, setActiveMilestoneId] = useState<string | null>(null); // Track which milestone is being edited
     const [allDevelopers, setAllDevelopers] = useState<ServiceTeamMember[]>([]);
     const [newlyAssignedDevs, setNewlyAssignedDevs] = useState<ServiceTeamMember[]>([]); // Track new assignments for email
+    const [originalProject, setOriginalProject] = useState<ProjectDetail | null>(null); // Backup for cancel functionality
 
     // Fetch developers if admin
     useEffect(() => {
@@ -286,6 +290,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 setShowSnackbar(true);
             }
 
+            setActiveMilestoneId(null);
             setIsEditing(false);
         } catch (error) {
             console.error("Failed to save:", error);
@@ -521,7 +526,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         <Button
                                             size="sm"
                                             variant="ghost"
-                                            onClick={() => setIsEditing(false)}
+                                            onClick={() => {
+                                                if (originalProject) setProject(originalProject);
+                                                setIsEditing(false);
+                                                setActiveMilestoneId(null);
+                                            }}
                                             className="text-white hover:bg-zinc-800 text-xs h-8"
                                         >
                                             <X className="h-3.5 w-3.5 mr-1.5" /> Cancel
@@ -566,7 +575,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         <Button
                                             size="sm"
                                             variant="outline"
-                                            onClick={() => setIsEditing(true)}
+                                            onClick={() => {
+                                                setOriginalProject(JSON.parse(JSON.stringify(project)));
+                                                setIsEditing(true);
+                                            }}
                                             className="border-[#3f3f46] bg-[#27272a] text-white hover:bg-[#3f3f46] hover:border-[#52525b] text-xs h-8 font-medium"
                                         >
                                             <Edit className="h-3.5 w-3.5 mr-1.5" /> Edit Project
@@ -788,245 +800,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             </div>
                         </motion.div>
 
-                        {/* Timeline - Vertical Stepper */}
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                            className="rounded-xl border border-[#27272a] bg-[#18181b] p-5 hover:border-[#3f3f46] transition-colors">
-                            <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-sm font-semibold text-white tracking-tight">Timeline</h3>
-                                <div className="flex items-center gap-2">
-                                    {isEditing && (
-                                        <Button size="sm" variant="ghost" className="h-6 w-6 p-0 hover:bg-zinc-800" onClick={() => {
-                                            if (!project) return;
-                                            setProject({
-                                                ...project,
-                                                milestones: [
-                                                    ...project.milestones,
-                                                    {
-                                                        id: Date.now().toString(),
-                                                        title: "New Milestone",
-                                                        date: "TBD",
-                                                        status: "upcoming",
-                                                        icon: "circle",
-                                                        description: "Description"
-                                                    }
-                                                ]
-                                            })
-                                        }}>
-                                            <Plus className="h-3.5 w-3.5" />
-                                        </Button>
-                                    )}
-                                    <span className="text-[10px] text-[#71717a] font-mono">{project.startDate} → {project.dueDate}</span>
-                                </div>
-                            </div>
 
-                            <div className="relative pl-8">
-                                {project.milestones.length > 0 ? (
-                                    <>
-                                        {/* Dynamic line segments */}
-                                        {/* Dynamic line segments */}
-
-
-                                        <div className="relative pl-4 space-y-0">
-                                            {project.milestones.map((m, i) => {
-                                                const isLast = i === project.milestones.length - 1;
-                                                const done = m.status === "completed";
-                                                const active = m.status === "current";
-
-                                                // Determine styles based on status
-                                                let dotStyle = "";
-                                                let lineStyle = "";
-
-                                                if (done) {
-                                                    dotStyle = "bg-emerald-500 ring-4 ring-[#18181b]"; // Green filled
-                                                    lineStyle = "border-l-2 border-emerald-500"; // Solid Green
-                                                } else if (active) {
-                                                    dotStyle = "bg-blue-600 ring-4 ring-[#18181b] shadow-[0_0_0_4px_#3f3f46]"; // Blue with border/ring
-                                                    // Check the NEXT status to determine line style.
-                                                    // If next is Future, this line is Dotted Grey.
-                                                    lineStyle = "border-l-2 border-dashed border-[#3f3f46]";
-                                                } else {
-                                                    dotStyle = "bg-zinc-700 ring-4 ring-[#18181b]"; // Grey filled
-                                                    lineStyle = "border-l-2 border-dashed border-[#3f3f46]";
-                                                }
-
-                                                // Connector override:
-                                                // If we are DONE, check if next node exists.
-                                                // If next is ALSO done or CURRENT, path should be green.
-                                                if (done) {
-                                                    const nextMilestone = !isLast ? project.milestones[i + 1] : null;
-                                                    // If next milestone exists and is either Completed or Current, line is Green.
-                                                    if (nextMilestone && (nextMilestone.status === 'completed' || nextMilestone.status === 'current')) {
-                                                        lineStyle = "border-l-2 border-emerald-500";
-                                                    } else {
-                                                        // Else (next is upcoming?), maybe dotted? Or still green if we delivered?
-                                                        // Usually if I'm done, path to next is done.
-                                                        // Let's stick to Green if I am done.
-                                                        lineStyle = "border-l-2 border-emerald-500";
-                                                    }
-                                                }
-
-                                                // Calculate duration
-                                                let durationDisplay = "";
-                                                if (i > 0) {
-                                                    try {
-                                                        const prevDateStr = project.milestones[i - 1]?.date;
-                                                        const currDateStr = m.date;
-
-                                                        if (prevDateStr && currDateStr && prevDateStr !== 'TBD' && currDateStr !== 'TBD') {
-                                                            const prevDate = new Date(prevDateStr);
-                                                            const currDate = new Date(currDateStr);
-                                                            const diffTime = Math.abs(currDate.getTime() - prevDate.getTime());
-                                                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                                                            durationDisplay = `${diffDays} Day${diffDays !== 1 ? 's' : ''}`;
-                                                        }
-                                                    } catch (e) {
-                                                        // ignore
-                                                    }
-                                                }
-
-                                                return (
-                                                    <div key={m.id} className="relative flex gap-4">
-                                                        {/* Left Column: Timeline Graphic */}
-                                                        <div className="flex flex-col items-center">
-                                                            {/* The Dot - Syncfusion exact colors + special last item styling */}
-                                                            {isLast ? (
-                                                                /* Last item: Larger green dot with glow effect */
-                                                                <div className="relative shrink-0">
-                                                                    {/* Outer glow rings */}
-                                                                    <div className="absolute inset-0 w-6 h-6 -translate-x-[5px] -translate-y-[5px] rounded-full bg-emerald-500/10 blur-sm" />
-                                                                    <div className="absolute inset-0 w-5 h-5 -translate-x-[3px] -translate-y-[3px] rounded-full bg-emerald-500/20 blur-[2px]" />
-                                                                    {/* Main dot */}
-                                                                    <div className="w-4 h-4 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)]" />
-                                                                </div>
-                                                            ) : done ? (
-                                                                <div className="w-3.5 h-3.5 rounded-full bg-[#4CAF50] shrink-0" />
-                                                            ) : active ? (
-                                                                <div className="w-5 h-5 rounded-full bg-[#2196F3] border-[3px] border-white shrink-0 shadow-sm" />
-                                                            ) : (
-                                                                <div className="w-3.5 h-3.5 rounded-full bg-[#D1D5DB] shrink-0" />
-                                                            )}
-
-                                                            {/* The Line (only if not last) */}
-                                                            {!isLast && (
-                                                                <div
-                                                                    className={`flex-1 w-0 ${done ? 'border-l-2 border-[#4CAF50]' : 'border-l-2 border-dashed border-[#9CA3AF]'}`}
-                                                                    style={{ minHeight: '3.5rem' }}
-                                                                />
-                                                            )}
-                                                        </div>
-
-                                                        {/* Right Column: Content */}
-                                                        <div className={`flex-1 pb-8 ${isLast ? 'pb-0' : ''}`}>
-                                                            <div className="flex flex-col gap-1 -mt-1">
-                                                                {/* Header Row: Title + Date + Duration */}
-                                                                <div className="flex items-start justify-between">
-                                                                    {isEditing ? (
-                                                                        <div className="flex flex-col gap-2 w-full">
-                                                                            <input
-                                                                                value={m.title}
-                                                                                onChange={(e) => {
-                                                                                    const newMilestones = [...project.milestones];
-                                                                                    newMilestones[i] = { ...m, title: e.target.value };
-                                                                                    setProject({ ...project, milestones: newMilestones });
-                                                                                }}
-                                                                                className="bg-transparent text-sm font-semibold text-white focus:outline-none border-b border-transparent focus:border-emerald-500/50"
-                                                                            />
-                                                                            <div className="flex gap-2">
-                                                                                <input
-                                                                                    value={m.date}
-                                                                                    onChange={(e) => {
-                                                                                        const newMilestones = [...project.milestones];
-                                                                                        newMilestones[i] = { ...m, date: e.target.value };
-                                                                                        setProject({ ...project, milestones: newMilestones });
-                                                                                    }}
-                                                                                    placeholder="YYYY-MM-DD"
-                                                                                    className="bg-transparent text-xs text-[#71717a] font-mono border border-[#3f3f46] rounded px-1 w-24"
-                                                                                />
-                                                                                <select
-                                                                                    value={m.status}
-                                                                                    onChange={(e) => {
-                                                                                        const newMilestones = [...project.milestones];
-                                                                                        newMilestones[i] = { ...m, status: e.target.value as any };
-                                                                                        setProject({ ...project, milestones: newMilestones });
-                                                                                    }}
-                                                                                    className="bg-[#18181b] text-xs text-[#71717a] border border-[#3f3f46] rounded px-1"
-                                                                                >
-                                                                                    <option value="upcoming">Upcoming</option>
-                                                                                    <option value="current">Current</option>
-                                                                                    <option value="completed">Completed</option>
-                                                                                </select>
-                                                                                <button
-                                                                                    onClick={() => {
-                                                                                        const newMilestones = project.milestones.filter((_, idx) => idx !== i);
-                                                                                        setProject({ ...project, milestones: newMilestones });
-                                                                                    }}
-                                                                                    className="text-red-400 hover:text-red-300"
-                                                                                >
-                                                                                    <Trash2 className="h-4 w-4" />
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                    ) : (
-                                                                        <div className="space-y-0.5">
-                                                                            <h4 className={`text-sm font-medium ${active ? 'text-white' : 'text-[#e4e4e7]'}`}>
-                                                                                {m.title}
-                                                                            </h4>
-                                                                            <div className="flex items-center gap-3">
-                                                                                <span className="text-xs text-[#71717a] font-mono">
-                                                                                    {m.date === 'TBD' ? 'TBD' : new Date(m.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                                                                                </span>
-                                                                                {durationDisplay && (
-                                                                                    <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-[#27272a] text-[#a1a1aa] border border-[#3f3f46]">
-                                                                                        {durationDisplay}
-                                                                                    </span>
-                                                                                )}
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-
-                                                                {/* Description */}
-                                                                {!isEditing && m.description && (
-                                                                    <p className="text-xs text-[#71717a] leading-relaxed mt-1">
-                                                                        {m.description}
-                                                                    </p>
-                                                                )}
-
-                                                                {isEditing && (
-                                                                    <textarea
-                                                                        value={m.description || ""}
-                                                                        onChange={(e) => {
-                                                                            const newMilestones = [...project.milestones];
-                                                                            newMilestones[i] = { ...m, description: e.target.value };
-                                                                            setProject({ ...project, milestones: newMilestones });
-                                                                        }}
-                                                                        className="w-full bg-transparent text-xs text-[#71717a] mt-1 border border-[#3f3f46] rounded p-1"
-                                                                        rows={2}
-                                                                    />
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </>
-                                ) : (
-                                    <div className="text-center py-8">
-                                        <Target className="h-8 w-8 mx-auto mb-2 text-zinc-700" />
-                                        <p className="text-sm text-zinc-500">No milestones yet</p>
-                                        {role === 'admin' && (
-                                            <button
-                                                onClick={() => setIsEditing(true)}
-                                                className="mt-2 text-xs text-brand-green hover:underline"
-                                            >
-                                                Add milestone
-                                            </button>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        </motion.div>
                     </div>
 
                     {/* Right Column - Bento Grid */}
@@ -1367,6 +1141,266 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             <span>Need changes? Send feedback</span>
                             <ChevronRight className="h-3 w-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                         </motion.button>
+                    </div>
+
+                    {/* Timeline - Full Width - New Layout */}
+                    <div className="lg:col-span-12">
+                         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
+                            className="rounded-xl border border-[#27272a] bg-[#18181b] p-6 hover:border-[#3f3f46] transition-colors shadow-2xl">
+                             <div className="flex items-center justify-between mb-8 border-b border-[#27272a] pb-4">
+                                <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+                                    <div className="h-2 w-2 rounded-full bg-brand-green animate-pulse" />
+                                    Project Project Plan
+                                </h3>
+                                <div className="flex items-center gap-3">
+                                    {isEditing && (
+                                        <Button size="sm" variant="ghost" className="h-8 px-3 hover:bg-zinc-800 text-xs border border-[#3f3f46]" onClick={() => {
+                                            if (!project) return;
+                                            const newMilestoneId = Date.now().toString();
+                                            setProject({
+                                                ...project,
+                                                milestones: [
+                                                    ...project.milestones,
+                                                    {
+                                                        id: newMilestoneId,
+                                                        title: "New Milestone",
+                                                        date: new Date().toISOString().split('T')[0],
+                                                        status: "upcoming",
+                                                        icon: "circle",
+                                                        description: "Description"
+                                                    }
+                                                ]
+                                            });
+                                            setActiveMilestoneId(newMilestoneId); // Set newly added milestone as active
+                                        }}>
+                                            <Plus className="h-3.5 w-3.5 mr-1.5" /> Add Milestone
+                                        </Button>
+                                    )}
+                                    {/* Dynamic date range */}
+                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#27272a] border border-[#3f3f46]">
+                                        <Calendar className="h-3.5 w-3.5 text-emerald-400" />
+                                        <span className="text-xs text-[#d4d4d8] font-medium">
+                                            {project.startDate && project.startDate !== 'TBD' 
+                                                ? new Date(project.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                                                : 'Start'
+                                            }
+                                        </span>
+                                        <span className="text-[#52525b] px-1">→</span>
+                                        <span className="text-xs text-[#d4d4d8] font-medium">
+                                            {/* Use dueDate or last milestone's date or deliveryTime */}
+                                            {project.dueDate && project.dueDate !== 'TBD'
+                                                ? new Date(project.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                                                : project.milestones.length > 0 && project.milestones[project.milestones.length - 1].date !== 'TBD'
+                                                    ? new Date(project.milestones[project.milestones.length - 1].date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                                                    : project.deliveryTime || 'TBD'
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {project.milestones.length > 0 ? (
+                                <div className={`relative min-h-[220px] pb-4 px-4 ${project.milestones.length > 6 ? 'overflow-x-auto' : ''}`}>
+                                     {/* Flex container for the whole timeline stripes */}
+                                    <div className={`flex items-center ${project.milestones.length > 6 ? 'w-max px-2 min-w-full' : 'w-full justify-between'}`}>
+                                        {project.milestones.map((m, i) => {
+                                            const isLast = i === project.milestones.length - 1;
+                                            const done = m.status === "completed";
+                                            const active = m.status === "current";
+                                            const nextMilestone = !isLast ? project.milestones[i + 1] : null;
+                                            const connectionFilled = done && nextMilestone && (nextMilestone.status === 'completed' || nextMilestone.status === 'current');
+
+                                            return (
+                                                <React.Fragment key={m.id}>
+                                                    {/* Node */}
+                                                    <div className="relative flex flex-col items-center group z-10"
+                                                        onClick={() => {
+                                                            if (isEditing) {
+                                                                // Toggle active state for editing
+                                                                setActiveMilestoneId(activeMilestoneId === m.id ? null : m.id);
+                                                            }
+                                                        }}
+                                                        style={{ 
+                                                            cursor: isEditing ? 'pointer' : 'default',
+                                                            minWidth: project.milestones.length > 6 ? '100px' : 'auto'
+                                                        }}
+                                                    >
+                                                        {/* Dot */}
+                                                        <div className={`
+                                                            relative flex items-center justify-center rounded-full transition-all duration-500 border-[3px]
+                                                            ${done 
+                                                                ? 'w-10 h-10 bg-emerald-500 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]' 
+                                                                : active 
+                                                                    ? 'w-12 h-12 bg-zinc-900 border-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.3)]' 
+                                                                    : 'w-10 h-10 bg-[#18181b] border-[#3f3f46]'
+                                                            }
+                                                        `}>
+                                                            {done ? (
+                                                                <Check className="h-5 w-5 text-white" strokeWidth={3} />
+                                                            ) : active ? (
+                                                                <div className="w-3 h-3 rounded-full bg-blue-400 animate-ping" />
+                                                            ) : (
+                                                                <span className="text-xs font-bold text-[#52525b]">{i + 1}</span>
+                                                            )}
+                                                            
+                                                            {/* Edit Indicator Overlay */}
+                                                            {isEditing && activeMilestoneId !== m.id && (
+                                                                <>
+                                                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                        <Edit className="h-4 w-4 text-white" />
+                                                                    </div>
+                                                                    <button
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            if (confirm('Delete this milestone?')) {
+                                                                                const newMilestones = project.milestones.filter((_, idx) => idx !== i);
+                                                                                setProject({ ...project, milestones: newMilestones });
+                                                                            }
+                                                                        }}
+                                                                        className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity z-20 hover:scale-110"
+                                                                        title="Remove Milestone"
+                                                                    >
+                                                                        <X className="h-3 w-3" />
+                                                                    </button>
+                                                                </>
+                                                            )}
+                                                            
+                                                            {/* Active Ring */}
+                                                            {active && (
+                                                                <div className="absolute inset-0 rounded-full border border-blue-500/50 animate-pulse" style={{ padding: '2px' }}/>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Absolute Content Positioning */}
+                                                        <div className="absolute top-16 left-1/2 -translate-x-1/2 w-48 flex flex-col items-center">
+                                                            {isEditing && activeMilestoneId === m.id ? (
+                                                                <div 
+                                                                    className="bg-[#18181b] p-3 rounded-xl border border-[#3f3f46] shadow-2xl shadow-black w-full flex flex-col gap-2 z-50 text-left"
+                                                                    onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                                                                >
+                                                                       <div className="flex items-center justify-between mb-1">
+                                                                            <span className="text-[10px] uppercase font-bold text-zinc-500">Edit Milestone</span>
+                                                                            <button onClick={() => setActiveMilestoneId(null)}><X className="h-3 w-3 text-zinc-500 hover:text-white"/></button>
+                                                                       </div>
+                                                                       <input
+                                                                            value={m.title}
+                                                                            onChange={(e) => {
+                                                                                const newMilestones = [...project.milestones];
+                                                                                newMilestones[i] = { ...m, title: e.target.value };
+                                                                                setProject({ ...project, milestones: newMilestones });
+                                                                            }}
+                                                                            placeholder="Title"
+                                                                            className="w-full bg-[#27272a] text-xs font-bold text-white focus:outline-none border border-[#3f3f46] focus:border-emerald-500/50 rounded px-2 py-1.5"
+                                                                        />
+                                                                        <textarea
+                                                                            value={m.description || ''}
+                                                                            onChange={(e) => {
+                                                                                const newMilestones = [...project.milestones];
+                                                                                newMilestones[i] = { ...m, description: e.target.value };
+                                                                                setProject({ ...project, milestones: newMilestones });
+                                                                            }}
+                                                                            placeholder="Details..."
+                                                                            rows={3}
+                                                                            className="w-full bg-[#27272a] text-[11px] text-zinc-300 border border-[#3f3f46] focus:border-emerald-500/50 rounded px-2 py-1.5 resize-none focus:outline-none"
+                                                                        />
+                                                                        <div className="grid grid-cols-2 gap-2">
+                                                                            <input
+                                                                                type="date"
+                                                                                value={m.date !== 'TBD' ? m.date : ''}
+                                                                                onChange={(e) => {
+                                                                                    const newMilestones = [...project.milestones];
+                                                                                    newMilestones[i] = { ...m, date: e.target.value || 'TBD' };
+                                                                                    setProject({ ...project, milestones: newMilestones });
+                                                                                }}
+                                                                                className="w-full bg-[#27272a] text-[10px] text-zinc-400 border border-[#3f3f46] rounded px-2 py-1.5 [color-scheme:dark]"
+                                                                            />
+                                                                            <select
+                                                                                value={m.status}
+                                                                                onChange={(e) => {
+                                                                                    const newMilestones = [...project.milestones];
+                                                                                    newMilestones[i] = { ...m, status: e.target.value as any };
+                                                                                    setProject({ ...project, milestones: newMilestones });
+                                                                                }}
+                                                                                className="w-full bg-[#27272a] text-[10px] border border-[#3f3f46] rounded px-2 py-1.5 focus:outline-none"
+                                                                            >
+                                                                                <option value="upcoming">Upcoming</option>
+                                                                                <option value="current">In Progress</option>
+                                                                                <option value="completed">Completed</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <button
+                                                                            onClick={() => {
+                                                                                const newMilestones = project.milestones.filter((_, idx) => idx !== i);
+                                                                                setProject({ ...project, milestones: newMilestones });
+                                                                                setActiveMilestoneId(null);
+                                                                            }}
+                                                                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 text-[10px] flex items-center justify-center gap-1 w-full py-1.5 rounded transition-colors mt-1"
+                                                                        >
+                                                                            <Trash2 className="h-3 w-3" /> Remove Milestone
+                                                                        </button>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="text-center group-hover:scale-105 transition-transform duration-300">
+                                                                    <div className={`text-sm font-bold mb-0.5 ${active ? 'text-white' : done ? 'text-emerald-400' : 'text-zinc-500'}`}>
+                                                                        {m.title}
+                                                                    </div>
+                                                                    <div className={`text-[10px] font-medium mb-1.5 ${active ? 'text-blue-400' : 'text-zinc-600'}`}>
+                                                                         {m.date === 'TBD' 
+                                                                            ? 'TBD' 
+                                                                            : new Date(m.date).toLocaleDateString('en-US', { 
+                                                                                month: 'short', 
+                                                                                day: 'numeric'
+                                                                            })
+                                                                        }
+                                                                    </div>
+                                                                    {m.description && (
+                                                                        <div className="text-[10px] text-zinc-500 leading-tight max-w-[140px] mx-auto bg-[#27272a]/50 px-2 py-1 rounded-md border border-white/5">
+                                                                            {m.description}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Flexible Connector Line */}
+                                                    {!isLast && (
+                                                        <div className={`${project.milestones.length > 6 ? 'w-24 shrink-0' : 'flex-1'} h-1 bg-[#27272a] mx-2 lg:mx-4 relative rounded-full overflow-hidden`}>
+                                                            <div className={`absolute inset-0 transition-all duration-1000 ease-out
+                                                                ${connectionFilled || done 
+                                                                    ? 'w-full bg-gradient-to-r from-emerald-500 to-emerald-400' 
+                                                                    : active 
+                                                                        ? 'w-1/2 bg-gradient-to-r from-blue-500 to-transparent' 
+                                                                        : 'w-0'
+                                                                }
+                                                            `} />
+                                                        </div>
+                                                    )}
+                                                </React.Fragment>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="text-center py-16 px-4 bg-[#27272a]/20 rounded-xl border border-dashed border-[#3f3f46]">
+                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#27272a] mb-4">
+                                        <Target className="h-7 w-7 text-[#52525b]" />
+                                    </div>
+                                    <p className="text-zinc-400 mb-6">No milestones defined for this project.</p>
+                                    {canEdit && (
+                                        <button
+                                            onClick={() => {
+                                                setOriginalProject(JSON.parse(JSON.stringify(project)));
+                                                setIsEditing(true);
+                                            }}
+                                            className="px-6 py-2.5 text-sm font-medium text-white bg-emerald-600 rounded-full hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-900/20"
+                                        >
+                                            <Plus className="h-4 w-4 inline mr-2" /> Start Planning
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                         </motion.div>
                     </div>
                 </div >
             </main >
