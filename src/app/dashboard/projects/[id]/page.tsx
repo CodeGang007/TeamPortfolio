@@ -173,15 +173,41 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     // Prevent body scroll when modal is open
     useEffect(() => {
         if (isDetailsModalOpen || isFeedbackEditorOpen || !!selectedDocument) {
+            // Store current scroll position
+            const scrollY = window.scrollY;
             document.documentElement.style.overflow = 'hidden';
             document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.left = '0';
+            document.body.style.right = '0';
+            document.body.style.touchAction = 'none';
         } else {
+            // Restore scroll position
+            const scrollY = document.body.style.top;
             document.documentElement.style.overflow = '';
             document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            document.body.style.touchAction = '';
+            if (scrollY) {
+                window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            }
         }
         return () => {
+            const scrollY = document.body.style.top;
             document.documentElement.style.overflow = '';
             document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            document.body.style.touchAction = '';
+            if (scrollY) {
+                window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            }
         };
     }, [isDetailsModalOpen, isFeedbackEditorOpen, selectedDocument]);
 
@@ -213,7 +239,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
             // SYNC ASSIGNMENTS: Ensure all team members are in the project_assignments collection
             try {
-                await Promise.all(project.teamMembers.map(member => 
+                await Promise.all(project.teamMembers.map(member =>
                     projectRequestService.assignProject(project.id, member.id)
                 ));
             } catch (assignError) {
@@ -222,7 +248,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
             // EMAIL NOTIFICATION: Send email to newly assigned developers (Batched)
             if (newlyAssignedDevs.length > 0) {
-                 try {
+                try {
                     const requestData = await projectRequestService.getProjectById(project.id);
                     await emailService.sendTeamAssignmentEmail({
                         developers: newlyAssignedDevs.map(d => ({ name: d.name, email: d.email || "" })),
@@ -231,9 +257,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                         clientName: requestData?.userName || "Admin"
                     });
                     setNewlyAssignedDevs([]); // Clear buffer
-                 } catch (emailError) {
-                     console.error("Failed to send assignment emails", emailError);
-                 }
+                } catch (emailError) {
+                    console.error("Failed to send assignment emails", emailError);
+                }
             }
 
             // Send Email if activating
@@ -272,7 +298,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         if (dev && project && !project.teamMembers.find(m => m.id === dev.uid)) {
             // Track as new
             setNewlyAssignedDevs(prev => [...prev, dev]);
-            
+
             setProject({
                 ...project,
                 teamMembers: [
@@ -1086,7 +1112,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                         {/* Details Modal */}
                         <AnimatePresence>
                             {isDetailsModalOpen && (
-                                <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6">
+                                <div
+                                    className="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6 overscroll-contain touch-none"
+                                    style={{ overscrollBehavior: 'contain' }}
+                                >
                                     <motion.div
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
@@ -1194,7 +1223,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                     <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-3">Attachments & Files</span>
                                                     <div className="flex flex-col gap-2">
                                                         {project.attachmentUrls.map((file, idx) => (
-                                                            <div 
+                                                            <div
                                                                 key={idx}
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
@@ -1209,7 +1238,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                     <div className="flex flex-col min-w-0">
                                                                         <span className="text-xs text-white font-medium truncate pr-2">{file.name}</span>
                                                                         <span className="text-[10px] text-[#71717a]">{// @ts-ignore
-                                                                        file.size ? file.size : 'Unknown size'}</span>
+                                                                            file.size ? file.size : 'Unknown size'}</span>
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex items-center gap-2">
@@ -1398,17 +1427,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     <div className="h-8 w-8 rounded-full border-2 border-[#27272a] border-t-emerald-500 animate-spin" />
                                 </div>
 
-                                {selectedDocument.type.toLowerCase().includes('image') ||  selectedDocument.url.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i) ? (
+                                {selectedDocument.type.toLowerCase().includes('image') || selectedDocument.url.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i) ? (
                                     <div className="relative w-full h-full overflow-auto flex items-center justify-center p-4 z-10 bg-[#09090b] overscroll-contain" style={{ overscrollBehavior: 'contain' }}>
-                                        <img 
-                                            src={selectedDocument.url} 
+                                        <img
+                                            src={selectedDocument.url}
                                             alt={selectedDocument.name}
                                             className="max-w-full max-h-full object-contain rounded shadow-xl"
                                         />
                                     </div>
                                 ) : (
-                                    <iframe 
-                                        src={selectedDocument.url.includes('cloudinary') && selectedDocument.url.endsWith('.pdf') ? 
+                                    <iframe
+                                        src={selectedDocument.url.includes('cloudinary') && selectedDocument.url.endsWith('.pdf') ?
                                             selectedDocument.url.replace('.pdf', '.pdf#view=FitH') : // Optimize PDF view params
                                             selectedDocument.url
                                         }
