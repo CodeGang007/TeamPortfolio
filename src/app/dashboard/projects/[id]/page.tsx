@@ -490,7 +490,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     const canEdit = role === 'admin' || isAssignedDeveloper;
 
     return (
-        <div className="min-h-screen bg-[#09090b] text-white">
+        <div className="min-h-screen bg-[#09090b] text-white -mt-32">
             {/* ... Header ... */}
             <header className="border-b border-[#27272a] bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-50">
                 <div className="mx-auto max-w-7xl px-6 py-3">
@@ -1145,9 +1145,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
                     {/* Timeline - Full Width - New Layout */}
                     <div className="lg:col-span-12">
-                         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
+                        <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
                             className="rounded-xl border border-[#27272a] bg-[#18181b] p-6 hover:border-[#3f3f46] transition-colors shadow-2xl">
-                             <div className="flex items-center justify-between mb-8 border-b border-[#27272a] pb-4">
+                            <div className="flex items-center justify-between mb-8 border-b border-[#27272a] pb-4">
                                 <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
                                     <div className="h-2 w-2 rounded-full bg-brand-green animate-pulse" />
                                     Project Project Plan
@@ -1180,7 +1180,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#27272a] border border-[#3f3f46]">
                                         <Calendar className="h-3.5 w-3.5 text-emerald-400" />
                                         <span className="text-xs text-[#d4d4d8] font-medium">
-                                            {project.startDate && project.startDate !== 'TBD' 
+                                            {project.startDate && project.startDate !== 'TBD'
                                                 ? new Date(project.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
                                                 : 'Start'
                                             }
@@ -1198,10 +1198,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     </div>
                                 </div>
                             </div>
-                            
+
                             {project.milestones.length > 0 ? (
                                 <div className={`relative min-h-[220px] pb-4 px-4 ${project.milestones.length > 6 ? 'overflow-x-auto' : ''}`}>
-                                     {/* Flex container for the whole timeline stripes */}
+                                    {/* Flex container for the whole timeline stripes */}
                                     <div className={`flex items-center ${project.milestones.length > 6 ? 'w-max px-2 min-w-full' : 'w-full justify-between'}`}>
                                         {project.milestones.map((m, i) => {
                                             const isLast = i === project.milestones.length - 1;
@@ -1220,7 +1220,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                 setActiveMilestoneId(activeMilestoneId === m.id ? null : m.id);
                                                             }
                                                         }}
-                                                        style={{ 
+                                                        style={{
                                                             cursor: isEditing ? 'pointer' : 'default',
                                                             minWidth: project.milestones.length > 6 ? '100px' : 'auto'
                                                         }}
@@ -1228,10 +1228,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                         {/* Dot */}
                                                         <div className={`
                                                             relative flex items-center justify-center rounded-full transition-all duration-500 border-[3px]
-                                                            ${done 
-                                                                ? 'w-10 h-10 bg-emerald-500 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]' 
-                                                                : active 
-                                                                    ? 'w-12 h-12 bg-zinc-900 border-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.3)]' 
+                                                            ${done
+                                                                ? 'w-10 h-10 bg-emerald-500 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]'
+                                                                : active
+                                                                    ? 'w-12 h-12 bg-zinc-900 border-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.3)]'
                                                                     : 'w-10 h-10 bg-[#18181b] border-[#3f3f46]'
                                                             }
                                                         `}>
@@ -1242,7 +1242,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                             ) : (
                                                                 <span className="text-xs font-bold text-[#52525b]">{i + 1}</span>
                                                             )}
-                                                            
+
                                                             {/* Edit Indicator Overlay */}
                                                             {isEditing && activeMilestoneId !== m.id && (
                                                                 <>
@@ -1264,80 +1264,80 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                     </button>
                                                                 </>
                                                             )}
-                                                            
+
                                                             {/* Active Ring */}
                                                             {active && (
-                                                                <div className="absolute inset-0 rounded-full border border-blue-500/50 animate-pulse" style={{ padding: '2px' }}/>
+                                                                <div className="absolute inset-0 rounded-full border border-blue-500/50 animate-pulse" style={{ padding: '2px' }} />
                                                             )}
                                                         </div>
 
                                                         {/* Absolute Content Positioning */}
                                                         <div className="absolute top-16 left-1/2 -translate-x-1/2 w-48 flex flex-col items-center">
                                                             {isEditing && activeMilestoneId === m.id ? (
-                                                                <div 
+                                                                <div
                                                                     className="bg-[#18181b] p-3 rounded-xl border border-[#3f3f46] shadow-2xl shadow-black w-full flex flex-col gap-2 z-50 text-left"
                                                                     onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
                                                                 >
-                                                                       <div className="flex items-center justify-between mb-1">
-                                                                            <span className="text-[10px] uppercase font-bold text-zinc-500">Edit Milestone</span>
-                                                                            <button onClick={() => setActiveMilestoneId(null)}><X className="h-3 w-3 text-zinc-500 hover:text-white"/></button>
-                                                                       </div>
-                                                                       <input
-                                                                            value={m.title}
+                                                                    <div className="flex items-center justify-between mb-1">
+                                                                        <span className="text-[10px] uppercase font-bold text-zinc-500">Edit Milestone</span>
+                                                                        <button onClick={() => setActiveMilestoneId(null)}><X className="h-3 w-3 text-zinc-500 hover:text-white" /></button>
+                                                                    </div>
+                                                                    <input
+                                                                        value={m.title}
+                                                                        onChange={(e) => {
+                                                                            const newMilestones = [...project.milestones];
+                                                                            newMilestones[i] = { ...m, title: e.target.value };
+                                                                            setProject({ ...project, milestones: newMilestones });
+                                                                        }}
+                                                                        placeholder="Title"
+                                                                        className="w-full bg-[#27272a] text-xs font-bold text-white focus:outline-none border border-[#3f3f46] focus:border-emerald-500/50 rounded px-2 py-1.5"
+                                                                    />
+                                                                    <textarea
+                                                                        value={m.description || ''}
+                                                                        onChange={(e) => {
+                                                                            const newMilestones = [...project.milestones];
+                                                                            newMilestones[i] = { ...m, description: e.target.value };
+                                                                            setProject({ ...project, milestones: newMilestones });
+                                                                        }}
+                                                                        placeholder="Details..."
+                                                                        rows={3}
+                                                                        className="w-full bg-[#27272a] text-[11px] text-zinc-300 border border-[#3f3f46] focus:border-emerald-500/50 rounded px-2 py-1.5 resize-none focus:outline-none"
+                                                                    />
+                                                                    <div className="grid grid-cols-2 gap-2">
+                                                                        <input
+                                                                            type="date"
+                                                                            value={m.date !== 'TBD' ? m.date : ''}
                                                                             onChange={(e) => {
                                                                                 const newMilestones = [...project.milestones];
-                                                                                newMilestones[i] = { ...m, title: e.target.value };
+                                                                                newMilestones[i] = { ...m, date: e.target.value || 'TBD' };
                                                                                 setProject({ ...project, milestones: newMilestones });
                                                                             }}
-                                                                            placeholder="Title"
-                                                                            className="w-full bg-[#27272a] text-xs font-bold text-white focus:outline-none border border-[#3f3f46] focus:border-emerald-500/50 rounded px-2 py-1.5"
+                                                                            className="w-full bg-[#27272a] text-[10px] text-zinc-400 border border-[#3f3f46] rounded px-2 py-1.5 [color-scheme:dark]"
                                                                         />
-                                                                        <textarea
-                                                                            value={m.description || ''}
+                                                                        <select
+                                                                            value={m.status}
                                                                             onChange={(e) => {
                                                                                 const newMilestones = [...project.milestones];
-                                                                                newMilestones[i] = { ...m, description: e.target.value };
+                                                                                newMilestones[i] = { ...m, status: e.target.value as any };
                                                                                 setProject({ ...project, milestones: newMilestones });
                                                                             }}
-                                                                            placeholder="Details..."
-                                                                            rows={3}
-                                                                            className="w-full bg-[#27272a] text-[11px] text-zinc-300 border border-[#3f3f46] focus:border-emerald-500/50 rounded px-2 py-1.5 resize-none focus:outline-none"
-                                                                        />
-                                                                        <div className="grid grid-cols-2 gap-2">
-                                                                            <input
-                                                                                type="date"
-                                                                                value={m.date !== 'TBD' ? m.date : ''}
-                                                                                onChange={(e) => {
-                                                                                    const newMilestones = [...project.milestones];
-                                                                                    newMilestones[i] = { ...m, date: e.target.value || 'TBD' };
-                                                                                    setProject({ ...project, milestones: newMilestones });
-                                                                                }}
-                                                                                className="w-full bg-[#27272a] text-[10px] text-zinc-400 border border-[#3f3f46] rounded px-2 py-1.5 [color-scheme:dark]"
-                                                                            />
-                                                                            <select
-                                                                                value={m.status}
-                                                                                onChange={(e) => {
-                                                                                    const newMilestones = [...project.milestones];
-                                                                                    newMilestones[i] = { ...m, status: e.target.value as any };
-                                                                                    setProject({ ...project, milestones: newMilestones });
-                                                                                }}
-                                                                                className="w-full bg-[#27272a] text-[10px] border border-[#3f3f46] rounded px-2 py-1.5 focus:outline-none"
-                                                                            >
-                                                                                <option value="upcoming">Upcoming</option>
-                                                                                <option value="current">In Progress</option>
-                                                                                <option value="completed">Completed</option>
-                                                                            </select>
-                                                                        </div>
-                                                                        <button
-                                                                            onClick={() => {
-                                                                                const newMilestones = project.milestones.filter((_, idx) => idx !== i);
-                                                                                setProject({ ...project, milestones: newMilestones });
-                                                                                setActiveMilestoneId(null);
-                                                                            }}
-                                                                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 text-[10px] flex items-center justify-center gap-1 w-full py-1.5 rounded transition-colors mt-1"
+                                                                            className="w-full bg-[#27272a] text-[10px] border border-[#3f3f46] rounded px-2 py-1.5 focus:outline-none"
                                                                         >
-                                                                            <Trash2 className="h-3 w-3" /> Remove Milestone
-                                                                        </button>
+                                                                            <option value="upcoming">Upcoming</option>
+                                                                            <option value="current">In Progress</option>
+                                                                            <option value="completed">Completed</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            const newMilestones = project.milestones.filter((_, idx) => idx !== i);
+                                                                            setProject({ ...project, milestones: newMilestones });
+                                                                            setActiveMilestoneId(null);
+                                                                        }}
+                                                                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10 text-[10px] flex items-center justify-center gap-1 w-full py-1.5 rounded transition-colors mt-1"
+                                                                    >
+                                                                        <Trash2 className="h-3 w-3" /> Remove Milestone
+                                                                    </button>
                                                                 </div>
                                                             ) : (
                                                                 <div className="text-center group-hover:scale-105 transition-transform duration-300">
@@ -1345,10 +1345,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                         {m.title}
                                                                     </div>
                                                                     <div className={`text-[10px] font-medium mb-1.5 ${active ? 'text-blue-400' : 'text-zinc-600'}`}>
-                                                                         {m.date === 'TBD' 
-                                                                            ? 'TBD' 
-                                                                            : new Date(m.date).toLocaleDateString('en-US', { 
-                                                                                month: 'short', 
+                                                                        {m.date === 'TBD'
+                                                                            ? 'TBD'
+                                                                            : new Date(m.date).toLocaleDateString('en-US', {
+                                                                                month: 'short',
                                                                                 day: 'numeric'
                                                                             })
                                                                         }
@@ -1367,10 +1367,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                     {!isLast && (
                                                         <div className={`${project.milestones.length > 6 ? 'w-24 shrink-0' : 'flex-1'} h-1 bg-[#27272a] mx-2 lg:mx-4 relative rounded-full overflow-hidden`}>
                                                             <div className={`absolute inset-0 transition-all duration-1000 ease-out
-                                                                ${connectionFilled || done 
-                                                                    ? 'w-full bg-gradient-to-r from-emerald-500 to-emerald-400' 
-                                                                    : active 
-                                                                        ? 'w-1/2 bg-gradient-to-r from-blue-500 to-transparent' 
+                                                                ${connectionFilled || done
+                                                                    ? 'w-full bg-gradient-to-r from-emerald-500 to-emerald-400'
+                                                                    : active
+                                                                        ? 'w-1/2 bg-gradient-to-r from-blue-500 to-transparent'
                                                                         : 'w-0'
                                                                 }
                                                             `} />
@@ -1400,7 +1400,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     )}
                                 </div>
                             )}
-                         </motion.div>
+                        </motion.div>
                     </div>
                 </div >
             </main >
