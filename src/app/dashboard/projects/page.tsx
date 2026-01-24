@@ -393,7 +393,7 @@ export default function ProjectDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-[#121212] text-white">
+        <div className="min-h-screen bg-[#121212] text-white -mt-32">
             {/* Header */}
             <header className="sticky top-0 z-50 border-b border-[#27272a] bg-[#121212]/80 backdrop-blur-xl">
                 <div className="mx-auto max-w-7xl px-6 py-4">

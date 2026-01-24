@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { ProjectService } from "@/services/projects";
 import { motion } from "framer-motion";
-import { 
-    ArrowLeft, 
-    Upload, 
-    X, 
-    Loader2, 
-    Save, 
+import {
+    ArrowLeft,
+    Upload,
+    X,
+    Loader2,
+    Save,
     Link as LinkIcon,
     Type,
     AlignLeft,
@@ -95,7 +95,7 @@ export default function AddProjectPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!formData.title || !formData.category) {
             alert("Please fill in all required fields (Title and Category)");
             return;
@@ -139,8 +139,8 @@ export default function AddProjectPage() {
                 <div className="mx-auto max-w-5xl px-6 py-4">
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
-                            <Link 
-                                href="/project" 
+                            <Link
+                                href="/project"
                                 className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors"
                             >
                                 <ArrowLeft className="h-5 w-5" />
@@ -161,9 +161,9 @@ export default function AddProjectPage() {
 
             <main className="mx-auto max-w-5xl px-6 py-12">
                 <form onSubmit={handleSubmit} className="space-y-8">
-                    
+
                     {/* Image Upload Section */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6 space-y-4"
@@ -172,8 +172,8 @@ export default function AddProjectPage() {
                             <ImageIcon className="h-5 w-5 text-brand-green" />
                             <h2 className="text-lg font-semibold">Project Image</h2>
                         </div>
-                        
-                        <div 
+
+                        <div
                             onClick={() => fileInputRef.current?.click()}
                             className="relative aspect-video w-full rounded-xl border-2 border-dashed border-brand-green/30 bg-brand-green/5 hover:bg-brand-green/10 transition-colors cursor-pointer overflow-hidden group"
                         >
@@ -230,7 +230,7 @@ export default function AddProjectPage() {
                     </motion.div>
 
                     {/* Project Details Section */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
@@ -251,7 +251,7 @@ export default function AddProjectPage() {
                                 type="text"
                                 required
                                 value={formData.title}
-                                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                 placeholder="e.g. E-Commerce Platform Redesign"
                                 className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white placeholder:text-zinc-600 focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20 transition-all shadow-sm"
                             />
@@ -265,7 +265,7 @@ export default function AddProjectPage() {
                             </label>
                             <textarea
                                 value={formData.description}
-                                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 placeholder="Briefly describe the project, its goals, and key features..."
                                 rows={5}
                                 className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white placeholder:text-zinc-600 focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20 transition-all shadow-sm resize-none"
@@ -284,7 +284,7 @@ export default function AddProjectPage() {
                                     <select
                                         required
                                         value={formData.category}
-                                        onChange={(e) => setFormData({...formData, category: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                         className="w-full appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 pr-10 text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20 transition-all shadow-sm cursor-pointer"
                                     >
                                         <option value="" disabled>Select a category</option>
@@ -297,6 +297,7 @@ export default function AddProjectPage() {
                                         <option value="Data Science">Data Science</option>
                                         <option value="Cloud Infrastructure">Cloud Infrastructure</option>
                                         <option value="Blockchain">Blockchain</option>
+                                        <option value="Business Automation">Business Automation</option>
                                         <option value="IoT">IoT</option>
                                         <option value="Cybersecurity">Cybersecurity</option>
                                         <option value="E-commerce">E-commerce</option>
@@ -321,7 +322,7 @@ export default function AddProjectPage() {
                                 <input
                                     type="url"
                                     value={formData.link}
-                                    onChange={(e) => setFormData({...formData, link: e.target.value})}
+                                    onChange={(e) => setFormData({ ...formData, link: e.target.value })}
                                     placeholder="https://example.com"
                                     className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white placeholder:text-zinc-600 focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20 transition-all shadow-sm"
                                 />
@@ -330,7 +331,7 @@ export default function AddProjectPage() {
                     </motion.div>
 
                     {/* Actions */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
