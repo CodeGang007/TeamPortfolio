@@ -119,7 +119,7 @@ export default function ContactUsClient() {
                 <h3 className={`text-2xl font-bold mb-6 transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'}`}>Contact Information</h3>
                 <div className="space-y-6">
                   {[
-                    { icon: Mail, label: "Email us", value: "admin@codegang.online" },
+                    { icon: Mail, label: "Email us", value: "contact@codegang.online" },
                     // { icon: Phone, label: "Call us", value: "+1 (555) 000-0000" },
                     // { icon: MapPin, label: "Visit us", value: "123 Innovation Dr,\nTech City, TC 90210" }
                   ].map((item, idx) => (
