@@ -116,7 +116,7 @@ export default function MyTopPublications() {
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
                                 whileHover={{ y: -8 }}
-                                className="group h-full"
+                                className="group h-full pt-2"
                             >
                                 <div className={`relative p-8 rounded-3xl border backdrop-blur-md transition-all duration-500 hover:shadow-2xl h-full flex flex-col ${isOnline
                                         ? 'bg-zinc-900/60 border-zinc-800/50 hover:border-brand-green/50 hover:bg-zinc-900/80 hover:shadow-brand-green/10'
