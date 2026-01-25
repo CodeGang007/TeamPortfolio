@@ -490,7 +490,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     const canEdit = role === 'admin' || isAssignedDeveloper;
 
     return (
-        <div className="min-h-screen bg-[#09090b] text-white -mt-32">
+        <div className="min-h-screen bg-[#09090b] text-white">
             {/* ... Header ... */}
             <header className="border-b border-[#27272a] bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-50">
                 <div className="mx-auto max-w-7xl px-6 py-3">

@@ -151,7 +151,7 @@ export default function DashboardProjectCard({
             transition={{ duration: 0.2, ease: "easeOut" }}
         >
             <div
-                className={`group relative overflow-hidden rounded-xl border border-[#333] bg-[#1E1E1E] transition-all duration-200 cursor-pointer hover:border-brand-green hover:shadow-lg hover:shadow-brand-green/10`}
+                className={`group relative overflow-hidden rounded-xl border border-zinc-800/60 bg-zinc-900 transition-all duration-200 cursor-pointer hover:border-brand-green hover:shadow-lg hover:shadow-brand-green/10`}
             >
                 {/* Thumbnail Area - Strict 16:9 aspect ratio */}
                 <div className="relative aspect-video overflow-hidden" style={{ backgroundColor: colorScheme.bg }}>
@@ -206,7 +206,7 @@ export default function DashboardProjectCard({
 
 
                 {/* Content Area - Fixed height for consistency */}
-                <div className="p-4 flex flex-col h-[180px]">
+                <div className="p-5 flex flex-col h-[180px]">
                     {/* Status Badge + Category Row */}
                     <div className="flex items-center gap-2 mb-2 flex-shrink-0">
                         {/* Status Badge - Glassmorphism style */}
