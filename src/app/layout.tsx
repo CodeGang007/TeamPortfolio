@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   alternates: {
-    canonical: '/',
+    canonical: './',
   },
   manifest: '/manifest.json',
   openGraph: {
