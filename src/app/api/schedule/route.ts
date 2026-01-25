@@ -50,7 +50,9 @@ export async function POST(req: Request) {
 
     // Send confirmation email manually since we couldn't add them as an attendee
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.hostinger.com',
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.SMTP_EMAIL,
         pass: process.env.SMTP_PASSWORD,
