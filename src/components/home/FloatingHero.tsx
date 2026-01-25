@@ -187,11 +187,10 @@ export default function FloatingHero() {
                 </motion.div>
 
                 {/* Main Headline */}
-                <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-center mb-6 leading-tight"
+                {/* Main Headline - CSS Animation for LCP */}
+                <h1
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-center mb-6 leading-tight animate-fade-in-up opacity-0"
+                    style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}
                 >
                     <span className="text-white">WE BUILD</span>{" "}
                     <span
@@ -206,7 +205,7 @@ export default function FloatingHero() {
                         SCALABLE
                     </span>{" "}
                     <span className="text-white">SOLUTIONS</span>
-                </motion.h1>
+                </h1>
 
                 {/* Subtitle */}
                 <motion.p
