@@ -202,9 +202,9 @@ export default function FloatingHero() {
                             backgroundSize: '200% 200%',
                         }}
                     >
-                        SCALABLE
+                        SOFTWARE
                     </span>{" "}
-                    <span className="text-white">SOLUTIONS</span>
+                    <span className="text-white">THAT SOLVES BUSINESS PROBLEMS</span>
                 </h1>
 
                 {/* Subtitle */}
@@ -214,8 +214,8 @@ export default function FloatingHero() {
                     transition={{ duration: 0.6, delay: 0.2 }}
                     className="text-center text-zinc-400 text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed"
                 >
-                    High-performance websites and applications with cutting-edge optimizations.
-                    Sub-300ms guaranteed latency, infinite scale, and no infrastructure headaches.
+                    App development · System architecture · AI &amp; data pipelines · Web platforms.
+                    A small team shipping production systems for clients across Brazil, Australia, India, the USA &amp; Europe.
                 </motion.p>
 
                 {/* CTA Buttons */}

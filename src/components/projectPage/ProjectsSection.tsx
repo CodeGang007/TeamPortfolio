@@ -3,20 +3,19 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ProjectFilter } from "./ProjectFilter";
+import ProjectRow from "@/components/projectPage/ProjectRow";
 import ProjectCard from "@/components/projectPage/Cards/ProjectCards";
 import { useAuth } from "@/contexts/AuthContext";
 import { Plus } from "lucide-react";
 import { AddProjectModal } from "./AddProjectModal";
 import { ProjectService } from "@/services/projects";
+import { PORTFOLIO_PROJECTS } from "@/data/portfolioProjects";
 
-// 1. Import the database we configured in src/lib/firebase.ts
 import { db } from "@/lib/firebase";
-
-// 2. Import the "tools" we need from the Firebase library
 import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
 
-// 3. Define what a "Project" looks like so TypeScript doesn't get confused
-interface Project {
+// Community / admin-added projects fetched from Firestore (lighter shape).
+interface CommunityProject {
   id: string;
   title: string;
   description: string;
@@ -28,104 +27,87 @@ interface Project {
 }
 
 export function ProjectsSection() {
-  const { isAuthenticated, triggerAuth, role } = useAuth();
+  const { isAuthenticated, role } = useAuth();
   const isOnline = isAuthenticated;
   const isAdmin = role === 'admin';
 
-  // STATE: Think of these as variables that React "watches". 
-  // If they change, the website updates automatically.
   const [activeCategory, setActiveCategory] = useState("All");
-  const [projects, setProjects] = useState<Project[]>([]); // Starts as an empty list
-  const [loading, setLoading] = useState(true);            // Is the data still traveling?
+  const [community, setCommunity] = useState<CommunityProject[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
 
-  // FUNCTION: This goes to the internet to get your data
+  const portfolioProjects = [...PORTFOLIO_PROJECTS].sort((a, b) => a.order - b.order);
+
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const projectsCol = collection(db, "projects");
-      let snapshot;
-
-      // Try OPTIMIZED query (Requires Firestore Index)
+      let firestoreList: CommunityProject[] = [];
       try {
-        const q = query(
-          projectsCol,
-          where("active", "==", true),
-          orderBy("order", "asc")
-        );
-        snapshot = await getDocs(q);
-      } catch (indexError: any) {
-        console.warn("Index query failed (likely missing index), falling back to basic fetch.", indexError);
-        // Fallback: Fetch ALL and filter client-side
-        snapshot = await getDocs(projectsCol);
+        const projectsCol = collection(db, "projects");
+        let snapshot;
+        try {
+          const q = query(
+            projectsCol,
+            where("active", "==", true),
+            orderBy("order", "asc")
+          );
+          snapshot = await getDocs(q);
+        } catch {
+          snapshot = await getDocs(projectsCol);
+        }
+        firestoreList = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            title: data.title || "",
+            description: data.description || "",
+            category: data.category || "Uncategorized",
+            image: data.image || undefined,
+            link: data.link || undefined,
+            active: data.active !== false,
+            order: (data.order || 999) + 100,
+          };
+        }).filter(p => p.active === true && p.title !== "");
+      } catch (firestoreError) {
+        console.warn("Firestore fetch failed, showing portfolio projects only.", firestoreError);
       }
 
-      // Step D: Clean up the data and normalize field names
-      let projectList = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          title: data.title || "",
-          description: data.description || "",
-          category: data.category || "Uncategorized",
-          image: data.image || null,
-          link: data.link || null,
-          active: data.active !== false,
-          order: data.order || 999
-        };
-      }) as Project[];
+      setCommunity(firestoreList);
 
-      // Client-side Filter & Sort (in case fallback was used)
-      projectList = projectList
-        .filter(p => p.active === true)
-        .sort((a, b) => (a.order || 99) - (b.order || 99));
-
-      setProjects(projectList);
-
-      // Extract unique categories for dynamic filters
-      const categories = Array.from(new Set(projectList.map(p => p.category))).filter(Boolean);
+      const categories = Array.from(
+        new Set([
+          ...portfolioProjects.map(p => p.category),
+          ...firestoreList.map(p => p.category),
+        ])
+      ).filter(Boolean);
       setAvailableCategories(categories);
     } catch (error) {
-      console.error("Firebase Error:", error);
+      console.error("Error loading projects:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // EFFECT: This tells React "Run the fetchProjects function as soon as the page loads"
   useEffect(() => {
     fetchProjects();
-  }, []); // The empty [] means "only run once"
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // FILTER LOGIC: Same as before, but using our new 'projects' state
-  const filteredProjects =
+  const filteredPortfolio =
     activeCategory === "All"
-      ? projects
-      : projects.filter((p) => p.category === activeCategory);
+      ? portfolioProjects
+      : portfolioProjects.filter(p => p.category === activeCategory);
 
-  const handleInteraction = (action: () => void) => {
-    if (!isOnline) {
-      triggerAuth();
-    } else {
-      action();
-    }
-  };
-
-  const handleProjectAdded = () => {
-    fetchProjects(); // Refresh the list
-  };
+  const filteredCommunity =
+    activeCategory === "All"
+      ? community
+      : community.filter(p => p.category === activeCategory);
 
   const handleDelete = async (projectId: string) => {
     try {
       await ProjectService.deleteProject(projectId);
-      // Remove from local state immediately for instant UI feedback
-      setProjects(prev => prev.filter(p => p.id !== projectId));
-      
-      // Also update categories if needed
-      const remainingProjects = projects.filter(p => p.id !== projectId);
-      const categories = Array.from(new Set(remainingProjects.map(p => p.category))).filter(Boolean);
-      setAvailableCategories(categories);
+      setCommunity(prev => prev.filter(p => p.id !== projectId));
     } catch (error) {
       console.error("Failed to delete project:", error);
       alert("Failed to delete project. Please try again.");
@@ -143,13 +125,13 @@ export function ProjectsSection() {
           whileTap={{ scale: 0.95 }}
           onClick={() => setShowAddModal(true)}
           className={`fixed bottom-8 right-8 z-40 p-4 rounded-full shadow-2xl transition-all ${
-            isOnline 
-              ? 'bg-brand-green hover:bg-brand-green/90 text-black' 
+            isOnline
+              ? 'bg-brand-green hover:bg-brand-green/90 text-black'
               : 'bg-red-500 hover:bg-red-500/90 text-white'
           }`}
           style={{
-            boxShadow: isOnline 
-              ? '0 0 30px rgba(0, 255, 100, 0.5)' 
+            boxShadow: isOnline
+              ? '0 0 30px rgba(0, 255, 100, 0.5)'
               : '0 0 30px rgba(239, 68, 68, 0.5)'
           }}
         >
@@ -157,15 +139,14 @@ export function ProjectsSection() {
         </motion.button>
       )}
 
-      {/* Add Project Modal */}
       <AddProjectModal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
-        onSuccess={handleProjectAdded}
+        onSuccess={fetchProjects}
         isOnline={isOnline}
       />
 
-      {/* 1. The Filter Buttons - Now Dynamic */}
+      {/* Filters */}
       <ProjectFilter
         active={activeCategory}
         onChange={setActiveCategory}
@@ -173,47 +154,64 @@ export function ProjectsSection() {
         categories={availableCategories}
       />
 
-      {/* 2. Loading State: Show this while waiting for Firebase */}
-      {loading && (
-        <div className="py-20 text-center">
-          <div className={`animate-spin rounded-full h-10 w-10 border-b-2 mx-auto ${isOnline ? 'border-brand-green' : 'border-red-500'}`}></div>
-          <p className={`mt-4 ${isOnline ? 'text-white/50' : 'text-red-400/50'}`}>
-            {isOnline ? 'Connecting to Neural Network...' : 'System Offline. Connecting...'}
-          </p>
+      {/* Portfolio case studies — full-width stacked rows */}
+      {filteredPortfolio.length > 0 && (
+        <div className="flex flex-col gap-20 md:gap-28 mt-12">
+          {filteredPortfolio.map((project, index) => (
+            <ProjectRow
+              key={project.id}
+              project={project}
+              index={index}
+              isOnline={isOnline}
+              priority={index === 0}
+            />
+          ))}
         </div>
       )}
 
-      {/* 3. The Grid: Only show if NOT loading */}
-      {!loading && (
-        <motion.div layout className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project) => (
-              <motion.div
-                key={project.id} // Use the unique ID from Firebase
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-              >
-                <ProjectCard
-                  id={project.id}
-                  title={project.title}
-                  description={project.description}
-                  category={project.category}
-                  image={project.image}
-                  link={project.link}
-                  isOnline={isOnline}
-                  isAdmin={isAdmin}
-                  onDelete={handleDelete}
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+      {/* Community / admin-added projects */}
+      {loading && (
+        <div className="py-20 text-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-green mx-auto"></div>
+          <p className="mt-4 text-white/50">Loading projects...</p>
+        </div>
       )}
 
-      {/* 4. Empty State */}
-      {!loading && filteredProjects.length === 0 && (
+      {!loading && filteredCommunity.length > 0 && (
+        <div className="mt-28">
+          <h3 className="text-sm font-bold uppercase tracking-[0.3em] text-zinc-500 mb-8">
+            More from the community
+          </h3>
+          <motion.div layout className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <AnimatePresence mode="popLayout">
+              {filteredCommunity.map((project) => (
+                <motion.div
+                  key={project.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                >
+                  <ProjectCard
+                    id={project.id}
+                    title={project.title}
+                    description={project.description}
+                    category={project.category}
+                    image={project.image}
+                    link={project.link}
+                    isOnline={isOnline}
+                    isAdmin={isAdmin}
+                    onDelete={handleDelete}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Empty state */}
+      {!loading && filteredPortfolio.length === 0 && filteredCommunity.length === 0 && (
         <div className={`py-20 text-center ${isOnline ? 'text-white/50' : 'text-red-400/50'}`}>
           <p>No projects found in this category.</p>
         </div>

@@ -14,45 +14,45 @@ import {
 const services = [
     {
         icon: Code2,
-        title: "Web Development",
-        description: "Custom websites and web apps that work perfectly on all devices and help your business grow online.",
-        stats: "50+ Projects",
-        tech: ["React", "Next.js", "Node.js"]
+        title: "Web & API Development",
+        description: "Full-stack platforms built with Next.js, NestJS, and FastAPI. Modular monoliths, REST APIs, and multi-tenant SaaS — shipped to production.",
+        stats: "Live in Production",
+        tech: ["Next.js", "NestJS", "FastAPI"]
     },
     {
         icon: Smartphone,
         title: "Mobile Apps",
-        description: "Easy-to-use mobile apps for iPhone and Android that connect your customers to your business.",
-        stats: "25+ Apps",
-        tech: ["React Native", "Flutter", "Swift"]
-    },
-    {
-        icon: Palette,
-        title: "UI/UX Design",
-        description: "Beautiful, user-friendly designs that make your customers love using your digital products.",
-        stats: "100+ Designs",
-        tech: ["Figma", "Adobe XD", "Sketch"]
-    },
-    {
-        icon: ShoppingCart,
-        title: "E-commerce",
-        description: "Complete online stores that make it easy for customers to buy from you and manage your inventory.",
-        stats: "30+ Stores",
-        tech: ["Shopify", "WooCommerce", "Stripe"]
+        description: "Native-quality Android and cross-platform apps. From medical-education platforms with 10K+ installs to logistics tools used in the field.",
+        stats: "10K+ Installs · 4.9★",
+        tech: ["Android", "Flutter", "React Native"]
     },
     {
         icon: Cloud,
-        title: "Cloud Solutions",
-        description: "Reliable, secure hosting that keeps your website fast and running 24/7 without any downtime.",
-        stats: "40+ Deployments",
-        tech: ["AWS", "Azure", "Docker"]
+        title: "Cloud & DevOps",
+        description: "AWS-native architectures: ECS Fargate, CloudFront, SQS, RDS MultiAZ, Cognito, KMS. Dockerized, CI/CD on GitHub Actions — scalable by default.",
+        stats: "7-layer AWS stacks",
+        tech: ["AWS", "Docker", "GitHub Actions"]
     },
     {
         icon: TrendingUp,
-        title: "SEO & Analytics",
-        description: "Get more customers by making your business easier to find on Google and track your success.",
-        stats: "200% Avg Growth",
-        tech: ["Google Analytics", "SEMrush", "Ahrefs"]
+        title: "Applied AI & ML",
+        description: "RAG pipelines, multi-LLM gateways (Anthropic, OpenAI, Bedrock), LSTM demand forecasting, autoencoder anomaly detection, and invoice OCR.",
+        stats: "Running in Production",
+        tech: ["OpenAI", "TensorFlow", "PyTorch"]
+    },
+    {
+        icon: ShoppingCart,
+        title: "ERP & Business Systems",
+        description: "Custom ERP suites with real-time P&L dashboards, Excel export, multi-module architecture, and deep-learning decision modules built in.",
+        stats: "Multi-module, Live",
+        tech: ["PostgreSQL", "Supabase", "Redis"]
+    },
+    {
+        icon: Palette,
+        title: "Data Pipelines",
+        description: "Nightly Airflow ETL jobs, vector embedding queues, feature stores, and FastAPI inference layers — wired directly into product dashboards.",
+        stats: "ETL · Embeddings · Serving",
+        tech: ["Airflow", "Qdrant", "Redis"]
     },
 ];
 
@@ -93,14 +93,14 @@ export default function MyTopPublications() {
                     </motion.div>
                     <h2 className={`text-4xl sm:text-5xl md:text-7xl font-black mb-6 transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-50'
                         }`}>
-                        What We <span className={`text-transparent bg-clip-text bg-gradient-to-r transition-all duration-500 ${isOnline ? 'from-brand-green to-blue-400' : 'from-red-400 to-red-200'
+                        The Stack We <span className={`text-transparent bg-clip-text bg-gradient-to-r transition-all duration-500 ${isOnline ? 'from-brand-green to-blue-400' : 'from-red-400 to-red-200'
                             }`}>
-                            Build
+                            Ship With
                         </span>
                     </h2>
                     <p className={`text-xl max-w-3xl mx-auto leading-relaxed transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/70'
                         }`}>
-                        Cutting-edge digital solutions engineered for performance, scalability, and user experience
+                        Technologies we use day-to-day in production — across five live client engagements and five geographies.
                     </p>
                 </motion.div>
 

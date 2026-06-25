@@ -8,26 +8,26 @@ const steps = [
     {
         icon: Search,
         step: "01",
-        title: "Understand & Discover",
-        description: "We dive deep into your brand's core. We analyze your market, audience, and goals to build a strategy that isn't just effective—it's transformative."
+        title: "Discover",
+        description: "We sit with the team, walk the workflows, and write a one-page brief everyone agrees on before any code is written."
     },
     {
         icon: PenTool,
         step: "02",
-        title: "Architect & Design",
-        description: "Our designers craft intuitive, stunning interfaces. We blueprint the user journey to ensure every click leads to conversion and every pixel serves a purpose."
+        title: "Architect",
+        description: "We diagram the system end-to-end — every box, queue, and database — and pick a stack the client can actually maintain."
     },
     {
         icon: Code2,
         step: "03",
-        title: "Develop & engineer",
-        description: "This is where magic happens. Our developers write clean, scalable, and high-performance code, integrating cutting-edge technologies like three.js and AI."
+        title: "Ship in Slices",
+        description: "Two-week increments to staging. Real users touch the product early; surprises stop being expensive."
     },
     {
         icon: Rocket,
         step: "04",
-        title: "Deploy & Scale",
-        description: "Launch is just the beginning. We ensure a flawless deployment and provide the tools and insights needed to scale your digital presence globally."
+        title: "Operate",
+        description: "Observability, alerts, and a clear hand-off doc. We stay on retainer for as long as the product is moving fast."
     }
 ];
 
@@ -37,12 +37,12 @@ export function ProcessSection() {
         <section className="py-24 bg-zinc-950 border-t border-zinc-900">
             <div className="container mx-auto px-6">
                 <div className="mb-16 text-center max-w-3xl mx-auto">
-                    <span className={`${isAuthenticated ? "text-brand-green" : "text-red-500"} uppercase tracking-widest text-sm font-bold block mb-4`}>Our Methodology</span>
+                    <span className={`${isAuthenticated ? "text-brand-green" : "text-red-500"} uppercase tracking-widest text-sm font-bold block mb-4`}>How We Run a Project</span>
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                        Precision in Every <span className={`${isAuthenticated ? "text-brand-green" : "text-red-500"}`}>Step.</span>
+                        From Brief to <span className={`${isAuthenticated ? "text-brand-green" : "text-red-500"}`}>Production.</span>
                     </h2>
                     <p className="text-zinc-400 text-lg">
-                        We don't leave success to chance. Our proven 4-step process ensures transparency, efficiency, and excellence from day one.
+                        Four steps, no surprises. We write a one-pager before any code is written, ship in two-week slices, and stay on retainer for as long as your product is moving fast.
                     </p>
                 </div>
 

@@ -1,37 +1,36 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AppWindow, Smartphone, BrainCircuit, Paintbrush } from "lucide-react";
+import { Cloud, Smartphone, BrainCircuit, Database } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
-// Updated with detailed "Services" content
 const strategies = [
     {
-        icon: AppWindow,
-        title: "Web Development",
-        label: "Next-Gen Web Apps",
-        description: "We build blazing fast, SEO-optimized web applications using Next.js and React. From corporate portals to complex SaaS platforms, we deliver robustness.",
+        icon: Cloud,
+        title: "Cloud & System Design",
+        label: "AWS-Native Infrastructure",
+        description: "Multi-tenant, scalable-by-default architectures on AWS. CloudFront, ECS Fargate, RDS MultiAZ, SQS, Cognito, KMS — production-grade on day one.",
         color: "bg-brand-green"
     },
     {
-        icon: Smartphone,
-        title: "Mobile Solutions",
-        label: "Cross-Platform Apps",
-        description: "Native-like performance on iOS and Android. We utilize React Native and Flutter to create seamless mobile experiences that users love.",
-        color: "bg-white"
-    },
-    {
         icon: BrainCircuit,
-        title: "AI Integration",
-        label: "Intelligent Systems",
-        description: "Leveraging the power of LLMs and machine learning. We integrate AI agents, chatbots, and automation workflows to future-proof your business.",
+        title: "Applied AI & ML",
+        label: "RAG · LLMs · Deep Learning",
+        description: "RAG pipelines, LLM gateways (Anthropic, OpenAI, Bedrock), demand forecasting with LSTM, anomaly detection, invoice OCR, and dealer-risk classifiers — running in production.",
         color: "bg-white"
     },
     {
-        icon: Paintbrush,
-        title: "UI/UX Design",
-        label: "Immersive Design",
-        description: "Design that speaks. We create glassmorphic, modern, and accessible interfaces that not only look premium but ensure fluid user navigation.",
+        icon: Smartphone,
+        title: "Mobile & Web Apps",
+        label: "Android · Flutter · Next.js",
+        description: "Full-stack web platforms and native-quality mobile apps. From medical-education Android apps with 10K+ installs to multi-module ERP suites deployed on Vercel.",
+        color: "bg-white"
+    },
+    {
+        icon: Database,
+        title: "Data Pipelines",
+        label: "Ingestion · ETL · Observability",
+        description: "Nightly Airflow batch jobs, embedding queues, time-series feature stores, and FastAPI inference services backed by Redis — all wired to your product UI.",
         color: "bg-white"
     },
 ];

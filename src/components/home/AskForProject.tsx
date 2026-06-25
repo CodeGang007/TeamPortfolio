@@ -31,12 +31,12 @@ export default function AskForProject() {
     }, []);
 
     function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-        let { left, top } = currentTarget.getBoundingClientRect();
+        // Only move the reveal mask (cheap motion values). The matrix text is
+        // generated once on mount — regenerating 10k chars per mousemove caused
+        // a setState + full re-render on every pixel of movement.
+        const { left, top } = currentTarget.getBoundingClientRect();
         mouseX.set(clientX - left);
         mouseY.set(clientY - top);
-
-        const str = generateRandomString(10000);
-        setRandomString(str);
     }
 
     return (

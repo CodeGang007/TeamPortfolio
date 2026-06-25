@@ -22,7 +22,15 @@
     font-family: 'Inter', sans-serif;
     scroll-behavior: smooth;
     font-size: 90%;
-    /* Global 90% scale as requested */
+    /* Compact 90% base for phones; full size on laptop/desktop browsers */
+  }
+
+  @media (min-width: 1024px) {
+
+    html,
+    body {
+      font-size: 100%;
+    }
   }
 }
 

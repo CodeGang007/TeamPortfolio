@@ -11,6 +11,7 @@ import {
     GoogleAuthProvider,
     User
 } from "firebase/auth";
+import { formalAvatar, type Gender } from "@/lib/avatars";
 
     export type UserRole = 'admin' | 'developer' | 'client';
 
@@ -64,6 +65,7 @@ import {
         const [isMounted, setIsMounted] = useState(false);
         const [customPhotoURL, setCustomPhotoURL] = useState<string | null>(null);
         const [role, setRole] = useState<UserRole>('client'); // Role state
+        const [gender, setGender] = useState<Gender | null>(null); // For gender-based default avatar
 
     // UI State
     const [showAuthToast, setShowAuthToast] = useState(false);
@@ -125,6 +127,7 @@ import {
         if (!user) {
             setCustomPhotoURL(null);
             setRole('client'); // Default to client on logout
+            setGender(null);
             return;
         }
 
@@ -136,9 +139,12 @@ import {
                 // Check both root-level role and nested profile.role
                 const fetchedRole = data.role || data.profile?.role;
                 setRole((fetchedRole?.toLowerCase() as UserRole) || 'client');
+                const fetchedGender = (data.gender || data.profile?.gender) as Gender | undefined;
+                setGender(fetchedGender === 'male' || fetchedGender === 'female' ? fetchedGender : null);
             } else {
                 setCustomPhotoURL(null);
                 setRole('client');
+                setGender(null);
             }
         }, (error) => {
             console.error("Error listening to user document:", error);
@@ -147,8 +153,16 @@ import {
         return () => unsubscribe();
     }, [user]);
 
-    // Compute display photo: custom → email provider fallback
-    const displayPhotoURL = customPhotoURL || user?.photoURL || null;
+    // Compute display photo. Legacy casual/emoji avatars (old DiceBear presets)
+    // are ignored so they no longer override the professional defaults.
+    const seed = user?.uid || user?.email || "user";
+    const isLegacyAvatar = (u: string | null | undefined) => !!u && u.includes("dicebear");
+    const realCustomPhoto = customPhotoURL && !isLegacyAvatar(customPhotoURL) ? customPhotoURL : null;
+    const displayPhotoURL =
+        realCustomPhoto ||                                 // a real upload or a chosen business icon
+        (gender ? formalAvatar(gender, seed) : null) ||    // explicit gender → matching icon
+        user?.photoURL ||                                  // auth-provider photo
+        formalAvatar("male", seed);                        // default professional icon
 
     // Recurring Toast Logic (Only when not authenticated)
     useEffect(() => {

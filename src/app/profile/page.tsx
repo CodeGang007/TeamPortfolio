@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import PhoneInput from "@/components/PhoneInput";
 import { developerService, Developer } from "@/lib/developerService";
 import { userService, User as AppUser } from "@/lib/userService";
+import { FORMAL_MALE_PRESETS, FORMAL_FEMALE_PRESETS, genderFromAvatarUrl, formalAvatar, type Gender } from "@/lib/avatars";
 
 // Types
 type BusinessModel = "individual" | "enterprise";
@@ -26,6 +27,7 @@ type EnterpriseSize = "1-10" | "11-50" | "51-200" | "201+";
 interface UserProfileData {
     phoneNumber: string;
     businessModel: BusinessModel;
+    gender?: Gender;
     enterpriseDetails?: {
         size: EnterpriseSize;
         email?: string;
@@ -166,8 +168,17 @@ function ProfileContent() {
                     const r = data.role || data.profile?.role || 'client';
                     setTargetRole(r);
 
-                    // Determine Photo
-                    setDisplayPhoto(data.customPhotoURL || data.photoURL || null);
+                    // Determine Photo — ignore legacy casual/emoji avatars, fall
+                    // back to the gender-based professional icon (default male).
+                    const rawPhoto: string | undefined = data.customPhotoURL;
+                    const realPhoto = rawPhoto && !rawPhoto.includes("dicebear") ? rawPhoto : null;
+                    const g = (data.gender || data.profile?.gender) as Gender | undefined;
+                    setDisplayPhoto(
+                        realPhoto ||
+                        (g === "male" || g === "female" ? formalAvatar(g, targetUserId) : null) ||
+                        data.photoURL ||
+                        formalAvatar("male", targetUserId)
+                    );
 
                     // Set Client Form Data
                     setFormData(prev => ({
@@ -250,6 +261,15 @@ function ProfileContent() {
         }
     };
 
+    // Pick a gender in the form. Persisted on Save (part of formData), and we
+    // live-update the avatar preview unless the user has a real uploaded photo.
+    const handleGenderChange = (g: Gender) => {
+        setFormData(prev => ({ ...prev, gender: g }));
+        setDisplayPhoto(prev =>
+            !prev || prev.startsWith("/avatars/") ? formalAvatar(g, targetUserId || "user") : prev
+        );
+    };
+
     const handleSave = async () => {
         if (!targetUserId) return;
 
@@ -260,10 +280,12 @@ function ProfileContent() {
             const userRef = doc(db, "users", targetUserId);
 
             // 1. Save Client Data
-            const dataToSave = {
+            const dataToSave: Record<string, unknown> = {
                 ...formData,
                 updatedAt: serverTimestamp()
             };
+            // Firestore rejects undefined values — drop gender if it wasn't set.
+            if (dataToSave.gender === undefined) delete dataToSave.gender;
             await setDoc(userRef, dataToSave, { merge: true });
 
             // 2. If Developer, Save/Sync Developer Data
@@ -573,6 +595,27 @@ function ProfileContent() {
                                             <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500">
                                                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-zinc-300">Gender</label>
+                                        <p className="text-xs text-zinc-500 -mt-1">Sets your default profile avatar.</p>
+                                        <div className="flex gap-2">
+                                            {(["male", "female"] as Gender[]).map((g) => (
+                                                <button
+                                                    key={g}
+                                                    type="button"
+                                                    onClick={() => handleGenderChange(g)}
+                                                    disabled={!isOwnProfile && !isAdmin}
+                                                    className={`flex-1 rounded-xl border px-4 py-3 text-sm font-semibold transition-all disabled:opacity-50 ${formData.gender === g
+                                                        ? "border-brand-green bg-brand-green/10 text-brand-green"
+                                                        : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-600 hover:text-white"
+                                                        }`}
+                                                >
+                                                    {g === "male" ? "Male" : "Female"}
+                                                </button>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
@@ -1054,34 +1097,30 @@ function ProfileContent() {
                                         )}
                                     </div>
 
-                                    {/* Custom Predefined Avatars */}
+                                    {/* Professional, gender-based avatars */}
                                     <div className="w-full">
-                                        <p className="text-sm font-medium text-zinc-400 mb-3">Choose a preset</p>
-                                        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                                        <p className="text-sm font-medium text-zinc-400 mb-3">Professional avatar</p>
+                                        <div className="grid grid-cols-2 gap-4">
                                             {[
-                                                "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
-                                                "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
-                                                "https://api.dicebear.com/7.x/avataaars/svg?seed=Zack",
-                                                "https://api.dicebear.com/7.x/avataaars/svg?seed=Bella",
-                                                "https://api.dicebear.com/7.x/avataaars/svg?seed=Trouble",
-                                                "https://api.dicebear.com/7.x/bottts/svg?seed=Gizmo",
-                                                "https://api.dicebear.com/7.x/bottts/svg?seed=Max"
-                                            ].map((avatarUrl, index) => (
+                                                { gender: "male" as Gender, label: "Male", url: FORMAL_MALE_PRESETS[0] },
+                                                { gender: "female" as Gender, label: "Female", url: FORMAL_FEMALE_PRESETS[0] },
+                                            ].map(({ gender, label, url }) => (
                                                 <button
-                                                    key={index}
+                                                    key={gender}
+                                                    type="button"
                                                     onClick={() => {
-                                                        setAvatarPreview(avatarUrl);
-                                                        // Convert URL to file-like object if needed, or just handle URL update
-                                                        // For now, we'll just set the preview. We might need logic to handle 'saving' a URL vs a File.
-                                                        // Actually, we can just save the URL directly if no file is selected.
+                                                        setAvatarPreview(url);
                                                         setSelectedFile(null); // Clear manual file selection
                                                     }}
-                                                    className={`flex-shrink-0 h-12 w-12 rounded-full border-2 overflow-hidden transition-all ${avatarPreview === avatarUrl
-                                                        ? "border-brand-green scale-110"
-                                                        : "border-zinc-700 hover:border-zinc-500"
+                                                    className={`flex flex-col items-center gap-2 rounded-xl border-2 p-3 transition-all ${avatarPreview === url
+                                                        ? "border-brand-green bg-brand-green/5"
+                                                        : "border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800/50"
                                                         }`}
                                                 >
-                                                    <img src={avatarUrl} alt={`Avatar ${index + 1}`} className="h-full w-full object-cover" />
+                                                    <span className="h-20 w-20 rounded-full overflow-hidden bg-white">
+                                                        <img src={url} alt={`${label} professional avatar`} className="h-full w-full object-cover" />
+                                                    </span>
+                                                    <span className="text-xs font-semibold text-zinc-300">{label}</span>
                                                 </button>
                                             ))}
                                         </div>
@@ -1180,7 +1219,12 @@ function ProfileContent() {
                                                     if (downloadURL) {
                                                         // 1. Save as customPhotoURL in Firestore (Users Collection)
                                                         const userRef = doc(db, "users", targetUserId || user.uid); // Use targetUserId if admin is editing
-                                                        await setDoc(userRef, { customPhotoURL: downloadURL, updatedAt: serverTimestamp() }, { merge: true });
+                                                        // Persist gender when a professional preset was chosen, so
+                                                        // gender-based default avatars stay consistent elsewhere.
+                                                        const presetGender = !selectedFile ? genderFromAvatarUrl(downloadURL) : null;
+                                                        const userUpdate: Record<string, unknown> = { customPhotoURL: downloadURL, updatedAt: serverTimestamp() };
+                                                        if (presetGender) userUpdate.gender = presetGender;
+                                                        await setDoc(userRef, userUpdate, { merge: true });
 
                                                         // 2. Sync to Team Collection if Developer
                                                         // Check if the user being edited (targetUserId) is a developer

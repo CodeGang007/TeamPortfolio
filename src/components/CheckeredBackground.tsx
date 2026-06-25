@@ -11,72 +11,52 @@ export default function CheckeredBackground() {
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
-
-        // Set canvas size
-        const resizeCanvas = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
-        resizeCanvas();
-        window.addEventListener("resize", resizeCanvas);
 
         const gridSize = 40;
         let mouseX = -1000;
         let mouseY = -1000;
+        let rafId = 0;
+        let resizeTimer: ReturnType<typeof setTimeout> | undefined;
 
-        const handleMouseMove = (e: MouseEvent) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        };
-
-        window.addEventListener("mousemove", handleMouseMove);
+        const prefersReduced =
+            typeof window !== "undefined" &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const isTouch =
+            typeof window !== "undefined" &&
+            window.matchMedia("(hover: none), (pointer: coarse)").matches;
+        // Skip the interactive cursor effect where it costs the most / is unusable.
+        const interactive = !prefersReduced && !isTouch;
 
         const draw = () => {
+            rafId = 0;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             const cols = Math.ceil(canvas.width / gridSize);
             const rows = Math.ceil(canvas.height / gridSize);
+            const maxDistance = 200;
 
             for (let i = 0; i < cols; i++) {
                 for (let j = 0; j < rows; j++) {
                     const x = i * gridSize;
                     const y = j * gridSize;
 
-                    // Calculate distance from mouse
                     const dx = mouseX - (x + gridSize / 2);
                     const dy = mouseY - (y + gridSize / 2);
                     const distance = Math.sqrt(dx * dx + dy * dy);
-                    const maxDistance = 200;
-
-                    // Interactive effect based on distance
                     const interactionStrength = Math.max(0, 1 - distance / maxDistance);
                     const offset = interactionStrength * 10;
 
-                    // Checkerboard pattern
-                    const isDark = (i + j) % 2 === 0;
-                    
-                    if (isDark) {
-                        // Base opacity for dark squares
+                    if ((i + j) % 2 === 0) {
                         const baseOpacity = 0.02;
                         const hoverOpacity = 0.18;
                         const opacity = baseOpacity + (hoverOpacity - baseOpacity) * interactionStrength;
-
-                        ctx.fillStyle = isOnline 
-                            ? `rgba(34, 197, 94, ${opacity})` 
+                        ctx.fillStyle = isOnline
+                            ? `rgba(34, 197, 94, ${opacity})`
                             : `rgba(239, 68, 68, ${opacity})`;
-
-                        ctx.fillRect(
-                            x - offset / 2,
-                            y - offset / 2,
-                            gridSize + offset,
-                            gridSize + offset
-                        );
+                        ctx.fillRect(x - offset / 2, y - offset / 2, gridSize + offset, gridSize + offset);
                     }
 
-                    // Draw subtle grid lines with interaction
                     const lineOpacity = 0.05 + interactionStrength * 0.18;
                     ctx.strokeStyle = isOnline
                         ? `rgba(34, 197, 94, ${lineOpacity})`
@@ -85,14 +65,40 @@ export default function CheckeredBackground() {
                     ctx.strokeRect(x, y, gridSize, gridSize);
                 }
             }
-
-            requestAnimationFrame(draw);
         };
 
-        draw();
+        // Coalesce redraws to one per frame — no always-on loop.
+        const scheduleDraw = () => {
+            if (!rafId) rafId = requestAnimationFrame(draw);
+        };
+
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            scheduleDraw();
+        };
+
+        const handleResize = () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(resizeCanvas, 150);
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            scheduleDraw();
+        };
+
+        resizeCanvas();
+        window.addEventListener("resize", handleResize);
+        if (interactive) {
+            window.addEventListener("mousemove", handleMouseMove, { passive: true });
+        }
 
         return () => {
-            window.removeEventListener("resize", resizeCanvas);
+            if (rafId) cancelAnimationFrame(rafId);
+            clearTimeout(resizeTimer);
+            window.removeEventListener("resize", handleResize);
             window.removeEventListener("mousemove", handleMouseMove);
         };
     }, [isOnline]);

@@ -30,16 +30,16 @@ export function StorySection() {
 
                         <div className="space-y-6 text-lg text-zinc-400 leading-relaxed">
                             <p>
-                                <strong>CodeGang007</strong> isn't just a development team; we are a collective of digital craftsmen. Founded by 4 visionary technologists, we emerged from a shared frustration: the web was becoming stale, functional but uninspired.
+                                <strong>CodeGang</strong> is a tight engineering studio that helps founders and enterprises ship software that actually moves the business — production AI, multi-tenant platforms, mobile apps, and the data plumbing under all of it.
                             </p>
                             <p>
-                                We set out to change that. We believe that every line of code should serve a purpose, and every interface should tell a story. We combine <strong>technical rigor</strong> with <strong>artistic fluidity</strong>, creating platforms that don't just work—they perform.
+                                We currently ship for clients in Brazil, Australia, India, the United States, and Europe. The engineer in the meeting is the one writing the code — no layers between brief and build.
                             </p>
                             <p>
-                                From the first whiteboard sketch to the final server deployment, we handle the entire lifecycle of digital product creation. We are obsessed with performance, accessibility, and the "wow" factor that turns visitors into loyal customers.
+                                We design for multi-tenant, observable, queue-decoupled systems on day one. Concrete RAG pipelines, fine-tuned models, and deep-learning modules that run in production — not slide-deck promises.
                             </p>
                             <blockquote className={`border-l-4 pl-6 italic text-white/90 my-8 ${isAuthenticated ? "border-brand-green" : "border-red-500"}`}>
-                                "We don't build websites. We build digital experiences that define brands."
+                                "Small team. Senior hands. We build software that ships."
                             </blockquote>
                         </div>
                     </motion.div>
@@ -67,10 +67,10 @@ export function StorySection() {
                         {/* Floating Badge */}
                         <div className={`absolute -bottom-4 -left-4 md:-bottom-10 md:-left-10 bg-black/90 backdrop-blur-xl border border-zinc-800 p-6 md:p-8 rounded-2xl shadow-2xl z-20 transition-colors ${isAuthenticated ? "hover:border-brand-green/50" : "hover:border-red-500/50"}`}>
                             <div className="flex items-center gap-3 md:gap-4">
-                                <div className={`text-3xl md:text-5xl font-bold ${isAuthenticated ? "text-brand-green" : "text-red-500"}`}>4</div>
-                                <div className="text-white text-xs md:text-sm font-medium leading-tight">Founding<br />Partners</div>
+                                <div className={`text-3xl md:text-5xl font-bold ${isAuthenticated ? "text-brand-green" : "text-red-500"}`}>5</div>
+                                <div className="text-white text-xs md:text-sm font-medium leading-tight">Live<br />Engagements</div>
                             </div>
-                            <div className="mt-2 text-[10px] md:text-xs text-zinc-500 uppercase tracking-wider">United by Code</div>
+                            <div className="mt-2 text-[10px] md:text-xs text-zinc-500 uppercase tracking-wider">5 Geographies · 10K+ Users</div>
                         </div>
                     </motion.div>
                 </div>

@@ -108,7 +108,7 @@ export const NavBody = ({ children, className, visible, isOnline = true }: NavBo
         maxWidth: "fit-content",
       }}
       className={cn(
-        "relative z-[60] mx-auto hidden w-auto flex-row items-center justify-between self-start rounded-full px-8 py-2 lg:flex border border-transparent gap-10",
+        "relative z-[60] mx-auto hidden w-auto flex-row items-center justify-between self-start rounded-full px-10 py-3 lg:flex border border-transparent gap-8",
         visible && "border-white/10 bg-black/80 backdrop-blur-md",
         className,
       )}
@@ -125,7 +125,7 @@ export const NavItems = ({ items, className, onItemClick, isOnline = true }: Nav
     <motion.div
       onMouseLeave={() => setHovered(null)}
       className={cn(
-        "hidden flex-row items-center justify-center space-x-2 lg:flex", // Reduced spacing: space-x-6 -> space-x-2
+        "hidden flex-row items-center justify-center space-x-2 lg:flex",
         className,
       )}
     >
@@ -136,7 +136,7 @@ export const NavItems = ({ items, className, onItemClick, isOnline = true }: Nav
             if (onItemClick) onItemClick();
           }}
           className={cn(
-            "relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border flex items-center justify-center",
+            "relative px-5 py-2.5 rounded-full text-[15px] font-medium transition-all duration-300 border flex items-center justify-center whitespace-nowrap",
             isOnline
               ? "bg-white/5 border-white/5 text-zinc-400 hover:text-white hover:border-brand-green/30 hover:shadow-[0_0_15px_rgba(34,197,94,0.15)] hover:bg-white/10"
               : "bg-red-950/10 border-red-500/10 text-red-500/70 hover:text-red-400 hover:border-red-500/30 hover:shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:bg-red-950/20"
@@ -250,16 +250,16 @@ export const NavbarLogo = ({ isOnline = true }: { isOnline?: boolean }) => {
   return (
     <Link
       href="/"
-      className="relative z-20 mr-4 flex items-center space-x-3 px-2 py-1 text-sm font-normal"
+      className="relative z-20 mr-4 flex items-center space-x-3 px-2 py-1 font-normal"
     >
       <div className={cn(
-        "h-11 w-11 flex items-center justify-center transition-all duration-500",
+        "h-12 w-12 flex items-center justify-center transition-all duration-500",
         isOnline ? "drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]"
       )}>
         <CodeGangLogo isOnline={isOnline} />
       </div>
       <span className={cn(
-        "font-bold text-lg tracking-tight transition-colors duration-500",
+        "font-bold text-xl tracking-tight transition-colors duration-500",
         isOnline ? "text-white" : "text-red-200"
       )}>CodeGang</span>
 
@@ -285,7 +285,7 @@ export const NavbarButton = ({
     | React.ComponentPropsWithoutRef<"button">
   )) => {
   const baseStyles =
-    "px-4 py-2 rounded-md text-sm font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center";
+    "px-5 py-2.5 rounded-md text-[15px] font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center";
 
   const variantStyles = {
     primary:
