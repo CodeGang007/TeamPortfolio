@@ -3,10 +3,10 @@
 import { motion } from "framer-motion";
 
 const stats = [
-    { value: "50+", label: "Completed Projects" },
-    { value: "50+", label: "Satisfied Customers" },
-    { value: "4+", label: "Years Of Experience" },
-    { value: "12+", label: "Worldwide Honors" },
+    { value: "6", label: "Live Client Engagements" },
+    { value: "5", label: "Geographies Served" },
+    { value: "10K+", label: "End-users on Shipped Products" },
+    { value: "4.9★", label: "Average User Rating" },
 ];
 
 export function StatsSection() {

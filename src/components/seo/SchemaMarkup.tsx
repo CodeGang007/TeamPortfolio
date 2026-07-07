@@ -1,5 +1,3 @@
-import Script from 'next/script';
-
 export default function SchemaMarkup() {
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -23,10 +21,9 @@ export default function SchemaMarkup() {
   };
 
   return (
-    <Script
+    <script
       id="schema-org-markup"
       type="application/ld+json"
-      strategy="beforeInteractive"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
   );

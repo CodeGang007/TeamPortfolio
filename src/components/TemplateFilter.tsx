@@ -9,11 +9,7 @@ interface TemplateFilterProps {
     onSelect: (category: string) => void;
 }
 
-import { useAuth } from "@/contexts/AuthContext";
-
 export default function TemplateFilter({ categories, selectedCategory, onSelect }: TemplateFilterProps) {
-    const { isAuthenticated } = useAuth();
-    const isOnline = isAuthenticated;
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const scroll = (direction: "left" | "right") => {
@@ -35,14 +31,14 @@ export default function TemplateFilter({ categories, selectedCategory, onSelect 
             {/* Scroll Buttons */}
             <button
                 onClick={() => scroll("left")}
-                className={`hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-20 -ml-4 h-8 w-8 items-center justify-center rounded-full bg-zinc-800 border border-zinc-700 text-white transition-all opacity-0 group-hover:opacity-100 disabled:opacity-0 ${isOnline ? 'hover:bg-brand-green hover:text-black' : 'hover:bg-red-500 hover:text-white'}`}
+                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-20 -ml-4 h-8 w-8 items-center justify-center rounded-full bg-zinc-800 border border-zinc-700 text-white transition-all opacity-0 group-hover:opacity-100 disabled:opacity-0 hover:bg-brand-green hover:text-black"
             >
                 <ChevronLeft className="h-4 w-4" />
             </button>
 
             <button
                 onClick={() => scroll("right")}
-                className={`hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 -mr-4 h-8 w-8 items-center justify-center rounded-full bg-zinc-800 border border-zinc-700 text-white transition-all opacity-0 group-hover:opacity-100 ${isOnline ? 'hover:bg-brand-green hover:text-black' : 'hover:bg-red-500 hover:text-white'}`}
+                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 -mr-4 h-8 w-8 items-center justify-center rounded-full bg-zinc-800 border border-zinc-700 text-white transition-all opacity-0 group-hover:opacity-100 hover:bg-brand-green hover:text-black"
             >
                 <ChevronRight className="h-4 w-4" />
             </button>
@@ -58,9 +54,7 @@ export default function TemplateFilter({ categories, selectedCategory, onSelect 
                         key={category}
                         onClick={() => onSelect(category)}
                         className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-200 border whitespace-nowrap ${selectedCategory === category
-                            ? (isOnline
-                                ? "bg-brand-green text-black border-brand-green shadow-lg shadow-brand-green/20"
-                                : "bg-red-500/20 text-red-200 border-red-500/50 shadow-lg shadow-red-500/20")
+                            ? "bg-brand-green text-black border-brand-green shadow-lg shadow-brand-green/20"
                             : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-white"
                             }`}
                     >

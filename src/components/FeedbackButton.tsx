@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, Send, Star, Zap } from "lucide-react";
 import { ref, push } from "firebase/database";
-import { database } from "@/lib/firebase";
+import { database } from "@/lib/firebaseRtdb";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 

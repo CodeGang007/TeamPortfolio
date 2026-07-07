@@ -1,14 +1,23 @@
 import "./globals.css";
 import FooterWrapper from "@/components/layout/FooterWrapper";
-// import AnimatedBackground from "@/components/ui/AnimatedBg"; // Keeping as is if it exists there
 import AnimatedBackground from "@/components/ui/AnimatedBg";
 import { AuthProvider } from "@/contexts/AuthContext";
-import ModalWrapper from "@/components/shared/ModalWrapper";
-import AuthGuard from "@/components/auth/AuthGuard";
-import AuthToast from "@/components/auth/AuthToast";
-import SmoothScroll from "@/components/ui/SmoothScroll";
-import FeedbackButton from "@/components/FeedbackButton";
+import DeferredWidgets from "@/components/layout/DeferredWidgets";
 import { Metadata } from 'next';
+import { Inter, Space_Grotesk } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'optional',
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-display',
+  display: 'optional',
+});
 import SchemaMarkup from "@/components/seo/SchemaMarkup";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -74,24 +83,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body
         suppressHydrationWarning
-        // Removed bg-[#f0f7f5] here because it is now inside AnimatedBackground
-        className="text-slate-900 relative"
+        className="font-sans text-slate-900 relative"
       >
         <AuthProvider>
-          <AuthGuard />
-          <SmoothScroll />
           <AnimatedBackground />
           <SchemaMarkup />
           {children}
           <Analytics />
           <SpeedInsights />
 
-          <ModalWrapper />
-          <AuthToast />
-          <FeedbackButton />
+          <DeferredWidgets />
           <FooterWrapper />
         </AuthProvider>
       </body>

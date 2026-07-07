@@ -698,9 +698,9 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
     }, [formData.category]);
 
     return (
-        <div className={`min-h-screen font-sans transition-all duration-500 ${isOnline ? 'bg-black text-white' : 'bg-zinc-950 text-white'}`} onPaste={handlePaste}>
+        <div className="min-h-screen font-sans bg-black text-white" onPaste={handlePaste}>
             {/* Header */}
-            <div className={`sticky top-0 z-50 flex h-16 items-center border-b px-4 md:px-8 backdrop-blur-md transition-all duration-500 ${isOnline ? 'border-zinc-800 bg-black/90' : 'border-red-900/50 bg-red-950/20'}`}>
+            <div className="sticky top-0 z-50 flex h-16 items-center border-b px-4 md:px-8 backdrop-blur-md border-zinc-800 bg-black/90">
                 <Link href="/" className="mr-4 flex h-8 w-8 items-center justify-center rounded-full hover:bg-zinc-800 transition-colors">
                     <ArrowLeft className="h-5 w-5 text-zinc-400 hover:text-white" />
                 </Link>
@@ -745,10 +745,10 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         {/* Contact Info Section */}
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div className="space-y-2">
-                                <label className="text-base font-semibold text-zinc-300">Name<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
+                                <label className="text-base font-semibold text-zinc-300">Name<span className={`ml-0.5 text-brand-green`}>*</span></label>
                                 <input
                                     type="text"
-                                    className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                    className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20`}
                                     placeholder="Your Name"
                                     value={formData.name}
                                     onChange={e => updateFormData({ name: e.target.value })}
@@ -758,7 +758,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 <label className="text-base font-semibold text-zinc-300">Phone Number<span className="ml-0.5 text-zinc-600 text-xs font-normal">(Optional)</span></label>
                                 <input
                                     type="tel"
-                                    className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                    className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20`}
                                     placeholder="+1 (555) 000-0000"
                                     value={formData.phone}
                                     onChange={e => updateFormData({ phone: e.target.value })}
@@ -768,11 +768,11 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
                         {/* Project Name */}
                         <div className="space-y-2">
-                            <label className="text-base font-semibold text-zinc-300">Project name<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
+                            <label className="text-base font-semibold text-zinc-300">Project name<span className={`ml-0.5 text-brand-green`}>*</span></label>
                             <div className="relative">
                                 <input
                                     type="text"
-                                    className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                    className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20`}
                                     placeholder="Enter project name"
                                     maxLength={100}
                                     value={formData.projectName}
@@ -788,23 +788,21 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                             onChange={(value) => updateFormData({ description: value })}
                             placeholder="Describe your project in detail...\n\nInclude:\n• Project goals and objectives\n• Key features and functionality\n• Target audience\n• Any specific requirements or preferences"
                             maxLength={5000}
-                            isOnline={isOnline}
+                            isOnline={true}
                             label="Description"
                             required={true}
                         />
 
                         {/* Categories */}
                         <div className="space-y-3">
-                            <label className="text-base font-semibold text-zinc-300">Categories<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
+                            <label className="text-base font-semibold text-zinc-300">Categories<span className={`ml-0.5 text-brand-green`}>*</span></label>
                             <div className="flex flex-wrap gap-3">
                                 {categories.map(cat => (
                                     <button
                                         key={cat}
                                         onClick={() => updateFormData({ category: cat })}
                                         className={`rounded-full px-8 py-2.5 text-sm font-bold transition-all duration-200 border ${formData.category === cat
-                                            ? isOnline
-                                                ? "bg-brand-green text-black border-brand-green shadow-lg shadow-brand-green/20"
-                                                : "bg-red-500/20 text-red-200 border-red-500/50 shadow-lg shadow-red-500/20"
+                                            ? "bg-brand-green text-black border-brand-green shadow-lg shadow-brand-green/20"
                                             : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300"
                                             }`}
                                     >
@@ -822,12 +820,10 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     {subCategories.map((sub) => (
                                         <label key={sub} className="flex cursor-pointer items-center gap-3 group">
                                             <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-all duration-200 ${formData.subCategories.includes(sub)
-                                                ? isOnline
-                                                    ? 'border-brand-green bg-brand-green shadow-md shadow-brand-green/20'
-                                                    : 'border-red-500 bg-red-500/20 shadow-md shadow-red-500/20'
+                                                ? 'border-brand-green bg-brand-green shadow-md shadow-brand-green/20'
                                                 : 'border-zinc-700 bg-zinc-900 group-hover:border-zinc-500'
                                                 }`}>
-                                                {formData.subCategories.includes(sub) && <Check className={`h-3.5 w-3.5 ${isOnline ? 'text-black' : 'text-red-200'}`} strokeWidth={3} />}
+                                                {formData.subCategories.includes(sub) && <Check className="h-3.5 w-3.5 text-black" strokeWidth={3} />}
                                             </div>
                                             <input
                                                 type="checkbox"
@@ -851,9 +847,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 <button
                                     onClick={() => updateFormData({ projectType: "fixed_price" })}
                                     className={`p-4 rounded-xl border text-left transition-all duration-200 ${formData.projectType === "fixed_price"
-                                        ? isOnline
-                                            ? "bg-brand-green/10 border-brand-green text-white"
-                                            : "bg-red-500/10 border-red-500/50 text-red-200"
+                                        ? "bg-brand-green/10 border-brand-green text-white"
                                         : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300"
                                         }`}
                                 >
@@ -863,9 +857,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 <button
                                     onClick={() => updateFormData({ projectType: "hourly" })}
                                     className={`p-4 rounded-xl border text-left transition-all duration-200 ${formData.projectType === "hourly"
-                                        ? isOnline
-                                            ? "bg-brand-green/10 border-brand-green text-white"
-                                            : "bg-red-500/10 border-red-500/50 text-red-200"
+                                        ? "bg-brand-green/10 border-brand-green text-white"
                                         : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300"
                                         }`}
                                 >
@@ -881,12 +873,12 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                             <div className="space-y-3">
-                                <label className="text-base font-semibold text-zinc-300">Delivery<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
+                                <label className="text-base font-semibold text-zinc-300">Delivery<span className={`ml-0.5 text-brand-green`}>*</span></label>
                                 <div className="relative group">
                                     <input
                                         type="date"
                                         min={new Date().toISOString().split('T')[0]}
-                                        className={`w-full rounded-xl border px-4 py-3.5 focus:outline-none focus:ring-4 transition-all group-hover:border-zinc-700 [color-scheme:dark] ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/10' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/10'}`}
+                                        className={`w-full rounded-xl border px-4 py-3.5 focus:outline-none focus:ring-4 transition-all group-hover:border-zinc-700 [color-scheme:dark] border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/10`}
                                         value={formData.deliveryTime}
                                         onChange={e => updateFormData({ deliveryTime: e.target.value })}
                                     />
@@ -894,14 +886,14 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <label className="text-base font-semibold text-zinc-300">Budget<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></label>
+                                <label className="text-base font-semibold text-zinc-300">Budget<span className={`ml-0.5 text-brand-green`}>*</span></label>
                                 <div className="flex gap-2">
                                     {/* Currency Selector */}
                                     <div className="relative">
                                         <select
                                             value={formData.currency}
                                             onChange={e => updateFormData({ currency: e.target.value })}
-                                            className={`h-full appearance-none rounded-xl border pl-3 pr-8 py-3.5 font-semibold focus:outline-none focus:ring-4 transition-all hover:border-zinc-700 cursor-pointer ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/10' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/10'}`}
+                                            className={`h-full appearance-none rounded-xl border pl-3 pr-8 py-3.5 font-semibold focus:outline-none focus:ring-4 transition-all hover:border-zinc-700 cursor-pointer border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/10`}
                                         >
                                             {CURRENCIES.map(currency => (
                                                 <option key={currency.code} value={currency.code} className="bg-zinc-900 text-white">
@@ -917,12 +909,12 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     </div>
                                     {/* Amount Input */}
                                     <div className="relative group flex-1">
-                                        <span className={`absolute left-4 top-3.5 font-semibold transition-colors ${isOnline ? 'text-zinc-500 group-focus-within:text-brand-green' : 'text-red-400/60 group-focus-within:text-red-500'}`}>
+                                        <span className={`absolute left-4 top-3.5 font-semibold transition-colors text-zinc-500 group-focus-within:text-brand-green`}>
                                             {selectedCurrency.symbol}
                                         </span>
                                         <input
                                             type="number"
-                                            className={`w-full rounded-xl border pl-10 pr-4 py-3.5 font-semibold focus:outline-none focus:ring-4 transition-all group-hover:border-zinc-700 ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/10' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/10'}`}
+                                            className={`w-full rounded-xl border pl-10 pr-4 py-3.5 font-semibold focus:outline-none focus:ring-4 transition-all group-hover:border-zinc-700 border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/10`}
                                             placeholder="2,000.00"
                                             value={formData.budget}
                                             onChange={e => updateFormData({ budget: e.target.value })}
@@ -954,12 +946,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 onDrop={handleImageDrop}
                                 onClick={() => imageInputRef.current?.click()}
                                 className={`relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all duration-200 ${isDraggingImages
-                                    ? isOnline
-                                        ? "border-brand-green bg-brand-green/10 scale-[1.02]"
-                                        : "border-red-500 bg-red-500/10 scale-[1.02]"
-                                    : isOnline
-                                        ? "border-zinc-800 bg-zinc-900/30 hover:border-zinc-600 hover:bg-zinc-900"
-                                        : "border-red-900/30 bg-red-950/20 hover:border-red-500/30 hover:bg-red-900/10"
+                                    ? "border-brand-green bg-brand-green/10 scale-[1.02]"
+                                    : "border-zinc-800 bg-zinc-900/30 hover:border-zinc-600 hover:bg-zinc-900"
                                     }`}
                             >
                                 <input
@@ -971,7 +959,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     onChange={(e) => processImages(e.target.files!)}
                                 />
                                 <div className="rounded-full bg-zinc-800 p-3 shadow-sm mb-2">
-                                    <Upload className={`h-6 w-6 ${isDraggingImages ? (isOnline ? 'text-brand-green' : 'text-red-500') : 'text-zinc-400'}`} />
+                                    <Upload className={`h-6 w-6 ${isDraggingImages ? 'text-brand-green' : 'text-zinc-400'}`} />
                                 </div>
                                 <p className="text-sm font-medium text-zinc-300">Click or drag images here</p>
                                 <p className="text-xs text-zinc-500 mt-1">supports .png, .jpg, .webp</p>
@@ -1007,7 +995,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="text-base font-semibold text-zinc-300">Attachments<span className={`ml-0.5 ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>*</span></h3>
+                                    <h3 className="text-base font-semibold text-zinc-300">Attachments<span className={`ml-0.5 text-brand-green`}>*</span></h3>
                                     <p className="text-xs text-zinc-500">PDF, Word, Excel, etc (Required - Max 10MB)</p>
                                 </div>
                             </div>
@@ -1050,12 +1038,8 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                 onDrop={handleDocDrop}
                                 onClick={() => docInputRef.current?.click()}
                                 className={`relative flex min-h-[80px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all duration-200 ${isDraggingDocs
-                                    ? isOnline
-                                        ? "border-brand-green bg-brand-green/10 scale-[1.01]"
-                                        : "border-red-500 bg-red-500/10 scale-[1.01]"
-                                    : isOnline
-                                        ? "border-zinc-800 bg-zinc-900/30 hover:border-zinc-600 hover:bg-zinc-900"
-                                        : "border-red-900/30 bg-red-950/20 hover:border-red-500/30 hover:bg-red-900/10"
+                                    ? "border-brand-green bg-brand-green/10 scale-[1.01]"
+                                    : "border-zinc-800 bg-zinc-900/30 hover:border-zinc-600 hover:bg-zinc-900"
                                     }`}
                             >
                                 <input
@@ -1087,9 +1071,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                         type="url"
                                         className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${linkWarnings.github
                                             ? 'border-amber-500/50 bg-zinc-900/50 text-white focus:border-amber-500 focus:ring-amber-500/20'
-                                            : isOnline
-                                                ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
-                                                : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'
+                                            : 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
                                             }`}
                                         placeholder="https://github.com/username/repository"
                                         value={formData.projectLinks.github}
@@ -1112,9 +1094,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                         type="url"
                                         className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${linkWarnings.figma
                                             ? 'border-amber-500/50 bg-zinc-900/50 text-white focus:border-amber-500 focus:ring-amber-500/20'
-                                            : isOnline
-                                                ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
-                                                : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'
+                                            : 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
                                             }`}
                                         placeholder="https://figma.com/file/..."
                                         value={formData.projectLinks.figma}
@@ -1137,9 +1117,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                         type="url"
                                         className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${linkWarnings.website
                                             ? 'border-amber-500/50 bg-zinc-900/50 text-white focus:border-amber-500 focus:ring-amber-500/20'
-                                            : isOnline
-                                                ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
-                                                : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'
+                                            : 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
                                             }`}
                                         placeholder="https://yourproject.com"
                                         value={formData.projectLinks.website}
@@ -1162,9 +1140,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                         type="url"
                                         className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${linkWarnings.documentation
                                             ? 'border-amber-500/50 bg-zinc-900/50 text-white focus:border-amber-500 focus:ring-amber-500/20'
-                                            : isOnline
-                                                ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
-                                                : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'
+                                            : 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
                                             }`}
                                         placeholder="https://docs.google.com/... or Notion link"
                                         value={formData.projectLinks.documentation}
@@ -1187,9 +1163,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                         type="url"
                                         className={`w-full rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all font-medium ${linkWarnings.other
                                             ? 'border-amber-500/50 bg-zinc-900/50 text-white focus:border-amber-500 focus:ring-amber-500/20'
-                                            : isOnline
-                                                ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
-                                                : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'
+                                            : 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20'
                                             }`}
                                         placeholder="Any other relevant links"
                                         value={formData.projectLinks.other}
@@ -1215,7 +1189,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
 
                             <div className="relative group">
                                 <textarea
-                                    className={`h-32 w-full resize-none rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all group-hover:border-zinc-700 ${isOnline ? 'border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20' : 'border-red-900/30 bg-red-950/20 text-red-200 focus:border-red-500/50 focus:ring-red-500/20'}`}
+                                    className={`h-32 w-full resize-none rounded-xl border px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:ring-2 transition-all group-hover:border-zinc-700 border-zinc-800 bg-zinc-900/50 text-white focus:border-brand-green focus:ring-brand-green/20`}
                                     placeholder="e.g. I need a responsive design, SEO optimization, and dark mode support."
                                     maxLength={500}
                                     value={formData.additionalNotes}
@@ -1233,10 +1207,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                     <button
                         onClick={handleSaveDraft}
                         disabled={isSaving || isSubmitting}
-                        className={`w-full max-w-md rounded-xl py-4 font-bold transition-all active:scale-[0.98] ${isOnline
-                            ? 'border border-zinc-800 bg-zinc-900 text-white hover:bg-zinc-800'
-                            : 'border border-red-900/50 bg-red-950/20 text-red-200 hover:bg-red-900/30'
-                            } ${isSaving ? 'opacity-70 cursor-wait' : ''}`}
+                        className={`w-full max-w-md rounded-xl py-4 font-bold transition-all active:scale-[0.98] border border-zinc-800 bg-zinc-900 text-white hover:bg-zinc-800 ${isSaving ? 'opacity-70 cursor-wait' : ''}`}
                     >
                         {isSaving ? (
                             <span className="flex items-center justify-center gap-2">
@@ -1251,7 +1222,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                     <Button
                         size="lg"
                         disabled={isSubmitting}
-                        className={`w-full max-w-md rounded-xl py-7 text-lg font-bold shadow-lg transform transition-all hover:-translate-y-1 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none ${isOnline ? 'bg-brand-green text-black shadow-brand-green/20 hover:shadow-brand-green/40 hover:bg-green-400' : 'bg-red-500/20 text-red-200 border border-red-500/50 shadow-red-500/20 hover:shadow-red-500/40 hover:bg-red-500/30'}`}
+                        className={`w-full max-w-md rounded-xl py-7 text-lg font-bold shadow-lg transform transition-all hover:-translate-y-1 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none bg-brand-green text-black shadow-brand-green/20 hover:shadow-brand-green/40 hover:bg-green-400`}
                         onClick={() => {
                             if (!isOnline) {
                                 openLoginModal();
@@ -1278,7 +1249,7 @@ export default function ProjectRequestPage({ params }: { params: ParamsProps }) 
                                     type="button"
                                     onClick={handleUndo}
                                     disabled={historyIndex <= 0}
-                                    className={`group flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/50 border border-zinc-800 text-zinc-400 transition-all duration-200 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed ${isOnline ? 'hover:text-brand-green hover:border-brand-green/50' : 'hover:text-red-500 hover:border-red-500/50'}`}
+                                    className={`group flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/50 border border-zinc-800 text-zinc-400 transition-all duration-200 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed hover:text-brand-green hover:border-brand-green/50`}
                                     title="Undo (Ctrl+Z)"
                                 >
                                     <RotateCcw className="h-3.5 w-3.5 group-hover:rotate-[-20deg] transition-transform duration-200" />

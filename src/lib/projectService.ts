@@ -1,4 +1,5 @@
-import { db, auth } from './firebase';
+import { db } from './firebaseDb';
+import { auth } from './firebaseAuth';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { telegramService } from './telegramService';
 import { emailService } from './emailService';

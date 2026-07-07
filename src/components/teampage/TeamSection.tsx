@@ -7,7 +7,7 @@ import { TeamMemberCard } from "./TeamMemberCard";
 import { DeveloperDetailsModal } from "./DeveloperDetailsModal";
 import { TeamMember } from "./types";
 import { useAuth } from "@/contexts/AuthContext";
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firebaseDb";
 import { developerService } from "@/lib/developerService";
 import {
   collection,
@@ -192,9 +192,9 @@ export function TeamSection() {
     <div className="w-full">
       {/* DEBUG / REPAIR SECTION */}
       {members.length === 0 && !loading && (
-        <div className={`mb-8 p-6 border rounded-xl text-center ${isOnline ? 'bg-slate-50 border-slate-200' : 'bg-red-500/10 border-red-500/30'}`}>
-          <h3 className={`text-lg font-bold mb-2 ${isOnline ? 'text-slate-700' : 'text-red-300'}`}>Database Setup Needed</h3>
-          <p className={`mb-4 ${isOnline ? 'text-slate-500' : 'text-red-400/70'}`}>{debugLog || "No team members found in the database."}</p>
+        <div className="mb-8 p-6 border rounded-xl text-center bg-slate-50 border-slate-200">
+          <h3 className="text-lg font-bold mb-2 text-slate-700">Database Setup Needed</h3>
+          <p className="mb-4 text-slate-500">{debugLog || "No team members found in the database."}</p>
         </div>
       )}
 
@@ -204,7 +204,6 @@ export function TeamSection() {
           <TeamFilter
             active={activeCategory}
             onChange={setActiveCategory}
-            isOnline={isOnline}
           />
 
           <motion.div layout className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-3 mt-8">
@@ -221,7 +220,6 @@ export function TeamSection() {
                 >
                   <TeamMemberCard
                     member={member}
-                    isOnline={isOnline}
                     onClick={() => setSelectedMember(member)}
                   />
 
@@ -270,9 +268,9 @@ export function TeamSection() {
       {/* LOADING SPINNER */}
       {loading && (
         <div className="py-20 text-center">
-          <div className={`inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-r-transparent ${isOnline ? 'border-teal-500' : 'border-red-500'}`}></div>
-          <p className={`mt-4 ${isOnline ? 'text-slate-400' : 'text-red-400/50'}`}>
-            {isOnline ? 'Loading team...' : 'System Offline. Connecting...'}
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-r-transparent border-teal-500"></div>
+          <p className="mt-4 text-slate-400">
+            Loading team...
           </p>
         </div>
       )}

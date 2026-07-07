@@ -11,7 +11,7 @@ import { ThemeFlipHeading } from "@/components/ui/ThemeFlipHeading";
 import { ConsultationModal } from "@/components/contact/ConsultationModal";
 
 export default function ContactUsPageContent() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, triggerAuth } = useAuth();
   const isOnline = isAuthenticated;
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
 
@@ -66,23 +66,7 @@ export default function ContactUsPageContent() {
 
   return (
     <AppLayout>
-      <div className="relative min-h-screen w-full overflow-hidden bg-black text-white pt-20 pb-20">
-
-        {/* Abstract 3D Decorative Elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-          <motion.img
-            src="/3d_ring.png"
-            className={`absolute top-[15%] right-[8%] w-64 h-64 opacity-20 mix-blend-screen transition-all duration-500 ${!isOnline && 'grayscale sepia hue-rotate-[-50deg]'}`}
-            animate={{ rotate: [0, 360], y: [0, -20, 0] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.img
-            src="/3d_blob.png"
-            className={`absolute bottom-[10%] left-[5%] w-80 h-80 opacity-15 mix-blend-screen transition-all duration-500 ${!isOnline && 'grayscale sepia hue-rotate-[-50deg]'}`}
-            animate={{ scale: [1, 1.2, 1], rotate: [0, 15, 0] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </div>
+      <div className="relative min-h-screen w-full overflow-hidden text-white pt-20 pb-20">
 
         <div className="container mx-auto px-6 md:px-12 relative z-10">
 
@@ -98,7 +82,7 @@ export default function ContactUsPageContent() {
                 words={["Touch.", "Sync.", "Connect."]}
               />
             </div>
-            <p className={`max-w-2xl mx-auto text-lg transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>
+            <p className="max-w-2xl mx-auto text-lg text-zinc-400">
               Have a project in mind? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
             </p>
           </motion.div>
@@ -112,28 +96,19 @@ export default function ContactUsPageContent() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="space-y-8"
             >
-              <div className={`p-8 rounded-3xl border backdrop-blur-md transition-all duration-500 ${isOnline
-                ? 'bg-zinc-900/50 border-white/10'
-                : 'bg-red-950/10 border-red-900/30 shadow-[0_0_30px_rgba(220,38,38,0.1)]'
-                }`}>
-                <h3 className={`text-2xl font-bold mb-6 transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'}`}>Contact Information</h3>
+              <div className="p-8 rounded-3xl border backdrop-blur-md bg-zinc-900/50 border-white/10">
+                <h3 className="text-2xl font-bold mb-6 text-white">Contact Information</h3>
                 <div className="space-y-6">
                   {[
                     { icon: Mail, label: "Email us", value: "contact@codegang.online" },
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-start gap-4">
-                      <div className={`p-3 rounded-xl transition-colors duration-500 ${isOnline
-                        ? 'bg-brand-green/10 text-brand-green'
-                        : 'bg-red-500/10 text-red-500'
-                        }`}>
+                      <div className="p-3 rounded-xl bg-brand-green/10 text-brand-green">
                         <item.icon size={24} />
                       </div>
                       <div>
-                        <p className={`text-sm mb-1 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-400/60'}`}>{item.label}</p>
-                        <p className={`text-lg font-medium whitespace-pre-line transition-colors duration-500 ${isOnline
-                          ? 'text-white hover:text-brand-green cursor-pointer'
-                          : 'text-red-200 hover:text-red-400'
-                          }`}>
+                        <p className="text-sm mb-1 text-zinc-400">{item.label}</p>
+                        <p className="text-lg font-medium whitespace-pre-line text-white hover:text-brand-green cursor-pointer transition-colors">
                           {item.value}
                         </p>
                       </div>
@@ -142,20 +117,14 @@ export default function ContactUsPageContent() {
                 </div>
               </div>
 
-              <div className={`p-8 rounded-3xl border backdrop-blur-md transition-all duration-500 ${isOnline
-                ? 'bg-gradient-to-br from-brand-green/20 to-zinc-900/50 border-brand-green/20'
-                : 'bg-gradient-to-br from-red-600/10 to-red-950/20 border-red-500/20'
-                }`}>
-                <h3 className={`text-xl font-bold mb-2 transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-100'}`}>Ready to start?</h3>
-                <p className={`mb-6 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/70'}`}>Book a free discovery call to discuss your project requirements.</p>
+              <div className="p-8 rounded-3xl border backdrop-blur-md bg-gradient-to-br from-brand-green/20 to-zinc-900/50 border-brand-green/20">
+                <h3 className="text-xl font-bold mb-2 text-white">Ready to start?</h3>
+                <p className="mb-6 text-zinc-400">Book a free discovery call to discuss your project requirements.</p>
                 <Button
-                  className={`w-full font-bold transition-all duration-500 ${isOnline
-                    ? 'bg-brand-green text-black shadow-[0_0_20px_rgba(0,255,65,0.3)]'
-                    : 'bg-red-500/20 text-red-200 border border-red-500/50 hover:bg-red-500/30'
-                    }`}
-                  onClick={() => isOnline && setIsConsultationOpen(true)}
+                  className="w-full font-bold bg-brand-green text-black"
+                  onClick={() => (isOnline ? setIsConsultationOpen(true) : triggerAuth())}
                 >
-                  {isOnline ? 'Book Consultation' : 'Authentication Required'}
+                  Book Consultation
                 </Button>
               </div>
             </motion.div>
@@ -167,10 +136,7 @@ export default function ContactUsPageContent() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className={`p-8 md:p-10 rounded-[2.5rem] border backdrop-blur-sm transition-all duration-500 ${isOnline
-                ? 'bg-zinc-900/30 border-white/5'
-                : 'bg-red-950/10 border-red-900/20'
-                }`}
+              className="p-8 md:p-10 rounded-[2.5rem] border backdrop-blur-sm bg-zinc-900/30 border-white/5"
             >
               <form onSubmit={handleSubmit} className="space-y-6">
                 {submitStatus === 'success' && (
@@ -196,40 +162,36 @@ export default function ContactUsPageContent() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className={`text-sm font-medium ml-1 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>First Name</label>
+                    <label className="text-sm font-medium ml-1 text-zinc-400">First Name</label>
                     <Input
                       placeholder="John"
                       value={formData.firstName}
                       onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                       required
                       classNames={{
-                        inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
-                          ? "bg-zinc-900 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green"
-                          : "bg-red-950/20 border border-red-900/30 hover:border-red-500/30 focus-within:border-red-500/50"}`,
-                        input: `placeholder:text-zinc-600 !text-white ${isOnline ? "text-white" : "text-red-200"}`
+                        inputWrapper: "transition-colors h-14 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green",
+                        input: "placeholder:text-zinc-600 !text-white text-white"
                       }}
-                      startContent={<User size={18} className={`transition-colors duration-500 ${isOnline ? "text-zinc-500" : "text-red-500/50"}`} />}
+                      startContent={<User size={18} className="text-zinc-500" />}
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className={`text-sm font-medium ml-1 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>Last Name</label>
+                    <label className="text-sm font-medium ml-1 text-zinc-400">Last Name</label>
                     <Input
                       placeholder="Doe"
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                       required
                       classNames={{
-                        inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
-                          ? "bg-zinc-900 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green"
-                          : "bg-red-950/20 border border-red-900/30 hover:border-red-500/30 focus-within:border-red-500/50"}`,
-                        input: `placeholder:text-zinc-600 !text-white ${isOnline ? "text-white" : "text-red-200"}`
+                        inputWrapper: "transition-colors h-14 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green",
+                        input: "placeholder:text-zinc-600 !text-white text-white"
                       }}
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className={`text-sm font-medium ml-1 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>Email</label>
+                  <label className="text-sm font-medium ml-1 text-zinc-400">Email</label>
                   <Input
                     placeholder="john@example.com"
                     type="email"
@@ -239,18 +201,16 @@ export default function ContactUsPageContent() {
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
                     classNames={{
-                      inputWrapper: `transition-colors h-14 rounded-2xl ${isOnline
-                        ? `bg-zinc-900 border ${user ? 'border-brand-green/30 bg-brand-green/5' : 'border-zinc-800'} hover:border-brand-green/50 focus-within:border-brand-green`
-                        : "bg-red-950/20 border border-red-900/30 hover:border-red-500/30 focus-within:border-red-500/50"}`,
-                      input: `placeholder:text-zinc-600 !text-white ${isOnline ? "text-white" : "text-red-200"} ${user ? 'opacity-70 cursor-not-allowed' : ''}`
+                      inputWrapper: `transition-colors h-14 rounded-2xl bg-zinc-900 border ${user ? 'border-brand-green/30 bg-brand-green/5' : 'border-zinc-800'} hover:border-brand-green/50 focus-within:border-brand-green`,
+                      input: `placeholder:text-zinc-600 !text-white text-white ${user ? 'opacity-70 cursor-not-allowed' : ''}`
                     }}
-                    startContent={<Mail size={18} className={`transition-colors duration-500 ${isOnline ? (user ? "text-brand-green" : "text-zinc-500") : "text-red-500/50"}`} />}
+                    startContent={<Mail size={18} className={user ? "text-brand-green" : "text-zinc-500"} />}
 
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className={`text-sm font-medium ml-1 transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/60'}`}>Message</label>
+                  <label className="text-sm font-medium ml-1 text-zinc-400">Message</label>
                   <Textarea
                     placeholder="Tell us about your project..."
                     minRows={6}
@@ -258,10 +218,8 @@ export default function ContactUsPageContent() {
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     required
                     classNames={{
-                      inputWrapper: `transition-colors rounded-2xl p-4 ${isOnline
-                        ? "bg-zinc-900 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green"
-                        : "bg-red-950/20 border border-red-900/30 hover:border-red-500/30 focus-within:border-red-500/50"}`,
-                      input: `placeholder:text-zinc-600 !text-white ${isOnline ? "text-white" : "text-red-200"}`
+                      inputWrapper: "transition-colors rounded-2xl p-4 bg-zinc-900 border border-zinc-800 hover:border-brand-green/50 focus-within:border-brand-green",
+                      input: "placeholder:text-zinc-600 !text-white text-white"
                     }}
 
                   />
@@ -270,14 +228,12 @@ export default function ContactUsPageContent() {
                 <Button
                   type="submit"
                   size="lg"
-                  disabled={isSubmitting || !isOnline}
-                  className={`w-full font-bold h-14 rounded-2xl transition-colors ${isOnline
-                    ? "bg-white text-black hover:bg-zinc-200"
-                    : "bg-red-500/20 text-red-300 border border-red-500/40 hover:bg-red-500/30"}`}
+                  disabled={isSubmitting}
+                  className="w-full font-bold h-14 rounded-2xl transition-colors bg-white text-black hover:bg-zinc-200"
                   endContent={isSubmitting ? null : <Send size={18} />}
 
                 >
-                  {isSubmitting ? 'Sending...' : isOnline ? 'Send Message' : 'Authentication Required'}
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
                 </Button>
               </form>
             </motion.div>

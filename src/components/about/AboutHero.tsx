@@ -1,14 +1,12 @@
 "use client";
 
 import { ThemeFlipHeading } from "@/components/ui/ThemeFlipHeading";
-import { useAuth } from "@/contexts/AuthContext";
 
 export function AboutHero() {
-    const { isAuthenticated } = useAuth();
     return (
         <div className="relative flex flex-col items-center justify-center pt-32 pb-16 text-center px-4">
             <div className="relative z-10 max-w-4xl mx-auto">
-                <h1 className={`text-sm font-medium tracking-[0.3em] uppercase mb-4 ${isAuthenticated ? "text-brand-green" : "text-red-500"}`}>
+                <h1 className="text-sm font-medium tracking-[0.3em] uppercase mb-4 text-brand-green">
                     Who We Are
                 </h1>
 

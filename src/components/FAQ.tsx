@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useAuth } from "@/contexts/AuthContext";
 import { ChevronDown, MessageCircle, Code, Zap, Shield, Users } from "lucide-react";
+import Reveal from "@/components/ui/Reveal";
 
 const FAQS = [
     {
@@ -39,8 +38,6 @@ const FAQS = [
 ];
 
 export default function FAQ() {
-    const { isAuthenticated } = useAuth();
-    const isOnline = isAuthenticated;
     const [openId, setOpenId] = useState<number | null>(null);
 
     const toggleFAQ = (id: number) => {
@@ -48,99 +45,61 @@ export default function FAQ() {
     };
 
     return (
-        <section id="faq" className="py-24 relative overflow-hidden">
-
-            <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
+        <section id="faq" className="py-24 md:py-32 relative overflow-hidden">
+            <div className="max-w-4xl mx-auto relative z-10">
                 {/* Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, ease: "easeOut" }}
-                    viewport={{ once: true }}
-                    className="text-center mb-16"
-                >
-                    <h2 className={`text-4xl md:text-6xl font-bold mb-6 transition-colors duration-500 ${isOnline ? 'text-white' : 'text-red-50'
-                        }`}>
+                <Reveal className="text-center mb-16">
+                    <h2 className="font-display text-3xl md:text-5xl font-medium tracking-tight mb-6 text-white">
                         Frequently Asked{" "}
-                        <span className={`bg-gradient-to-r bg-clip-text text-transparent transition-all duration-500 ${isOnline
-                                ? 'from-brand-green to-blue-400'
-                                : 'from-red-400 to-red-300'
-                            }`}>
-                            Questions
-                        </span>
+                        <span className="text-brand-green">Questions</span>
                     </h2>
-                    <p className={`text-lg max-w-2xl mx-auto transition-colors duration-500 ${isOnline ? 'text-zinc-400' : 'text-red-300/70'
-                        }`}>
+                    <p className="text-lg max-w-2xl mx-auto text-zinc-400">
                         Everything you need to know about working with us.
                     </p>
-                </motion.div>
+                </Reveal>
 
                 {/* FAQ List */}
                 <div className="space-y-4">
-                    {FAQS.map((faq, index) => {
+                    {FAQS.map((faq) => {
                         const isOpen = openId === faq.id;
                         const Icon = faq.icon;
 
                         return (
-                            <motion.div
+                            <div
                                 key={faq.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                                className={`rounded-xl border backdrop-blur-sm transition-all duration-300 ${isOnline
-                                        ? 'bg-zinc-900/40 border-white/10 hover:border-brand-green/30'
-                                        : 'bg-red-950/20 border-red-900/30 hover:border-red-400/40'
-                                    }`}
+                                className="rounded-xl border transition-colors duration-300 bg-zinc-900/40 border-white/[0.06] hover:border-brand-green/25"
                             >
                                 <button
                                     onClick={() => toggleFAQ(faq.id)}
                                     aria-expanded={isOpen}
-                                    className="w-full text-left p-6 transition-all duration-300 group"
+                                    className="w-full text-left p-6 group"
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className={`p-2 rounded-lg transition-all duration-300 ${isOnline
-                                                ? `${isOpen ? 'bg-brand-green/20 text-brand-green' : 'bg-zinc-800/50 text-zinc-400 group-hover:bg-brand-green/10 group-hover:text-brand-green'}`
-                                                : `${isOpen ? 'bg-red-500/20 text-red-400' : 'bg-red-900/30 text-red-500/70 group-hover:bg-red-500/10 group-hover:text-red-400'}`
-                                            }`}>
+                                        <div className={`p-2 rounded-lg transition-colors duration-300 ${isOpen ? 'bg-brand-green/20 text-brand-green' : 'bg-zinc-800/50 text-zinc-400 group-hover:bg-brand-green/10 group-hover:text-brand-green'}`}>
                                             <Icon size={20} />
                                         </div>
-                                        <h3 className={`flex-1 text-lg font-semibold transition-colors duration-300 ${isOnline
-                                                ? `${isOpen ? 'text-brand-green' : 'text-white group-hover:text-brand-green/80'}`
-                                                : `${isOpen ? 'text-red-400' : 'text-red-100 group-hover:text-red-300'}`
-                                            }`}>
+                                        <h3 className={`flex-1 text-lg font-semibold transition-colors duration-300 ${isOpen ? 'text-brand-green' : 'text-white group-hover:text-brand-green/80'}`}>
                                             {faq.question}
                                         </h3>
-                                        <motion.div
-                                            animate={{ rotate: isOpen ? 180 : 0 }}
-                                            transition={{ duration: 0.3 }}
-                                            className={`p-1 transition-colors duration-300 ${isOnline
-                                                    ? `${isOpen ? 'text-brand-green' : 'text-zinc-400 group-hover:text-brand-green/60'}`
-                                                    : `${isOpen ? 'text-red-400' : 'text-red-500/70 group-hover:text-red-400/80'}`
-                                                }`}
+                                        <div
+                                            className={`p-1 transition-all duration-300 ${isOpen ? 'text-brand-green rotate-180' : 'text-zinc-400 group-hover:text-brand-green/60'}`}
                                         >
                                             <ChevronDown size={20} />
-                                        </motion.div>
+                                        </div>
                                     </div>
 
-                                    <AnimatePresence>
-                                        {isOpen && (
-                                            <motion.div
-                                                initial={{ height: 0, opacity: 0 }}
-                                                animate={{ height: "auto", opacity: 1 }}
-                                                exit={{ height: 0, opacity: 0 }}
-                                                transition={{ duration: 0.3, ease: "easeInOut" }}
-                                                className="overflow-hidden"
-                                            >
-                                                <div className={`pt-4 pl-4 md:pl-12 pr-8 pb-2 text-sm leading-relaxed transition-colors duration-300 ${isOnline ? 'text-zinc-300' : 'text-red-200/80'
-                                                    }`}>
-                                                    {faq.answer}
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                    {/* CSS grid-rows accordion — no animation library needed */}
+                                    <div
+                                        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+                                    >
+                                        <div className="overflow-hidden">
+                                            <div className="pt-4 pl-4 md:pl-12 pr-8 pb-2 text-sm leading-relaxed text-zinc-300">
+                                                {faq.answer}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </button>
-                            </motion.div>
+                            </div>
                         );
                     })}
                 </div>
@@ -148,4 +107,3 @@ export default function FAQ() {
         </section>
     );
 }
-
