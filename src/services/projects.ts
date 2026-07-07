@@ -1,4 +1,4 @@
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firebaseDb";
 import { collection, getDocs, query, limit, orderBy, addDoc, deleteDoc, doc } from "firebase/firestore";
 
 // Structured service for efficient data fetching

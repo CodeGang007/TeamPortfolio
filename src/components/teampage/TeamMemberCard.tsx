@@ -14,11 +14,10 @@ import styles from "./TeamMemberCard.module.css";
 
 interface TeamMemberCardProps {
   member: TeamMember;
-  isOnline?: boolean;
   onClick?: () => void;
 }
 
-export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isOnline = true, onClick }) => {
+export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, onClick }) => {
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -32,7 +31,7 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isOnline
     <motion.div
       onClick={onClick}
       onMouseMove={handleMouseMove}
-      className={`${styles.card} ${!isOnline ? styles.offline : ''} cursor-pointer group ${!isOnline && 'grayscale-[0.3]'}`}
+      className={`${styles.card} cursor-pointer group`}
       whileHover={{ y: -6 }}
       transition={{ type: "spring", stiffness: 200, damping: 15 }}
     >
@@ -42,11 +41,8 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isOnline
           <img
             src={member.imageUrl}
             alt={member.name}
-            className={`h-full w-full object-cover transition-all duration-500 ${!isOnline && 'grayscale contrast-125 saturate-50'}`}
+            className="h-full w-full object-cover transition-all duration-500"
           />
-          {!isOnline && (
-            <div className="absolute inset-0 bg-red-900/10 mix-blend-overlay" />
-          )}
         </div>
         <div className={styles.roleBadge}>
           {member.role}

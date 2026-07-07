@@ -2,16 +2,25 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth, db } from "@/lib/firebase";
-import { doc, getDoc, onSnapshot, setDoc, serverTimestamp } from "firebase/firestore";
-import {
-    onAuthStateChanged,
-    signInWithPopup,
-    signOut as firebaseSignOut,
-    GoogleAuthProvider,
-    User
-} from "firebase/auth";
+import type { User } from "firebase/auth";
 import { formalAvatar, type Gender } from "@/lib/avatars";
+
+// Firebase is loaded lazily (dynamic import) so the SDK stays out of the
+// first-load JS of every public page; auth state resolves just after hydration.
+const loadAuth = async () => {
+    const [{ auth }, authMod] = await Promise.all([
+        import("@/lib/firebaseAuth"),
+        import("firebase/auth"),
+    ]);
+    return { auth, ...authMod };
+};
+const loadDb = async () => {
+    const [{ db }, dbMod] = await Promise.all([
+        import("@/lib/firebaseDb"),
+        import("firebase/firestore"),
+    ]);
+    return { db, ...dbMod };
+};
 
     export type UserRole = 'admin' | 'developer' | 'client';
 
@@ -77,23 +86,31 @@ import { formalAvatar, type Gender } from "@/lib/avatars";
     useEffect(() => {
         setIsMounted(true);
 
-        // Subscribe to Firebase Auth state changes
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-            setLoading(false);
+        let unsubscribe: (() => void) | undefined;
+        let cancelled = false;
 
-            // If user logs in, dismiss toast and close modal
-            if (currentUser) {
-                setShowAuthToast(false);
-                setAuthToastDismissed(true);
-                setIsLoginModalOpen(false);
-            } else {
-                // Clear custom photo when logged out
-                setCustomPhotoURL(null);
-            }
+        loadAuth().then(({ auth, onAuthStateChanged }) => {
+            if (cancelled) return;
+            unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+                setUser(currentUser);
+                setLoading(false);
+
+                // If user logs in, dismiss toast and close modal
+                if (currentUser) {
+                    setShowAuthToast(false);
+                    setAuthToastDismissed(true);
+                    setIsLoginModalOpen(false);
+                } else {
+                    // Clear custom photo when logged out
+                    setCustomPhotoURL(null);
+                }
+            });
         });
 
-        return () => unsubscribe();
+        return () => {
+            cancelled = true;
+            unsubscribe?.();
+        };
     }, []);
 
     // Sync Auth Data to Firestore (displayName & email) to ensure Admin Dashboard has data
@@ -101,6 +118,7 @@ import { formalAvatar, type Gender } from "@/lib/avatars";
         const syncUserToFirestore = async () => {
             if (!user) return;
             try {
+                const { db, doc, setDoc, serverTimestamp } = await loadDb();
                 const userDocRef = doc(db, "users", user.uid);
                 // We use setDoc with merge: true to avoid overwriting existing profile data
                 // Only update if we have a name/email to give
@@ -131,26 +149,35 @@ import { formalAvatar, type Gender } from "@/lib/avatars";
             return;
         }
 
-        const userDocRef = doc(db, "users", user.uid);
-        const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                setCustomPhotoURL(data.customPhotoURL || null);
-                // Check both root-level role and nested profile.role
-                const fetchedRole = data.role || data.profile?.role;
-                setRole((fetchedRole?.toLowerCase() as UserRole) || 'client');
-                const fetchedGender = (data.gender || data.profile?.gender) as Gender | undefined;
-                setGender(fetchedGender === 'male' || fetchedGender === 'female' ? fetchedGender : null);
-            } else {
-                setCustomPhotoURL(null);
-                setRole('client');
-                setGender(null);
-            }
-        }, (error) => {
-            console.error("Error listening to user document:", error);
+        let unsubscribe: (() => void) | undefined;
+        let cancelled = false;
+
+        loadDb().then(({ db, doc, onSnapshot }) => {
+            if (cancelled) return;
+            const userDocRef = doc(db, "users", user.uid);
+            unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    setCustomPhotoURL(data.customPhotoURL || null);
+                    // Check both root-level role and nested profile.role
+                    const fetchedRole = data.role || data.profile?.role;
+                    setRole((fetchedRole?.toLowerCase() as UserRole) || 'client');
+                    const fetchedGender = (data.gender || data.profile?.gender) as Gender | undefined;
+                    setGender(fetchedGender === 'male' || fetchedGender === 'female' ? fetchedGender : null);
+                } else {
+                    setCustomPhotoURL(null);
+                    setRole('client');
+                    setGender(null);
+                }
+            }, (error) => {
+                console.error("Error listening to user document:", error);
+            });
         });
 
-        return () => unsubscribe();
+        return () => {
+            cancelled = true;
+            unsubscribe?.();
+        };
     }, [user]);
 
     // Compute display photo. Legacy casual/emoji avatars (old DiceBear presets)
@@ -170,7 +197,7 @@ import { formalAvatar, type Gender } from "@/lib/avatars";
              // ... existing toast logic ...
             const initialTimeout = setTimeout(() => {
                 setShowAuthToast(true);
-            }, 1000);
+            }, 8000);
 
             const interval = setInterval(() => {
                 if (!user) {
@@ -188,6 +215,7 @@ import { formalAvatar, type Gender } from "@/lib/avatars";
 
     const login = async () => {
         try {
+            const { auth, GoogleAuthProvider, signInWithPopup } = await loadAuth();
             const provider = new GoogleAuthProvider();
             await signInWithPopup(auth, provider);
         } catch (error) {
@@ -198,7 +226,8 @@ import { formalAvatar, type Gender } from "@/lib/avatars";
 
     const logout = async () => {
         try {
-            await firebaseSignOut(auth);
+            const { auth, signOut } = await loadAuth();
+            await signOut(auth);
             router.push("/");
         } catch (error) {
             console.error("Logout failed:", error);
@@ -206,6 +235,7 @@ import { formalAvatar, type Gender } from "@/lib/avatars";
     };
 
     const refreshUser = async () => {
+        const { auth } = await loadAuth();
         if (auth.currentUser) {
             await auth.currentUser.reload();
             setUser({ ...auth.currentUser });

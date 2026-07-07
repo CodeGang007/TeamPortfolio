@@ -1,13 +1,7 @@
-"use client";
-
 import ProjectRow from "@/components/projectPage/ProjectRow";
 import { PORTFOLIO_PROJECTS } from "@/data/portfolioProjects";
-import { useAuth } from "@/contexts/AuthContext";
 
 export default function CreativeProjects() {
-    const { isAuthenticated } = useAuth();
-    const isOnline = isAuthenticated;
-
     const projects = [...PORTFOLIO_PROJECTS].sort((a, b) => a.order - b.order);
 
     return (
@@ -17,7 +11,6 @@ export default function CreativeProjects() {
                     key={project.id}
                     project={project}
                     index={index}
-                    isOnline={isOnline}
                     priority={index === 0}
                 />
             ))}

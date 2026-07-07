@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 const stats = [
-    { value: "5", label: "Live Client Engagements" },
+    { value: "6", label: "Live Client Engagements" },
     { value: "5", label: "Geographies Served" },
     { value: "10K+", label: "End-users on Shipped Products" },
     { value: "4.9★", label: "Average User Rating" },

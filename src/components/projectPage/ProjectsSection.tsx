@@ -11,7 +11,7 @@ import { AddProjectModal } from "./AddProjectModal";
 import { ProjectService } from "@/services/projects";
 import { PORTFOLIO_PROJECTS } from "@/data/portfolioProjects";
 
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firebaseDb";
 import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
 
 // Community / admin-added projects fetched from Firestore (lighter shape).
@@ -27,8 +27,7 @@ interface CommunityProject {
 }
 
 export function ProjectsSection() {
-  const { isAuthenticated, role } = useAuth();
-  const isOnline = isAuthenticated;
+  const { role } = useAuth();
   const isAdmin = role === 'admin';
 
   const [activeCategory, setActiveCategory] = useState("All");
@@ -124,15 +123,9 @@ export function ProjectsSection() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setShowAddModal(true)}
-          className={`fixed bottom-8 right-8 z-40 p-4 rounded-full shadow-2xl transition-all ${
-            isOnline
-              ? 'bg-brand-green hover:bg-brand-green/90 text-black'
-              : 'bg-red-500 hover:bg-red-500/90 text-white'
-          }`}
+          className="fixed bottom-8 right-8 z-40 p-4 rounded-full shadow-2xl transition-all bg-brand-green hover:bg-brand-green/90 text-black"
           style={{
-            boxShadow: isOnline
-              ? '0 0 30px rgba(0, 255, 100, 0.5)'
-              : '0 0 30px rgba(239, 68, 68, 0.5)'
+            boxShadow: '0 0 30px rgba(0, 255, 100, 0.5)'
           }}
         >
           <Plus className="h-6 w-6" />
@@ -143,14 +136,12 @@ export function ProjectsSection() {
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         onSuccess={fetchProjects}
-        isOnline={isOnline}
       />
 
       {/* Filters */}
       <ProjectFilter
         active={activeCategory}
         onChange={setActiveCategory}
-        isOnline={isOnline}
         categories={availableCategories}
       />
 
@@ -162,7 +153,6 @@ export function ProjectsSection() {
               key={project.id}
               project={project}
               index={index}
-              isOnline={isOnline}
               priority={index === 0}
             />
           ))}
@@ -199,7 +189,6 @@ export function ProjectsSection() {
                     category={project.category}
                     image={project.image}
                     link={project.link}
-                    isOnline={isOnline}
                     isAdmin={isAdmin}
                     onDelete={handleDelete}
                   />
@@ -212,7 +201,7 @@ export function ProjectsSection() {
 
       {/* Empty state */}
       {!loading && filteredPortfolio.length === 0 && filteredCommunity.length === 0 && (
-        <div className={`py-20 text-center ${isOnline ? 'text-white/50' : 'text-red-400/50'}`}>
+        <div className="py-20 text-center text-white/50">
           <p>No projects found in this category.</p>
         </div>
       )}

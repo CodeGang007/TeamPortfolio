@@ -1,7 +1,4 @@
-"use client";
-
-import { useAuth } from "@/contexts/AuthContext";
-
+// Server component — geography + capabilities band under the hero. No JS, CSS-only marquee.
 const GEOGRAPHIES = ["Brazil", "Australia", "India", "United States", "Europe"];
 
 const CAPABILITIES = [
@@ -12,35 +9,31 @@ const CAPABILITIES = [
 ];
 
 export default function TrustStrip() {
-  const { isAuthenticated } = useAuth();
-  const isOnline = isAuthenticated;
-  const accent = isOnline ? "text-brand-green" : "text-red-500";
-
   return (
-    <section className="relative z-10 py-14 border-y border-zinc-900">
-      <div className="container mx-auto px-6 md:px-12">
+    <section className="relative z-10 py-14 border-y border-white/[0.06]">
+      <div className="max-w-6xl mx-auto px-6">
         {/* Geographies */}
-        <p className="text-center text-sm md:text-base text-zinc-500 mb-3">
+        <p className="text-center text-sm text-zinc-500 mb-3">
           Currently shipping for clients in
         </p>
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 mb-10">
           {GEOGRAPHIES.map((g, i) => (
             <span key={g} className="flex items-center gap-3">
-              <span className="text-base md:text-lg font-bold text-white">{g}</span>
+              <span className="text-base md:text-lg font-semibold text-white">{g}</span>
               {i < GEOGRAPHIES.length - 1 && (
-                <span className={`${accent} text-xs`}>●</span>
+                <span className="text-brand-green text-[10px]">●</span>
               )}
             </span>
           ))}
         </div>
 
-        {/* Capabilities marquee (pure CSS, pauses for reduced motion) */}
-        <div className="relative overflow-hidden marquee-mask">
-          <div className="flex w-max marquee-track gap-3">
+        {/* Capabilities marquee (pure CSS via tailwind `animate-scroll`) */}
+        <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] motion-reduce:[mask-image:none]">
+          <div className="flex w-max gap-3 animate-scroll motion-reduce:animate-none motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center">
             {[...CAPABILITIES, ...CAPABILITIES].map((tech, i) => (
               <span
                 key={`${tech}-${i}`}
-                className="shrink-0 text-xs md:text-sm font-mono px-3 py-1.5 rounded-full border border-zinc-800 bg-zinc-950 text-zinc-400"
+                className="shrink-0 text-xs md:text-sm font-mono px-3 py-1.5 rounded-full border border-white/[0.06] bg-zinc-900/40 text-zinc-400"
               >
                 {tech}
               </span>
@@ -48,43 +41,6 @@ export default function TrustStrip() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .marquee-mask {
-          -webkit-mask-image: linear-gradient(
-            to right,
-            transparent,
-            black 8%,
-            black 92%,
-            transparent
-          );
-          mask-image: linear-gradient(
-            to right,
-            transparent,
-            black 8%,
-            black 92%,
-            transparent
-          );
-        }
-        .marquee-track {
-          animation: marquee-scroll 40s linear infinite;
-        }
-        @keyframes marquee-scroll {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            transform: translateX(-50%);
-          }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .marquee-track {
-            animation: none;
-            flex-wrap: wrap;
-            justify-content: center;
-          }
-        }
-      `}</style>
     </section>
   );
 }

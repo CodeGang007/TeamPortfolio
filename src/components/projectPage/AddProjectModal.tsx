@@ -9,10 +9,9 @@ interface AddProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  isOnline: boolean;
 }
 
-export function AddProjectModal({ isOpen, onClose, onSuccess, isOnline }: AddProjectModalProps) {
+export function AddProjectModal({ isOpen, onClose, onSuccess }: AddProjectModalProps) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -111,10 +110,10 @@ export function AddProjectModal({ isOpen, onClose, onSuccess, isOnline }: AddPro
     }
   };
 
-  const themeColor = isOnline ? "#00ff64" : "#ef4444";
-  const themeBorder = isOnline ? "border-brand-green" : "border-red-500";
-  const themeBg = isOnline ? "bg-brand-green" : "bg-red-500";
-  const themeHover = isOnline ? "hover:bg-brand-green/90" : "hover:bg-red-500/90";
+  const themeColor = "#10B981";
+  const themeBorder = "border-brand-green";
+  const themeBg = "bg-brand-green";
+  const themeHover = "hover:bg-brand-green/90";
 
   return (
     <AnimatePresence>
@@ -160,7 +159,7 @@ export function AddProjectModal({ isOpen, onClose, onSuccess, isOnline }: AddPro
                 <label className="text-sm font-medium text-zinc-300">Project Image</label>
                 <div 
                   onClick={() => fileInputRef.current?.click()}
-                  className={`relative aspect-video w-full rounded-xl border-2 border-dashed ${themeBorder} ${isOnline ? 'bg-brand-green/5 hover:bg-brand-green/10' : 'bg-red-500/5 hover:bg-red-500/10'} transition-colors cursor-pointer overflow-hidden`}
+                  className={`relative aspect-video w-full rounded-xl border-2 border-dashed ${themeBorder} bg-brand-green/5 hover:bg-brand-green/10 transition-colors cursor-pointer overflow-hidden`}
                 >
                   {imagePreview ? (
                     <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />

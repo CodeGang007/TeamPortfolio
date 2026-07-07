@@ -1,9 +1,8 @@
 // src/lib/firebase.ts
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getDatabase } from "firebase/database";
-import { getStorage } from "firebase/storage";
-import { getAuth } from "firebase/auth";
+// App-only init. Import services from the per-service modules
+// (firebaseDb, firebaseAuth, firebaseRtdb, firebaseStorage) so each
+// route bundles only the Firebase pieces it actually uses.
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,13 +14,11 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
-// Singleton pattern to prevent multiple initializations in Next.js
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+let app: FirebaseApp | undefined;
 
-// Initialize services
-const db = getFirestore(app);
-const database = getDatabase(app);
-const storage = getStorage(app);
-const auth = getAuth(app);
-
-export { db, database, storage, auth };
+export function getFirebaseApp(): FirebaseApp {
+  if (!app) {
+    app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  }
+  return app;
+}

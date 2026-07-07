@@ -1,9 +1,7 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ExternalLink, MapPin } from "lucide-react";
+import Reveal from "@/components/ui/Reveal";
 
 export interface ProjectRowData {
   id: string;
@@ -21,7 +19,6 @@ export interface ProjectRowData {
 interface ProjectRowProps {
   project: ProjectRowData;
   index: number;
-  isOnline?: boolean;
   /** First row above the fold — load its image eagerly for LCP. */
   priority?: boolean;
 }
@@ -30,28 +27,35 @@ interface ProjectRowProps {
  * Heizen-style full-width "line by line" case-study row.
  * Large screenshot on one side, copy on the other, alternating by index.
  */
-export default function ProjectRow({ project, index, isOnline = true, priority = false }: ProjectRowProps) {
+export default function ProjectRow({ project, index, priority = false }: ProjectRowProps) {
   const reversed = index % 2 === 1;
-  const accent = isOnline ? "text-brand-green" : "text-red-500";
-  const accentBorder = isOnline ? "border-brand-green/30" : "border-red-500/30";
-  const accentGlow = isOnline ? "hover:shadow-brand-green/10" : "hover:shadow-red-500/10";
+  const accent = "text-brand-green";
+  const accentBorder = "border-brand-green/30";
+  const accentGlow = "hover:shadow-brand-green/10";
   const num = String(index + 1).padStart(2, "0");
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+    <Reveal>
+    <article
       className={`group grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center ${
         reversed ? "lg:[&>*:first-child]:order-2" : ""
       }`}
     >
-      {/* Screenshot */}
+      {/* Screenshot in browser chrome */}
       <Link
         href={`/project/${project.id}`}
-        className={`relative block w-full overflow-hidden rounded-2xl border ${accentBorder} bg-zinc-950 shadow-2xl ${accentGlow} transition-all duration-500`}
+        className={`card-shine relative block w-full overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/90 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.7)] hover:border-brand-green/30 ${accentGlow} transition-all duration-500`}
       >
+        <div className="flex items-center gap-2 px-3.5 py-2.5 border-b border-white/[0.06] bg-zinc-950/80">
+          <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+          <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+          <span className="w-2.5 h-2.5 rounded-full bg-brand-green/60" />
+          {project.link && (
+            <span className="ml-3 hidden sm:block max-w-[240px] truncate text-[10px] font-mono text-zinc-500 bg-zinc-900 border border-white/[0.06] rounded-md px-2.5 py-0.5">
+              {project.link.replace(/^https?:\/\/(www\.)?/, "").split(/[?#]/)[0].replace(/\/$/, "")}
+            </span>
+          )}
+        </div>
         <div className="relative aspect-[16/10] w-full">
           <Image
             src={project.image}
@@ -61,12 +65,19 @@ export default function ProjectRow({ project, index, isOnline = true, priority =
             priority={priority}
             className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
         </div>
       </Link>
 
       {/* Copy */}
-      <div className="flex flex-col">
+      <div className="relative flex flex-col">
+        {/* number watermark */}
+        <span
+          aria-hidden
+          className="absolute -top-14 -left-2 font-display text-[7rem] leading-none font-medium text-white/[0.04] select-none pointer-events-none"
+        >
+          {num}
+        </span>
         <div className="flex items-center gap-3 mb-4">
           <span className={`font-mono text-sm font-bold ${accent}`}>{num}</span>
           <span className="h-px w-10 bg-zinc-700" />
@@ -75,7 +86,7 @@ export default function ProjectRow({ project, index, isOnline = true, priority =
           </span>
         </div>
 
-        <h3 className="text-3xl md:text-4xl font-black tracking-tight text-white mb-3">
+        <h3 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-white mb-3">
           {project.title}
         </h3>
 
@@ -96,11 +107,7 @@ export default function ProjectRow({ project, index, isOnline = true, priority =
             {project.stack.slice(0, 6).map((tech) => (
               <span
                 key={tech}
-                className={`text-xs px-2.5 py-1 rounded-full font-medium border ${
-                  isOnline
-                    ? "bg-brand-green/5 text-brand-green/90 border-brand-green/20"
-                    : "bg-red-500/5 text-red-400/90 border-red-500/20"
-                }`}
+                className="text-xs px-2.5 py-1 rounded-full font-medium border bg-brand-green/5 text-brand-green/90 border-brand-green/20"
               >
                 {tech}
               </span>
@@ -129,6 +136,7 @@ export default function ProjectRow({ project, index, isOnline = true, priority =
           )}
         </div>
       </div>
-    </motion.article>
+    </article>
+    </Reveal>
   );
 }

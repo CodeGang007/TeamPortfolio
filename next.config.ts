@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    optimizePackageImports: [
+      "framer-motion",
+      "lucide-react",
+      "@tabler/icons-react",
+      "@nextui-org/react",
+    ],
+  },
   async redirects() {
     return [
       {

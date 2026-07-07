@@ -1,72 +1,72 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { Mail, Globe, Github, Users } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-
-const CONTACTS = [
-  { icon: Mail, label: "Email", value: "support@codegang.online", href: "mailto:support@codegang.online" },
-  { icon: Globe, label: "Website", value: "codegang.online", href: "https://www.codegang.online/" },
-  { icon: Github, label: "GitHub", value: "Devfusion009", href: "https://github.com/Devfusion009" },
-  { icon: Users, label: "Founders", value: "Gourav · Subhadip · Sushant · Sunny", href: undefined as string | undefined },
-];
+import Link from "next/link";
+import { ArrowRight, Mail, Github } from "lucide-react";
+import Reveal from "@/components/ui/Reveal";
 
 export default function FinalCTA() {
-  const { isAuthenticated } = useAuth();
-  const isOnline = isAuthenticated;
-  const accent = isOnline ? "text-brand-green" : "text-red-500";
-  const accentBorder = isOnline ? "hover:border-brand-green/50" : "hover:border-red-500/50";
-
   return (
-    <section className="relative z-10 py-28">
-      <div className="container mx-auto px-6 md:px-12 max-w-5xl">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
-        >
-          <span className={`text-sm font-bold uppercase tracking-[0.3em] mb-4 block ${accent}`}>
-            Get in touch
-          </span>
-          <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white leading-[0.95]">
-            Let&apos;s build something <br />
-            <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isOnline ? "from-brand-green to-emerald-400" : "from-red-400 to-rose-300"}`}>
-              that ships.
-            </span>
-          </h2>
-          <p className="text-zinc-400 text-lg mt-5 max-w-2xl mx-auto">
-            If any of our work looks like the kind of thing you need built — get in touch.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {CONTACTS.map(({ icon: Icon, label, value, href }, i) => {
-            const inner = (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
-                className={`h-full rounded-2xl border border-zinc-800 bg-zinc-950/60 p-6 transition-colors ${href ? accentBorder : ""}`}
-              >
-                <Icon className={`w-6 h-6 mb-4 ${accent}`} />
-                <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-1.5">
-                  {label}
-                </div>
-                <div className="text-white font-medium break-words">{value}</div>
-              </motion.div>
-            );
-            return href ? (
-              <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="block h-full">
-                {inner}
-              </a>
-            ) : (
-              <div key={label} className="h-full">{inner}</div>
-            );
-          })}
-        </div>
+    <section className="relative z-10 py-24 md:py-32">
+      <div className="max-w-6xl mx-auto px-6">
+        <Reveal>
+          <div className="card-shine noise rounded-3xl border border-white/[0.07] bg-zinc-900/40 px-8 py-16 md:px-16 md:py-20 text-center relative overflow-hidden">
+            {/* ambient glow + faint grid inside the card */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(ellipse 60% 80% at 50% 0%, rgba(16,185,129,0.10), transparent 70%)",
+              }}
+            />
+            <div
+              className="absolute inset-0 pointer-events-none opacity-40 bg-[linear-gradient(to_right,#17171b_1px,transparent_1px),linear-gradient(to_bottom,#17171b_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,#000_50%,transparent_100%)]"
+            />
+            <div className="relative">
+              <p className="inline-flex items-center gap-2.5 rounded-full border border-brand-green/25 bg-brand-green/[0.07] px-4 py-1.5 text-xs font-medium text-brand-green mb-6">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-green opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-green" />
+                </span>
+                Available for new projects
+              </p>
+              <h2 className="font-display text-3xl md:text-5xl font-medium tracking-tight text-white mb-5">
+                Let&apos;s build something <span className="text-gradient-emerald">that ships.</span>
+              </h2>
+              <p className="text-zinc-400 text-lg leading-relaxed max-w-xl mx-auto mb-10">
+                If any of our work looks like the kind of thing you need built —
+                tell us about your project.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
+                <Link
+                  href="/contactus"
+                  className="group inline-flex items-center gap-2 bg-brand-green text-zinc-950 hover:bg-brand-green-bright rounded-full px-8 py-4 font-semibold transition-colors shadow-[0_0_32px_rgba(16,185,129,0.25)]"
+                >
+                  Start a project
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-zinc-400">
+                <a
+                  href="mailto:support@codegang.online"
+                  className="inline-flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <Mail className="w-4 h-4 text-brand-green" />
+                  support@codegang.online
+                </a>
+                <a
+                  href="https://github.com/Devfusion009"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <Github className="w-4 h-4 text-brand-green" />
+                  Devfusion009
+                </a>
+                <span className="text-zinc-500">
+                  Founders — Gourav · Subhadip · Sushant · Sunny
+                </span>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -5,12 +5,10 @@ import { motion } from "framer-motion";
 export function ProjectFilter({
   active,
   onChange,
-  isOnline = true,
   categories = [],
 }: {
   active: string;
   onChange: (v: string) => void;
-  isOnline?: boolean;
   categories?: string[];
 }) {
   // Always show "All" first, then dynamic categories
@@ -20,10 +18,7 @@ export function ProjectFilter({
     <div className="relative z-10 mb-16 w-full px-4">
       <div className="mx-auto max-w-5xl">
         {/* Control Panel Container */}
-        <div className={`relative flex flex-wrap justify-center gap-3 p-6 rounded-3xl backdrop-blur-2xl border transition-all duration-500 ${isOnline
-            ? "bg-zinc-900/40 border-brand-green/10 shadow-[0_0_40px_-10px_rgba(0,255,65,0.05)]"
-            : "bg-red-950/40 border-red-500/10 shadow-[0_0_40px_-10px_rgba(220,38,38,0.05)]"
-          }`}>
+        <div className="relative flex flex-wrap justify-center gap-3 p-6 rounded-3xl backdrop-blur-2xl border transition-all duration-500 bg-zinc-900/40 border-brand-green/10 shadow-[0_0_40px_-10px_rgba(0,255,65,0.05)]">
 
           {filters.map((filter) => {
             const isActive = active === filter;
@@ -35,17 +30,14 @@ export function ProjectFilter({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`relative px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border flex items-center gap-2 ${isActive
-                    ? isOnline
-                      ? "bg-brand-green/20 border-brand-green/50 text-white shadow-[0_0_20px_rgba(0,255,65,0.25)]"
-                      : "bg-red-500/20 border-red-500/50 text-white shadow-[0_0_20px_rgba(239,68,68,0.25)]"
+                    ? "bg-brand-green/20 border-brand-green/50 text-white shadow-[0_0_20px_rgba(0,255,65,0.25)]"
                     : "bg-white/5 border-white/5 text-zinc-300 hover:bg-white/10 hover:text-white hover:border-white/20"
                   }`}
               >
                 {isActive && (
                   <motion.span
                     layoutId="activeProjectDot"
-                    className={`block h-1.5 w-1.5 rounded-full shadow-[0_0_8px_currentColor] ${isOnline ? "bg-brand-green" : "bg-red-500"
-                      }`}
+                    className="block h-1.5 w-1.5 rounded-full shadow-[0_0_8px_currentColor] bg-brand-green"
                   />
                 )}
 
@@ -59,8 +51,7 @@ export function ProjectFilter({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.2 }}
                     exit={{ opacity: 0 }}
-                    className={`absolute inset-0 rounded-xl blur-md z-10 ${isOnline ? "bg-brand-green" : "bg-red-500"
-                      }`}
+                    className="absolute inset-0 rounded-xl blur-md z-10 bg-brand-green"
                     transition={{ duration: 0.8, ease: "easeOut" }}
                   />
                 )}

@@ -3,7 +3,8 @@
 import { useEffect, useState, Suspense, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
-import { db, storage } from "@/lib/firebase";
+import { db } from "@/lib/firebaseDb";
+import { storage } from "@/lib/firebaseStorage";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 // import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Removed
 import { motion, AnimatePresence } from "framer-motion";

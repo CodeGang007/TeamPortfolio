@@ -17,7 +17,11 @@ import { Menu, X, LogOut, User, FileText, LayoutGrid, Camera, Users } from "luci
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import UserMenu from "@/components/UserMenu";
+import dynamic from "next/dynamic";
+
+// Only rendered when signed in — load on demand so its bundle (incl. framer-motion)
+// stays out of the public first-load JS.
+const UserMenu = dynamic(() => import("@/components/UserMenu"), { ssr: false });
 
 export default function AppLayout({
   children,
@@ -43,16 +47,15 @@ export default function AppLayout({
       {/* NAVBAR */}
       <Navbar>
         {/* Only render Navbar content after client-side hydration to prevent flash mismatch */}
-        <NavBody isOnline={isAuthenticated} visible={true}>
-          <NavbarLogo isOnline={isAuthenticated} />
+        <NavBody visible={true}>
+          <NavbarLogo />
           <NavItems
             items={navItems}
-            isOnline={isAuthenticated}
           />
           {!isAuthenticated && (
             <NavbarButton
-                variant="secondary" 
-                className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                variant="secondary"
+                className="border border-white/15 text-white hover:border-white/30"
                 onClick={openLoginModal}
             >
                 Sign In
@@ -67,7 +70,7 @@ export default function AppLayout({
 
         <MobileNav>
           <MobileNavHeader>
-            <NavbarLogo isOnline={isAuthenticated} />
+            <NavbarLogo />
             <MobileNavToggle
               isOpen={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -87,8 +90,7 @@ export default function AppLayout({
                   setIsMobileMenuOpen(false);
                   router.push(item.link);
                 }}
-                className={`block w-full p-2 text-lg font-medium transition-colors ${isAuthenticated ? "text-zinc-400 hover:text-white" : "text-red-400 hover:text-red-300"
-                  }`}
+                className="block w-full p-2 text-lg font-medium transition-colors text-zinc-400 hover:text-white"
               >
                 {item.name}
               </a>
@@ -103,7 +105,7 @@ export default function AppLayout({
                   setIsMobileMenuOpen(false);
                   openLoginModal();
                 }}
-                className="mt-4 w-full rounded-md px-4 py-3 text-sm font-bold shadow-md transition-all active:scale-95 bg-red-500/20 text-red-200 border border-red-500/50 hover:bg-red-500/30"
+                className="mt-4 w-full rounded-md px-4 py-3 text-sm font-bold shadow-md transition-all active:scale-95 border border-white/15 text-white hover:border-white/30"
               >
                 Sign In
               </button>

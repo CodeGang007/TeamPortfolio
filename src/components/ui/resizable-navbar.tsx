@@ -3,14 +3,8 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { CodeGangLogo } from "./CodeGangLogo";
 import { Menu, X } from "lucide-react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useMotionValueEvent,
-} from "framer-motion";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 
 interface NavbarProps {
@@ -53,22 +47,28 @@ interface MobileNavMenuProps {
 
 export const Navbar = ({ children, className }: NavbarProps) => {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
   const [visible, setVisible] = useState<boolean>(false);
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 100) {
-      setVisible(true);
-    } else {
-      setVisible(false);
-    }
-  });
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        setVisible(window.scrollY > 100);
+        ticking = false;
+      });
+    };
+
+    // Set initial state (e.g. page loaded mid-scroll)
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <motion.div
+    <div
       ref={ref}
       className={cn("sticky inset-x-0 top-5 z-[100] w-full", className)}
     >
@@ -80,49 +80,34 @@ export const Navbar = ({ children, className }: NavbarProps) => {
           )
           : child,
       )}
-    </motion.div>
+    </div>
   );
 };
 
-export const NavBody = ({ children, className, visible, isOnline = true }: NavBodyProps & { isOnline?: boolean }) => {
+export const NavBody = ({ children, className, visible }: NavBodyProps) => {
   return (
-    <motion.div
-      animate={{
-        backdropFilter: visible ? "blur(12px)" : "none",
-        backgroundColor: visible ? "rgba(0, 0, 0, 0.7)" : "transparent",
-        boxShadow: visible
-          ? isOnline
-            ? "0 0 24px rgba(0, 255, 65, 0.1), 0 1px 1px rgba(0, 255, 65, 0.05), 0 0 0 1px rgba(0, 255, 65, 0.1)"
-            : "0 0 24px rgba(239, 68, 68, 0.1), 0 1px 1px rgba(239, 68, 68, 0.05), 0 0 0 1px rgba(239, 68, 68, 0.1)"
-          : "none",
-        width: visible ? "auto" : "100%",
-        y: visible ? 20 : 0,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 200,
-        damping: 50,
-      }}
+    <div
       style={{
-        minWidth: visible ? "auto" : "auto",
         maxWidth: "fit-content",
       }}
       className={cn(
-        "relative z-[60] mx-auto hidden w-auto flex-row items-center justify-between self-start rounded-full px-10 py-3 lg:flex border border-transparent gap-8",
-        visible && "border-white/10 bg-black/80 backdrop-blur-md",
+        "relative z-[60] mx-auto hidden w-auto flex-row items-center justify-between self-start rounded-full px-10 py-3 lg:flex border border-transparent gap-8 transition-all duration-300",
+        visible
+          ? "translate-y-5 border-white/10 bg-black/80 backdrop-blur-md shadow-[0_0_24px_rgba(0,255,65,0.1),0_1px_1px_rgba(0,255,65,0.05),0_0_0_1px_rgba(0,255,65,0.1)]"
+          : "translate-y-0 bg-transparent shadow-none",
         className,
       )}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };
 
-export const NavItems = ({ items, className, onItemClick, isOnline = true }: NavItemsProps & { isOnline?: boolean }) => {
+export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <motion.div
+    <div
       onMouseLeave={() => setHovered(null)}
       className={cn(
         "hidden flex-row items-center justify-center space-x-2 lg:flex",
@@ -132,62 +117,43 @@ export const NavItems = ({ items, className, onItemClick, isOnline = true }: Nav
       {items.map((item, idx) => (
         <Link
           onMouseEnter={() => setHovered(idx)}
-          onClick={(e) => {
+          onClick={() => {
             if (onItemClick) onItemClick();
           }}
           className={cn(
             "relative px-5 py-2.5 rounded-full text-[15px] font-medium transition-all duration-300 border flex items-center justify-center whitespace-nowrap",
-            isOnline
-              ? "bg-white/5 border-white/5 text-zinc-400 hover:text-white hover:border-brand-green/30 hover:shadow-[0_0_15px_rgba(34,197,94,0.15)] hover:bg-white/10"
-              : "bg-red-950/10 border-red-500/10 text-red-500/70 hover:text-red-400 hover:border-red-500/30 hover:shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:bg-red-950/20"
+            "bg-white/5 border-white/5 text-zinc-400 hover:text-white hover:border-brand-green/30 hover:shadow-[0_0_15px_rgba(34,197,94,0.15)] hover:bg-white/10"
           )}
           key={`link-${idx}`}
           href={item.link}
         >
           {/* Active/Hover Background - Keeping it subtle or removing if the border style is enough. Let's keep a very subtle internal glow */}
-          {hovered === idx && (
-            <motion.div
-              layoutId="hovered"
-              className={cn(
-                "absolute inset-0 h-full w-full rounded-full z-0",
-                isOnline ? "bg-brand-green/5" : "bg-red-500/5"
-              )}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
-          )}
+          <div
+            className={cn(
+              "absolute inset-0 h-full w-full rounded-full z-0 bg-brand-green/5 transition-opacity duration-200",
+              hovered === idx ? "opacity-100" : "opacity-0",
+            )}
+          />
           <span className="relative z-10">{item.name}</span>
         </Link>
       ))}
-    </motion.div>
+    </div>
   );
 };
 
 export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
   return (
-    <motion.div
-      animate={{
-        backdropFilter: visible ? "blur(10px)" : "none",
-        backgroundColor: visible ? "rgba(0,0,0,0.8)" : "transparent",
-        width: visible ? "90%" : "100%",
-        paddingRight: visible ? "12px" : "0px",
-        paddingLeft: visible ? "12px" : "0px",
-        borderRadius: visible ? "4px" : "2rem",
-        y: visible ? 20 : 0,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 200,
-        damping: 50,
-      }}
+    <div
       className={cn(
-        "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between bg-transparent px-0 py-2 lg:hidden",
+        "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between bg-transparent py-2 lg:hidden transition-all duration-300",
+        visible
+          ? "translate-y-5 w-[90%] px-3 rounded-[4px] bg-black/80 backdrop-blur-md"
+          : "translate-y-0 px-0 rounded-[2rem]",
         className,
       )}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };
 
@@ -213,22 +179,17 @@ export const MobileNavMenu = ({
   isOpen,
   onClose,
 }: MobileNavMenuProps) => {
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg bg-zinc-950/90 border border-zinc-800 px-4 py-8 shadow-2xl backdrop-blur-xl",
-            className,
-          )}
-        >
-          {children}
-        </motion.div>
+    <div
+      className={cn(
+        "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg bg-zinc-950/90 border border-zinc-800 px-4 py-8 shadow-2xl backdrop-blur-xl",
+        className,
       )}
-    </AnimatePresence>
+    >
+      {children}
+    </div>
   );
 };
 
@@ -246,22 +207,16 @@ export const MobileNavToggle = ({
   );
 };
 
-export const NavbarLogo = ({ isOnline = true }: { isOnline?: boolean }) => {
+export const NavbarLogo = () => {
   return (
     <Link
       href="/"
       className="relative z-20 mr-4 flex items-center space-x-3 px-2 py-1 font-normal"
     >
-      <div className={cn(
-        "h-12 w-12 flex items-center justify-center transition-all duration-500",
-        isOnline ? "drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]"
-      )}>
-        <CodeGangLogo isOnline={isOnline} />
+      <div className="h-12 w-12 flex items-center justify-center drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]">
+        <CodeGangLogo />
       </div>
-      <span className={cn(
-        "font-bold text-xl tracking-tight transition-colors duration-500",
-        isOnline ? "text-white" : "text-red-200"
-      )}>CodeGang</span>
+      <span className="font-bold text-xl tracking-tight text-white">CodeGang</span>
 
     </Link>
   );

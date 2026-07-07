@@ -1,88 +1,64 @@
-"use client";
-
 import AppLayout from "@/components/AppLayout";
-import AskForProject from "@/components/home/AskForProject";
-import FloatingHero from "@/components/home/FloatingHero";
-import PerformanceStats from "@/components/home/PerformanceStats";
-import ServiceWorkflow from "@/components/home/ServiceWorkflow";
-import MyTopPublications from "@/components/home/MyTopPublications";
-import CreativeProjects from "@/components/home/CreativeProjects";
+import Hero from "@/components/home/Hero";
 import TrustStrip from "@/components/home/TrustStrip";
+import Services from "@/components/home/Services";
+import CreativeProjects from "@/components/home/CreativeProjects";
+import Process from "@/components/home/Process";
+import ProofSection from "@/components/home/ProofSection";
 import FinalCTA from "@/components/home/FinalCTA";
-
-import UserStories from "@/components/UserStories";
 import FAQ from "@/components/FAQ";
-import CheckeredBackground from "@/components/CheckeredBackground";
-import { motion } from "framer-motion";
-import { useAuth } from "@/contexts/AuthContext";
+import Reveal from "@/components/ui/Reveal";
 
+// Server component — ships as static HTML; interactivity lives in leaf islands.
 export default function HomePage() {
-  const { isAuthenticated } = useAuth();
-  const isOnline = isAuthenticated;
-
   return (
     <AppLayout>
-      <CheckeredBackground />
-      <div className="relative min-h-screen bg-transparent overflow-hidden">
+      <div className="relative min-h-screen">
         {/* 1. Hero */}
-        <FloatingHero />
+        <Hero />
 
-        {/* 2. Trust strip — geographies + capabilities */}
+        {/* 2. Proof band — real numbers, geographies, capabilities */}
         <TrustStrip />
 
         {/* 3. What we build */}
-        <MyTopPublications />
+        <Services />
 
-        {/* 4. Selected Work — full-width stacked rows */}
-        <section className="py-24 relative z-10">
-          <div className="container mx-auto px-6 md:px-12">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className="mb-16"
-            >
-              <span className={`text-sm font-bold uppercase tracking-[0.3em] mb-4 block ${isOnline ? 'text-brand-green' : 'text-red-500'}`}>
+        {/* 4. Selected Work */}
+        <section id="work" className="relative z-10 py-24 md:py-32 scroll-mt-24">
+          <div className="max-w-6xl mx-auto px-6">
+            <Reveal className="mb-16">
+              <p className="text-xs font-medium uppercase tracking-[0.25em] text-brand-green mb-4">
                 Selected Work
-              </span>
-              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white">
-                Six projects. <br />
-                <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isOnline ? 'from-brand-green to-emerald-400' : 'from-red-400 to-rose-300'}`}>
-                  Five geographies.
-                </span>
-              </h2>
-              <p className="text-zinc-400 text-lg mt-4 max-w-2xl">
-                Production AI, multi-tenant platforms, mobile apps, ERP suites, property tech, and a live hospital system — shipped for clients across Brazil, Australia, India, the USA, and Europe.
               </p>
-            </motion.div>
+              <h2 className="font-display text-3xl md:text-5xl font-medium tracking-tight text-white mb-4">
+                Six projects. Five geographies.
+              </h2>
+              <p className="text-zinc-400 text-lg leading-relaxed max-w-2xl">
+                Production AI, multi-tenant platforms, mobile apps, ERP suites,
+                property tech, and a live hospital system — shipped for clients
+                across Brazil, Australia, India, the USA, and Europe.
+              </p>
+            </Reveal>
             <CreativeProjects />
           </div>
         </section>
 
         {/* 5. How we run a project */}
-        <ServiceWorkflow />
+        <Process />
 
-        {/* 6. Why work with us + at a glance */}
-        <PerformanceStats />
+        {/* 6. Why work with us — real numbers */}
+        <ProofSection />
 
-        <div className="container mx-auto px-6 md:px-12 relative z-10">
+        {/* 7. FAQ */}
+        <section className="relative z-10">
+          <div className="max-w-6xl mx-auto px-6">
+            <FAQ />
+          </div>
+        </section>
 
-          {/* 7. Testimonials */}
-          <UserStories />
-
-          {/* 8. FAQ */}
-          <FAQ />
-
-          {/* 9. Inspired? Build your own */}
-          <AskForProject />
-        </div>
-
-        {/* 10. Final contact CTA */}
+        {/* 8. Final contact CTA */}
         <FinalCTA />
       </div>
-
-
     </AppLayout>
   );
 }

@@ -10,7 +10,6 @@ interface SwipeButtonProps {
     href?: string;
     text?: string;
     disabled?: boolean;
-    isOnline?: boolean;
 }
 
 export function SwipeButton({
@@ -18,7 +17,6 @@ export function SwipeButton({
     href = "/project-request/custom",
     text = "Start a Project",
     disabled = false,
-    isOnline = true,
 }: SwipeButtonProps) {
     const router = useRouter();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -30,18 +28,12 @@ export function SwipeButton({
     const [containerWidth, setContainerWidth] = useState(0);
     const handleWidth = 56; // Width of the handle in pixels
 
-    // Theme colors based on online status
-    const colors = isOnline
-        ? {
-            primary: "0, 255, 100", // Green RGB
-            primaryHex: "#00ff64",
-            primaryDark: "#00cc50",
-        }
-        : {
-            primary: "239, 68, 68", // Red RGB
-            primaryHex: "#ef4444",
-            primaryDark: "#dc2626",
-        };
+    // Theme colors
+    const colors = {
+        primary: "0, 255, 100", // Green RGB
+        primaryHex: "#00ff64",
+        primaryDark: "#00cc50",
+    };
 
     // Calculate container width on mount and resize
     useEffect(() => {
@@ -178,14 +170,10 @@ export function SwipeButton({
         ${isDragging ? "cursor-grabbing" : ""}
       `}
             style={{
-                background: isOnline
-                    ? "rgba(255, 255, 255, 0.05)"
-                    : "rgba(239, 68, 68, 0.1)",
+                background: "rgba(255, 255, 255, 0.05)",
                 backdropFilter: "blur(12px)",
                 WebkitBackdropFilter: "blur(12px)",
-                border: isOnline
-                    ? "1px solid rgba(255, 255, 255, 0.1)"
-                    : "1px solid rgba(239, 68, 68, 0.3)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
             }}
         >
             {/* Track Text */}
@@ -196,14 +184,9 @@ export function SwipeButton({
                 <span
                     className="text-base font-bold tracking-wide"
                     style={{
-                        background: isOnline
-                            ? `linear-gradient(90deg, 
-                  rgba(255,255,255,0.9) ${progress}%, 
+                        background: `linear-gradient(90deg,
+                  rgba(255,255,255,0.9) ${progress}%,
                   rgba(255,255,255,0.6) ${progress + 20}%
-                )`
-                            : `linear-gradient(90deg, 
-                  rgba(255,200,200,0.9) ${progress}%, 
-                  rgba(255,150,150,0.6) ${progress + 20}%
                 )`,
                         WebkitBackgroundClip: "text",
                         backgroundClip: "text",
@@ -271,7 +254,7 @@ export function SwipeButton({
                             exit={{ scale: 0 }}
                             transition={{ type: "spring", stiffness: 500, damping: 25 }}
                         >
-                            <Check size={24} strokeWidth={3} className={isOnline ? "text-black" : "text-white"} />
+                            <Check size={24} strokeWidth={3} className="text-black" />
                         </motion.div>
                     ) : (
                         <motion.div
@@ -281,7 +264,7 @@ export function SwipeButton({
                             }}
                             transition={{ duration: 0 }}
                         >
-                            <ArrowRight size={24} strokeWidth={2.5} className={isOnline ? "text-black" : "text-white"} />
+                            <ArrowRight size={24} strokeWidth={2.5} className="text-black" />
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -295,9 +278,7 @@ export function SwipeButton({
                 <motion.div
                     className="absolute h-full w-1/3"
                     style={{
-                        background: isOnline
-                            ? "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)"
-                            : "linear-gradient(90deg, transparent, rgba(255,100,100,0.15), transparent)",
+                        background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
                     }}
                     animate={{
                         x: ["-100%", "400%"],

@@ -14,7 +14,6 @@ interface ProjectCardProps {
   category: string;
   image?: string;
   link?: string;
-  isOnline?: boolean;
   isAdmin?: boolean;
   onDelete?: (id: string) => void;
 }
@@ -25,8 +24,7 @@ export function ProjectCard({
   description, 
   category, 
   image, 
-  link, 
-  isOnline = true,
+  link,
   isAdmin = false,
   onDelete 
 }: ProjectCardProps) {
@@ -47,7 +45,7 @@ export function ProjectCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
       whileHover={{ scale: 1.02 }}
-      className={`${styles.cardWrapper} ${!isOnline ? styles.offline : ''} relative group`}
+      className={`${styles.cardWrapper} relative group`}
     >
       {/* Admin Delete Button - Shows on Hover */}
       {isAdmin && id && onDelete && (

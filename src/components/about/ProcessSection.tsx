@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Search, PenTool, Code2, Rocket } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
 
 const steps = [
     {
@@ -32,14 +31,13 @@ const steps = [
 ];
 
 export function ProcessSection() {
-    const { isAuthenticated } = useAuth();
     return (
         <section className="py-24 bg-zinc-950 border-t border-zinc-900">
             <div className="container mx-auto px-6">
                 <div className="mb-16 text-center max-w-3xl mx-auto">
-                    <span className={`${isAuthenticated ? "text-brand-green" : "text-red-500"} uppercase tracking-widest text-sm font-bold block mb-4`}>How We Run a Project</span>
+                    <span className="text-brand-green uppercase tracking-widest text-sm font-bold block mb-4">How We Run a Project</span>
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                        From Brief to <span className={`${isAuthenticated ? "text-brand-green" : "text-red-500"}`}>Production.</span>
+                        From Brief to <span className="text-brand-green">Production.</span>
                     </h2>
                     <p className="text-zinc-400 text-lg">
                         Four steps, no surprises. We write a one-pager before any code is written, ship in two-week slices, and stay on retainer for as long as your product is moving fast.
@@ -54,17 +52,17 @@ export function ProcessSection() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.15 }}
-                            className={`relative group p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 transition-all hover:-translate-y-2 ${isAuthenticated ? "hover:border-brand-green/30" : "hover:border-red-500/30"}`}
+                            className="relative group p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 transition-all hover:-translate-y-2 hover:border-brand-green/30"
                         >
-                            <div className={`absolute -top-6 left-6 text-6xl font-bold text-zinc-800/50 transition-colors ${isAuthenticated ? "group-hover:text-brand-green/10" : "group-hover:text-red-500/10"}`}>
+                            <div className="absolute -top-6 left-6 text-6xl font-bold text-zinc-800/50 transition-colors group-hover:text-brand-green/10">
                                 {item.step}
                             </div>
 
-                            <div className={`relative z-10 mb-6 bg-zinc-950 w-12 h-12 rounded-xl flex items-center justify-center border border-zinc-800 shadow-lg ${isAuthenticated ? "group-hover:border-brand-green/50 text-white group-hover:text-brand-green" : "group-hover:border-red-500/50 text-white group-hover:text-red-500"}`}>
+                            <div className="relative z-10 mb-6 bg-zinc-950 w-12 h-12 rounded-xl flex items-center justify-center border border-zinc-800 shadow-lg group-hover:border-brand-green/50 text-white group-hover:text-brand-green">
                                 <item.icon size={24} />
                             </div>
 
-                            <h3 className={`relative z-10 text-xl font-bold text-white mb-3 transition-colors ${isAuthenticated ? "group-hover:text-brand-green" : "group-hover:text-red-500"}`}>
+                            <h3 className="relative z-10 text-xl font-bold text-white mb-3 transition-colors group-hover:text-brand-green">
                                 {item.title}
                             </h3>
 
