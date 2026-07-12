@@ -76,9 +76,9 @@ function ToolbarButton({
                 "p-2 rounded-lg",
                 isActive
                     ? isOnline
-                        ? 'bg-brand-green/15 text-brand-green'
+                        ? 'bg-blue-600/15 text-blue-600'
                         : 'bg-red-500/15 text-red-400'
-                    : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800',
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100',
                 disabled && 'opacity-30 cursor-not-allowed'
             )}
         >
@@ -89,7 +89,7 @@ function ToolbarButton({
 
 // Divider for toolbar groups
 const ToolbarDivider = () => (
-    <div className="w-px h-6 bg-zinc-700/50 mx-1" />
+    <div className="w-px h-6 bg-slate-200/50 mx-1" />
 );
 
 // Link Popup Component
@@ -162,27 +162,27 @@ function LinkPopup({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-full left-0 mt-3 p-4 bg-zinc-900/95 backdrop-blur-xl rounded-xl border border-zinc-700/50 shadow-2xl z-50 min-w-[320px]"
+            className="absolute top-full left-0 mt-3 p-4 bg-white/95 backdrop-blur-xl rounded-xl border border-slate-300 shadow-2xl z-50 min-w-[320px]"
             onKeyDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
         >
             <div className="flex items-center gap-2 mb-4">
                 <div className={cn(
                     "p-1.5 rounded-lg",
-                    isOnline ? "bg-brand-green/10" : "bg-red-500/10"
+                    isOnline ? "bg-blue-600/10" : "bg-red-500/10"
                 )}>
                     <LinkIcon className={cn(
                         "h-4 w-4",
-                        isOnline ? "text-brand-green" : "text-red-400"
+                        isOnline ? "text-blue-600" : "text-red-400"
                     )} />
                 </div>
-                <span className="text-sm font-semibold text-white">Insert Link</span>
+                <span className="text-sm font-semibold text-slate-900">Insert Link</span>
             </div>
 
             <div className="space-y-3">
                 <div>
-                    <label className="text-xs font-medium text-zinc-400 block mb-1.5">
-                        Display Text <span className="text-zinc-600">(optional)</span>
+                    <label className="text-xs font-medium text-slate-600 block mb-1.5">
+                        Display Text <span className="text-slate-400">(optional)</span>
                     </label>
                     <input
                         type="text"
@@ -190,11 +190,11 @@ function LinkPopup({
                         onChange={(e) => setLinkText(e.target.value)}
                         onKeyDown={(e) => e.stopPropagation()}
                         placeholder="e.g. Click here"
-                        className="w-full px-3 py-2.5 text-sm bg-zinc-950/50 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-zinc-600 focus:ring-2 focus:ring-zinc-700/50 placeholder:text-zinc-600 transition-all"
+                        className="w-full px-3 py-2.5 text-sm bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-300/50 placeholder:text-slate-400 transition-all"
                     />
                 </div>
                 <div>
-                    <label className="text-xs font-medium text-zinc-400 block mb-1.5">
+                    <label className="text-xs font-medium text-slate-600 block mb-1.5">
                         URL <span className="text-red-400">*</span>
                     </label>
                     <input
@@ -205,10 +205,10 @@ function LinkPopup({
                         onBlur={() => setUrlTouched(true)}
                         placeholder="https://example.com"
                         className={cn(
-                            "w-full px-3 py-2.5 text-sm bg-zinc-950/50 border rounded-lg text-white focus:outline-none transition-all placeholder:text-zinc-600",
+                            "w-full px-3 py-2.5 text-sm bg-white border rounded-lg text-slate-900 focus:outline-none transition-all placeholder:text-slate-400",
                             showError
                                 ? "border-amber-500/50 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
-                                : "border-zinc-800 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-700/50"
+                                : "border-slate-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-300/50"
                         )}
                         autoFocus
                     />
@@ -223,11 +223,11 @@ function LinkPopup({
                 </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-zinc-800/50">
+            <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-slate-200">
                 <button
                     type="button"
                     onClick={handleCancel}
-                    className="px-4 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all"
+                    className="px-4 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
                 >
                     Cancel
                 </button>
@@ -239,9 +239,9 @@ function LinkPopup({
                         "px-4 py-2 text-sm font-semibold rounded-lg transition-all flex items-center gap-2",
                         canInsert
                             ? isOnline
-                                ? "bg-brand-green text-black hover:bg-brand-green/90 shadow-lg shadow-brand-green/20"
-                                : "bg-red-500 text-white hover:bg-red-600"
-                            : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                                ? "bg-blue-600 text-slate-900 hover:bg-blue-600/90 shadow-lg shadow-blue-600/20"
+                                : "bg-red-500 text-slate-900 hover:bg-red-600"
+                            : "bg-slate-100 text-slate-500 cursor-not-allowed"
                     )}
                 >
                     <LinkIcon className="h-3.5 w-3.5" />
@@ -293,7 +293,7 @@ export function RichTextEditor({
         content: value,
         editorProps: {
             attributes: {
-                class: 'prose prose-invert prose-sm max-w-none focus:outline-none min-h-[160px] px-5 py-4 text-white leading-relaxed',
+                class: 'prose prose-sm max-w-none focus:outline-none min-h-[160px] px-5 py-4 text-slate-900 leading-relaxed',
             },
         },
         onUpdate: ({ editor }) => {
@@ -357,7 +357,7 @@ export function RichTextEditor({
     // Professional Toolbar
     const Toolbar = ({ className = "", showExpandButton = true }: { className?: string; showExpandButton?: boolean }) => (
         <div className={cn(
-            "flex flex-wrap items-center gap-0.5 px-3 py-2 bg-zinc-900/60 backdrop-blur-sm",
+            "flex flex-wrap items-center gap-0.5 px-3 py-2 bg-slate-50 backdrop-blur-sm",
             className
         )}>
             {/* Text Formatting */}
@@ -497,8 +497,8 @@ export function RichTextEditor({
                     className={cn(
                         "p-2 rounded-lg transition-all flex items-center gap-1.5 text-xs font-medium",
                         isOnline
-                            ? 'text-zinc-500 hover:text-brand-green hover:bg-brand-green/10'
-                            : 'text-zinc-500 hover:text-red-400 hover:bg-red-500/10'
+                            ? 'text-slate-500 hover:text-blue-600 hover:bg-blue-600/10'
+                            : 'text-slate-500 hover:text-red-400 hover:bg-red-500/10'
                     )}
                     title="Expand"
                 >
@@ -515,29 +515,29 @@ export function RichTextEditor({
             editor={editor}
             className={cn(
                 "min-h-[160px] overflow-y-auto custom-scrollbar",
-                isOnline ? "text-white" : "text-red-200"
+                isOnline ? "text-slate-900" : "text-red-200"
             )}
         />
     );
 
     return (
         <div className="space-y-2.5">
-            <label className="text-sm font-semibold text-zinc-300 flex items-center gap-1.5">
-                <Type className="h-4 w-4 text-zinc-500" />
+            <label className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
+                <Type className="h-4 w-4 text-slate-500" />
                 {label}
-                {required && <span className={cn("text-xs", isOnline ? 'text-brand-green' : 'text-red-500')}>*</span>}
+                {required && <span className={cn("text-xs", isOnline ? 'text-blue-600' : 'text-red-500')}>*</span>}
             </label>
 
             <div className={cn(
                 "relative rounded-xl border overflow-hidden transition-all duration-200",
                 isOnline
-                    ? "border-zinc-800/80 bg-zinc-950/50 hover:border-zinc-700 focus-within:border-brand-green/50 focus-within:ring-2 focus-within:ring-brand-green/10 focus-within:shadow-[0_0_20px_rgba(34,197,94,0.05)]"
+                    ? "border-slate-200/80 bg-white hover:border-slate-300 focus-within:border-blue-600/50 focus-within:ring-2 focus-within:ring-blue-600/10 focus-within:shadow-[0_0_20px_rgba(34,197,94,0.05)]"
                     : "border-red-900/30 bg-red-950/20 hover:border-red-800/50 focus-within:border-red-500/50 focus-within:ring-2 focus-within:ring-red-500/10"
             )}>
                 {/* Toolbar */}
                 <div className={cn(
                     "border-b",
-                    isOnline ? "border-zinc-800/50" : "border-red-900/30"
+                    isOnline ? "border-slate-200" : "border-red-900/30"
                 )}>
                     <Toolbar />
                 </div>
@@ -545,7 +545,7 @@ export function RichTextEditor({
                 {/* Editor Content - Only render here when NOT expanded */}
                 {!isExpanded && (
                     <div
-                        className="relative max-h-[280px] overflow-y-auto custom-scrollbar bg-zinc-950/30 overscroll-contain"
+                        className="relative max-h-[280px] overflow-y-auto custom-scrollbar bg-white/30 overscroll-contain"
                         onWheel={(e) => {
                             const target = e.currentTarget;
                             const scrollTop = target.scrollTop;
@@ -570,14 +570,14 @@ export function RichTextEditor({
 
                 {/* Placeholder when expanded */}
                 {isExpanded && (
-                    <div className="min-h-[160px] max-h-[280px] flex items-center justify-center bg-zinc-950/30">
+                    <div className="min-h-[160px] max-h-[280px] flex items-center justify-center bg-white/30">
                         <div className="text-center">
                             <Expand className={cn(
                                 "h-8 w-8 mx-auto mb-2",
-                                isOnline ? "text-brand-green/30" : "text-red-500/30"
+                                isOnline ? "text-blue-600/30" : "text-red-500/30"
                             )} />
-                            <span className="text-sm text-zinc-600">Editing in fullscreen mode</span>
-                            <p className="text-xs text-zinc-700 mt-1">Press <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-400">Esc</kbd> to exit</p>
+                            <span className="text-sm text-slate-400">Editing in fullscreen mode</span>
+                            <p className="text-xs text-slate-300 mt-1">Press <kbd className="px-1.5 py-0.5 bg-slate-100 rounded text-slate-600">Esc</kbd> to exit</p>
                         </div>
                     </div>
                 )}
@@ -585,11 +585,11 @@ export function RichTextEditor({
                 {/* Footer with character count */}
                 <div className={cn(
                     "px-4 py-2.5 border-t flex items-center justify-between",
-                    isOnline ? "border-zinc-800/50 bg-zinc-900/30" : "border-red-900/30 bg-red-950/30"
+                    isOnline ? "border-slate-200 bg-slate-50" : "border-red-900/30 bg-red-950/30"
                 )}>
                     {/* Character count bar */}
                     <div className="flex items-center gap-3">
-                        <div className="w-24 h-1.5 rounded-full bg-zinc-800 overflow-hidden">
+                        <div className="w-24 h-1.5 rounded-full bg-slate-100 overflow-hidden">
                             <div
                                 className={cn(
                                     "h-full rounded-full transition-all duration-300",
@@ -597,7 +597,7 @@ export function RichTextEditor({
                                         ? "bg-amber-500"
                                         : characterPercentage > 75
                                             ? "bg-yellow-500"
-                                            : isOnline ? "bg-brand-green" : "bg-red-500"
+                                            : isOnline ? "bg-blue-600" : "bg-red-500"
                                 )}
                                 style={{ width: `${Math.min(characterPercentage, 100)}%` }}
                             />
@@ -606,7 +606,7 @@ export function RichTextEditor({
                             "text-xs font-medium tabular-nums",
                             characterPercentage > 90
                                 ? "text-amber-500"
-                                : "text-zinc-500"
+                                : "text-slate-500"
                         )}>
                             {characterCount.toLocaleString()} / {maxLength.toLocaleString()}
                         </span>
@@ -621,7 +621,7 @@ export function RichTextEditor({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 md:p-8"
+                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/95 backdrop-blur-sm p-4 md:p-8"
                     onClick={() => setIsExpanded(false)}
                 >
                     <motion.div
@@ -632,29 +632,29 @@ export function RichTextEditor({
                         className={cn(
                             "w-full max-w-4xl h-[85vh] rounded-2xl border shadow-2xl flex flex-col overflow-hidden",
                             isOnline
-                                ? 'bg-zinc-950 border-zinc-800 shadow-brand-green/5'
-                                : 'bg-zinc-950 border-red-900/50 shadow-red-500/5'
+                                ? 'bg-white border-slate-200 shadow-blue-600/5'
+                                : 'bg-white border-red-900/50 shadow-red-500/5'
                         )}
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Modal Header */}
                         <div className={cn(
                             "flex items-center justify-between px-6 py-4 border-b",
-                            isOnline ? 'border-zinc-800/50' : 'border-red-900/30'
+                            isOnline ? 'border-slate-200' : 'border-red-900/30'
                         )}>
                             <div className="flex items-center gap-3">
                                 <div className={cn(
                                     "p-2.5 rounded-xl",
-                                    isOnline ? 'bg-brand-green/10' : 'bg-red-500/10'
+                                    isOnline ? 'bg-blue-600/10' : 'bg-red-500/10'
                                 )}>
                                     <FileText className={cn(
                                         "h-5 w-5",
-                                        isOnline ? 'text-brand-green' : 'text-red-500'
+                                        isOnline ? 'text-blue-600' : 'text-red-500'
                                     )} />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-white">Project Description</h3>
-                                    <p className="text-xs text-zinc-500">Use formatting to structure your requirements</p>
+                                    <h3 className="text-lg font-semibold text-slate-900">Project Description</h3>
+                                    <p className="text-xs text-slate-500">Use formatting to structure your requirements</p>
                                 </div>
                             </div>
                             <button
@@ -663,27 +663,27 @@ export function RichTextEditor({
                                 className={cn(
                                     "p-2 rounded-lg transition-all flex items-center gap-2 text-sm font-medium",
                                     isOnline
-                                        ? 'hover:bg-zinc-800 text-zinc-400 hover:text-white'
+                                        ? 'hover:bg-slate-100 text-slate-600 hover:text-slate-900'
                                         : 'hover:bg-red-900/30 text-red-400 hover:text-red-300'
                                 )}
                             >
                                 <Minimize2 className="h-4 w-4" />
                                 <span className="hidden sm:inline">Exit</span>
-                                <kbd className="hidden sm:inline px-1.5 py-0.5 text-[10px] bg-zinc-800 rounded text-zinc-500">Esc</kbd>
+                                <kbd className="hidden sm:inline px-1.5 py-0.5 text-[10px] bg-slate-100 rounded text-slate-500">Esc</kbd>
                             </button>
                         </div>
 
                         {/* Modal Toolbar */}
                         <div className={cn(
                             "border-b",
-                            isOnline ? "border-zinc-800/50" : "border-red-900/30"
+                            isOnline ? "border-slate-200" : "border-red-900/30"
                         )}>
                             <Toolbar showExpandButton={false} />
                         </div>
 
                         {/* Modal Editor Content */}
                         <div
-                            className="flex-1 overflow-y-auto custom-scrollbar bg-zinc-950/50 overscroll-contain"
+                            className="flex-1 overflow-y-auto custom-scrollbar bg-white overscroll-contain"
                             onWheel={(e) => {
                                 const target = e.currentTarget;
                                 const scrollTop = target.scrollTop;
@@ -707,21 +707,21 @@ export function RichTextEditor({
                         {/* Modal Footer */}
                         <div className={cn(
                             "flex items-center justify-between px-6 py-4 border-t",
-                            isOnline ? 'border-zinc-800/50 bg-zinc-900/30' : 'border-red-900/30 bg-red-950/20'
+                            isOnline ? 'border-slate-200 bg-slate-50' : 'border-red-900/30 bg-red-950/20'
                         )}>
                             <div className="flex items-center gap-3">
-                                <div className="w-32 h-1.5 rounded-full bg-zinc-800 overflow-hidden">
+                                <div className="w-32 h-1.5 rounded-full bg-slate-100 overflow-hidden">
                                     <div
                                         className={cn(
                                             "h-full rounded-full transition-all duration-300",
                                             characterPercentage > 90
                                                 ? "bg-amber-500"
-                                                : isOnline ? "bg-brand-green" : "bg-red-500"
+                                                : isOnline ? "bg-blue-600" : "bg-red-500"
                                         )}
                                         style={{ width: `${Math.min(characterPercentage, 100)}%` }}
                                     />
                                 </div>
-                                <span className="text-sm text-zinc-500 tabular-nums">
+                                <span className="text-sm text-slate-500 tabular-nums">
                                     {characterCount.toLocaleString()} / {maxLength.toLocaleString()} characters
                                 </span>
                             </div>
@@ -731,8 +731,8 @@ export function RichTextEditor({
                                 className={cn(
                                     "px-6 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-lg",
                                     isOnline
-                                        ? 'bg-brand-green text-black hover:bg-brand-green/90 shadow-brand-green/20'
-                                        : 'bg-red-500 text-white hover:bg-red-600 shadow-red-500/20'
+                                        ? 'bg-blue-600 text-slate-900 hover:bg-blue-600/90 shadow-blue-600/20'
+                                        : 'bg-red-500 text-slate-900 hover:bg-red-600 shadow-red-500/20'
                                 )}
                             >
                                 Done

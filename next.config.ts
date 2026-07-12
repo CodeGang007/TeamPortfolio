@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
         destination: "https://www.codegang.online/:path*",
         permanent: true,
       },
+      // Console revamp — old routes keep whatever link equity exists
+      { source: "/project", destination: "/work", permanent: true },
+      { source: "/project/:slug", destination: "/work/:slug", permanent: true },
+      { source: "/about", destination: "/studio", permanent: true },
+      { source: "/team", destination: "/studio", permanent: true },
+      { source: "/contactus", destination: "/contact", permanent: true },
     ];
   },
   images: {

@@ -63,20 +63,20 @@ export default function FeedbackButton() {
         className={cn(
           "fixed bottom-8 right-8 z-[60] group",
           "w-14 h-14 rounded-full flex items-center justify-center",
-          "bg-black/40 backdrop-blur-md border border-white/10",
+          "bg-white/40 backdrop-blur-md border border-white/10",
           "shadow-[0_0_20px_rgba(34,197,94,0.2)]",
-          "hover:shadow-[0_0_35px_rgba(34,197,94,0.4)] hover:border-brand-green/50",
+          "hover:shadow-[0_0_35px_rgba(34,197,94,0.4)] hover:border-blue-600/50",
           "transition-all duration-500"
         )}
       >
         {/* Inner Glow Pulse */}
-        <div className="absolute inset-0 rounded-full bg-brand-green/10 animate-pulse" />
+        <div className="absolute inset-0 rounded-full bg-blue-600/10 animate-pulse" />
 
         {/* Animated Icon */}
-        <MessageSquare className="w-6 h-6 text-brand-green relative z-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" />
+        <MessageSquare className="w-6 h-6 text-blue-600 relative z-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" />
 
         {/* Tooltip Label */}
-        <span className="absolute right-full mr-4 px-3 py-1.5 rounded-lg bg-black/80 border border-white/10 text-xs font-medium text-white opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 pointer-events-none whitespace-nowrap backdrop-blur-sm">
+        <span className="absolute right-full mr-4 px-3 py-1.5 rounded-lg bg-slate-900/50 border border-white/10 text-xs font-medium text-slate-900 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 pointer-events-none whitespace-nowrap backdrop-blur-sm">
           Feedback
         </span>
       </motion.button>
@@ -88,7 +88,7 @@ export default function FeedbackButton() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xl"
             onClick={() => setIsOpen(false)}
           >
             <motion.div
@@ -100,15 +100,15 @@ export default function FeedbackButton() {
               className={cn(
                 "relative w-full max-w-lg overflow-hidden",
                 "rounded-3xl border border-white/10",
-                "bg-zinc-900/40 backdrop-blur-2xl",
+                "bg-slate-50 backdrop-blur-2xl",
                 "shadow-[0_0_100px_rgba(0,0,0,0.5)]"
               )}
             >
               {/* Decorative Top Gradient */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-green/50 to-transparent opacity-50" />
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-600/50 to-transparent opacity-50" />
 
               {/* Ambient Green background Glow */}
-              <div className="absolute -top-32 -right-32 w-64 h-64 bg-brand-green/10 rounded-full blur-[100px] pointer-events-none" />
+              <div className="absolute -top-32 -right-32 w-64 h-64 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
               <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
 
               <div className="relative p-8">
@@ -120,25 +120,25 @@ export default function FeedbackButton() {
                         <img
                           src={displayPhotoURL}
                           alt="User"
-                          className="w-12 h-12 rounded-full border-2 border-brand-green/20"
+                          className="w-12 h-12 rounded-full border-2 border-blue-600/20"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-full border-2 border-brand-green/20 bg-brand-green/5 flex items-center justify-center">
-                          <Zap className="w-5 h-5 text-brand-green" />
+                        <div className="w-12 h-12 rounded-full border-2 border-blue-600/20 bg-blue-600/5 flex items-center justify-center">
+                          <Zap className="w-5 h-5 text-blue-600" />
                         </div>
                       )}
-                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-black rounded-full flex items-center justify-center border border-white/10">
-                        <div className="w-2.5 h-2.5 rounded-full bg-brand-green animate-pulse" />
+                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center border border-white/10">
+                        <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
                       </div>
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-white tracking-tight">Your Thoughts Matter</h2>
-                      <p className="text-xs text-zinc-400 font-medium">Help us perfect this experience</p>
+                      <h2 className="text-xl font-bold text-slate-900 tracking-tight">Your Thoughts Matter</h2>
+                      <p className="text-xs text-slate-600 font-medium">Help us perfect this experience</p>
                     </div>
                   </div>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-2 rounded-full text-zinc-500 hover:text-white hover:bg-white/5 transition-all duration-200"
+                    className="p-2 rounded-full text-slate-500 hover:text-slate-900 hover:bg-white/5 transition-all duration-200"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -163,15 +163,15 @@ export default function FeedbackButton() {
                             className={cn(
                               "w-8 h-8 transition-all duration-300",
                               star <= (hoveredStar || rating)
-                                ? "fill-brand-green text-brand-green drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]"
-                                : "fill-transparent text-zinc-700"
+                                ? "fill-blue-600 text-blue-600 drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]"
+                                : "fill-transparent text-slate-300"
                             )}
                             strokeWidth={1.5}
                           />
                         </button>
                       ))}
                     </div>
-                    <span className="text-xs font-medium text-brand-green/80 min-h-[1.25rem] transition-all">
+                    <span className="text-xs font-medium text-blue-600/80 min-h-[1.25rem] transition-all">
                       {hoveredStar > 0 ? ["Poor", "Fair", "Good", "Great", "Excellent"][hoveredStar - 1] : ""}
                     </span>
                   </div>
@@ -182,20 +182,20 @@ export default function FeedbackButton() {
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       rows={4}
-                      className="w-full bg-black/20 border border-white/5 rounded-2xl p-4 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-brand-green/30 focus:bg-black/40 transition-all resize-none"
+                      className="w-full bg-white/20 border border-white/5 rounded-2xl p-4 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-blue-600/30 focus:bg-white/40 transition-all resize-none"
                       placeholder="What's on your mind? We'd love to hear it..."
                     />
-                    <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-brand-green/50 transition-all duration-500 group-focus-within:w-full" />
+                    <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-blue-600/50 transition-all duration-500 group-focus-within:w-full" />
                   </div>
 
                   {/* Tag Input */}
                   <div className="relative group">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 text-xs font-semibold uppercase tracking-wider">Tag</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-semibold uppercase tracking-wider">Tag</span>
                     <input
                       type="text"
                       value={formData.tag}
                       onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
-                      className="w-full bg-black/20 border border-white/5 rounded-xl py-3 pl-14 pr-4 text-sm text-zinc-300 placeholder:text-zinc-700 focus:outline-none focus:border-brand-green/30 focus:bg-black/40 transition-all"
+                      className="w-full bg-white/20 border border-white/5 rounded-xl py-3 pl-14 pr-4 text-sm text-slate-700 placeholder:text-slate-300 focus:outline-none focus:border-blue-600/30 focus:bg-white/40 transition-all"
                       placeholder="Suggestion, Bug, Praise..."
                     />
                   </div>
@@ -209,8 +209,8 @@ export default function FeedbackButton() {
                     className={cn(
                       "w-full py-4 rounded-xl font-bold text-sm tracking-wide uppercase transition-all flex items-center justify-center gap-2 relative overflow-hidden",
                       (!formData.description || rating === 0)
-                        ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
-                        : "bg-brand-green text-black hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-green to-emerald-500"
+                        ? "bg-slate-100 text-slate-500 cursor-not-allowed"
+                        : "bg-blue-600 text-slate-900 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-600 to-emerald-500"
                     )}
                   >
                     {isSubmitting ? (

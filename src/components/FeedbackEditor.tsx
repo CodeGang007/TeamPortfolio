@@ -94,7 +94,7 @@ export function FeedbackEditor({ projectId, projectName, onClose, onSave }: Feed
         content: '',
         editorProps: {
             attributes: {
-                class: 'prose prose-invert prose-sm max-w-none focus:outline-none min-h-[300px] p-4',
+                class: 'prose prose-sm max-w-none focus:outline-none min-h-[300px] p-4',
             },
         },
     });
@@ -163,7 +163,7 @@ export function FeedbackEditor({ projectId, projectName, onClose, onSave }: Feed
         >
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                className="absolute inset-0 bg-slate-900/50 backdrop-blur-md"
                 onClick={onClose}
             />
 
@@ -190,7 +190,7 @@ export function FeedbackEditor({ projectId, projectName, onClose, onSave }: Feed
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 rounded-lg hover:bg-[#27272a] text-[#71717a] hover:text-white transition-colors"
+                            className="p-2 rounded-lg hover:bg-[#27272a] text-[#71717a] hover:text-slate-900 transition-colors"
                         >
                             <X className="h-5 w-5" />
                         </button>
@@ -295,7 +295,7 @@ export function FeedbackEditor({ projectId, projectName, onClose, onSave }: Feed
                                                 value={linkText}
                                                 onChange={(e) => setLinkText(e.target.value)}
                                                 placeholder="e.g. Click here, Visit website"
-                                                className="w-full px-3 py-2 text-xs bg-[#09090b] border border-[#27272a] rounded-lg text-white focus:outline-none focus:border-violet-500 placeholder:text-[#52525b]"
+                                                className="w-full px-3 py-2 text-xs bg-[#09090b] border border-[#27272a] rounded-lg text-slate-900 focus:outline-none focus:border-violet-500 placeholder:text-[#52525b]"
                                             />
                                         </div>
                                         <div>
@@ -305,7 +305,7 @@ export function FeedbackEditor({ projectId, projectName, onClose, onSave }: Feed
                                                 value={linkUrl}
                                                 onChange={(e) => setLinkUrl(e.target.value)}
                                                 placeholder="https://example.com"
-                                                className="w-full px-3 py-2 text-xs bg-[#09090b] border border-[#27272a] rounded-lg text-white focus:outline-none focus:border-violet-500 placeholder:text-[#52525b]"
+                                                className="w-full px-3 py-2 text-xs bg-[#09090b] border border-[#27272a] rounded-lg text-slate-900 focus:outline-none focus:border-violet-500 placeholder:text-[#52525b]"
                                                 autoFocus
                                             />
                                         </div>
@@ -317,14 +317,14 @@ export function FeedbackEditor({ projectId, projectName, onClose, onSave }: Feed
                                                 setLinkUrl('');
                                                 setLinkText('');
                                             }}
-                                            className="px-3 py-1.5 text-xs rounded-lg bg-[#27272a] text-[#a1a1aa] hover:bg-[#3f3f46] hover:text-white transition-colors"
+                                            className="px-3 py-1.5 text-xs rounded-lg bg-[#27272a] text-[#a1a1aa] hover:bg-[#3f3f46] hover:text-slate-900 transition-colors"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             onClick={setLink}
                                             disabled={!linkUrl.trim()}
-                                            className="px-3 py-1.5 text-xs rounded-lg bg-violet-500 text-white hover:bg-violet-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                                            className="px-3 py-1.5 text-xs rounded-lg bg-violet-500 text-slate-900 hover:bg-violet-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
                                         >
                                             <LinkIcon className="h-3 w-3" />
                                             Insert Link
@@ -414,7 +414,7 @@ export function FeedbackEditor({ projectId, projectName, onClose, onSave }: Feed
                                             className="w-6 h-6 rounded border border-[#3f3f46] hover:scale-110 transition-transform flex items-center justify-center bg-[#18181b]"
                                             title="Remove"
                                         >
-                                            <X className="h-3 w-3 text-zinc-500" />
+                                            <X className="h-3 w-3 text-slate-500" />
                                         </button>
                                     </div>
                                 </motion.div>
@@ -467,14 +467,14 @@ export function FeedbackEditor({ projectId, projectName, onClose, onSave }: Feed
                     <div className="flex items-center gap-3">
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 text-sm text-[#a1a1aa] hover:text-white transition-colors"
+                            className="px-4 py-2 text-sm text-[#a1a1aa] hover:text-slate-900 transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleSave}
                             disabled={isSaving || !editor.getText().trim()}
-                            className="px-5 py-2 text-sm font-medium bg-violet-500 hover:bg-violet-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            className="px-5 py-2 text-sm font-medium bg-violet-500 hover:bg-violet-600 text-slate-900 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
                             {isSaving ? (
                                 <>
@@ -518,7 +518,7 @@ function ToolbarButton({
                 p-2 rounded-md transition-all
                 ${isActive
                     ? 'bg-violet-500/20 text-violet-400'
-                    : 'text-[#a1a1aa] hover:text-white hover:bg-[#27272a]'
+                    : 'text-[#a1a1aa] hover:text-slate-900 hover:bg-[#27272a]'
                 }
                 ${disabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'}
             `}

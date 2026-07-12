@@ -43,7 +43,7 @@ export default function Pagination({
             <button
                 onClick={() => onPageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className="flex items-center gap-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:hover:bg-transparent border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-brand-green disabled:text-zinc-600"
+                className="flex items-center gap-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:hover:bg-transparent border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-blue-600 disabled:text-slate-400"
             >
                 <ChevronLeft className="h-4 w-4" />
                 Previous
@@ -52,7 +52,7 @@ export default function Pagination({
             <div className="flex items-center gap-1">
                 {getPageNumbers().map((page, index) => {
                     if (page === '...') {
-                        return <span key={`ellipsis-${index}`} className="px-2 text-zinc-600">...</span>;
+                        return <span key={`ellipsis-${index}`} className="px-2 text-slate-400">...</span>;
                     }
 
                     return (
@@ -62,8 +62,8 @@ export default function Pagination({
                             className={cn(
                                 "flex h-9 w-9 items-center justify-center rounded-lg text-sm font-medium transition-colors",
                                 currentPage === page
-                                    ? "bg-brand-green text-black shadow-sm"
-                                    : "text-zinc-400 hover:bg-zinc-800 hover:text-brand-green"
+                                    ? "bg-blue-600 text-slate-900 shadow-sm"
+                                    : "text-slate-600 hover:bg-slate-100 hover:text-blue-600"
                             )}
                         >
                             {page}
@@ -75,7 +75,7 @@ export default function Pagination({
             <button
                 onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
-                className="flex items-center gap-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:hover:bg-transparent border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-brand-green disabled:text-zinc-600"
+                className="flex items-center gap-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:hover:bg-transparent border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-blue-600 disabled:text-slate-400"
             >
                 Next
                 <ChevronRight className="h-4 w-4" />

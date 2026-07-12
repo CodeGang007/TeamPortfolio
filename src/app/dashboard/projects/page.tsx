@@ -233,10 +233,10 @@ export default function ProjectDashboard() {
 
     if (loading || isLoadingData) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#121212]">
+            <div className="flex min-h-screen items-center justify-center bg-[#f8fafc]">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-green border-t-transparent" />
-                    <p className="text-zinc-500 text-sm">Loading your projects...</p>
+                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+                    <p className="text-slate-500 text-sm">Loading your projects...</p>
                 </div>
             </div>
         );
@@ -393,30 +393,30 @@ export default function ProjectDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-[#121212] text-white">
+        <div className="min-h-screen bg-[#f8fafc] text-slate-900">
             {/* Header */}
-            <header className="sticky top-0 z-50 border-b border-[#27272a] bg-[#121212]/80 backdrop-blur-xl">
+            <header className="sticky top-0 z-50 border-b border-slate-200 bg-[#ffffff]/90 backdrop-blur-xl">
                 <div className="mx-auto max-w-7xl px-6 py-4">
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
-                            <Link href="/" className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#27272a] text-[#71717a] hover:text-white hover:border-[#3f3f46] transition-all">
+                            <Link href="/" className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300 transition-all">
                                 <ArrowLeft className="h-4 w-4" />
                             </Link>
                             <div>
-                                <h1 className="text-lg font-semibold text-white flex items-center gap-2">
+                                <h1 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
                                     {role === 'admin' ? (
                                         <>
-                                            <LayoutGrid className="h-4 w-4 text-brand-green" />
+                                            <LayoutGrid className="h-4 w-4 text-blue-600" />
                                             Manage Publications
                                         </>
                                     ) : (
                                         <>
-                                            <FolderKanban className="h-4 w-4 text-brand-green" />
+                                            <FolderKanban className="h-4 w-4 text-blue-600" />
                                             My Publications
                                         </>
                                     )}
                                 </h1>
-                                <p className="text-[11px] text-[#71717a]">
+                                <p className="text-[11px] text-slate-500">
                                     {role === 'admin'
                                         ? "Overview of all platform activity and projects"
                                         : "Track your published projects and drafts"
@@ -429,7 +429,7 @@ export default function ProjectDashboard() {
                             <div className="flex items-center gap-3">
                                 <Button
                                     onClick={() => router.push("/project-request/new")}
-                                    className="bg-gradient-to-b from-brand-green to-brand-green-dim hover:from-brand-green/90 hover:to-brand-green-dim/90 text-black font-bold text-sm px-4 shadow-lg shadow-brand-green/25 border border-brand-green/20"
+                                    className="bg-gradient-to-b from-blue-600 to-blue-700 hover:from-blue-600/90 hover:to-blue-700/90 text-slate-900 font-bold text-sm px-4 shadow-lg shadow-blue-600/25 border border-blue-600/20"
                                 >
                                     <Plus className="h-4 w-4 md:mr-1.5" />
                                     <span className="hidden md:inline">New Project</span>
@@ -441,17 +441,17 @@ export default function ProjectDashboard() {
             </header>
 
             {/* Sub-header: Underline Tabs + Search */}
-            <div className="border-b border-[#1a1a1a]">
+            <div className="border-b border-slate-200">
                 <div className="mx-auto max-w-7xl px-6">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 py-3">
                         {/* Underline Tabs */}
-                        <div className="flex gap-6 border-b md:border-none border-[#27272a] md:pb-0">
+                        <div className="flex gap-6 border-b md:border-none border-slate-200 md:pb-0">
                             <button
                                 onClick={() => setActiveTab("all")}
-                                className={`relative pb-3 text-sm font-medium transition-colors flex items-center gap-2 ${activeTab === "all" ? "text-white" : "text-[#a1a1aa] hover:text-white"}`}
+                                className={`relative pb-3 text-sm font-medium transition-colors flex items-center gap-2 ${activeTab === "all" ? "text-slate-900" : "text-slate-500 hover:text-slate-900"}`}
                             >
                                 Published
-                                <span className={`text-xs px-1.5 py-0.5 rounded ${activeTab === "all" ? "bg-[#27272a] text-white" : "bg-[#27272a]/50 text-[#71717a]"}`}>
+                                <span className={`text-xs px-1.5 py-0.5 rounded ${activeTab === "all" ? "bg-slate-200 text-slate-900" : "bg-slate-100 text-slate-500"}`}>
                                     {publishedProjects.length}
                                 </span>
                                 {activeTab === "all" && <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-white rounded-full" />}
@@ -459,10 +459,10 @@ export default function ProjectDashboard() {
 
                             <button
                                 onClick={() => setActiveTab("drafts")}
-                                className={`relative pb-3 text-sm font-medium transition-colors flex items-center gap-2 ${activeTab === "drafts" ? "text-white" : "text-[#a1a1aa] hover:text-white"}`}
+                                className={`relative pb-3 text-sm font-medium transition-colors flex items-center gap-2 ${activeTab === "drafts" ? "text-slate-900" : "text-slate-500 hover:text-slate-900"}`}
                             >
                                 Drafts
-                                <span className={`text-xs px-1.5 py-0.5 rounded ${activeTab === "drafts" ? "bg-[#27272a] text-white" : "bg-[#27272a]/50 text-[#71717a]"}`}>
+                                <span className={`text-xs px-1.5 py-0.5 rounded ${activeTab === "drafts" ? "bg-slate-200 text-slate-900" : "bg-slate-100 text-slate-500"}`}>
                                     {draftProjects.length}
                                 </span>
                                 {activeTab === "drafts" && <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-white rounded-full" />}
@@ -490,9 +490,9 @@ export default function ProjectDashboard() {
                                                     if (!userDropdownOpen) setUserSearchQuery("");
                                                 }
                                             }}
-                                            className={`flex items-center gap-2 w-full md:w-56 rounded-lg bg-[#18181b] border ${userDropdownOpen ? 'border-brand-green' : 'border-[#27272a]'} px-3 py-2 text-sm text-white hover:border-[#3f3f46] transition-colors cursor-pointer select-none`}
+                                            className={`flex items-center gap-2 w-full md:w-56 rounded-lg bg-white border ${userDropdownOpen ? 'border-blue-600' : 'border-slate-200'} px-3 py-2 text-sm text-slate-900 hover:border-slate-300 transition-colors cursor-pointer select-none`}
                                         >
-                                            <Users className="h-4 w-4 text-[#52525b] flex-shrink-0" />
+                                            <Users className="h-4 w-4 text-slate-400 flex-shrink-0" />
                                             <span className="truncate flex-1 text-left">
                                                 {getSelectedUserName()}
                                             </span>
@@ -502,27 +502,27 @@ export default function ProjectDashboard() {
                                                         e.stopPropagation();
                                                         setSelectedUserFilter("all");
                                                     }}
-                                                    className="p-0.5 rounded hover:bg-white/10 text-[#71717a] hover:text-white transition-colors"
+                                                    className="p-0.5 rounded hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors"
                                                 >
                                                     <X className="h-3 w-3" />
                                                 </button>
                                             )}
-                                            <ChevronDown className={`h-4 w-4 text-[#52525b] transition-transform flex-shrink-0 ${userDropdownOpen ? 'rotate-180' : ''}`} />
+                                            <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform flex-shrink-0 ${userDropdownOpen ? 'rotate-180' : ''}`} />
                                         </div>
 
                                         {/* Dropdown Menu */}
                                         {userDropdownOpen && (
-                                            <div className="absolute right-0 top-full mt-2 w-72 rounded-xl bg-[#1c1c1e] border border-[#333] shadow-2xl shadow-black/50 overflow-hidden z-50">
+                                            <div className="absolute right-0 top-full mt-2 w-72 rounded-xl bg-white border border-slate-200 shadow-2xl shadow-slate-900/10 overflow-hidden z-50">
                                                 {/* Search Input */}
-                                                <div className="p-2 border-b border-[#333]">
+                                                <div className="p-2 border-b border-slate-200">
                                                     <div className="relative">
-                                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#52525b]" />
+                                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                                                         <input
                                                             type="text"
                                                             value={userSearchQuery}
                                                             onChange={(e) => setUserSearchQuery(e.target.value)}
                                                             placeholder="Search users..."
-                                                            className="w-full rounded-lg bg-[#27272a] border border-[#3f3f46] pl-9 pr-4 py-2 text-sm text-white placeholder:text-[#52525b] focus:outline-none focus:border-brand-green transition-colors"
+                                                            className="w-full rounded-lg bg-slate-200 border border-slate-300 pl-9 pr-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 transition-colors"
                                                             autoFocus
                                                         />
                                                     </div>
@@ -539,24 +539,24 @@ export default function ProjectDashboard() {
                                                             setSelectedUserFilter("all");
                                                             setUserDropdownOpen(false);
                                                         }}
-                                                        className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors ${selectedUserFilter === "all" ? 'bg-brand-green/10 text-brand-green' : 'text-[#e5e5e5] hover:bg-white/5'}`}
+                                                        className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors ${selectedUserFilter === "all" ? 'bg-blue-600/10 text-blue-600' : 'text-slate-700 hover:bg-slate-100'}`}
                                                     >
-                                                        <div className={`w-7 h-7 rounded-full flex items-center justify-center ${selectedUserFilter === "all" ? 'bg-brand-green/20' : 'bg-[#27272a]'}`}>
+                                                        <div className={`w-7 h-7 rounded-full flex items-center justify-center ${selectedUserFilter === "all" ? 'bg-blue-600/20' : 'bg-slate-200'}`}>
                                                             <Users className="h-3.5 w-3.5" />
                                                         </div>
                                                         <div className="flex-1 text-left">
                                                             <div className="font-medium">All Users</div>
-                                                            <div className="text-[10px] text-[#71717a]">
+                                                            <div className="text-[10px] text-slate-500">
                                                                 {authors.length} users with projects
                                                             </div>
                                                         </div>
                                                         {selectedUserFilter === "all" && (
-                                                            <Check className="h-4 w-4 text-brand-green flex-shrink-0" />
+                                                            <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
                                                         )}
                                                     </button>
 
                                                     {/* Divider */}
-                                                    <div className="border-t border-[#333] my-1" />
+                                                    <div className="border-t border-slate-200 my-1" />
 
                                                     {/* User List */}
                                                     {getFilteredAuthors().length > 0 ? (
@@ -567,26 +567,26 @@ export default function ProjectDashboard() {
                                                                     setSelectedUserFilter(author.id);
                                                                     setUserDropdownOpen(false);
                                                                 }}
-                                                                className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors ${selectedUserFilter === author.id ? 'bg-brand-green/10 text-brand-green' : 'text-[#e5e5e5] hover:bg-white/5'}`}
+                                                                className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors ${selectedUserFilter === author.id ? 'bg-blue-600/10 text-blue-600' : 'text-slate-700 hover:bg-slate-100'}`}
                                                             >
-                                                                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${selectedUserFilter === author.id ? 'bg-brand-green text-black' : 'bg-gradient-to-br from-[#3f3f46] to-[#27272a] text-white'}`}>
+                                                                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${selectedUserFilter === author.id ? 'bg-blue-600 text-slate-900' : 'bg-gradient-to-br from-slate-300 to-slate-200 text-slate-900'}`}>
                                                                     {author.name.charAt(0).toUpperCase()}
                                                                 </div>
                                                                 <div className="flex-1 text-left min-w-0">
                                                                     <div className="font-medium truncate">{author.name}</div>
                                                                     {author.email && (
-                                                                        <div className="text-[10px] text-[#71717a] truncate">
+                                                                        <div className="text-[10px] text-slate-500 truncate">
                                                                             {author.email}
                                                                         </div>
                                                                     )}
                                                                 </div>
                                                                 {selectedUserFilter === author.id && (
-                                                                    <Check className="h-4 w-4 text-brand-green flex-shrink-0" />
+                                                                    <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
                                                                 )}
                                                             </button>
                                                         ))
                                                     ) : (
-                                                        <div className="px-3 py-4 text-center text-sm text-[#71717a]">
+                                                        <div className="px-3 py-4 text-center text-sm text-slate-500">
                                                             No users found matching &quot;{userSearchQuery}&quot;
                                                         </div>
                                                     )}
@@ -599,29 +599,29 @@ export default function ProjectDashboard() {
                                     <div className="relative" ref={filterDropdownRef}>
                                         <button
                                             onClick={() => setFilterDropdownOpen(!filterDropdownOpen)}
-                                            className={`flex items-center gap-2 rounded-lg bg-[#18181b] border ${filterDropdownOpen ? 'border-brand-green' : 'border-[#27272a]'} px-3 py-2 text-sm text-white hover:border-[#3f3f46] transition-colors cursor-pointer`}
+                                            className={`flex items-center gap-2 rounded-lg bg-white border ${filterDropdownOpen ? 'border-blue-600' : 'border-slate-200'} px-3 py-2 text-sm text-slate-900 hover:border-slate-300 transition-colors cursor-pointer`}
                                         >
-                                            <SlidersHorizontal className="h-4 w-4 text-[#52525b]" />
+                                            <SlidersHorizontal className="h-4 w-4 text-slate-400" />
                                             <span className="hidden md:inline">Filters</span>
                                             {getActiveFilterCount() > 0 && (
-                                                <span className="flex items-center justify-center h-5 w-5 rounded-full bg-brand-green text-black text-[10px] font-bold">
+                                                <span className="flex items-center justify-center h-5 w-5 rounded-full bg-blue-600 text-slate-900 text-[10px] font-bold">
                                                     {getActiveFilterCount()}
                                                 </span>
                                             )}
-                                            <ChevronDown className={`h-4 w-4 text-[#52525b] transition-transform ${filterDropdownOpen ? 'rotate-180' : ''}`} />
+                                            <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${filterDropdownOpen ? 'rotate-180' : ''}`} />
                                         </button>
 
                                         {filterDropdownOpen && (
-                                            <div className="absolute right-0 top-full mt-2 w-80 rounded-xl bg-[#1c1c1e] border border-[#333] shadow-2xl shadow-black/50 overflow-hidden z-50">
+                                            <div className="absolute right-0 top-full mt-2 w-80 rounded-xl bg-white border border-slate-200 shadow-2xl shadow-slate-900/10 overflow-hidden z-50">
                                                 {/* Header */}
-                                                <div className="flex items-center justify-between p-3 border-b border-[#333]">
-                                                    <span className="text-sm font-medium text-white">Filters & Sorting</span>
+                                                <div className="flex items-center justify-between p-3 border-b border-slate-200">
+                                                    <span className="text-sm font-medium text-slate-900">Filters & Sorting</span>
                                                     {getActiveFilterCount() > 0 && (
                                                         <button
                                                             onClick={() => {
                                                                 clearAllFilters();
                                                             }}
-                                                            className="text-xs text-brand-green hover:text-brand-green/80 transition-colors"
+                                                            className="text-xs text-blue-600 hover:text-blue-600/80 transition-colors"
                                                         >
                                                             Clear all
                                                         </button>
@@ -631,15 +631,15 @@ export default function ProjectDashboard() {
                                                 <div className="p-3 space-y-4">
                                                     {/* Sort Options */}
                                                     <div>
-                                                        <label className="block text-[10px] uppercase tracking-wider text-[#71717a] font-medium mb-2">
+                                                        <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-medium mb-2">
                                                             Sort by Date
                                                         </label>
                                                         <div className="grid grid-cols-2 gap-2">
                                                             <button
                                                                 onClick={() => setSortOrder(sortOrder === 'newest' ? null : 'newest')}
                                                                 className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${sortOrder === 'newest'
-                                                                    ? 'bg-brand-green text-black'
-                                                                    : 'bg-[#27272a] text-[#a1a1aa] hover:bg-[#3f3f46] hover:text-white'
+                                                                    ? 'bg-blue-600 text-slate-900'
+                                                                    : 'bg-slate-200 text-slate-500 hover:bg-slate-300 hover:text-slate-900'
                                                                     }`}
                                                             >
                                                                 <ArrowDown className="h-3.5 w-3.5" />
@@ -648,8 +648,8 @@ export default function ProjectDashboard() {
                                                             <button
                                                                 onClick={() => setSortOrder(sortOrder === 'oldest' ? null : 'oldest')}
                                                                 className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${sortOrder === 'oldest'
-                                                                    ? 'bg-brand-green text-black'
-                                                                    : 'bg-[#27272a] text-[#a1a1aa] hover:bg-[#3f3f46] hover:text-white'
+                                                                    ? 'bg-blue-600 text-slate-900'
+                                                                    : 'bg-slate-200 text-slate-500 hover:bg-slate-300 hover:text-slate-900'
                                                                     }`}
                                                             >
                                                                 <ArrowUp className="h-3.5 w-3.5" />
@@ -660,27 +660,27 @@ export default function ProjectDashboard() {
 
                                                     {/* Date Range */}
                                                     <div>
-                                                        <label className="block text-[10px] uppercase tracking-wider text-[#71717a] font-medium mb-2">
+                                                        <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-medium mb-2">
                                                             Date Range
                                                         </label>
                                                         <div className="grid grid-cols-2 gap-2">
                                                             <div className="relative">
-                                                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#a1a1aa] pointer-events-none z-10" />
+                                                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none z-10" />
                                                                 <input
                                                                     type="date"
                                                                     value={dateRangeStart}
                                                                     onChange={(e) => setDateRangeStart(e.target.value)}
-                                                                    className="w-full rounded-lg bg-[#27272a] border border-[#3f3f46] pl-9 pr-2 py-2 text-sm text-white focus:outline-none focus:border-brand-green transition-colors cursor-pointer"
+                                                                    className="w-full rounded-lg bg-slate-200 border border-slate-300 pl-9 pr-2 py-2 text-sm text-slate-900 focus:outline-none focus:border-blue-600 transition-colors cursor-pointer"
                                                                     style={{ colorScheme: 'dark' }}
                                                                 />
                                                             </div>
                                                             <div className="relative">
-                                                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#a1a1aa] pointer-events-none z-10" />
+                                                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none z-10" />
                                                                 <input
                                                                     type="date"
                                                                     value={dateRangeEnd}
                                                                     onChange={(e) => setDateRangeEnd(e.target.value)}
-                                                                    className="w-full rounded-lg bg-[#27272a] border border-[#3f3f46] pl-9 pr-2 py-2 text-sm text-white focus:outline-none focus:border-brand-green transition-colors cursor-pointer"
+                                                                    className="w-full rounded-lg bg-slate-200 border border-slate-300 pl-9 pr-2 py-2 text-sm text-slate-900 focus:outline-none focus:border-blue-600 transition-colors cursor-pointer"
                                                                     style={{ colorScheme: 'dark' }}
                                                                 />
                                                             </div>
@@ -691,7 +691,7 @@ export default function ProjectDashboard() {
                                                                     setDateRangeStart('');
                                                                     setDateRangeEnd('');
                                                                 }}
-                                                                className="mt-2 text-xs text-[#71717a] hover:text-white transition-colors flex items-center gap-1"
+                                                                className="mt-2 text-xs text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-1"
                                                             >
                                                                 <X className="h-3 w-3" />
                                                                 Clear dates
@@ -706,13 +706,13 @@ export default function ProjectDashboard() {
                             )}
 
                             <div className="relative w-full md:w-auto">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#52525b]" />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                                 <input
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Search projects..."
-                                    className="w-full md:w-56 rounded-lg bg-[#18181b] border border-[#27272a] pl-9 pr-4 py-2 text-sm text-white placeholder:text-[#52525b] focus:outline-none focus:border-brand-green hover:border-[#3f3f46] transition-colors"
+                                    className="w-full md:w-56 rounded-lg bg-white border border-slate-200 pl-9 pr-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 hover:border-slate-300 transition-colors"
                                 />
                             </div>
                         </div>
@@ -736,10 +736,10 @@ export default function ProjectDashboard() {
                                 </div>
                             </div>
                         </div>
-                        <h2 className="text-xl font-semibold text-white mb-2">
+                        <h2 className="text-xl font-semibold text-slate-900 mb-2">
                             {searchQuery ? "No matching projects found" : activeTab === 'all' ? "No published projects yet" : "No drafts saved"}
                         </h2>
-                        <p className="text-[#71717a] text-center max-w-sm mb-6 text-sm">
+                        <p className="text-slate-500 text-center max-w-sm mb-6 text-sm">
                             {activeTab === 'all' ? "Start your journey by launching your first project." : "You haven't saved any drafts yet."}
                         </p>
                     </motion.div>
@@ -796,7 +796,7 @@ export default function ProjectDashboard() {
                                                     setProjectToDelete(project);
                                                     setDeleteModalOpen(true);
                                                 }}
-                                                className="p-2.5 rounded-xl bg-gradient-to-b from-red-500/20 to-red-600/10 border border-red-500/30 text-red-400 hover:from-red-500 hover:to-red-600 hover:text-white backdrop-blur-md transition-all shadow-lg shadow-black/50 group"
+                                                className="p-2.5 rounded-xl bg-gradient-to-b from-red-500/20 to-red-600/10 border border-red-500/30 text-red-400 hover:from-red-500 hover:to-red-600 hover:text-slate-900 backdrop-blur-md transition-all shadow-lg shadow-slate-900/10 group"
                                                 title="Delete Draft"
                                             >
                                                 <Trash2 className="h-4 w-4 transition-transform group-hover:scale-110" />
@@ -817,7 +817,7 @@ export default function ProjectDashboard() {
                                                     e.stopPropagation();
                                                     setOpenActionMenu(openActionMenu === project.id ? null : project.id || null);
                                                 }}
-                                                className="p-2.5 rounded-xl bg-gradient-to-b from-[#27272a] to-[#1c1c1e] border border-[#3f3f46] text-[#a1a1aa] hover:text-white hover:border-[#52525b] hover:from-[#3f3f46] hover:to-[#27272a] backdrop-blur-md transition-all shadow-lg shadow-black/40 group"
+                                                className="p-2.5 rounded-xl bg-gradient-to-b from-slate-200 to-slate-100 border border-slate-300 text-slate-500 hover:text-slate-900 hover:border-slate-300 hover:from-slate-300 hover:to-slate-200 backdrop-blur-md transition-all shadow-lg shadow-black/40 group"
                                                 title="More Options"
                                             >
                                                 <MoreVertical className="h-4 w-4 transition-transform group-hover:scale-110" />
@@ -829,7 +829,7 @@ export default function ProjectDashboard() {
                                                     initial={{ opacity: 0, y: 6, scale: 0.96 }}
                                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                                     transition={{ duration: 0.12, ease: "easeOut" }}
-                                                    className="absolute bottom-full right-0 mb-2 w-48 rounded-xl bg-[#1a1a1c] border border-[#2a2a2e] shadow-2xl shadow-black/70 overflow-hidden z-50"
+                                                    className="absolute bottom-full right-0 mb-2 w-48 rounded-xl bg-white border border-slate-200 shadow-xl shadow-slate-900/10 overflow-hidden z-50"
                                                 >
                                                     {/* Subtle top highlight */}
                                                     <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
@@ -841,9 +841,9 @@ export default function ProjectDashboard() {
                                                             e.stopPropagation();
                                                             router.push(`/dashboard/projects/${project.id}`);
                                                         }}
-                                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] text-[#d4d4d8] hover:text-white hover:bg-white/[0.04] transition-all duration-150"
+                                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all duration-150"
                                                     >
-                                                        <ExternalLink className="h-4 w-4 text-[#71717a]" />
+                                                        <ExternalLink className="h-4 w-4 text-slate-500" />
                                                         <span>View Details</span>
                                                     </button>
 
@@ -859,16 +859,16 @@ export default function ProjectDashboard() {
                                                             setTimeout(() => setShowSnackbar(false), 2500);
                                                             setOpenActionMenu(null);
                                                         }}
-                                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] text-[#d4d4d8] hover:text-white hover:bg-white/[0.04] transition-all duration-150"
+                                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all duration-150"
                                                     >
-                                                        <Copy className="h-4 w-4 text-[#71717a]" />
+                                                        <Copy className="h-4 w-4 text-slate-500" />
                                                         <span>Copy Link</span>
                                                     </button>
 
                                                     {/* Close Project - Only if not already closed/completed/pending */}
                                                     {!['completed', 'closed', 'pending-closure'].includes(status) && (
                                                         <>
-                                                            <div className="my-1 mx-3 border-t border-[#27272a]" />
+                                                            <div className="my-1 mx-3 border-t border-slate-200" />
                                                             <button
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
@@ -888,7 +888,7 @@ export default function ProjectDashboard() {
                                                     {/* Show pending status if applicable */}
                                                     {status === 'pending-closure' && (
                                                         <>
-                                                            <div className="my-1 mx-3 border-t border-[#27272a]" />
+                                                            <div className="my-1 mx-3 border-t border-slate-200" />
                                                             <div className="px-4 py-2.5 text-[11px] text-amber-500/80 flex items-center gap-2">
                                                                 <div className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
                                                                 <span>Pending Approval</span>
@@ -921,13 +921,13 @@ export default function ProjectDashboard() {
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 50 }}
-                    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 bg-[#1c1c1e] border border-[#333] rounded-xl shadow-2xl shadow-black/50 flex items-center gap-3"
+                    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 bg-white border border-slate-200 rounded-xl shadow-2xl shadow-slate-900/10 flex items-center gap-3"
                 >
-                    <div className="h-2 w-2 rounded-full bg-brand-green animate-pulse" />
-                    <span className="text-sm text-white">{snackbarMessage}</span>
+                    <div className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+                    <span className="text-sm text-slate-900">{snackbarMessage}</span>
                     <button
                         onClick={() => setShowSnackbar(false)}
-                        className="text-[#71717a] hover:text-white transition-colors ml-2"
+                        className="text-slate-500 hover:text-slate-900 transition-colors ml-2"
                     >
                         <X className="h-4 w-4" />
                     </button>

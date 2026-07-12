@@ -335,8 +335,8 @@ function ProfileContent() {
 
     if (loading || isLoadingData) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-black text-white">
-                <Loader2 className="h-8 w-8 animate-spin text-brand-green" />
+            <div className="flex min-h-screen items-center justify-center bg-white text-slate-900">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
             </div>
         );
     }
@@ -344,14 +344,14 @@ function ProfileContent() {
     if (!profileUser) return null;
 
     return (
-        <div className="min-h-screen bg-black text-white selection:bg-brand-green/30">
+        <div className="min-h-screen bg-white text-slate-900 selection:bg-blue-600/30">
             {/* Header */}
-            <header className="sticky top-0 z-50 border-b border-zinc-800 bg-black/90 px-4 py-3 md:py-4 backdrop-blur-md md:px-8">
+            <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 px-4 py-3 md:py-4 backdrop-blur-md md:px-8">
                 <div className="mx-auto flex max-w-7xl items-center justify-between">
                     <div className="flex items-center gap-3 md:gap-4">
                         <Link
                             href="/"
-                            className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors"
+                            className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
                         >
                             <ArrowLeft className="h-5 w-5" />
                         </Link>
@@ -360,7 +360,7 @@ function ProfileContent() {
                     <Button
                         onClick={handleSave}
                         disabled={isSaving}
-                        className="bg-brand-green text-black hover:bg-brand-green/90 font-semibold"
+                        className="bg-blue-600 text-slate-900 hover:bg-blue-600/90 font-semibold"
                     >
                         {isSaving ? (
                             <>
@@ -387,8 +387,8 @@ function ProfileContent() {
 
                         {/* ADMIN ONLY: User Selector */}
                         {isAdmin && (
-                            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 space-y-4 relative z-50">
-                                <div className="flex items-center gap-2 text-brand-green">
+                            <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-4 relative z-50">
+                                <div className="flex items-center gap-2 text-blue-600">
                                     <ShieldCheck className="h-5 w-5" />
                                     <h3 className="font-semibold">Admin Tools</h3>
                                 </div>
@@ -396,9 +396,9 @@ function ProfileContent() {
                                 <div className="relative" ref={userSearchRef}>
                                     <div
                                         onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                                        className="flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 cursor-pointer hover:border-zinc-700 transition-colors"
+                                        className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-slate-300 transition-colors"
                                     >
-                                        <Search className="h-4 w-4 text-zinc-500" />
+                                        <Search className="h-4 w-4 text-slate-500" />
                                         <input
                                             type="text"
                                             value={userSearchQuery}
@@ -407,7 +407,7 @@ function ProfileContent() {
                                                 setIsUserDropdownOpen(true);
                                             }}
                                             placeholder="Find user..."
-                                            className="bg-transparent border-none outline-none text-sm text-white placeholder:text-zinc-600 w-full"
+                                            className="bg-transparent border-none outline-none text-sm text-slate-900 placeholder:text-slate-400 w-full"
                                         />
                                     </div>
 
@@ -417,7 +417,7 @@ function ProfileContent() {
                                                 initial={{ opacity: 0, y: 10 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: 10 }}
-                                                className="absolute top-full left-0 right-0 mt-2 bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-xl max-h-60 overflow-y-auto"
+                                                className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xl max-h-60 overflow-y-auto"
                                             >
                                                 {allUsers
                                                     .filter(u =>
@@ -432,16 +432,16 @@ function ProfileContent() {
                                                                 setUserSearchQuery("");
                                                                 setIsUserDropdownOpen(false);
                                                             }}
-                                                            className={`w-full text-left px-4 py-3 hover:bg-zinc-800 transition-colors flex items-center gap-3 ${targetUserId === u.uid ? 'bg-zinc-800/50' : ''}`}
+                                                            className={`w-full text-left px-4 py-3 hover:bg-slate-100 transition-colors flex items-center gap-3 ${targetUserId === u.uid ? 'bg-slate-100' : ''}`}
                                                         >
-                                                            <div className="h-8 w-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-500">
+                                                            <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500">
                                                                 {u.displayName?.[0] || "U"}
                                                             </div>
                                                             <div className="flex-1 min-w-0">
-                                                                <p className="text-sm font-medium text-white truncate">{u.displayName || "Unknown User"}</p>
-                                                                <p className="text-xs text-zinc-500 truncate">{u.email}</p>
+                                                                <p className="text-sm font-medium text-slate-900 truncate">{u.displayName || "Unknown User"}</p>
+                                                                <p className="text-xs text-slate-500 truncate">{u.email}</p>
                                                             </div>
-                                                            {u.role === 'developer' && <Crown className="h-3 w-3 text-brand-green" />}
+                                                            {u.role === 'developer' && <Crown className="h-3 w-3 text-blue-600" />}
                                                         </button>
                                                     ))}
                                             </motion.div>
@@ -449,23 +449,23 @@ function ProfileContent() {
                                     </AnimatePresence>
                                 </div>
                                 {isOwnProfile ? (
-                                    <p className="text-xs text-zinc-500">Viewing your own profile.</p>
+                                    <p className="text-xs text-slate-500">Viewing your own profile.</p>
                                 ) : (
                                     <div className="flex items-center justify-between text-xs">
-                                        <span className="text-zinc-400">Viewing: <span className="text-white font-medium">{profileUser?.displayName}</span></span>
-                                        <Link href="/profile" className="text-brand-green hover:underline">Back to me</Link>
+                                        <span className="text-slate-600">Viewing: <span className="text-slate-900 font-medium">{profileUser?.displayName}</span></span>
+                                        <Link href="/profile" className="text-blue-600 hover:underline">Back to me</Link>
                                     </div>
                                 )}
                             </div>
                         )}
 
-                        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 md:p-6 flex flex-col items-center text-center">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-5 md:p-6 flex flex-col items-center text-center">
                             {/* ... Avatar Logic (keep as is, maybe disable upload if viewing another user) ... */}
                             {/* Simplified for brevity in this replace block, ideally would keep existing and just patch around it, but easier to replace the structure if needed. 
                                 Actually, I will just INSERT the Admin Logic below the Avatar/Name section in the Left Column.
                             */}
 
-                            <div className="relative mb-4 h-32 w-32 overflow-hidden rounded-full border-2 border-zinc-700 shadow-xl group">
+                            <div className="relative mb-4 h-32 w-32 overflow-hidden rounded-full border-2 border-slate-300 shadow-xl group">
                                 {displayPhoto ? (
                                     <img
                                         src={displayPhoto}
@@ -473,7 +473,7 @@ function ProfileContent() {
                                         className="h-full w-full object-cover"
                                     />
                                 ) : (
-                                    <div className="flex h-full w-full items-center justify-center bg-zinc-800 text-4xl font-bold text-zinc-500">
+                                    <div className="flex h-full w-full items-center justify-center bg-slate-100 text-4xl font-bold text-slate-500">
                                         {(profileUser.displayName?.[0] || "U").toUpperCase()}
                                     </div>
                                 )}
@@ -481,27 +481,27 @@ function ProfileContent() {
                                 {isOwnProfile && (
                                     <button
                                         onClick={() => setShowAvatarModal(true)}
-                                        className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                        className="absolute inset-0 flex items-center justify-center bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                                     >
-                                        <div className="flex flex-col items-center gap-1 text-white">
+                                        <div className="flex flex-col items-center gap-1 text-slate-900">
                                             <Camera className="h-6 w-6" />
                                             <span className="text-xs font-medium">Edit</span>
                                         </div>
                                     </button>
                                 )}
                             </div>
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2 justify-center">
+                            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2 justify-center">
                                 {profileUser.displayName || "User Name"}
-                                {targetRole === 'developer' && <Crown className="h-4 w-4 text-brand-green fill-brand-green/20" />}
+                                {targetRole === 'developer' && <Crown className="h-4 w-4 text-blue-600 fill-blue-600/20" />}
                                 {targetRole === 'admin' && <ShieldCheck className="h-4 w-4 text-blue-500" />}
                             </h2>
-                            <p className="text-sm text-zinc-400 mt-1">{profileUser.email}</p>
+                            <p className="text-sm text-slate-600 mt-1">{profileUser.email}</p>
 
                             {/* Admin Actions */}
                             {isAdmin && !isOwnProfile && targetRole === 'client' && (
                                 <Button
                                     onClick={approveAsDeveloper}
-                                    className="mt-4 w-full bg-brand-green/10 text-brand-green hover:bg-brand-green/20 border border-brand-green/20"
+                                    className="mt-4 w-full bg-blue-600/10 text-blue-600 hover:bg-blue-600/20 border border-blue-600/20"
                                 >
                                     <Crown className="mr-2 h-4 w-4" /> Approve as Developer
                                 </Button>
@@ -520,26 +520,26 @@ function ProfileContent() {
                             <div className="mt-6 w-full space-y-4">
                                 {/* ... Name/Email Inputs ... */}
                                 <div className="space-y-1.5 text-left">
-                                    <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider ml-1">Full Name</label>
+                                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider ml-1">Full Name</label>
                                     <div className="relative">
-                                        <User className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
+                                        <User className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
                                         <input
                                             type="text"
                                             disabled
                                             value={profileUser.displayName || ""}
-                                            className="w-full rounded-lg border border-zinc-800 bg-zinc-950 pl-10 pr-4 py-2.5 text-zinc-400 cursor-not-allowed"
+                                            className="w-full rounded-lg border border-slate-200 bg-white pl-10 pr-4 py-2.5 text-slate-600 cursor-not-allowed"
                                         />
                                     </div>
                                 </div>
                                 <div className="space-y-1.5 text-left">
-                                    <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider ml-1">Email Address</label>
+                                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider ml-1">Email Address</label>
                                     <div className="relative">
-                                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
+                                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
                                         <input
                                             type="text"
                                             disabled
                                             value={profileUser.email || ""}
-                                            className="w-full rounded-lg border border-zinc-800 bg-zinc-950 pl-10 pr-4 py-2.5 text-zinc-400 cursor-not-allowed"
+                                            className="w-full rounded-lg border border-slate-200 bg-white pl-10 pr-4 py-2.5 text-slate-600 cursor-not-allowed"
                                         />
                                     </div>
                                 </div>
@@ -561,18 +561,18 @@ function ProfileContent() {
                             </motion.div>
                         )}
 
-                        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-4 md:p-6 space-y-5 md:space-y-6">
+                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 md:p-6 space-y-5 md:space-y-6">
 
                             {/* Personal Details */}
                             <div className="space-y-4">
-                                <div className="flex items-center gap-3 pb-2 border-b border-zinc-800">
-                                    <Briefcase className="h-5 w-5 text-brand-green" />
-                                    <h3 className="text-lg font-semibold text-white">Professional Details</h3>
+                                <div className="flex items-center gap-3 pb-2 border-b border-slate-200">
+                                    <Briefcase className="h-5 w-5 text-blue-600" />
+                                    <h3 className="text-lg font-semibold text-slate-900">Professional Details</h3>
                                 </div>
 
                                 <div className="grid gap-6 md:grid-cols-2">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-300">Phone Number</label>
+                                        <label className="text-sm font-medium text-slate-700">Phone Number</label>
                                         <PhoneInput
                                             value={formData.phoneNumber}
                                             onChange={(value) => setFormData({ ...formData, phoneNumber: value })}
@@ -582,26 +582,26 @@ function ProfileContent() {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-300">Business Model</label>
+                                        <label className="text-sm font-medium text-slate-700">Business Model</label>
                                         <div className="relative">
                                             <select
                                                 value={formData.businessModel}
                                                 onChange={(e) => setFormData({ ...formData, businessModel: e.target.value as BusinessModel })}
                                                 disabled={!isOwnProfile && !isAdmin}
-                                                className="w-full appearance-none rounded-xl border border-zinc-800 bg-zinc-950 pl-4 pr-10 py-3 text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20 transition-all cursor-pointer disabled:opacity-50"
+                                                className="w-full appearance-none rounded-xl border border-slate-200 bg-white pl-4 pr-10 py-3 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600/20 transition-all cursor-pointer disabled:opacity-50"
                                             >
                                                 <option value="individual">Individual / Freelancer</option>
                                                 <option value="enterprise">Enterprise / Company</option>
                                             </select>
-                                            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500">
+                                            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">
                                                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-300">Gender</label>
-                                        <p className="text-xs text-zinc-500 -mt-1">Sets your default profile avatar.</p>
+                                        <label className="text-sm font-medium text-slate-700">Gender</label>
+                                        <p className="text-xs text-slate-500 -mt-1">Sets your default profile avatar.</p>
                                         <div className="flex gap-2">
                                             {(["male", "female"] as Gender[]).map((g) => (
                                                 <button
@@ -610,8 +610,8 @@ function ProfileContent() {
                                                     onClick={() => handleGenderChange(g)}
                                                     disabled={!isOwnProfile && !isAdmin}
                                                     className={`flex-1 rounded-xl border px-4 py-3 text-sm font-semibold transition-all disabled:opacity-50 ${formData.gender === g
-                                                        ? "border-brand-green bg-brand-green/10 text-brand-green"
-                                                        : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-600 hover:text-white"
+                                                        ? "border-blue-600 bg-blue-600/10 text-blue-600"
+                                                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-400 hover:text-slate-900"
                                                         }`}
                                                 >
                                                     {g === "male" ? "Male" : "Female"}
@@ -632,21 +632,21 @@ function ProfileContent() {
                                 transition={{ duration: 0.3 }}
                                 className="overflow-hidden"
                             >
-                                <div className="space-y-6 pt-6 border-t border-zinc-800/50">
-                                    <div className="flex items-center gap-3 pb-2 border-b border-zinc-800">
-                                        <Building2 className="h-5 w-5 text-brand-green" />
-                                        <h3 className="text-lg font-semibold text-white">Enterprise Information</h3>
+                                <div className="space-y-6 pt-6 border-t border-slate-200">
+                                    <div className="flex items-center gap-3 pb-2 border-b border-slate-200">
+                                        <Building2 className="h-5 w-5 text-blue-600" />
+                                        <h3 className="text-lg font-semibold text-slate-900">Enterprise Information</h3>
                                     </div>
                                     {/* ... Keep existing enterprise fields (wrapped in fragment or just inline if replacing block) ... */}
                                     <div className="grid gap-6 md:grid-cols-2">
                                         {/* Copied from original for fidelity */}
                                         <div className="space-y-2">
-                                            <label className="text-sm font-medium text-zinc-300">Company Size</label>
+                                            <label className="text-sm font-medium text-slate-700">Company Size</label>
                                             <select
                                                 value={formData.enterpriseDetails?.size || "1-10"}
                                                 onChange={(e) => updateEnterpriseDetail("size", e.target.value)}
                                                 disabled={!isOwnProfile && !isAdmin}
-                                                className="w-full appearance-none rounded-xl border border-zinc-800 bg-zinc-950 pl-4 pr-10 py-3 text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20 transition-all cursor-pointer disabled:opacity-50"
+                                                className="w-full appearance-none rounded-xl border border-slate-200 bg-white pl-4 pr-10 py-3 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600/20 transition-all cursor-pointer disabled:opacity-50"
                                             >
                                                 <option value="1-10">1-10 Employees</option>
                                                 <option value="11-50">11-50 Employees</option>
@@ -655,32 +655,32 @@ function ProfileContent() {
                                             </select>
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-sm font-medium text-zinc-300">Enterprise Phone</label>
+                                            <label className="text-sm font-medium text-slate-700">Enterprise Phone</label>
                                             <input
                                                 type="text"
                                                 value={formData.enterpriseDetails?.phone || ""}
                                                 onChange={(e) => updateEnterpriseDetail("phone", e.target.value)}
                                                 disabled={!isOwnProfile && !isAdmin}
-                                                className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white disabled:opacity-50"
+                                                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 disabled:opacity-50"
                                             />
                                         </div>
                                         <div className="space-y-2 md:col-span-2">
-                                            <label className="text-sm font-medium text-zinc-300">Enterprise Email</label>
+                                            <label className="text-sm font-medium text-slate-700">Enterprise Email</label>
                                             <input
                                                 type="email"
                                                 value={formData.enterpriseDetails?.email || ""}
                                                 onChange={(e) => updateEnterpriseDetail("email", e.target.value)}
                                                 disabled={!isOwnProfile && !isAdmin}
-                                                className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white disabled:opacity-50"
+                                                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 disabled:opacity-50"
                                             />
                                         </div>
                                         <div className="space-y-2 md:col-span-2">
-                                            <label className="text-sm font-medium text-zinc-300">Headquarters Address</label>
+                                            <label className="text-sm font-medium text-slate-700">Headquarters Address</label>
                                             <textarea
                                                 value={formData.enterpriseDetails?.address || ""}
                                                 onChange={(e) => updateEnterpriseDetail("address", e.target.value)}
                                                 disabled={!isOwnProfile && !isAdmin}
-                                                className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 min-h-[100px] text-white disabled:opacity-50"
+                                                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 min-h-[100px] text-slate-900 disabled:opacity-50"
                                             />
                                         </div>
                                     </div>
@@ -690,29 +690,29 @@ function ProfileContent() {
 
                         {/* DEVELOPER SECTION */}
                         {(targetRole === 'developer' || isAdmin) && (
-                            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-4 md:p-6 space-y-5 md:space-y-6 relative overflow-hidden">
+                            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 md:p-6 space-y-5 md:space-y-6 relative overflow-hidden">
 
                                 {/* LOCKED OVERLAY */}
                                 {targetRole !== 'developer' && (
-                                    <div className="absolute inset-0 z-20 bg-zinc-950/80 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 border border-zinc-800/50">
-                                        <div className="h-16 w-16 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-4 shadow-lg">
-                                            <Lock className="h-8 w-8 text-zinc-500" />
+                                    <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 border border-slate-200">
+                                        <div className="h-16 w-16 rounded-full bg-white border border-slate-200 flex items-center justify-center mb-4 shadow-lg">
+                                            <Lock className="h-8 w-8 text-slate-500" />
                                         </div>
-                                        <h3 className="text-xl font-bold text-white mb-2">Developer Profile Locked</h3>
-                                        <p className="text-zinc-400 max-w-sm mb-6 text-sm">
+                                        <h3 className="text-xl font-bold text-slate-900 mb-2">Developer Profile Locked</h3>
+                                        <p className="text-slate-600 max-w-sm mb-6 text-sm">
                                             This section contains specialized developer information. Access is restricted to approved technical team members.
                                         </p>
 
                                         {isAdmin && !isOwnProfile ? (
                                             <Button
                                                 onClick={approveAsDeveloper}
-                                                className="bg-brand-green text-black hover:bg-brand-green/90 font-semibold shadow-brand-glow"
+                                                className="bg-blue-600 text-white hover:bg-blue-500 font-semibold shadow-md shadow-blue-600/20"
                                             >
                                                 <Crown className="mr-2 h-4 w-4" /> Approve Access
                                             </Button>
                                         ) : (
                                             <div className="flex flex-col items-center gap-2">
-                                                <div className="px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500 text-xs font-mono uppercase tracking-wider">
+                                                <div className="px-4 py-2 rounded-lg bg-white border border-slate-200 text-slate-500 text-xs font-mono uppercase tracking-wider">
                                                     Admin Approval Required
                                                 </div>
                                             </div>
@@ -724,13 +724,13 @@ function ProfileContent() {
                                 {targetRole === 'developer' && <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><Crown className="h-32 w-32" /></div>}
 
                                 <div className={`space-y-6 relative z-10 transition-all duration-300 ${targetRole !== 'developer' ? 'opacity-20 blur-sm pointer-events-none grayscale' : ''}`}>
-                                    <div className="flex items-center justify-between pb-2 border-b border-zinc-800 py-2">
+                                    <div className="flex items-center justify-between pb-2 border-b border-slate-200 py-2">
                                         <div className="flex items-center gap-3">
-                                            <Code className="h-5 w-5 text-brand-green" />
-                                            <h3 className="text-lg font-semibold text-white">Developer Profile</h3>
+                                            <Code className="h-5 w-5 text-blue-600" />
+                                            <h3 className="text-lg font-semibold text-slate-900">Developer Profile</h3>
                                         </div>
                                         {targetRole === 'developer' && (
-                                            <span className="text-[10px] uppercase font-bold text-brand-green border border-brand-green/20 bg-brand-green/5 px-2 py-1 rounded">
+                                            <span className="text-[10px] uppercase font-bold text-blue-600 border border-blue-600/20 bg-blue-600/5 px-2 py-1 rounded">
                                                 Verified Developer
                                             </span>
                                         )}
@@ -739,12 +739,12 @@ function ProfileContent() {
                                     {/* Role & Experience */}
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
-                                            <label className="text-sm font-medium text-zinc-300">Designation / Role</label>
+                                            <label className="text-sm font-medium text-slate-700">Designation / Role</label>
                                             <div className="relative">
                                                 <select
                                                     value={developerForm.role || ""}
                                                     onChange={(e) => setDeveloperForm({ ...developerForm, role: e.target.value })}
-                                                    className="w-full appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20"
+                                                    className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600/20"
                                                 >
                                                     <option value="" disabled>Select Role</option>
                                                     {ROLES.map(role => (
@@ -752,25 +752,25 @@ function ProfileContent() {
                                                     ))}
                                                     <option value="Other">Other</option>
                                                 </select>
-                                                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500">
+                                                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">
                                                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-sm font-medium text-zinc-300">Experience Level</label>
+                                            <label className="text-sm font-medium text-slate-700">Experience Level</label>
                                             <div className="relative">
                                                 <select
                                                     value={developerForm.experienceLevel || "Junior"}
                                                     onChange={(e) => setDeveloperForm({ ...developerForm, experienceLevel: e.target.value as any })}
-                                                    className="w-full appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20"
+                                                    className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600/20"
                                                 >
                                                     <option value="Junior">Junior (0-2 years)</option>
                                                     <option value="Mid">Mid-Level (2-5 years)</option>
                                                     <option value="Senior">Senior (5+ years)</option>
                                                     <option value="Lead">Lead / Principal</option>
                                                 </select>
-                                                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500">
+                                                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">
                                                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                                                 </div>
                                             </div>
@@ -780,42 +780,42 @@ function ProfileContent() {
                                     {/* Availability & Rate */}
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
-                                            <label className="text-sm font-medium text-zinc-300">Availability Status</label>
+                                            <label className="text-sm font-medium text-slate-700">Availability Status</label>
                                             <div className="relative">
                                                 <select
                                                     value={developerForm.availability || "Freelance"}
                                                     onChange={(e) => setDeveloperForm({ ...developerForm, availability: e.target.value as any })}
-                                                    className="w-full appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20"
+                                                    className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600/20"
                                                 >
                                                     <option value="Freelance">Open to Freelance</option>
                                                     <option value="Full-time">Full-time (Employed)</option>
                                                     <option value="Part-time">Part-time</option>
                                                     <option value="Unavailable">Currently Unavailable</option>
                                                 </select>
-                                                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500">
+                                                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">
                                                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-sm font-medium text-zinc-300">Hourly Rate (USD) <span className="text-zinc-500 text-xs">(Optional)</span></label>
+                                            <label className="text-sm font-medium text-slate-700">Hourly Rate (USD) <span className="text-slate-500 text-xs">(Optional)</span></label>
                                             <input
                                                 type="text"
                                                 value={developerForm.hourlyRate || ""}
                                                 onChange={(e) => setDeveloperForm({ ...developerForm, hourlyRate: e.target.value })}
                                                 placeholder="e.g. 50"
-                                                className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20"
+                                                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600/20"
                                             />
                                         </div>
                                     </div>
 
                                     {/* Skills & Bio */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-300">Tech Stack</label>
-                                        <div className="bg-zinc-950 rounded-xl border border-zinc-800 p-3 ring-offset-2 focus-within:ring-1 focus-within:ring-brand-green/20 focus-within:border-brand-green">
+                                        <label className="text-sm font-medium text-slate-700">Tech Stack</label>
+                                        <div className="bg-white rounded-xl border border-slate-200 p-3 ring-offset-2 focus-within:ring-1 focus-within:ring-blue-600/20 focus-within:border-blue-600">
                                             <div className="flex flex-wrap gap-2 mb-2">
                                                 {developerForm.techStack?.map((skill, index) => (
-                                                    <span key={index} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-zinc-800 text-white text-xs border border-zinc-700">
+                                                    <span key={index} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-slate-100 text-slate-900 text-xs border border-slate-300">
                                                         {skill}
                                                         <button
                                                             onClick={() => setDeveloperForm({
@@ -831,7 +831,7 @@ function ProfileContent() {
                                             </div>
                                             <div className="relative group/tech">
                                                 <select
-                                                    className="w-full bg-transparent text-sm text-zinc-400 focus:outline-none cursor-pointer py-1"
+                                                    className="w-full bg-transparent text-sm text-slate-600 focus:outline-none cursor-pointer py-1"
                                                     onChange={(e) => {
                                                         const val = e.target.value;
                                                         if (val && !developerForm.techStack?.includes(val)) {
@@ -843,39 +843,39 @@ function ProfileContent() {
                                                         e.target.value = ""; // Reset
                                                     }}
                                                 >
-                                                    <option value="" className="bg-zinc-900">Add technology...</option>
+                                                    <option value="" className="bg-white">Add technology...</option>
                                                     {TECH_STACK_OPTIONS.map(opt => (
-                                                        <option key={opt} value={opt} className="bg-zinc-900 text-white">{opt}</option>
+                                                        <option key={opt} value={opt} className="bg-white text-slate-900">{opt}</option>
                                                     ))}
                                                 </select>
                                             </div>
                                         </div>
-                                        <p className="text-xs text-zinc-500">Select technologies from the list to add them.</p>
+                                        <p className="text-xs text-slate-500">Select technologies from the list to add them.</p>
                                     </div>
 
                                     {/* Photo Upload Shortcut */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-300">Profile Photo</label>
-                                        <div className="flex items-center gap-4 p-4 rounded-xl border border-zinc-800 bg-zinc-950/50">
-                                            <div className="h-12 w-12 rounded-full overflow-hidden bg-zinc-800 border-2 border-zinc-700">
+                                        <label className="text-sm font-medium text-slate-700">Profile Photo</label>
+                                        <div className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 bg-white">
+                                            <div className="h-12 w-12 rounded-full overflow-hidden bg-slate-100 border-2 border-slate-300">
                                                 {displayPhoto ? (
                                                     <img src={displayPhoto} alt="Profile" className="h-full w-full object-cover" />
                                                 ) : (
-                                                    <div className="flex bg-zinc-800 h-full w-full items-center justify-center font-bold text-zinc-600">
+                                                    <div className="flex bg-slate-100 h-full w-full items-center justify-center font-bold text-slate-400">
                                                         {profileUser?.displayName?.[0] || "?"}
                                                     </div>
                                                 )}
                                             </div>
                                             <div className="flex-1">
-                                                <p className="text-sm text-white font-medium">Developer Profile Photo</p>
-                                                <p className="text-xs text-zinc-500">This photo will be displayed on your team card.</p>
+                                                <p className="text-sm text-slate-900 font-medium">Developer Profile Photo</p>
+                                                <p className="text-xs text-slate-500">This photo will be displayed on your team card.</p>
                                             </div>
                                             <Button
                                                 type="button"
                                                 variant="outline"
                                                 size="sm"
                                                 onClick={() => setShowAvatarModal(true)}
-                                                className="border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800"
+                                                className="border-slate-300 text-slate-700 hover:text-slate-900 hover:bg-slate-100"
                                             >
                                                 <Camera className="mr-2 h-4 w-4" /> Change Photo
                                             </Button>
@@ -883,29 +883,29 @@ function ProfileContent() {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-300">Spoken Languages <span className="text-zinc-500 text-xs">(Comma separated)</span></label>
+                                        <label className="text-sm font-medium text-slate-700">Spoken Languages <span className="text-slate-500 text-xs">(Comma separated)</span></label>
                                         <input
                                             value={developerForm.languages ? developerForm.languages.join(', ') : ""}
                                             onChange={(e) => setDeveloperForm({ ...developerForm, languages: e.target.value.split(',').map(s => s.trim()) })}
                                             placeholder="English, Spanish, Hindi..."
-                                            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20"
+                                            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600/20"
                                         />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-300">Short Bio</label>
+                                        <label className="text-sm font-medium text-slate-700">Short Bio</label>
                                         <textarea
                                             value={developerForm.description || ""}
                                             onChange={(e) => setDeveloperForm({ ...developerForm, description: e.target.value })}
-                                            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 min-h-[100px] text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20"
+                                            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 min-h-[100px] text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600/20"
                                             placeholder="Tell us about your experience and skills..."
                                         />
                                     </div>
 
                                     {/* Showcase Projects */}
-                                    <div className="space-y-4 pt-4 border-t border-zinc-800/50">
+                                    <div className="space-y-4 pt-4 border-t border-slate-200">
                                         <div className="flex items-center justify-between">
-                                            <h4 className="text-base font-semibold text-white">Showcase Projects (Max 3)</h4>
+                                            <h4 className="text-base font-semibold text-slate-900">Showcase Projects (Max 3)</h4>
                                             {(!developerForm.projects || developerForm.projects.length < 3) && (
                                                 <Button
                                                     type="button"
@@ -915,7 +915,7 @@ function ProfileContent() {
                                                     })}
                                                     variant="outline"
                                                     size="sm"
-                                                    className="h-8 text-xs border-brand-green/20 text-brand-green hover:bg-brand-green/10"
+                                                    className="h-8 text-xs border-blue-600/20 text-blue-600 hover:bg-blue-600/10"
                                                 >
                                                     <Briefcase className="mr-2 h-3 w-3" /> Add Project
                                                 </Button>
@@ -924,13 +924,13 @@ function ProfileContent() {
 
                                         <div className="grid gap-4">
                                             {developerForm.projects?.map((project, index) => (
-                                                <div key={index} className="relative rounded-xl border border-zinc-800 bg-zinc-950/50 p-4 space-y-3">
+                                                <div key={index} className="relative rounded-xl border border-slate-200 bg-white p-4 space-y-3">
                                                     <button
                                                         onClick={() => setDeveloperForm({
                                                             ...developerForm,
                                                             projects: developerForm.projects?.filter((_, i) => i !== index)
                                                         })}
-                                                        className="absolute top-2 right-2 p-1 text-zinc-500 hover:text-red-400 transition-colors"
+                                                        className="absolute top-2 right-2 p-1 text-slate-500 hover:text-red-400 transition-colors"
                                                     >
                                                         <X className="h-4 w-4" />
                                                     </button>
@@ -945,7 +945,7 @@ function ProfileContent() {
                                                                 setDeveloperForm({ ...developerForm, projects: newProjects });
                                                             }}
                                                             placeholder="Project Title"
-                                                            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-brand-green focus:outline-none"
+                                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-blue-600 focus:outline-none"
                                                         />
                                                         <input
                                                             type="text"
@@ -956,7 +956,7 @@ function ProfileContent() {
                                                                 setDeveloperForm({ ...developerForm, projects: newProjects });
                                                             }}
                                                             placeholder="GitHub URL"
-                                                            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-brand-green focus:outline-none"
+                                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-blue-600 focus:outline-none"
                                                         />
                                                     </div>
                                                     <textarea
@@ -967,12 +967,12 @@ function ProfileContent() {
                                                             setDeveloperForm({ ...developerForm, projects: newProjects });
                                                         }}
                                                         placeholder="Short description of the project..."
-                                                        className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-brand-green focus:outline-none min-h-[60px]"
+                                                        className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-blue-600 focus:outline-none min-h-[60px]"
                                                     />
                                                 </div>
                                             ))}
                                             {(!developerForm.projects || developerForm.projects.length === 0) && (
-                                                <div className="text-center py-6 border border-dashed border-zinc-800 rounded-xl text-zinc-500 text-sm">
+                                                <div className="text-center py-6 border border-dashed border-slate-200 rounded-xl text-slate-500 text-sm">
                                                     No projects added yet. Add up to 3 projects to showcase your work.
                                                 </div>
                                             )}
@@ -980,50 +980,50 @@ function ProfileContent() {
                                     </div>
                                     {/* Portfolio URL */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-300">Portfolio / Website</label>
+                                        <label className="text-sm font-medium text-slate-700">Portfolio / Website</label>
                                         <input
                                             value={developerForm.projectUrl || ""}
                                             onChange={(e) => setDeveloperForm({ ...developerForm, projectUrl: e.target.value })}
                                             placeholder="https://your-portfolio.com"
-                                            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green/20"
+                                            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600/20"
                                         />
                                     </div>
 
                                     {/* Socials */}
-                                    <div className="space-y-4 pt-4 border-t border-zinc-800/50">
-                                        <h4 className="text-sm font-medium text-zinc-400">Social Connections</h4>
+                                    <div className="space-y-4 pt-4 border-t border-slate-200">
+                                        <h4 className="text-sm font-medium text-slate-600">Social Connections</h4>
                                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                                             <div className="flex items-center gap-2">
-                                                <div className="h-8 w-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                                                    <Github className="h-4 w-4 text-white" />
+                                                <div className="h-8 w-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center">
+                                                    <Github className="h-4 w-4 text-slate-900" />
                                                 </div>
                                                 <input
                                                     value={developerForm.socials?.github || ""}
                                                     onChange={(e) => setDeveloperForm({ ...developerForm, socials: { ...developerForm.socials!, github: e.target.value } })}
                                                     placeholder="GitHub URL"
-                                                    className="flex-1 rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs text-white"
+                                                    className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900"
                                                 />
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <div className="h-8 w-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                                                <div className="h-8 w-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center">
                                                     <Linkedin className="h-4 w-4 text-blue-500" />
                                                 </div>
                                                 <input
                                                     value={developerForm.socials?.linkedin || ""}
                                                     onChange={(e) => setDeveloperForm({ ...developerForm, socials: { ...developerForm.socials!, linkedin: e.target.value } })}
                                                     placeholder="LinkedIn URL"
-                                                    className="flex-1 rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs text-white"
+                                                    className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900"
                                                 />
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <div className="h-8 w-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                                                <div className="h-8 w-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center">
                                                     <Instagram className="h-4 w-4 text-pink-500" />
                                                 </div>
                                                 <input
                                                     value={developerForm.socials?.instagram || ""}
                                                     onChange={(e) => setDeveloperForm({ ...developerForm, socials: { ...developerForm.socials!, instagram: e.target.value } })}
                                                     placeholder="Instagram URL"
-                                                    className="flex-1 rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs text-white"
+                                                    className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900"
                                                 />
                                             </div>
                                         </div>
@@ -1044,7 +1044,7 @@ function ProfileContent() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+                            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4"
                             onClick={() => {
                                 setShowAvatarModal(false);
                                 setAvatarPreview(null);
@@ -1058,11 +1058,11 @@ function ProfileContent() {
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.9, opacity: 0 }}
                                 onClick={(e) => e.stopPropagation()}
-                                className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 w-full max-w-md shadow-2xl"
+                                className="bg-white border border-slate-200 rounded-2xl p-6 w-full max-w-md shadow-2xl"
                             >
                                 {/* Modal Header */}
                                 <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-xl font-bold text-white">Edit Avatar</h3>
+                                    <h3 className="text-xl font-bold text-slate-900">Edit Avatar</h3>
                                     <button
                                         onClick={() => {
                                             setShowAvatarModal(false);
@@ -1070,7 +1070,7 @@ function ProfileContent() {
                                             setSelectedFile(null);
                                             router.replace('/profile');
                                         }}
-                                        className="p-2 rounded-full hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
+                                        className="p-2 rounded-full hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors"
                                     >
                                         <X className="h-5 w-5" />
                                     </button>
@@ -1078,7 +1078,7 @@ function ProfileContent() {
 
                                 {/* Preview Area */}
                                 <div className="flex flex-col items-center gap-6">
-                                    <div className="relative h-40 w-40 overflow-hidden rounded-full border-4 border-zinc-700 shadow-xl bg-zinc-800">
+                                    <div className="relative h-40 w-40 overflow-hidden rounded-full border-4 border-slate-300 shadow-xl bg-slate-100">
                                         {avatarPreview ? (
                                             <img
                                                 src={avatarPreview}
@@ -1092,7 +1092,7 @@ function ProfileContent() {
                                                 className="h-full w-full object-cover"
                                             />
                                         ) : (
-                                            <div className="flex h-full w-full items-center justify-center text-5xl font-bold text-zinc-500">
+                                            <div className="flex h-full w-full items-center justify-center text-5xl font-bold text-slate-500">
                                                 {(user?.displayName?.[0] || "U").toUpperCase()}
                                             </div>
                                         )}
@@ -1100,7 +1100,7 @@ function ProfileContent() {
 
                                     {/* Professional, gender-based avatars */}
                                     <div className="w-full">
-                                        <p className="text-sm font-medium text-zinc-400 mb-3">Professional avatar</p>
+                                        <p className="text-sm font-medium text-slate-600 mb-3">Professional avatar</p>
                                         <div className="grid grid-cols-2 gap-4">
                                             {[
                                                 { gender: "male" as Gender, label: "Male", url: FORMAL_MALE_PRESETS[0] },
@@ -1114,34 +1114,34 @@ function ProfileContent() {
                                                         setSelectedFile(null); // Clear manual file selection
                                                     }}
                                                     className={`flex flex-col items-center gap-2 rounded-xl border-2 p-3 transition-all ${avatarPreview === url
-                                                        ? "border-brand-green bg-brand-green/5"
-                                                        : "border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800/50"
+                                                        ? "border-blue-600 bg-blue-600/5"
+                                                        : "border-slate-300 hover:border-zinc-500 hover:bg-slate-100"
                                                         }`}
                                                 >
                                                     <span className="h-20 w-20 rounded-full overflow-hidden bg-white">
                                                         <img src={url} alt={`${label} professional avatar`} className="h-full w-full object-cover" />
                                                     </span>
-                                                    <span className="text-xs font-semibold text-zinc-300">{label}</span>
+                                                    <span className="text-xs font-semibold text-slate-700">{label}</span>
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
 
                                     <div className="flex items-center w-full gap-4">
-                                        <div className="h-px bg-zinc-800 flex-1" />
-                                        <span className="text-xs text-zinc-500 font-medium">OR UPLOAD</span>
-                                        <div className="h-px bg-zinc-800 flex-1" />
+                                        <div className="h-px bg-slate-100 flex-1" />
+                                        <span className="text-xs text-slate-500 font-medium">OR UPLOAD</span>
+                                        <div className="h-px bg-slate-100 flex-1" />
                                     </div>
 
                                     {/* File Input */}
                                     <label className="w-full">
-                                        <div className="flex flex-col items-center justify-center gap-3 border-2 border-dashed border-zinc-700 rounded-xl p-6 hover:border-brand-green/50 hover:bg-zinc-800/50 transition-all cursor-pointer">
-                                            <Upload className="h-8 w-8 text-zinc-500" />
+                                        <div className="flex flex-col items-center justify-center gap-3 border-2 border-dashed border-slate-300 rounded-xl p-6 hover:border-blue-600/50 hover:bg-slate-100 transition-all cursor-pointer">
+                                            <Upload className="h-8 w-8 text-slate-500" />
                                             <div className="text-center">
-                                                <p className="text-sm font-medium text-zinc-300">
+                                                <p className="text-sm font-medium text-slate-700">
                                                     {selectedFile ? selectedFile.name : "Click to upload"}
                                                 </p>
-                                                <p className="text-xs text-zinc-500 mt-1">
+                                                <p className="text-xs text-slate-500 mt-1">
                                                     PNG, JPG or WebP (max 5MB)
                                                 </p>
                                             </div>
@@ -1181,7 +1181,7 @@ function ProfileContent() {
                                                 router.replace('/profile');
                                             }}
                                             variant="outline"
-                                            className="flex-1 border-zinc-700 text-zinc-400 hover:bg-zinc-800 hover:text-white"
+                                            className="flex-1 border-slate-300 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                                         >
                                             Cancel
                                         </Button>
@@ -1257,7 +1257,7 @@ function ProfileContent() {
                                                 }
                                             }}
                                             disabled={(!selectedFile && !avatarPreview) || isUploadingAvatar}
-                                            className="flex-1 bg-brand-green text-black hover:bg-brand-green/90 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="flex-1 bg-blue-600 text-slate-900 hover:bg-blue-600/90 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {isUploadingAvatar ? (
                                                 <>
@@ -1285,8 +1285,8 @@ function ProfileContent() {
 export default function ProfilePage() {
     return (
         <Suspense fallback={
-            <div className="flex min-h-screen items-center justify-center bg-black text-white">
-                <Loader2 className="h-8 w-8 animate-spin text-brand-green" />
+            <div className="flex min-h-screen items-center justify-center bg-white text-slate-900">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
             </div>
         }>
             <ProfileContent />
