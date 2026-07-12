@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Lock, Chrome, User } from "lucide-react";
+import { X, Lock, Chrome } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface SignInModalProps {
@@ -36,7 +36,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100]"
+                        className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100]"
                     />
 
                     {/* Modal Container for Centering */}
@@ -47,23 +47,23 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
                             className="w-full max-w-md pointer-events-auto"
                         >
-                            <div className="relative overflow-hidden rounded-2xl border border-red-900/50 bg-zinc-950 shadow-[0_0_50px_rgba(239,68,68,0.2)]">
+                            <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
                                 {/* Close Button */}
                                 <button
                                     onClick={onClose}
-                                    className="absolute right-4 top-4 text-zinc-500 hover:text-white transition-colors"
+                                    className="absolute right-4 top-4 text-slate-400 hover:text-slate-900 transition-colors"
                                 >
                                     <X size={20} />
                                 </button>
 
                                 <div className="flex flex-col items-center p-8 text-center">
                                     {/* Locked Icon */}
-                                    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-500/10 border border-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.1)]">
-                                        <Lock className="h-10 w-10 text-red-500" />
+                                    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-blue-50 border border-blue-100">
+                                        <Lock className="h-10 w-10 text-blue-600" />
                                     </div>
 
-                                    <h2 className="mb-2 text-2xl font-bold text-white">System Locked</h2>
-                                    <p className="mb-8 text-zinc-400">
+                                    <h2 className="mb-2 text-2xl font-bold text-slate-900">Sign in to CodeGang</h2>
+                                    <p className="mb-8 text-slate-500">
                                         Authentication required to access full system capabilities and project data.
                                     </p>
 
@@ -72,10 +72,10 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                                         <button
                                             onClick={handleGoogleSignIn}
                                             disabled={isLoading}
-                                            className="flex w-full items-center justify-center gap-3 rounded-lg bg-white px-4 py-3 font-semibold text-black transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+                                            className="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-800 shadow-sm transition-transform hover:bg-slate-50 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
                                             {isLoading ? (
-                                                <div className="h-5 w-5 animate-spin rounded-full border-2 border-zinc-300 border-t-black" />
+                                                <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-slate-800" />
                                             ) : (
                                                 <>
                                                     <Chrome className="h-5 w-5" />
@@ -85,13 +85,13 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                                         </button>
                                     </div>
 
-                                    <p className="mt-6 text-xs text-zinc-600">
+                                    <p className="mt-6 text-xs text-slate-400">
                                         By continuing, you agree to our Terms of Service and Privacy Policy.
                                     </p>
                                 </div>
 
                                 {/* Decorative Red Line */}
-                                <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-red-600/0 via-red-600/50 to-red-600/0" />
+                                <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-blue-600/0 via-blue-600/60 to-blue-600/0" />
                             </div>
                         </motion.div>
                     </div>

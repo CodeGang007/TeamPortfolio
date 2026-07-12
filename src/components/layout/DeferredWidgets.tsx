@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 // Global overlay widgets that render nothing at first paint.
 // Loaded after hydration (on idle) so they stay out of first-load JS.
@@ -9,8 +10,16 @@ const ModalWrapper = dynamic(() => import("@/components/shared/ModalWrapper"), {
 const AuthToast = dynamic(() => import("@/components/auth/AuthToast"), { ssr: false });
 const FeedbackButton = dynamic(() => import("@/components/FeedbackButton"), { ssr: false });
 
+// The marketing surface stays free of app nags — visitors get the sign-in
+// modal (via the header button) but never the toast or feedback bubble.
+const MARKETING_ROUTES = ["/work", "/studio", "/contact", "/privacy", "/terms", "/cookies", "/license", "/project-request", "/project-templates"];
+
 export default function DeferredWidgets() {
   const [ready, setReady] = useState(false);
+  const pathname = usePathname() ?? "/";
+  const isMarketing =
+    pathname === "/" ||
+    MARKETING_ROUTES.some((r) => pathname === r || pathname.startsWith(`${r}/`));
 
   useEffect(() => {
     const start = () => setReady(true);
@@ -27,8 +36,8 @@ export default function DeferredWidgets() {
   return (
     <>
       <ModalWrapper />
-      <AuthToast />
-      <FeedbackButton />
+      {!isMarketing && <AuthToast />}
+      {!isMarketing && <FeedbackButton />}
     </>
   );
 }

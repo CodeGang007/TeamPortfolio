@@ -1,30 +1,42 @@
+import { site } from "@/content/site";
+
 export default function SchemaMarkup() {
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'CodeGang',
-    url: 'https://www.codegang.online',
-    logo: 'https://www.codegang.online/assets/cg-logo-online.png',
-    sameAs: [
-      'https://twitter.com/codegang',
-      'https://linkedin.com/company/codegang',
-      'https://github.com/codegang'
-    ],
+  const organization = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: site.name,
+    url: site.domain,
+    logo: `${site.domain}/assets/cg-logo-online.png`,
+    sameAs: [site.x, site.linkedin, site.github],
     contactPoint: {
-      '@type': 'ContactPoint',
-      telephone: '',
-      contactType: 'customer service',
-      areaServed: 'Worldwide',
-      availableLanguage: 'English'
+      "@type": "ContactPoint",
+      email: site.email,
+      contactType: "sales",
+      areaServed: "Worldwide",
+      availableLanguage: "English",
     },
-    description: 'CodeGang is a premium digital agency architecting the future. We build high-performance web applications, scalable infrastructure, and stunning digital experiences.'
+    description: site.description,
+  };
+
+  const webSite = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.name,
+    url: site.domain,
   };
 
   return (
-    <script
-      id="schema-org-markup"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
+    <>
+      <script
+        id="schema-org-organization"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }}
+      />
+      <script
+        id="schema-org-website"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSite) }}
+      />
+    </>
   );
 }

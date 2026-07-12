@@ -178,29 +178,29 @@ export default function FounderForm() {
 
     if (loading || isLoadingData) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#121212]">
+            <div className="flex min-h-screen items-center justify-center bg-[#f8fafc]">
                 <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="h-8 w-8 animate-spin text-brand-green" />
-                    <p className="text-zinc-500 text-sm">Loading...</p>
+                    <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                    <p className="text-slate-500 text-sm">Loading...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#121212] text-white">
+        <div className="min-h-screen bg-[#f8fafc] text-slate-900">
             {/* Header */}
-            <header className="sticky top-0 z-50 border-b border-[#27272a] bg-[#121212]/80 backdrop-blur-xl">
+            <header className="sticky top-0 z-50 border-b border-slate-200 bg-[#ffffff]/90 backdrop-blur-xl">
                 <div className="mx-auto max-w-5xl px-6 py-4">
                     <div className="flex items-center gap-4">
-                        <Link href="/dashboard/founders" className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#27272a] text-[#71717a] hover:text-white hover:border-[#3f3f46] transition-all">
+                        <Link href="/dashboard/founders" className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300 transition-all">
                             <ArrowLeft className="h-4 w-4" />
                         </Link>
                         <div>
-                            <h1 className="text-lg font-semibold text-white">
+                            <h1 className="text-lg font-semibold text-slate-900">
                                 {isEditMode ? "Edit Founder" : "Add New Founder"}
                             </h1>
-                            <p className="text-[11px] text-[#71717a]">
+                            <p className="text-[11px] text-slate-500">
                                 {isEditMode ? "Update founder information" : "Create a new founder profile"}
                             </p>
                         </div>
@@ -213,7 +213,7 @@ export default function FounderForm() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Image Upload */}
                     <div>
-                        <label className="block text-sm font-medium text-white mb-2">
+                        <label className="block text-sm font-medium text-slate-900 mb-2">
                             Profile Image <span className="text-red-400">*</span>
                         </label>
                         <div className="flex items-center gap-6">
@@ -231,7 +231,7 @@ export default function FounderForm() {
                                     type="button"
                                     onClick={handleImageUpload}
                                     disabled={imageUploading}
-                                    className="bg-[#27272a] text-white hover:bg-[#3f3f46] border border-[#3f3f46]"
+                                    className="bg-slate-200 text-slate-900 hover:bg-slate-300 border border-slate-300"
                                 >
                                     {imageUploading ? (
                                         <>
@@ -245,7 +245,7 @@ export default function FounderForm() {
                                         </>
                                     )}
                                 </Button>
-                                <p className="text-xs text-[#71717a] mt-2">
+                                <p className="text-xs text-slate-500 mt-2">
                                     Recommended: Square image, JPG or PNG, max 5MB
                                 </p>
                             </div>
@@ -254,7 +254,7 @@ export default function FounderForm() {
 
                     {/* Name */}
                     <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
+                        <label htmlFor="name" className="block text-sm font-medium text-slate-900 mb-2">
                             Full Name <span className="text-red-400">*</span>
                         </label>
                         <input
@@ -262,7 +262,7 @@ export default function FounderForm() {
                             type="text"
                             value={formData.name}
                             onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                            className="w-full rounded-lg bg-[#18181b] border border-[#27272a] px-4 py-2.5 text-white placeholder:text-[#52525b] focus:outline-none focus:border-brand-green transition-colors"
+                            className="w-full rounded-lg bg-white border border-slate-200 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 transition-colors"
                             placeholder="John Doe"
                             required
                         />
@@ -270,7 +270,7 @@ export default function FounderForm() {
 
                     {/* Description */}
                     <div>
-                        <label htmlFor="description" className="block text-sm font-medium text-white mb-2">
+                        <label htmlFor="description" className="block text-sm font-medium text-slate-900 mb-2">
                             Description <span className="text-red-400">*</span>
                         </label>
                         <textarea
@@ -278,7 +278,7 @@ export default function FounderForm() {
                             value={formData.description}
                             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                             rows={4}
-                            className="w-full rounded-lg bg-[#18181b] border border-[#27272a] px-4 py-2.5 text-white placeholder:text-[#52525b] focus:outline-none focus:border-brand-green transition-colors resize-none"
+                            className="w-full rounded-lg bg-white border border-slate-200 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 transition-colors resize-none"
                             placeholder="Brief description about the founder..."
                             required
                         />
@@ -286,7 +286,7 @@ export default function FounderForm() {
 
                     {/* Tech Stack */}
                     <div>
-                        <label htmlFor="techStack" className="block text-sm font-medium text-white mb-2">
+                        <label htmlFor="techStack" className="block text-sm font-medium text-slate-900 mb-2">
                             Tech Stack / Expertise
                         </label>
                         <input
@@ -294,22 +294,22 @@ export default function FounderForm() {
                             type="text"
                             value={techStackInput}
                             onChange={(e) => setTechStackInput(e.target.value)}
-                            className="w-full rounded-lg bg-[#18181b] border border-[#27272a] px-4 py-2.5 text-white placeholder:text-[#52525b] focus:outline-none focus:border-brand-green transition-colors"
+                            className="w-full rounded-lg bg-white border border-slate-200 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 transition-colors"
                             placeholder="React, TypeScript, Node.js (comma separated)"
                         />
-                        <p className="text-xs text-[#71717a] mt-1">
+                        <p className="text-xs text-slate-500 mt-1">
                             Enter skills or technologies separated by commas
                         </p>
                     </div>
 
                     {/* Social Links */}
                     <div className="space-y-4">
-                        <h3 className="text-sm font-medium text-white">Social Links</h3>
+                        <h3 className="text-sm font-medium text-slate-900">Social Links</h3>
                         
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Linkedin className="h-4 w-4 text-[#71717a]" />
-                                <label htmlFor="linkedin" className="text-sm text-[#a1a1aa]">LinkedIn</label>
+                                <Linkedin className="h-4 w-4 text-slate-500" />
+                                <label htmlFor="linkedin" className="text-sm text-slate-500">LinkedIn</label>
                             </div>
                             <input
                                 id="linkedin"
@@ -319,15 +319,15 @@ export default function FounderForm() {
                                     ...prev,
                                     socials: { ...prev.socials, linkedin: e.target.value }
                                 }))}
-                                className="w-full rounded-lg bg-[#18181b] border border-[#27272a] px-4 py-2.5 text-white placeholder:text-[#52525b] focus:outline-none focus:border-brand-green transition-colors"
+                                className="w-full rounded-lg bg-white border border-slate-200 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 transition-colors"
                                 placeholder="https://linkedin.com/in/username"
                             />
                         </div>
 
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Github className="h-4 w-4 text-[#71717a]" />
-                                <label htmlFor="github" className="text-sm text-[#a1a1aa]">GitHub</label>
+                                <Github className="h-4 w-4 text-slate-500" />
+                                <label htmlFor="github" className="text-sm text-slate-500">GitHub</label>
                             </div>
                             <input
                                 id="github"
@@ -337,15 +337,15 @@ export default function FounderForm() {
                                     ...prev,
                                     socials: { ...prev.socials, github: e.target.value }
                                 }))}
-                                className="w-full rounded-lg bg-[#18181b] border border-[#27272a] px-4 py-2.5 text-white placeholder:text-[#52525b] focus:outline-none focus:border-brand-green transition-colors"
+                                className="w-full rounded-lg bg-white border border-slate-200 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 transition-colors"
                                 placeholder="https://github.com/username"
                             />
                         </div>
 
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Instagram className="h-4 w-4 text-[#71717a]" />
-                                <label htmlFor="instagram" className="text-sm text-[#a1a1aa]">Instagram</label>
+                                <Instagram className="h-4 w-4 text-slate-500" />
+                                <label htmlFor="instagram" className="text-sm text-slate-500">Instagram</label>
                             </div>
                             <input
                                 id="instagram"
@@ -355,37 +355,37 @@ export default function FounderForm() {
                                     ...prev,
                                     socials: { ...prev.socials, instagram: e.target.value }
                                 }))}
-                                className="w-full rounded-lg bg-[#18181b] border border-[#27272a] px-4 py-2.5 text-white placeholder:text-[#52525b] focus:outline-none focus:border-brand-green transition-colors"
+                                className="w-full rounded-lg bg-white border border-slate-200 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 transition-colors"
                                 placeholder="https://instagram.com/username"
                             />
                         </div>
 
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Link2 className="h-4 w-4 text-[#71717a]" />
-                                <label htmlFor="projectUrl" className="text-sm text-[#a1a1aa]">Portfolio/Website</label>
+                                <Link2 className="h-4 w-4 text-slate-500" />
+                                <label htmlFor="projectUrl" className="text-sm text-slate-500">Portfolio/Website</label>
                             </div>
                             <input
                                 id="projectUrl"
                                 type="url"
                                 value={formData.projectUrl || ""}
                                 onChange={(e) => setFormData(prev => ({ ...prev, projectUrl: e.target.value }))}
-                                className="w-full rounded-lg bg-[#18181b] border border-[#27272a] px-4 py-2.5 text-white placeholder:text-[#52525b] focus:outline-none focus:border-brand-green transition-colors"
+                                className="w-full rounded-lg bg-white border border-slate-200 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 transition-colors"
                                 placeholder="https://example.com"
                             />
                         </div>
                     </div>
 
                     {/* Active Status */}
-                    <div className="flex items-center gap-3 p-4 rounded-lg bg-[#18181b] border border-[#27272a]">
+                    <div className="flex items-center gap-3 p-4 rounded-lg bg-white border border-slate-200">
                         <input
                             id="active"
                             type="checkbox"
                             checked={formData.active}
                             onChange={(e) => setFormData(prev => ({ ...prev, active: e.target.checked }))}
-                            className="w-4 h-4 rounded border-[#3f3f46] text-brand-green focus:ring-brand-green focus:ring-offset-0 bg-[#27272a]"
+                            className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600 focus:ring-offset-0 bg-slate-200"
                         />
-                        <label htmlFor="active" className="text-sm text-white">
+                        <label htmlFor="active" className="text-sm text-slate-900">
                             Display on public About page
                         </label>
                     </div>
@@ -395,7 +395,7 @@ export default function FounderForm() {
                         <Button
                             type="submit"
                             disabled={isSubmitting || !formData.name || !formData.imageUrl || !formData.description}
-                            className="bg-brand-green hover:bg-brand-green/90 text-black font-bold flex-1"
+                            className="bg-blue-600 hover:bg-blue-600/90 text-slate-900 font-bold flex-1"
                         >
                             {isSubmitting ? (
                                 <>
@@ -409,7 +409,7 @@ export default function FounderForm() {
                         <Button
                             type="button"
                             onClick={() => router.push("/dashboard/founders")}
-                            className="bg-[#27272a] hover:bg-[#3f3f46] text-white border border-[#3f3f46]"
+                            className="bg-slate-200 hover:bg-slate-300 text-slate-900 border border-slate-300"
                         >
                             Cancel
                         </Button>

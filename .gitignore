@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# planning artifacts & personal docs — never ship
+document-phase2/
+codegang-plans.zip
+files.zip
+.claude/*.tmp.*

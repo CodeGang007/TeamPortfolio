@@ -102,17 +102,17 @@ export default function PhoneInput({ value, onChange, placeholder = "Enter phone
 
     return (
         <div className={`relative ${className} ${disabled ? "opacity-50 pointer-events-none" : ""}`} ref={dropdownRef}>
-            <div className="flex rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden focus-within:border-brand-green focus-within:ring-1 focus-within:ring-brand-green/20 transition-all">
+            <div className="flex rounded-xl border border-slate-200 bg-white overflow-hidden focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600/20 transition-all">
                 {/* Country Selector */}
                 <button
                     type="button"
                     onClick={() => !disabled && setIsOpen(!isOpen)}
-                    className="flex items-center gap-1.5 px-3 py-3 bg-zinc-900/50 border-r border-zinc-800 hover:bg-zinc-800/50 transition-colors min-w-[90px] disabled:cursor-not-allowed"
+                    className="flex items-center gap-1.5 px-3 py-3 bg-white border-r border-slate-200 hover:bg-slate-100 transition-colors min-w-[90px] disabled:cursor-not-allowed"
                     disabled={disabled}
                 >
                     <span className="text-xl">{selectedCountry.flag}</span>
-                    <span className="text-sm font-medium text-zinc-300">{selectedCountry.dialCode}</span>
-                    <ChevronDown className={`h-3.5 w-3.5 text-zinc-500 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                    <span className="text-sm font-medium text-slate-700">{selectedCountry.dialCode}</span>
+                    <ChevronDown className={`h-3.5 w-3.5 text-slate-500 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                 </button>
 
                 {/* Phone Input */}
@@ -124,7 +124,7 @@ export default function PhoneInput({ value, onChange, placeholder = "Enter phone
                     placeholder={placeholder}
                     maxLength={10}
                     disabled={disabled}
-                    className="flex-1 bg-transparent px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none disabled:cursor-not-allowed"
+                    className="flex-1 bg-transparent px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none disabled:cursor-not-allowed"
                 />
             </div>
 
@@ -136,18 +136,18 @@ export default function PhoneInput({ value, onChange, placeholder = "Enter phone
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute left-0 top-full mt-2 w-72 max-h-72 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-2xl z-50"
+                        className="absolute left-0 top-full mt-2 w-72 max-h-72 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl z-50"
                     >
                         {/* Search */}
-                        <div className="p-2 border-b border-zinc-800">
+                        <div className="p-2 border-b border-slate-200">
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                                 <input
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Search country..."
-                                    className="w-full rounded-lg bg-zinc-900 border border-zinc-800 pl-9 pr-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-700"
+                                    className="w-full rounded-lg bg-white border border-slate-200 pl-9 pr-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-300"
                                     autoFocus
                                 />
                             </div>
@@ -160,16 +160,16 @@ export default function PhoneInput({ value, onChange, placeholder = "Enter phone
                                     <button
                                         key={country.code}
                                         onClick={() => handleCountrySelect(country)}
-                                        className={`flex items-center gap-3 w-full px-4 py-2.5 hover:bg-zinc-900 transition-colors ${selectedCountry.code === country.code ? "bg-zinc-900/70" : ""
+                                        className={`flex items-center gap-3 w-full px-4 py-2.5 hover:bg-white transition-colors ${selectedCountry.code === country.code ? "bg-white/70" : ""
                                             }`}
                                     >
                                         <span className="text-xl">{country.flag}</span>
-                                        <span className="text-sm text-white flex-1 text-left">{country.name}</span>
-                                        <span className="text-sm text-zinc-500">{country.dialCode}</span>
+                                        <span className="text-sm text-slate-900 flex-1 text-left">{country.name}</span>
+                                        <span className="text-sm text-slate-500">{country.dialCode}</span>
                                     </button>
                                 ))
                             ) : (
-                                <div className="px-4 py-6 text-center text-sm text-zinc-500">
+                                <div className="px-4 py-6 text-center text-sm text-slate-500">
                                     No countries found
                                 </div>
                             )}

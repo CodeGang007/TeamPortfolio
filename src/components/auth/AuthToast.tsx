@@ -37,7 +37,7 @@ export default function AuthToast() {
                     transition={{ duration: 0.3, ease: "easeOut" }}
                     className="fixed bottom-6 right-6 z-[200] max-w-md"
                 >
-                    <div className="relative overflow-hidden rounded-2xl border border-red-900/50 bg-gradient-to-br from-red-950/90 to-zinc-950/90 backdrop-blur-xl shadow-[0_0_50px_rgba(239,68,68,0.3)]">
+                    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
                         {/* Glow effect */}
                         <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-orange-500/10 animate-pulse" />
 

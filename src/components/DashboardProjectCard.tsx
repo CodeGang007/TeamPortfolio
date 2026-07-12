@@ -43,14 +43,14 @@ function formatShortDate(dateStr?: string): string {
 
 // Color palette for pattern generation (similar to GitHub)
 const patternColors = [
-    { bg: "#1a1a2e", fg: "#4a4a6e" },
-    { bg: "#16213e", fg: "#3a5a7c" },
-    { bg: "#1b2838", fg: "#3d5a6a" },
-    { bg: "#2d132c", fg: "#5a3d5c" },
-    { bg: "#1a1a1a", fg: "#3a3a3a" },
-    { bg: "#0d1b2a", fg: "#2d4a5a" },
-    { bg: "#1c1c1c", fg: "#4c4c4c" },
-    { bg: "#2c1810", fg: "#5c4030" },
+    { bg: "#dbeafe", fg: "#3b82f6" }, // blue
+    { bg: "#e0e7ff", fg: "#6366f1" }, // indigo
+    { bg: "#cffafe", fg: "#06b6d4" }, // cyan
+    { bg: "#d1fae5", fg: "#10b981" }, // emerald
+    { bg: "#ede9fe", fg: "#8b5cf6" }, // violet
+    { bg: "#fef3c7", fg: "#f59e0b" }, // amber
+    { bg: "#fce7f3", fg: "#ec4899" }, // pink
+    { bg: "#f1f5f9", fg: "#64748b" }, // slate
 ];
 
 // Generate a simple hash from string
@@ -104,8 +104,8 @@ const statusConfig: Record<ProjectStatus, { label: string; dotClass: string; bgC
     pending: {
         label: "PENDING",
         dotClass: "bg-zinc-400",
-        bgClass: "bg-zinc-800/70 backdrop-blur-md border border-zinc-700/50",
-        textClass: "text-zinc-400",
+        bgClass: "bg-slate-100/70 backdrop-blur-md border border-slate-300",
+        textClass: "text-slate-600",
     },
     "pending-closure": {
         label: "CLOSING...",
@@ -116,8 +116,8 @@ const statusConfig: Record<ProjectStatus, { label: string; dotClass: string; bgC
     closed: {
         label: "CLOSED",
         dotClass: "bg-zinc-600",
-        bgClass: "bg-zinc-900/70 backdrop-blur-md border border-zinc-800/50",
-        textClass: "text-zinc-600",
+        bgClass: "bg-white/70 backdrop-blur-md border border-slate-200",
+        textClass: "text-slate-400",
     }
 };
 
@@ -151,7 +151,7 @@ export default function DashboardProjectCard({
             transition={{ duration: 0.2, ease: "easeOut" }}
         >
             <div
-                className={`group relative overflow-hidden rounded-xl border border-zinc-800/60 bg-zinc-900 transition-all duration-200 cursor-pointer hover:border-brand-green hover:shadow-lg hover:shadow-brand-green/10`}
+                className={`group relative overflow-hidden rounded-xl border border-slate-200/60 bg-white transition-all duration-200 cursor-pointer hover:border-blue-600 hover:shadow-lg hover:shadow-blue-600/10`}
             >
                 {/* Thumbnail Area - Strict 16:9 aspect ratio */}
                 <div className="relative aspect-video overflow-hidden" style={{ backgroundColor: colorScheme.bg }}>
@@ -198,7 +198,7 @@ export default function DashboardProjectCard({
                             </div>
 
                             {/* Subtle radial glow */}
-                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.03),transparent_70%)]" />
+                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.35),transparent_70%)]" />
                         </>
                     )}
                 </div>
@@ -219,25 +219,25 @@ export default function DashboardProjectCard({
 
                         {/* Category Tag - Subtle pill */}
                         {category && (
-                            <span className="px-2 py-0.5 rounded-full text-[8px] font-medium bg-white/5 text-[#71717a] tracking-wide truncate max-w-[120px]">
+                            <span className="px-2 py-0.5 rounded-full text-[8px] font-medium bg-slate-100 text-slate-500 tracking-wide truncate max-w-[120px]">
                                 {category}
                             </span>
                         )}
                     </div>
 
                     {/* Title - Dominant element */}
-                    <h3 className="text-base font-bold text-[#fafafa] line-clamp-1 group-hover:text-white transition-colors mb-1 flex-shrink-0">
+                    <h3 className="text-base font-bold text-slate-900 line-clamp-1 group-hover:text-slate-900 transition-colors mb-1 flex-shrink-0">
                         {title}
                     </h3>
 
                     {/* Description - Fixed height area with ellipsis */}
                     <div className="h-[18px] mb-2 flex-shrink-0">
                         {description ? (
-                            <p className="text-[12px] text-[#71717a] line-clamp-1 leading-relaxed">
-                                {description}
+                            <p className="text-[12px] text-slate-500 line-clamp-1 leading-relaxed">
+                                {description.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()}
                             </p>
                         ) : (
-                            <p className="text-[12px] text-[#52525b] italic">No description</p>
+                            <p className="text-[12px] text-slate-400 italic">No description</p>
                         )}
                     </div>
 
@@ -245,24 +245,24 @@ export default function DashboardProjectCard({
                     {status !== 'pending' ? (
                         <>
                             <div className="flex items-center justify-between mb-1">
-                                <span className="text-[10px] text-[#71717a] font-medium">Progress</span>
+                                <span className="text-[10px] text-slate-500 font-medium">Progress</span>
                                 {rating ? (
                                     <div className="flex gap-0.5">
                                         {[1, 2, 3, 4, 5].map((star) => (
                                             <Star
                                                 key={star}
-                                                className={`w-3 h-3 ${star <= rating ? "fill-brand-green text-brand-green" : "fill-transparent text-zinc-700"}`}
+                                                className={`w-3 h-3 ${star <= rating ? "fill-blue-600 text-blue-600" : "fill-transparent text-slate-300"}`}
                                                 strokeWidth={1.5}
                                             />
                                         ))}
                                     </div>
                                 ) : (
-                                    <span className="text-[10px] font-semibold text-brand-green">{progress ?? 0}%</span>
+                                    <span className="text-[10px] font-semibold text-blue-600">{progress ?? 0}%</span>
                                 )}
                             </div>
-                            <div className="h-1.5 bg-[#27272a] rounded-full overflow-hidden">
+                            <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
                                 <div
-                                    className="h-full bg-gradient-to-r from-brand-green to-emerald-400 rounded-full transition-all duration-500"
+                                    className="h-full bg-gradient-to-r from-blue-600 to-emerald-400 rounded-full transition-all duration-500"
                                     style={{ width: `${Math.min(Math.max(progress ?? 0, 0), 100)}%` }}
                                 />
                             </div>
@@ -277,7 +277,7 @@ export default function DashboardProjectCard({
                     {/* Meta Footer with Timeline - Two rows for better alignment */}
                     <div className="flex-shrink-0 space-y-1.5">
                         {/* Row 1: Client Name + Milestone Badge */}
-                        <div className="flex items-center gap-2 text-[10px] text-[#71717a] min-h-[18px]">
+                        <div className="flex items-center gap-2 text-[10px] text-slate-500 min-h-[18px]">
                             {clientName && (
                                 <div className="flex items-center gap-1 flex-shrink-0">
                                     <User className="h-3 w-3 flex-shrink-0" />
@@ -286,7 +286,7 @@ export default function DashboardProjectCard({
                             )}
                             {/* Current Milestone Badge */}
                             {currentMilestone && (
-                                <span className="px-1.5 py-0.5 rounded bg-brand-green/10 text-brand-green text-[9px] font-medium capitalize flex-shrink-0 whitespace-nowrap">
+                                <span className="px-1.5 py-0.5 rounded bg-blue-600/10 text-blue-600 text-[9px] font-medium capitalize flex-shrink-0 whitespace-nowrap">
                                     {currentMilestone}
                                 </span>
                             )}
@@ -298,7 +298,7 @@ export default function DashboardProjectCard({
                             const formattedDue = formatShortDate(dueDate);
                             if (!formattedStart && !formattedDue) return <div className="h-[16px]" />;
                             return (
-                                <div className="flex items-center gap-1 text-[10px] text-[#52525b]">
+                                <div className="flex items-center gap-1 text-[10px] text-slate-400">
                                     <Clock className="h-3 w-3 flex-shrink-0" />
                                     <span>
                                         {formattedStart}

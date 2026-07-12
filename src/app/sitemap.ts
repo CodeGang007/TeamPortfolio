@@ -1,45 +1,31 @@
-import { MetadataRoute } from 'next';
-import { db } from '@/lib/firebaseDb';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { MetadataRoute } from "next";
+import { consoleProjects } from "@/content/projects";
+import { site } from "@/content/site";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.codegang.online';
-
-  // Static routes
+export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
-    '',
-    '/about',
-    '/project',
-    '/team',
-    '/contactus',
-    '/privacy',
-    '/terms',
-    '/cookies',
-    '/license',
-    '/project-templates',
+    "",
+    "/work",
+    "/studio",
+    "/contact",
+    "/project-templates",
+    "/privacy",
+    "/terms",
+    "/cookies",
+    "/license",
   ].map((route) => ({
-    url: `${baseUrl}${route}`,
+    url: `${site.domain}${route}`,
     lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: route === '' ? 1 : 0.8,
+    changeFrequency: "monthly" as const,
+    priority: route === "" ? 1 : 0.8,
   }));
 
-  // Dynamic Project Routes
-  try {
-    const projectsCol = collection(db, 'projects');
-    const q = query(projectsCol, where('active', '==', true));
-    const snapshot = await getDocs(q);
+  const caseStudies = consoleProjects.map((p) => ({
+    url: `${site.domain}/work/${p.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.9,
+  }));
 
-    const projectRoutes = snapshot.docs.map((doc) => ({
-      url: `${baseUrl}/project/${doc.id}`,
-      lastModified: new Date(), // Ideally use doc.updatedAt if available
-      changeFrequency: 'weekly' as const,
-      priority: 0.9,
-    }));
-
-    return [...routes, ...projectRoutes];
-  } catch (error) {
-    console.error('Error generating project sitemap:', error);
-    return routes;
-  }
+  return [...routes, ...caseStudies];
 }

@@ -31,6 +31,7 @@ import { projectRequestService, TeamMember as ServiceTeamMember } from "@/lib/pr
 import { developerService } from "@/lib/developerService";
 import { emailService } from "../../../../lib/emailService";
 import { FeedbackEditor } from "@/components/FeedbackEditor";
+import ProjectChat from "@/components/ProjectChat";
 // Types
 interface Milestone {
     id: string;
@@ -158,6 +159,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     const [isFeedbackEditorOpen, setIsFeedbackEditorOpen] = useState(false);
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [chatOpen, setChatOpen] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState<{ name: string; url: string; type: string } | null>(null);
 
     // Admin Edit States
@@ -462,10 +464,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="h-8 w-8 rounded-full border-2 border-brand-green border-t-transparent animate-spin" />
-                    <p className="text-zinc-500 text-sm">Loading project...</p>
+                    <div className="h-8 w-8 rounded-full border-2 border-blue-600 border-t-transparent animate-spin" />
+                    <p className="text-slate-500 text-sm">Loading project...</p>
                 </div>
             </div>
         );
@@ -473,7 +475,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
     if (!project) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#09090b] text-white">
+            <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-900">
                 <div className="text-center">
                     <h2 className="text-xl font-bold mb-2">Project not found</h2>
                     <Button onClick={() => router.push("/dashboard/projects")} variant="outline">Back</Button>
@@ -490,19 +492,19 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     const canEdit = role === 'admin' || isAssignedDeveloper;
 
     return (
-        <div className="min-h-screen bg-[#09090b] text-white">
+        <div className="min-h-screen bg-slate-50 text-slate-900">
             {/* ... Header ... */}
-            <header className="border-b border-[#27272a] bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-50">
+            <header className="border-b border-slate-200 bg-white/90 backdrop-blur-xl sticky top-0 z-50">
                 <div className="mx-auto max-w-7xl px-6 py-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <Link href="/dashboard/projects" className="flex h-8 w-8 items-center justify-center rounded-md border border-[#27272a] text-[#71717a] hover:text-white hover:border-[#3f3f46] transition-all">
+                            <Link href="/dashboard/projects" className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300 transition-all">
                                 <ArrowLeft className="h-4 w-4" />
                             </Link>
-                            <div className="flex items-center gap-1.5 text-xs text-[#71717a]">
-                                <Link href="/dashboard/projects" className="hover:text-white transition-colors">Projects</Link>
+                            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                                <Link href="/dashboard/projects" className="hover:text-slate-900 transition-colors">Projects</Link>
                                 <ChevronRight className="h-3 w-3" />
-                                <span className="text-[#a1a1aa]">{project.title}</span>
+                                <span className="text-slate-500">{project.title}</span>
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -510,7 +512,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             {/* Only show Discuss/Live if active */}
                             {project.status === 'active' && !isEditing && (
                                 <>
-                                    <Button variant="ghost" size="sm" className="text-[#a1a1aa] hover:text-white text-xs h-8">
+                                    <Button variant="ghost" size="sm" onClick={() => setChatOpen(true)} className="text-slate-500 hover:text-slate-900 text-xs h-8">
                                         <MessageSquare className="h-3.5 w-3.5 mr-1.5" />Discuss
                                     </Button>
                                     <Button size="sm" className="bg-emerald-500 text-black hover:bg-emerald-400 font-medium text-xs h-8">
@@ -531,14 +533,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                 setIsEditing(false);
                                                 setActiveMilestoneId(null);
                                             }}
-                                            className="text-white hover:bg-zinc-800 text-xs h-8"
+                                            className="text-slate-900 hover:bg-slate-100 text-xs h-8"
                                         >
                                             <X className="h-3.5 w-3.5 mr-1.5" /> Cancel
                                         </Button>
                                         <Button
                                             size="sm"
                                             onClick={handleSave}
-                                            className="bg-brand-green text-black hover:bg-brand-green/90 font-medium text-xs h-8"
+                                            className="bg-blue-600 text-slate-900 hover:bg-blue-600/90 font-medium text-xs h-8"
                                         >
                                             <Save className="h-3.5 w-3.5 mr-1.5" /> Save Changes
                                         </Button>
@@ -567,7 +569,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                         }
                                                     }
                                                 }}
-                                                className="bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/20 text-xs h-8"
+                                                className="bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-slate-900 border border-red-500/20 text-xs h-8"
                                             >
                                                 Approve Closure
                                             </Button>
@@ -579,7 +581,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                 setOriginalProject(JSON.parse(JSON.stringify(project)));
                                                 setIsEditing(true);
                                             }}
-                                            className="border-[#3f3f46] bg-[#27272a] text-white hover:bg-[#3f3f46] hover:border-[#52525b] text-xs h-8 font-medium"
+                                            className="border-slate-300 bg-slate-200 text-slate-900 hover:bg-slate-300 hover:border-slate-300 text-xs h-8 font-medium"
                                         >
                                             <Edit className="h-3.5 w-3.5 mr-1.5" /> Edit Project
                                         </Button>
@@ -631,13 +633,13 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                         <div className="flex-1 max-w-2xl">
                             {/* Title with inline badges */}
                             <div className="flex flex-wrap items-center gap-3 mb-3">
-                                <h1 className="text-3xl font-bold text-[#f4f4f5] tracking-[-0.02em]">{project.title}</h1>
+                                <h1 className="text-3xl font-bold text-slate-900 tracking-[-0.02em]">{project.title}</h1>
                                 {/* Status Badge */}
                                 {isEditing ? (
                                     <select
                                         value={project.status}
                                         onChange={(e) => setProject({ ...project, status: e.target.value as any })}
-                                        className="px-2 py-0.5 rounded text-[10px] font-medium border border-emerald-500/40 bg-zinc-900 text-emerald-400 focus:outline-none focus:border-emerald-500"
+                                        className="px-2 py-0.5 rounded text-[10px] font-medium border border-emerald-500/40 bg-white text-emerald-400 focus:outline-none focus:border-emerald-500"
                                     >
                                         <option value="active">Active</option>
                                         <option value="completed">Completed</option>
@@ -651,23 +653,23 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     </span>
                                 )}
                                 {/* Category Badge */}
-                                <span className="px-2 py-0.5 rounded text-[10px] font-medium border border-[#3f3f46] text-[#a1a1aa]">
+                                <span className="px-2 py-0.5 rounded text-[10px] font-medium border border-slate-300 text-slate-500">
                                     {project.category}
                                 </span>
                             </div>
-                            <p className="text-[#a1a1aa] leading-relaxed text-sm" style={{ maxWidth: '60ch' }}>{project.description}</p>
+                            <p className="text-slate-500 leading-relaxed text-sm" style={{ maxWidth: '60ch' }}>{project.description}</p>
                         </div>
 
                         {/* Stats with proper hierarchy */}
                         <div className="flex items-center gap-4 text-center">
                             <div className="flex flex-col items-center">
-                                <p className="text-3xl font-bold text-[#f4f4f5]">{project.progress}%</p>
-                                <p className="text-[10px] text-[#71717a] uppercase tracking-[0.1em] mt-1 font-medium">Complete</p>
+                                <p className="text-3xl font-bold text-slate-900">{project.progress}%</p>
+                                <p className="text-[10px] text-slate-500 uppercase tracking-[0.1em] mt-1 font-medium">Complete</p>
                             </div>
-                            <div className="h-10 w-px bg-[#27272a]" />
+                            <div className="h-10 w-px bg-slate-200" />
                             <div className="flex flex-col items-center">
-                                <p className="text-3xl font-bold text-[#f4f4f5]">{project.stats.teamSize}</p>
-                                <p className="text-[10px] text-[#71717a] uppercase tracking-[0.1em] mt-1 font-medium">Team</p>
+                                <p className="text-3xl font-bold text-slate-900">{project.stats.teamSize}</p>
+                                <p className="text-[10px] text-slate-500 uppercase tracking-[0.1em] mt-1 font-medium">Team</p>
                             </div>
                         </div>
                     </div>
@@ -680,17 +682,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
                         {/* Browser Preview */}
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                            className="rounded-xl border border-[#27272a] bg-[#18181b] overflow-hidden hover:border-[#3f3f46] transition-colors group/preview">
+                            className="rounded-xl border border-slate-200 bg-white overflow-hidden hover:border-slate-300 transition-colors group/preview">
                             {/* Browser Toolbar */}
-                            <div className="flex items-center gap-2 px-4 py-3 border-b border-[#27272a] bg-[#27272a]">
+                            <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-200 bg-slate-200">
                                 <div className="flex gap-1.5">
                                     <div className="h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
                                     <div className="h-2.5 w-2.5 rounded-full bg-[#eab308]" />
                                     <div className="h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
                                 </div>
                                 <div className="flex-1 mx-4">
-                                    <div className="h-6 rounded bg-[#18181b] flex items-center px-3 group-focus-within/preview:ring-1 ring-emerald-500/50 transition-all">
-                                        <div className="mr-2 text-zinc-500">
+                                    <div className="h-6 rounded bg-white flex items-center px-3 group-focus-within/preview:ring-1 ring-emerald-500/50 transition-all">
+                                        <div className="mr-2 text-slate-500">
                                             <Globe className="h-3 w-3" />
                                         </div>
                                         {isEditing ? (
@@ -698,14 +700,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                 value={project.liveUrl || ""}
                                                 onChange={(e) => setProject({ ...project, liveUrl: e.target.value })}
                                                 placeholder="https://your-app.com"
-                                                className="w-full bg-transparent text-[10px] text-white focus:outline-none placeholder:text-zinc-600"
+                                                className="w-full bg-transparent text-[10px] text-slate-900 focus:outline-none placeholder:text-slate-400"
                                             />
                                         ) : (
                                             <a
                                                 href={project.liveUrl || "#"}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className={`text-[10px] block w-full truncate ${project.liveUrl ? 'text-zinc-300 hover:text-white' : 'text-zinc-600'}`}
+                                                className={`text-[10px] block w-full truncate ${project.liveUrl ? 'text-slate-700 hover:text-slate-900' : 'text-slate-400'}`}
                                             >
                                                 {project.liveUrl || 'No live URL configured'}
                                             </a>
@@ -713,14 +715,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     </div>
                                 </div>
                                 {project.liveUrl && !isEditing && (
-                                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="p-1 hover:bg-zinc-700 rounded transition-colors text-zinc-400 hover:text-white">
+                                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="p-1 hover:bg-slate-200 rounded transition-colors text-slate-600 hover:text-slate-900">
                                         <ExternalLink className="h-3.5 w-3.5" />
                                     </a>
                                 )}
                             </div>
 
                             {/* Preview Area */}
-                            <div className="aspect-video bg-[#09090b] relative overflow-hidden group/frame">
+                            <div className="aspect-video bg-slate-50 relative overflow-hidden group/frame">
                                 {project.liveUrl ? (
                                     <iframe
                                         src={project.liveUrl}
@@ -745,17 +747,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                             }}
                                         />
                                         {/* Subtle radial gradient overlay */}
-                                        <div className="absolute inset-0 bg-gradient-radial from-[#18181b] via-transparent to-transparent opacity-50" />
+                                        <div className="absolute inset-0 bg-gradient-radial from-slate-100 via-transparent to-transparent opacity-50" />
 
                                         <div className="text-center p-6 relative z-10">
                                             {/* Large thin-line Globe icon */}
-                                            <Globe className="h-20 w-20 mx-auto mb-6 text-zinc-600/50 stroke-[0.5]" />
-                                            <p className="text-sm text-[#a1a1aa] font-medium mb-1">No Live Preview Available</p>
-                                            <p className="text-xs text-[#52525b] mb-4">Add a Live URL to see the preview here</p>
+                                            <Globe className="h-20 w-20 mx-auto mb-6 text-slate-400/50 stroke-[0.5]" />
+                                            <p className="text-sm text-slate-500 font-medium mb-1">No Live Preview Available</p>
+                                            <p className="text-xs text-slate-400 mb-4">Add a Live URL to see the preview here</p>
                                             {role === 'admin' && (
                                                 <button
                                                     onClick={() => setIsEditing(true)}
-                                                    className="px-4 py-2 text-xs font-medium text-white bg-brand-green/10 border border-brand-green/30 rounded-lg hover:bg-brand-green/20 hover:border-brand-green/50 transition-all"
+                                                    className="px-4 py-2 text-xs font-medium text-slate-900 bg-blue-600/10 border border-blue-600/30 rounded-lg hover:bg-blue-600/20 hover:border-blue-600/50 transition-all"
                                                 >
                                                     Configure Live URL
                                                 </button>
@@ -771,7 +773,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             </div>
 
                             {/* Footer Bar */}
-                            <div className="px-4 py-3 border-t border-[#27272a] flex items-center justify-between bg-[#0f0f10]">
+                            <div className="px-4 py-3 border-t border-slate-200 flex items-center justify-between bg-white">
                                 <div className="flex items-center gap-3">
                                     <div className="flex -space-x-1.5">
                                         {project.teamMembers.map((m) => (
@@ -781,7 +783,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                 className="block transition-transform hover:scale-110 hover:z-10 relative"
                                                 title={`View ${m.name}'s Profile`}
                                             >
-                                                <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${m.color} border-2 border-[#18181b] flex items-center justify-center text-[8px] font-bold text-white shadow-sm overflow-hidden`}>
+                                                <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${m.color} border-2 border-slate-200 flex items-center justify-center text-[8px] font-bold text-slate-900 shadow-sm overflow-hidden`}>
                                                     {m.imageUrl ? (
                                                         <img src={m.imageUrl} alt={m.name} className="w-full h-full object-cover" />
                                                     ) : (
@@ -791,10 +793,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                             </Link>
                                         ))}
                                     </div>
-                                    <span className="text-[11px] text-[#52525b]">{project.stats.teamSize} contributors</span>
+                                    <span className="text-[11px] text-slate-400">{project.stats.teamSize} contributors</span>
                                 </div>
-                                <span className="flex items-center gap-1.5 text-[10px] text-[#3f3f46]">
-                                    <div className={`h-1.5 w-1.5 rounded-full ${project.liveUrl ? 'bg-emerald-500 animate-pulse' : 'bg-zinc-700'}`} />
+                                <span className="flex items-center gap-1.5 text-[10px] text-slate-400">
+                                    <div className={`h-1.5 w-1.5 rounded-full ${project.liveUrl ? 'bg-emerald-500 animate-pulse' : 'bg-slate-200'}`} />
                                     {project.liveUrl ? 'Live Preview Active' : 'Offline'}
                                 </span>
                             </div>
@@ -808,9 +810,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
                         {/* Progress */}
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-                            className="rounded-xl border border-[#27272a] bg-[#18181b] p-5 hover:border-[#3f3f46] transition-colors">
+                            className="rounded-xl border border-slate-200 bg-white p-5 hover:border-slate-300 transition-colors">
                             <div className="flex items-center justify-between mb-3">
-                                <span className="text-xs text-[#71717a]">Overall Progress</span>
+                                <span className="text-xs text-slate-500">Overall Progress</span>
                                 {isEditing ? (
                                     <input
                                         type="number"
@@ -818,10 +820,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         max="100"
                                         value={project.progress}
                                         onChange={(e) => setProject({ ...project, progress: parseInt(e.target.value) })}
-                                        className="w-12 bg-zinc-900 border border-[#27272a] rounded text-right text-sm font-bold text-white p-0.5 focus:outline-none"
+                                        className="w-12 bg-white border border-slate-200 rounded text-right text-sm font-bold text-slate-900 p-0.5 focus:outline-none"
                                     />
                                 ) : (
-                                    <span className="text-xl font-bold text-white">{project.progress}%</span>
+                                    <span className="text-xl font-bold text-slate-900">{project.progress}%</span>
                                 )}
                             </div>
                             {isEditing ? (
@@ -831,22 +833,22 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     max="100"
                                     value={project.progress}
                                     onChange={(e) => setProject({ ...project, progress: parseInt(e.target.value) })}
-                                    className="w-full h-1.5 bg-[#27272a] rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                                    className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                                 />
                             ) : (
-                                <div className="h-1.5 w-full bg-[#27272a] rounded-full overflow-hidden">
+                                <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                                     <motion.div initial={{ width: 0 }} animate={{ width: `${project.progress}%` }} transition={{ duration: 1, delay: 0.5 }}
                                         className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full" />
                                 </div>
                             )}
-                            <p className="text-[10px] text-[#52525b] mt-2">Est. {project.stats.estimatedCompletion} remaining</p>
+                            <p className="text-[10px] text-slate-400 mt-2">Est. {project.stats.estimatedCompletion} remaining</p>
                         </motion.div>
 
 
                         {/* Project Specs Card */}
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                             onClick={() => setIsDetailsModalOpen(true)}
-                            className="rounded-xl border border-[#27272a] bg-[#18181b] p-5 hover:border-[#3f3f46] transition-all cursor-pointer group"
+                            className="rounded-xl border border-slate-200 bg-white p-5 hover:border-slate-300 transition-all cursor-pointer group"
                         >
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-3">
@@ -854,31 +856,31 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         <FileText className="h-4 w-4 text-blue-400" />
                                     </div>
                                     <div>
-                                        <h3 className="text-sm font-semibold text-[#f4f4f5]">Project Details</h3>
-                                        <p className="text-[10px] text-[#71717a]">Submitted Information</p>
+                                        <h3 className="text-sm font-semibold text-slate-900">Project Details</h3>
+                                        <p className="text-[10px] text-slate-500">Submitted Information</p>
                                     </div>
                                 </div>
-                                <ArrowUpRight className="h-4 w-4 text-[#52525b] group-hover:text-white transition-colors" />
+                                <ArrowUpRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900 transition-colors" />
                             </div>
 
                             <div className="divide-y divide-[#27272a]">
                                 <div className="flex justify-between items-center py-2.5">
-                                    <span className="text-xs text-[#a1a1aa]">Budget</span>
-                                    <span className="text-xs text-[#f4f4f5] font-medium font-mono text-right">
+                                    <span className="text-xs text-slate-500">Budget</span>
+                                    <span className="text-xs text-slate-900 font-medium font-mono text-right">
                                         {project.currency === 'INR' ? '₹' : project.currency === 'USD' ? '$' : project.currency} {parseFloat(project.budget).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center py-2.5">
-                                    <span className="text-xs text-[#a1a1aa]">Deadline</span>
-                                    <span className="text-xs text-[#f4f4f5] font-medium text-right">
+                                    <span className="text-xs text-slate-500">Deadline</span>
+                                    <span className="text-xs text-slate-900 font-medium text-right">
                                         {project.dueDate && project.dueDate !== 'TBD'
                                             ? new Date(project.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                                             : project.deliveryTime}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center py-2.5">
-                                    <span className="text-xs text-[#a1a1aa]">Type</span>
-                                    <span className="text-xs text-[#f4f4f5] font-medium text-right capitalize">{project.projectType?.replace(/_/g, ' ') || 'N/A'}</span>
+                                    <span className="text-xs text-slate-500">Type</span>
+                                    <span className="text-xs text-slate-900 font-medium text-right capitalize">{project.projectType?.replace(/_/g, ' ') || 'N/A'}</span>
                                 </div>
                             </div>
                         </motion.div>
@@ -895,17 +897,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
                                         onClick={() => setIsDetailsModalOpen(false)}
-                                        className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                                        className="absolute inset-0 bg-slate-900/50 backdrop-blur-md"
                                     />
                                     <motion.div
                                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                                         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                                        className="relative w-full max-w-xl bg-[#0f0f12] border border-[#27272a] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
+                                        className="relative w-full max-w-xl bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
                                     >
                                         {/* Header with gradient accent */}
-                                        <div className="relative px-6 py-5 border-b border-[#27272a]">
+                                        <div className="relative px-6 py-5 border-b border-slate-200">
                                             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5" />
                                             <div className="relative flex items-center justify-between">
                                                 <div className="flex items-center gap-3">
@@ -913,13 +915,13 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                         <FileText className="h-5 w-5 text-blue-400" />
                                                     </div>
                                                     <div>
-                                                        <h2 className="text-lg font-bold text-[#f4f4f5]">Project Specifications</h2>
-                                                        <p className="text-xs text-[#71717a]">Submitted project details</p>
+                                                        <h2 className="text-lg font-bold text-slate-900">Project Specifications</h2>
+                                                        <p className="text-xs text-slate-500">Submitted project details</p>
                                                     </div>
                                                 </div>
                                                 <button
                                                     onClick={() => setIsDetailsModalOpen(false)}
-                                                    className="p-2 rounded-lg hover:bg-[#27272a] text-[#71717a] hover:text-white transition-colors"
+                                                    className="p-2 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-900 transition-colors"
                                                 >
                                                     <X className="h-5 w-5" />
                                                 </button>
@@ -930,60 +932,60 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         <div className="flex-1 overflow-y-auto p-6 space-y-4 overscroll-contain" style={{ overscrollBehavior: 'contain' }}>
                                             {/* Project Name & Category */}
                                             <div className="grid grid-cols-2 gap-3">
-                                                <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
-                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Project Name</span>
-                                                    <span className="text-sm text-[#f4f4f5] font-semibold">{project.projectName}</span>
+                                                <div className="p-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 transition-colors">
+                                                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-2">Project Name</span>
+                                                    <span className="text-sm text-slate-900 font-semibold">{project.projectName}</span>
                                                 </div>
-                                                <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
-                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Category</span>
-                                                    <span className="text-sm text-[#f4f4f5] font-semibold">{project.category}</span>
+                                                <div className="p-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 transition-colors">
+                                                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-2">Category</span>
+                                                    <span className="text-sm text-slate-900 font-semibold">{project.category}</span>
                                                 </div>
                                             </div>
 
                                             {/* Description */}
-                                            <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
-                                                <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Description</span>
-                                                <p className="text-sm text-[#a1a1aa] leading-relaxed whitespace-pre-wrap">{project.description}</p>
+                                            <div className="p-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 transition-colors">
+                                                <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-2">Description</span>
+                                                <p className="text-sm text-slate-500 leading-relaxed whitespace-pre-wrap">{project.description}</p>
                                             </div>
 
                                             {/* Budget & Timeline */}
                                             <div className="grid grid-cols-2 gap-3">
                                                 <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/5 to-transparent border border-emerald-500/20 hover:border-emerald-500/40 transition-colors">
-                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Budget</span>
+                                                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-2">Budget</span>
                                                     <span className="text-lg text-emerald-400 font-bold font-mono">
                                                         {project.currency === 'INR' ? '₹' : project.currency === 'USD' ? '$' : project.currency}{project.budget}
                                                     </span>
                                                 </div>
                                                 <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/5 to-transparent border border-blue-500/20 hover:border-blue-500/40 transition-colors">
-                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Timeline</span>
+                                                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-2">Timeline</span>
                                                     <span className="text-lg text-blue-400 font-bold">{project.deliveryTime}</span>
                                                 </div>
                                             </div>
 
                                             {project.additionalNotes && (
-                                                <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
-                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-2">Additional Notes</span>
-                                                    <p className="text-sm text-[#a1a1aa] leading-relaxed whitespace-pre-wrap">{project.additionalNotes}</p>
+                                                <div className="p-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 transition-colors">
+                                                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-2">Additional Notes</span>
+                                                    <p className="text-sm text-slate-500 leading-relaxed whitespace-pre-wrap">{project.additionalNotes}</p>
                                                 </div>
                                             )}
 
                                             {/* Links Section */}
                                             {(project.projectLinks?.github || project.projectLinks?.figma || project.projectLinks?.website) && (
-                                                <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
-                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-3">Project Links</span>
+                                                <div className="p-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 transition-colors">
+                                                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-3">Project Links</span>
                                                     <div className="flex flex-wrap gap-2">
                                                         {project.projectLinks.github && (
-                                                            <a href={project.projectLinks.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] text-xs text-white transition-colors">
+                                                            <a href={project.projectLinks.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-xs text-slate-900 transition-colors">
                                                                 <Github className="h-3.5 w-3.5" /> GitHub
                                                             </a>
                                                         )}
                                                         {project.projectLinks.figma && (
-                                                            <a href={project.projectLinks.figma} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] text-xs text-white transition-colors">
+                                                            <a href={project.projectLinks.figma} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-xs text-slate-900 transition-colors">
                                                                 <Figma className="h-3.5 w-3.5" /> Figma
                                                             </a>
                                                         )}
                                                         {project.projectLinks.website && (
-                                                            <a href={project.projectLinks.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] text-xs text-white transition-colors">
+                                                            <a href={project.projectLinks.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-xs text-slate-900 transition-colors">
                                                                 <Globe className="h-3.5 w-3.5" /> Website
                                                             </a>
                                                         )}
@@ -993,8 +995,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
                                             {/* Attachments Section */}
                                             {project.attachmentUrls && project.attachmentUrls.length > 0 && (
-                                                <div className="p-4 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors">
-                                                    <span className="text-[10px] text-[#71717a] uppercase tracking-wider block mb-3">Attachments & Files</span>
+                                                <div className="p-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 transition-colors">
+                                                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-3">Attachments & Files</span>
                                                     <div className="flex flex-col gap-2">
                                                         {project.attachmentUrls.map((file, idx) => (
                                                             <div
@@ -1003,21 +1005,21 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                     e.preventDefault();
                                                                     setSelectedDocument(file);
                                                                 }}
-                                                                className="flex items-center justify-between p-3 rounded-lg bg-[#27272a] hover:bg-[#3f3f46] transition-colors group/file cursor-pointer"
+                                                                className="flex items-center justify-between p-3 rounded-lg bg-slate-200 hover:bg-slate-300 transition-colors group/file cursor-pointer"
                                                             >
                                                                 <div className="flex items-center gap-3 overflow-hidden">
-                                                                    <div className="h-8 w-8 rounded bg-[#18181b] flex items-center justify-center text-zinc-400 group-hover/file:text-brand-green transition-colors">
+                                                                    <div className="h-8 w-8 rounded bg-white flex items-center justify-center text-slate-600 group-hover/file:text-blue-600 transition-colors">
                                                                         <FileText className="h-4 w-4" />
                                                                     </div>
                                                                     <div className="flex flex-col min-w-0">
-                                                                        <span className="text-xs text-white font-medium truncate pr-2">{file.name}</span>
-                                                                        <span className="text-[10px] text-[#71717a]">{// @ts-ignore
+                                                                        <span className="text-xs text-slate-900 font-medium truncate pr-2">{file.name}</span>
+                                                                        <span className="text-[10px] text-slate-500">{// @ts-ignore
                                                                             file.size ? file.size : 'Unknown size'}</span>
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex items-center gap-2">
-                                                                    <span className="text-[10px] text-zinc-500 group-hover/file:text-zinc-300">Preview</span>
-                                                                    <ExternalLink className="h-3.5 w-3.5 text-[#52525b] group-hover/file:text-white transition-colors flex-shrink-0" />
+                                                                    <span className="text-[10px] text-slate-500 group-hover/file:text-slate-700">Preview</span>
+                                                                    <ExternalLink className="h-3.5 w-3.5 text-slate-400 group-hover/file:text-slate-900 transition-colors flex-shrink-0" />
                                                                 </div>
                                                             </div>
                                                         ))}
@@ -1037,23 +1039,23 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     initial={{ opacity: 0, y: 20, scale: 0.9 }}
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 20, scale: 0.9 }}
-                                    className="fixed bottom-6 right-6 z-[200] flex items-center gap-3 px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 shadow-xl text-white"
+                                    className="fixed bottom-6 right-6 z-[200] flex items-center gap-3 px-4 py-3 rounded-xl bg-white border border-slate-200 shadow-xl text-slate-900"
                                 >
                                     <div className="h-8 w-8 rounded-full bg-emerald-500/10 flex items-center justify-center">
                                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                                     </div>
                                     <div>
                                         <p className="text-sm font-medium">Success</p>
-                                        <p className="text-xs text-zinc-400">{snackbarMessage}</p>
+                                        <p className="text-xs text-slate-600">{snackbarMessage}</p>
                                     </div>
-                                    <button onClick={() => setShowSnackbar(false)} className="ml-2 text-zinc-500 hover:text-white">
+                                    <button onClick={() => setShowSnackbar(false)} className="ml-2 text-slate-500 hover:text-slate-900">
                                         <X className="h-4 w-4" />
                                     </button>
                                 </motion.div>
                             )}
                         </AnimatePresence>
 
-                        <div className="rounded-xl border border-[#27272a] bg-[#18181b] p-4 hover:border-[#3f3f46] transition-colors">
+                        <div className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-300 transition-colors">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-3">
                                     <div className="flex -space-x-2">
@@ -1064,7 +1066,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                     title={`${m.name} - ${m.role}`}
                                                     className="block relative transition-transform hover:scale-110 hover:z-10"
                                                 >
-                                                    <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${m.color} border-2 border-[#18181b] flex items-center justify-center text-xs font-bold text-white overflow-hidden`}>
+                                                    <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${m.color} border-2 border-slate-200 flex items-center justify-center text-xs font-bold text-slate-900 overflow-hidden`}>
                                                         {m.imageUrl ? (
                                                             <img src={m.imageUrl} alt={m.name} className="w-full h-full object-cover" />
                                                         ) : (
@@ -1079,7 +1081,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                             e.stopPropagation();
                                                             handleRemoveDeveloper(m.id);
                                                         }}
-                                                        className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover/avatar:opacity-100 transition-opacity z-20"
+                                                        className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full flex items-center justify-center text-slate-900 opacity-0 group-hover/avatar:opacity-100 transition-opacity z-20"
                                                     >
                                                         <X className="h-2 w-2" />
                                                     </button>
@@ -1088,18 +1090,18 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         ))}
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-white">Project Team</p>
+                                        <p className="text-sm font-medium text-slate-900">Project Team</p>
                                         <div className="flex flex-col gap-0.5 mt-0.5">
                                             {project.teamMembers.length > 0 ? (
                                                 project.teamMembers.map(m => (
-                                                    <p key={m.id} className="text-[10px] text-[#71717a]">
-                                                        <span className="text-zinc-400">{m.name}</span>
+                                                    <p key={m.id} className="text-[10px] text-slate-500">
+                                                        <span className="text-slate-600">{m.name}</span>
                                                         <span className="mx-1.5 opacity-50">|</span>
-                                                        <span className="text-brand-green/70">{m.role}</span>
+                                                        <span className="text-blue-600/70">{m.role}</span>
                                                     </p>
                                                 ))
                                             ) : (
-                                                <p className="text-[10px] text-[#52525b]">No members assigned</p>
+                                                <p className="text-[10px] text-slate-400">No members assigned</p>
                                             )}
                                         </div>
                                     </div>
@@ -1107,10 +1109,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             </div>
 
                             {isEditing && role === 'admin' && (
-                                <div className="mt-3 pt-3 border-t border-[#27272a]">
-                                    <p className="text-[10px] text-[#71717a] mb-2 uppercase font-medium">Add Developer</p>
+                                <div className="mt-3 pt-3 border-t border-slate-200">
+                                    <p className="text-[10px] text-slate-500 mb-2 uppercase font-medium">Add Developer</p>
                                     <select
-                                        className="w-full bg-zinc-900 border border-[#27272a] rounded text-xs text-white p-2 focus:outline-none focus:border-brand-green"
+                                        className="w-full bg-white border border-slate-200 rounded text-xs text-slate-900 p-2 focus:outline-none focus:border-blue-600"
                                         onChange={(e) => {
                                             if (e.target.value) {
                                                 handleAddDeveloper(e.target.value);
@@ -1135,7 +1137,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.35 }}
                             onClick={() => setIsFeedbackEditorOpen(true)}
-                            className="w-full flex items-center justify-center gap-2 py-3 text-xs text-[#71717a] hover:text-[#a1a1aa] border border-transparent hover:border-[#27272a] rounded-lg transition-all group"
+                            className="w-full flex items-center justify-center gap-2 py-3 text-xs text-slate-500 hover:text-slate-500 border border-transparent hover:border-slate-200 rounded-lg transition-all group"
                         >
                             <MessageSquare className="h-4 w-4 text-violet-400/50 group-hover:text-violet-400 transition-colors" />
                             <span>Need changes? Send feedback</span>
@@ -1146,15 +1148,15 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     {/* Timeline - Full Width - New Layout */}
                     <div className="lg:col-span-12">
                         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
-                            className="rounded-xl border border-[#27272a] bg-[#18181b] p-6 hover:border-[#3f3f46] transition-colors shadow-2xl">
-                            <div className="flex items-center justify-between mb-8 border-b border-[#27272a] pb-4">
-                                <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
-                                    <div className="h-2 w-2 rounded-full bg-brand-green animate-pulse" />
+                            className="rounded-xl border border-slate-200 bg-white p-6 hover:border-slate-300 transition-colors shadow-2xl">
+                            <div className="flex items-center justify-between mb-8 border-b border-slate-200 pb-4">
+                                <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                                    <div className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
                                     Project Project Plan
                                 </h3>
                                 <div className="flex items-center gap-3">
                                     {isEditing && (
-                                        <Button size="sm" variant="ghost" className="h-8 px-3 hover:bg-zinc-800 text-xs border border-[#3f3f46]" onClick={() => {
+                                        <Button size="sm" variant="ghost" className="h-8 px-3 hover:bg-slate-100 text-xs border border-slate-300" onClick={() => {
                                             if (!project) return;
                                             const newMilestoneId = Date.now().toString();
                                             setProject({
@@ -1177,16 +1179,16 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         </Button>
                                     )}
                                     {/* Dynamic date range */}
-                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#27272a] border border-[#3f3f46]">
+                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-200 border border-slate-300">
                                         <Calendar className="h-3.5 w-3.5 text-emerald-400" />
-                                        <span className="text-xs text-[#d4d4d8] font-medium">
+                                        <span className="text-xs text-slate-600 font-medium">
                                             {project.startDate && project.startDate !== 'TBD'
                                                 ? new Date(project.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
                                                 : 'Start'
                                             }
                                         </span>
-                                        <span className="text-[#52525b] px-1">→</span>
-                                        <span className="text-xs text-[#d4d4d8] font-medium">
+                                        <span className="text-slate-400 px-1">→</span>
+                                        <span className="text-xs text-slate-600 font-medium">
                                             {/* Use dueDate or last milestone's date or deliveryTime */}
                                             {project.dueDate && project.dueDate !== 'TBD'
                                                 ? new Date(project.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
@@ -1231,23 +1233,23 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                             ${done
                                                                 ? 'w-10 h-10 bg-emerald-500 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]'
                                                                 : active
-                                                                    ? 'w-12 h-12 bg-zinc-900 border-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.3)]'
-                                                                    : 'w-10 h-10 bg-[#18181b] border-[#3f3f46]'
+                                                                    ? 'w-12 h-12 bg-white border-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.3)]'
+                                                                    : 'w-10 h-10 bg-white border-slate-300'
                                                             }
                                                         `}>
                                                             {done ? (
-                                                                <Check className="h-5 w-5 text-white" strokeWidth={3} />
+                                                                <Check className="h-5 w-5 text-slate-900" strokeWidth={3} />
                                                             ) : active ? (
                                                                 <div className="w-3 h-3 rounded-full bg-blue-400 animate-ping" />
                                                             ) : (
-                                                                <span className="text-xs font-bold text-[#52525b]">{i + 1}</span>
+                                                                <span className="text-xs font-bold text-slate-400">{i + 1}</span>
                                                             )}
 
                                                             {/* Edit Indicator Overlay */}
                                                             {isEditing && activeMilestoneId !== m.id && (
                                                                 <>
-                                                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                        <Edit className="h-4 w-4 text-white" />
+                                                                    <div className="absolute inset-0 flex items-center justify-center bg-white/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                        <Edit className="h-4 w-4 text-slate-900" />
                                                                     </div>
                                                                     <button
                                                                         onClick={(e) => {
@@ -1257,7 +1259,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                                 setProject({ ...project, milestones: newMilestones });
                                                                             }
                                                                         }}
-                                                                        className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity z-20 hover:scale-110"
+                                                                        className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-slate-900 opacity-0 group-hover:opacity-100 transition-opacity z-20 hover:scale-110"
                                                                         title="Remove Milestone"
                                                                     >
                                                                         <X className="h-3 w-3" />
@@ -1275,12 +1277,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                         <div className="absolute top-16 left-1/2 -translate-x-1/2 w-48 flex flex-col items-center">
                                                             {isEditing && activeMilestoneId === m.id ? (
                                                                 <div
-                                                                    className="bg-[#18181b] p-3 rounded-xl border border-[#3f3f46] shadow-2xl shadow-black w-full flex flex-col gap-2 z-50 text-left"
+                                                                    className="bg-white p-3 rounded-xl border border-slate-300 shadow-2xl shadow-black w-full flex flex-col gap-2 z-50 text-left"
                                                                     onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
                                                                 >
                                                                     <div className="flex items-center justify-between mb-1">
-                                                                        <span className="text-[10px] uppercase font-bold text-zinc-500">Edit Milestone</span>
-                                                                        <button onClick={() => setActiveMilestoneId(null)}><X className="h-3 w-3 text-zinc-500 hover:text-white" /></button>
+                                                                        <span className="text-[10px] uppercase font-bold text-slate-500">Edit Milestone</span>
+                                                                        <button onClick={() => setActiveMilestoneId(null)}><X className="h-3 w-3 text-slate-500 hover:text-slate-900" /></button>
                                                                     </div>
                                                                     <input
                                                                         value={m.title}
@@ -1290,7 +1292,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                             setProject({ ...project, milestones: newMilestones });
                                                                         }}
                                                                         placeholder="Title"
-                                                                        className="w-full bg-[#27272a] text-xs font-bold text-white focus:outline-none border border-[#3f3f46] focus:border-emerald-500/50 rounded px-2 py-1.5"
+                                                                        className="w-full bg-slate-200 text-xs font-bold text-slate-900 focus:outline-none border border-slate-300 focus:border-emerald-500/50 rounded px-2 py-1.5"
                                                                     />
                                                                     <textarea
                                                                         value={m.description || ''}
@@ -1301,7 +1303,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                         }}
                                                                         placeholder="Details..."
                                                                         rows={3}
-                                                                        className="w-full bg-[#27272a] text-[11px] text-zinc-300 border border-[#3f3f46] focus:border-emerald-500/50 rounded px-2 py-1.5 resize-none focus:outline-none"
+                                                                        className="w-full bg-slate-200 text-[11px] text-slate-700 border border-slate-300 focus:border-emerald-500/50 rounded px-2 py-1.5 resize-none focus:outline-none"
                                                                     />
                                                                     <div className="grid grid-cols-2 gap-2">
                                                                         <input
@@ -1312,7 +1314,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                                 newMilestones[i] = { ...m, date: e.target.value || 'TBD' };
                                                                                 setProject({ ...project, milestones: newMilestones });
                                                                             }}
-                                                                            className="w-full bg-[#27272a] text-[10px] text-zinc-400 border border-[#3f3f46] rounded px-2 py-1.5 [color-scheme:dark]"
+                                                                            className="w-full bg-slate-200 text-[10px] text-slate-600 border border-slate-300 rounded px-2 py-1.5 [color-scheme:dark]"
                                                                         />
                                                                         <select
                                                                             value={m.status}
@@ -1321,7 +1323,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                                 newMilestones[i] = { ...m, status: e.target.value as any };
                                                                                 setProject({ ...project, milestones: newMilestones });
                                                                             }}
-                                                                            className="w-full bg-[#27272a] text-[10px] border border-[#3f3f46] rounded px-2 py-1.5 focus:outline-none"
+                                                                            className="w-full bg-slate-200 text-[10px] border border-slate-300 rounded px-2 py-1.5 focus:outline-none"
                                                                         >
                                                                             <option value="upcoming">Upcoming</option>
                                                                             <option value="current">In Progress</option>
@@ -1341,10 +1343,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                 </div>
                                                             ) : (
                                                                 <div className="text-center group-hover:scale-105 transition-transform duration-300">
-                                                                    <div className={`text-sm font-bold mb-0.5 ${active ? 'text-white' : done ? 'text-emerald-400' : 'text-zinc-500'}`}>
+                                                                    <div className={`text-sm font-bold mb-0.5 ${active ? 'text-slate-900' : done ? 'text-emerald-400' : 'text-slate-500'}`}>
                                                                         {m.title}
                                                                     </div>
-                                                                    <div className={`text-[10px] font-medium mb-1.5 ${active ? 'text-blue-400' : 'text-zinc-600'}`}>
+                                                                    <div className={`text-[10px] font-medium mb-1.5 ${active ? 'text-blue-400' : 'text-slate-400'}`}>
                                                                         {m.date === 'TBD'
                                                                             ? 'TBD'
                                                                             : new Date(m.date).toLocaleDateString('en-US', {
@@ -1354,7 +1356,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                                                         }
                                                                     </div>
                                                                     {m.description && (
-                                                                        <div className="text-[10px] text-zinc-500 leading-tight max-w-[140px] mx-auto bg-[#27272a]/50 px-2 py-1 rounded-md border border-white/5">
+                                                                        <div className="text-[10px] text-slate-500 leading-tight max-w-[140px] mx-auto bg-slate-100 px-2 py-1 rounded-md border border-white/5">
                                                                             {m.description}
                                                                         </div>
                                                                     )}
@@ -1365,7 +1367,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
                                                     {/* Flexible Connector Line */}
                                                     {!isLast && (
-                                                        <div className={`${project.milestones.length > 6 ? 'w-24 shrink-0' : 'flex-1'} h-1 bg-[#27272a] mx-2 lg:mx-4 relative rounded-full overflow-hidden`}>
+                                                        <div className={`${project.milestones.length > 6 ? 'w-24 shrink-0' : 'flex-1'} h-1 bg-slate-200 mx-2 lg:mx-4 relative rounded-full overflow-hidden`}>
                                                             <div className={`absolute inset-0 transition-all duration-1000 ease-out
                                                                 ${connectionFilled || done
                                                                     ? 'w-full bg-gradient-to-r from-emerald-500 to-emerald-400'
@@ -1382,18 +1384,18 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                     </div>
                                 </div>
                             ) : (
-                                <div className="text-center py-16 px-4 bg-[#27272a]/20 rounded-xl border border-dashed border-[#3f3f46]">
-                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#27272a] mb-4">
-                                        <Target className="h-7 w-7 text-[#52525b]" />
+                                <div className="text-center py-16 px-4 bg-slate-200/20 rounded-xl border border-dashed border-slate-300">
+                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-200 mb-4">
+                                        <Target className="h-7 w-7 text-slate-400" />
                                     </div>
-                                    <p className="text-zinc-400 mb-6">No milestones defined for this project.</p>
+                                    <p className="text-slate-600 mb-6">No milestones defined for this project.</p>
                                     {canEdit && (
                                         <button
                                             onClick={() => {
                                                 setOriginalProject(JSON.parse(JSON.stringify(project)));
                                                 setIsEditing(true);
                                             }}
-                                            className="px-6 py-2.5 text-sm font-medium text-white bg-emerald-600 rounded-full hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-900/20"
+                                            className="px-6 py-2.5 text-sm font-medium text-slate-900 bg-emerald-600 rounded-full hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-900/20"
                                         >
                                             <Plus className="h-4 w-4 inline mr-2" /> Start Planning
                                         </button>
@@ -1414,24 +1416,24 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setSelectedDocument(null)}
-                            className="absolute inset-0 bg-black/90 backdrop-blur-md"
+                            className="absolute inset-0 bg-white/90 backdrop-blur-md"
                         />
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
                             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                            className="relative w-full h-full max-w-5xl max-h-[90vh] bg-[#0f0f12] border border-[#27272a] rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+                            className="relative w-full h-full max-w-5xl max-h-[90vh] bg-white border border-slate-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
                         >
                             {/* Header */}
-                            <div className="flex items-center justify-between px-6 py-4 border-b border-[#27272a] bg-[#18181b]">
+                            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-white">
                                 <div className="flex items-center gap-3">
-                                    <div className="h-8 w-8 rounded bg-[#27272a] flex items-center justify-center">
-                                        <FileText className="h-4 w-4 text-zinc-400" />
+                                    <div className="h-8 w-8 rounded bg-slate-200 flex items-center justify-center">
+                                        <FileText className="h-4 w-4 text-slate-600" />
                                     </div>
                                     <div>
-                                        <h3 className="text-sm font-semibold text-white">{selectedDocument.name}</h3>
-                                        <p className="text-xs text-[#71717a]">Preview Mode</p>
+                                        <h3 className="text-sm font-semibold text-slate-900">{selectedDocument.name}</h3>
+                                        <p className="text-xs text-slate-500">Preview Mode</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -1440,14 +1442,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                                         download
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="p-2 rounded-lg hover:bg-[#27272a] text-[#71717a] hover:text-white transition-colors"
+                                        className="p-2 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-900 transition-colors"
                                         title="Download original"
                                     >
                                         <ExternalLink className="h-5 w-5" />
                                     </a>
                                     <button
                                         onClick={() => setSelectedDocument(null)}
-                                        className="p-2 rounded-lg hover:bg-[#27272a] text-[#71717a] hover:text-white transition-colors"
+                                        className="p-2 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-900 transition-colors"
                                     >
                                         <X className="h-5 w-5" />
                                     </button>
@@ -1455,14 +1457,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                             </div>
 
                             {/* Content */}
-                            <div className="flex-1 bg-[#09090b] relative w-full h-full overflow-hidden flex items-center justify-center overscroll-contain" style={{ overscrollBehavior: 'contain' }}>
+                            <div className="flex-1 bg-slate-50 relative w-full h-full overflow-hidden flex items-center justify-center overscroll-contain" style={{ overscrollBehavior: 'contain' }}>
                                 {/* Loading Spinner (behind content) */}
                                 <div className="absolute inset-0 flex items-center justify-center z-0">
-                                    <div className="h-8 w-8 rounded-full border-2 border-[#27272a] border-t-emerald-500 animate-spin" />
+                                    <div className="h-8 w-8 rounded-full border-2 border-slate-200 border-t-emerald-500 animate-spin" />
                                 </div>
 
                                 {selectedDocument.type.toLowerCase().includes('image') || selectedDocument.url.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i) ? (
-                                    <div className="relative w-full h-full overflow-auto flex items-center justify-center p-4 z-10 bg-[#09090b] overscroll-contain" style={{ overscrollBehavior: 'contain' }}>
+                                    <div className="relative w-full h-full overflow-auto flex items-center justify-center p-4 z-10 bg-slate-50 overscroll-contain" style={{ overscrollBehavior: 'contain' }}>
                                         <img
                                             src={selectedDocument.url}
                                             alt={selectedDocument.name}
@@ -1484,6 +1486,16 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     </div>
                 )}
             </AnimatePresence>
+
+            {/* Project discussion — text + voice notes */}
+            {project && (
+                <ProjectChat
+                    projectId={project.id}
+                    projectTitle={project.title}
+                    open={chatOpen}
+                    onClose={() => setChatOpen(false)}
+                />
+            )}
 
             {/* Feedback Editor Modal */}
             <AnimatePresence>

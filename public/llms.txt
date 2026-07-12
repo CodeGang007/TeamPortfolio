@@ -1,0 +1,39 @@
+# CodeGang
+
+> CodeGang is a five-engineer software studio (codegang.online) shipping production
+> AI, multi-tenant platforms, and mobile apps for clients in Brazil, Australia,
+> India, the USA, and Europe. The engineers in the meeting are the ones writing
+> the code.
+
+## Systems
+
+- [Verse AI](https://www.codegang.online/work/verse-ai): Private ChatGPT for the
+  enterprise. Multi-tenant RAG on a 7-layer AWS stack (NestJS, Postgres, Qdrant,
+  Bedrock). Live in production in Brazil at moovehubia.com.br.
+- [eMedici](https://www.codegang.online/work/emedici): Australia's leading
+  medical-education Android app (Flutter). 10K+ installs, 4.9★ on the Play Store.
+- [ARM Tech ERP](https://www.codegang.online/work/arm-tech): 3-module ERP for a
+  cement, fleet and cold-materials trader in India, with five deep-learning
+  modules (LSTM demand forecasting, autoencoder anomaly detection, trip
+  profitability, invoice OCR, dealer risk scoring).
+- [AI Resume Builder](https://www.codegang.online/work/ai-resume): ATS-optimized
+  resumes from a pasted job description. Next.js + FastAPI + OpenAI on AWS. Live
+  at nailhiring.com (USA).
+- [NestFlow](https://www.codegang.online/work/nestflow): Property management for
+  landlords. Containerized microservices (MongoDB, Redis, Docker). In build,
+  targeting Europe.
+- [Pinnacle HMS](https://www.codegang.online/work/pinnacle-hms): Hospital
+  management system for Pinnacle General Hospital, India. Six role-based portals
+  over 39 tables and 57 relationships. Live in production.
+
+## Pages
+
+- [Work](https://www.codegang.online/work): all systems with live status
+- [Studio](https://www.codegang.online/studio): the five engineers and how the studio works
+- [Contact](https://www.codegang.online/contact): messages go straight to the founders
+
+## Contact
+
+- Email: support@codegang.online
+- GitHub: https://github.com/CodeGang007
+- LinkedIn: https://www.linkedin.com/company/code-gang
