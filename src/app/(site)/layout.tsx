@@ -10,7 +10,7 @@ export default function SiteLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="site-light min-h-screen bg-white text-slate-900 antialiased">
+    <div className="site-light min-h-screen bg-bone text-ink antialiased">
       <SiteHeader />
       <main>{children}</main>
       <SiteFooter />

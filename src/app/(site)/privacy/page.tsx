@@ -1,6 +1,7 @@
 "use client";
 
 import { Shield } from "lucide-react";
+import { site } from "@/content/site";
 
 export default function PrivacyPolicy() {
     return (
@@ -47,7 +48,7 @@ export default function PrivacyPolicy() {
                             <section className="space-y-4">
                                 <h2 className="text-2xl font-bold text-slate-900">4. Your Rights</h2>
                                 <p className="text-slate-600 leading-relaxed">
-                                    You have the right to access, correct, or delete your personal data. Contact us at <a href="mailto:support@codegang.online" className="text-blue-600 hover:underline">support@codegang.online</a> for any privacy-related inquiries.
+                                    You have the right to access, correct, or delete your personal data. Contact us at <a href={`mailto:${site.email}`} className="text-blue-600 hover:underline">{site.email}</a> for any privacy-related inquiries.
                                 </p>
                             </section>
 

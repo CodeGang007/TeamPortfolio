@@ -1,31 +1,39 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
-import {
-  ArrowRight,
-  BrainCircuit,
-  Layers,
-  Smartphone,
-  LineChart,
-  Building2,
-  Cloud,
-} from "lucide-react";
+
 import { consoleProjects } from "@/content/projects";
 import { clients, site, stats } from "@/content/site";
 import { testimonials } from "@/content/testimonials";
-import { getPortfolioProjectById } from "@/data/portfolioProjects";
-import GlobeWordmark from "@/components/console/GlobeWordmark";
-import ProcessFlow from "@/components/console/ProcessFlow";
-import Marquee from "@/components/console/Marquee";
-import StatusDot from "@/components/console/StatusDot";
+
+import HeroScene from "@/components/site/HeroScene";
+import WordGrid from "@/components/site/WordGrid";
+import FooterCta from "@/components/site/FooterCta";
+import StatsBand from "@/components/site/StatsBand";
+import Console from "@/components/site/dioramas/Console";
+import Stack from "@/components/site/dioramas/Stack";
+import Hospital from "@/components/site/dioramas/Hospital";
+import Forecast from "@/components/site/dioramas/Forecast";
+import Mobile from "@/components/site/dioramas/Mobile";
+import Ats from "@/components/site/dioramas/Ats";
 import JsonLd from "@/components/console/JsonLd";
-import Reveal from "@/components/ui/Reveal";
-import CountUp from "@/components/console/CountUp";
+import { FadeUp, Item, Parallax, Stagger } from "@/components/site/motion";
+import {
+  Body,
+  Display,
+  Eyebrow,
+  Frame,
+  LeadIns,
+  LiveChip,
+  Nudge,
+  Pill,
+  Rule,
+  Section,
+  SectionIntro,
+  Shell,
+} from "@/components/site/primitives";
 
 export const metadata: Metadata = {
-  title: {
-    absolute: site.title,
-  },
+  title: { absolute: site.title },
   description: site.description,
   openGraph: {
     title: site.title,
@@ -34,16 +42,150 @@ export const metadata: Metadata = {
   },
 };
 
-// Every answer here must stay verifiable from content/ or describe process,
-// not promises. No rates, no invented guarantees.
+/* ── Content ──────────────────────────────────────────────────────
+   Every claim below is backed by a system in content/projects.ts or
+   describes process. No rates, no invented guarantees, no fake logos.
+   ───────────────────────────────────────────────────────────────── */
+
+const platformLeadIns = [
+  {
+    lead: "Engineers, not account managers",
+    body: "The person in your first call writes the code. There is no sales layer and no hand-off to a delivery team you have never met.",
+  },
+  {
+    lead: "Production or nothing",
+    body: "We measure ourselves in systems that are live and maintained, not in prototypes. Most of what we have shipped is still under our maintenance.",
+  },
+  {
+    lead: "Yours to keep",
+    body: "Your repository, your cloud account, your data. We build so the system survives us — documented, tested, and handed over whole.",
+  },
+];
+
+// Each entry is one repeating feature band, mirroring the reference layout:
+// numeral, headline, copy, dual CTA, diorama.
+const systemBands = [
+  {
+    n: "01",
+    slug: "verse-ai",
+    eyebrow: "AI & GenAI engineering",
+    lead: "Private AI over your own documents,",
+    trail: "with the retrieval trace attached",
+    body: "Verse AI gives an enterprise a private assistant over its own files. Every answer arrives with the chunks it came from, and every chunk is scoped to one tenant — so a buyer can audit the answer instead of trusting it.",
+    proof: "Live for MooveHub in São Paulo",
+    diorama: <Console />,
+    caption: "Verse AI — assistant with retrieval trace",
+  },
+  {
+    n: "02",
+    slug: "pinnacle-hms",
+    eyebrow: "Enterprise systems",
+    lead: "Six role-based portals,",
+    trail: "one schema underneath",
+    body: "Pinnacle HMS runs a working hospital. Reception, OPD, diagnostics, pharmacy, billing and admin each get their own portal, but a patient episode is one record moving across 39 tables and 57 relationships with an audit trail behind it.",
+    proof: "Live in a hospital in Kolkata",
+    diorama: <Hospital />,
+    caption: "Pinnacle HMS — one patient episode across six portals",
+  },
+  {
+    n: "03",
+    slug: "arm-tech",
+    eyebrow: "Applied machine learning",
+    lead: "Deep learning inside the ERP,",
+    trail: "not inside a notebook",
+    body: "ARM Tech runs purchasing, fleet and finance for a cement trader. Five deep-learning modules sit on the same pipeline as the transactional system, so a forecast is something the buyer acts on in the app rather than a slide in a review.",
+    proof: "Live for a trading business in Kolkata",
+    diorama: <Forecast />,
+    caption: "ARM Tech ERP — LSTM demand forecast",
+  },
+  {
+    n: "04",
+    slug: "emedici",
+    eyebrow: "Mobile app development",
+    lead: "Mobile built for a real audience,",
+    trail: "shipped to a real store",
+    body: "eMedici teaches medical students across Australia. Offline-first sync, store-ready release engineering, and a question engine that has to stay correct — because the people using it are being examined on it.",
+    proof: `eMedici · Play Store — ${stats.emediciInstalls} installs, ${stats.emediciRating}★`,
+    diorama: <Mobile />,
+    caption: "eMedici — question engine",
+  },
+  {
+    n: "05",
+    slug: "ai-resume",
+    eyebrow: "SaaS product development",
+    lead: "A product that earns its keep",
+    trail: "in the first sixty seconds",
+    body: "AI Resume Builder turns a pasted job description into an ATS-optimised resume. The whole product is one loop — paste, score, rewrite, download — and the score has to move for a visible, explainable reason.",
+    proof: "Live at nailhiring.com",
+    diorama: <Ats />,
+    caption: "AI Resume Builder — ATS match report",
+  },
+] as const;
+
+const chapters = [
+  {
+    n: "I",
+    title: "Scope",
+    body: "We work out what the system has to do and what shipping means. You leave with a written scope you could hand to anyone — including someone who is not us.",
+  },
+  {
+    n: "II",
+    title: "Build",
+    body: "Short cycles against that scope, in your repository from day one. You see the system running before it is finished, not a status report about it.",
+  },
+  {
+    n: "III",
+    title: "Ship",
+    body: "Deployment, environments, CI/CD and the release itself. Live means a real user can reach it in your cloud account, not a demo on ours.",
+  },
+  {
+    n: "IV",
+    title: "Stay",
+    body: "Maintenance and roadmap. Most of the systems on this page are still under active maintenance by the same engineers who built them.",
+  },
+] as const;
+
+const industries = [
+  {
+    name: "Healthcare",
+    body: "eMedici trains medical students across Australia; Pinnacle HMS runs a working hospital in India.",
+    systems: "eMedici · Pinnacle HMS",
+    href: "/work/pinnacle-hms",
+  },
+  {
+    name: "Enterprise SaaS",
+    body: "Verse AI gives enterprises a private assistant over their own documents, with tenant isolation on a 7-layer AWS stack.",
+    systems: "Verse AI",
+    href: "/work/verse-ai",
+  },
+  {
+    name: "Trade & Logistics",
+    body: "ARM Tech runs purchasing, fleet and finance — with five deep-learning modules feeding decisions daily.",
+    systems: "ARM Tech ERP",
+    href: "/work/arm-tech",
+  },
+  {
+    name: "PropTech",
+    body: "NestFlow gives landlords properties, tenants, leases and rent in one place, on containerized microservices.",
+    systems: "NestFlow",
+    href: "/work/nestflow",
+  },
+  {
+    name: "HR & Recruiting",
+    body: "AI Resume Builder turns a job description into an ATS-optimised resume in under a minute.",
+    systems: "AI Resume Builder",
+    href: "/work/ai-resume",
+  },
+] as const;
+
 const faq = [
   {
     q: "Who actually writes the code?",
-    a: "The five engineers on the team page. There is no sales layer and no hand-off — the engineer in the meeting is the one writing the code.",
+    a: "The five engineers on the studio page. There is no sales layer and no hand-off — the engineer in the meeting is the one writing the code.",
   },
   {
     q: "What do you build?",
-    a: "Production AI systems (RAG, multi-LLM gateways), multi-tenant SaaS platforms, mobile apps, ERP suites with applied deep learning, and healthcare systems. Every one of those categories maps to a system we have shipped — see the case studies.",
+    a: "Production AI systems (RAG, multi-LLM gateways), multi-tenant SaaS platforms, mobile apps, ERP suites with applied deep learning, and healthcare systems. Every one of those maps to a system we have shipped — see the case studies.",
   },
   {
     q: "How does an engagement run?",
@@ -51,718 +193,492 @@ const faq = [
   },
   {
     q: "Do you work across time zones?",
-    a: `Yes. Our clients are in ${stats.regions} regions — Brazil, Australia, India, the USA, and Europe — and every system stays supported in its own timezone.`,
+    a: `Yes. Our clients are in ${stats.regions} regions — Brazil, Australia, India, the USA and Europe — and every system stays supported in its own timezone.`,
   },
   {
     q: "Can you work under NDA?",
-    a: "Yes, and most of our client work is under one. That is why this site shows regions, statuses, and stacks rather than client internals.",
+    a: "Yes, and most of our client work is under one. That is why this site shows regions, statuses and stacks rather than client internals.",
   },
-];
+] as const;
 
-const services = [
-  {
-    icon: BrainCircuit,
-    title: "AI & GenAI engineering",
-    body: "Private RAG platforms, multi-LLM gateways (Anthropic, OpenAI, Bedrock), embedding pipelines, and tenant-isolated knowledge bases your team can actually deploy.",
-    proof: "verse-ai",
-    proofLabel: "Verse AI — live in Brazil",
-  },
-  {
-    icon: Layers,
-    title: "SaaS product development",
-    body: "Multi-tenant platforms end to end — architecture, backend, frontend, and the deployment pipeline that keeps them shippable week after week.",
-    proof: "verse-ai",
-    proofLabel: "Verse AI — 7-layer AWS stack",
-  },
-  {
-    icon: Smartphone,
-    title: "Mobile app development",
-    body: "Flutter and native Android apps built for real audiences, with offline-first sync and store-ready release engineering.",
-    proof: "emedici",
-    proofLabel: `eMedici — ${stats.emediciInstalls} installs, ${stats.emediciRating}★`,
-  },
-  {
-    icon: LineChart,
-    title: "Applied machine learning",
-    body: "Demand forecasting, anomaly detection, OCR, and risk scoring — deep-learning modules deployed inside business software, not notebooks.",
-    proof: "arm-tech",
-    proofLabel: "ARM Tech — 5 DL modules in an ERP",
-  },
-  {
-    icon: Building2,
-    title: "Enterprise systems",
-    body: "ERPs, hospital management, role-based platforms with audit trails, wallets, and the domain modelling they depend on.",
-    proof: "pinnacle-hms",
-    proofLabel: "Pinnacle HMS — a working hospital runs on it",
-  },
-  {
-    icon: Cloud,
-    title: "Cloud & DevOps",
-    body: "AWS architecture, Docker, CI/CD with GitHub Actions — infrastructure designed so the system survives its own success.",
-    proof: "ai-resume",
-    proofLabel: "AI Resume — dockerized CI/CD on AWS",
-  },
-];
-
-const industries = [
-  {
-    name: "Healthcare",
-    body: "eMedici trains medical students across Australia; Pinnacle HMS runs a working hospital in India — six role-based portals over 39 tables and 57 relationships.",
-    systems: "eMedici · Pinnacle HMS",
-  },
-  {
-    name: "Enterprise SaaS",
-    body: "Verse AI gives enterprises a private ChatGPT over their own documents, with cryptographic tenant isolation on a 7-layer AWS stack.",
-    systems: "Verse AI",
-  },
-  {
-    name: "Trade & Logistics",
-    body: "ARM Tech runs purchasing, fleet, and finance for a cement trader — with five deep-learning modules feeding decisions daily.",
-    systems: "ARM Tech ERP",
-  },
-  {
-    name: "PropTech",
-    body: "NestFlow gives landlords properties, tenants, leases, and rent in one place, on containerized microservices.",
-    systems: "NestFlow",
-  },
-  {
-    name: "HR & Recruiting",
-    body: "AI Resume Builder turns a pasted job description into an ATS-optimized resume in under a minute, live at nailhiring.com.",
-    systems: "AI Resume Builder",
-  },
-];
-
-const marqueeItems = [
-  "Production AI",
-  "RAG platforms",
-  "Multi-tenant SaaS",
-  "Flutter & Android",
-  "ERP + deep learning",
-  "Healthcare systems",
-  "AWS architecture",
-  "Next.js",
-  "CI/CD",
-];
-
-const stackChips = [
-  "Anthropic", "OpenAI", "AWS Bedrock", "SageMaker", "Qdrant", "TensorFlow",
-  "NestJS", "FastAPI", "PostgreSQL", "MySQL", "MongoDB", "Redis", "Supabase",
-  "Next.js", "React", "TypeScript", "Flutter", "Android",
-  "AWS", "ECS Fargate", "CloudFront", "Docker", "GitHub Actions", "Airflow", "Vercel",
-];
+// Structured data. Every field mirrors something stated on the page — the
+// FAQ entries are the same objects rendered below, so they can never drift.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${site.domain}#organization`,
+      name: site.name,
+      url: site.domain,
+      email: site.email,
+      description: site.description,
+      sameAs: [site.github, site.linkedin, site.x],
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${site.domain}#faq`,
+      mainEntity: faq.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ],
+};
 
 export default function HomePage() {
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
-
   return (
     <>
-      <JsonLd data={faqJsonLd} />
+      <JsonLd data={jsonLd} />
+      <HeroScene />
 
-      {/* ── Hero — dark, with the globe→wordmark particle morph ── */}
-      <section className="relative overflow-hidden bg-[#0C1017]">
-        <div
-          aria-hidden
-          className="glow-blue pointer-events-none absolute inset-0"
-        />
-        {/* Slow-morphing blobs — compositor-cheap ambience */}
-        <div
-          aria-hidden
-          className="blob left-[-8%] top-[-12%] h-[420px] w-[420px] bg-blue-600/40"
-        />
-        <div
-          aria-hidden
-          className="blob right-[-6%] top-[30%] h-[360px] w-[360px] bg-indigo-500/30"
-          style={{ animationDelay: "-9s" }}
-        />
-        <div className="relative mx-auto max-w-7xl px-6 pt-32 md:pt-36">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold text-slate-200 backdrop-blur">
-              <span
-                aria-hidden
-                className="h-2 w-2 rounded-full bg-emerald-400 pulse-dot"
-              />
-              {stats.live} systems live in production right now
-            </p>
-            <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-[4.2rem]">
-              AI engineering partner for scalable SaaS &amp; enterprise
-              platforms
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300">
-              We design, ship, and run production systems — private RAG
-              platforms, multi-tenant SaaS, mobile apps, and ERP with applied
-              deep learning — across {stats.regions} regions.
-            </p>
-            <div className="mt-9 flex flex-wrap justify-center gap-4">
-              <Link
-                href="/work"
-                className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 shadow-sm transition-colors hover:bg-blue-50"
-              >
-                See case studies
-                <ArrowRight
-                  aria-hidden
-                  className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-white/60"
-              >
-                Talk to an engineer
-              </Link>
-            </div>
-          </div>
-
-          {/* The morph: particles on a rotating globe fly into CODEGANG.
-              Transparent canvas — the section glow shows through. */}
-          <div className="relative mx-auto max-w-6xl">
-            <GlobeWordmark className="h-auto w-full" />
-          </div>
-
-          {/* Honest numbers, labelled sources */}
-          <dl className="mx-auto grid max-w-5xl grid-cols-2 gap-x-6 gap-y-8 border-t border-white/10 py-10 sm:grid-cols-3 lg:grid-cols-6">
-            {[
-              { v: stats.projectsDelivered, l: "projects delivered" },
-              { v: stats.clientsServed, l: "clients · most under NDA" },
-              { v: String(stats.live), l: "systems live now" },
-              { v: String(stats.regions), l: "regions served" },
-              { v: stats.emediciInstalls, l: "installs · eMedici" },
-              { v: `${stats.emediciRating}★`, l: "Play Store · eMedici" },
-            ].map((s) => (
-              <div key={s.l} className="text-center">
-                <dt className="sr-only">{s.l}</dt>
-                <dd className="font-display text-4xl font-semibold tracking-tight text-white">
-                  <CountUp value={s.v} />
-                </dd>
-                <p className="mt-2 text-xs font-medium uppercase tracking-wider text-slate-400">
-                  {s.l}
-                </p>
-              </div>
+      {/* ══ Proof band ══════════════════════════════════════════════ */}
+      <section className="border-b border-line bg-bone py-14">
+        <Shell>
+          <Stagger as="ul" className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+            {clients.map((c) => (
+              <Item as="li" key={c.name}>
+                <Link
+                  href={`/work/${c.slug}`}
+                  className="group flex h-full flex-col justify-center rounded-xl border border-line bg-paper px-4 py-5 transition-all duration-200 hover:border-line-strong hover:shadow-frame"
+                >
+                  <span className="text-[0.82rem] font-medium leading-tight text-ink">
+                    {c.name}
+                  </span>
+                  <span className="mt-1 font-mono text-[0.58rem] uppercase tracking-wider text-mute">
+                    {c.detail}
+                  </span>
+                </Link>
+              </Item>
             ))}
-          </dl>
-        </div>
-      </section>
+          </Stagger>
 
-      {/* ── Client banner — real organisations, real systems ─── */}
-      <section className="border-b border-white/10 bg-[#0C1017] pb-14">
-        <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-          Running in production for
-        </p>
-        <Marquee className="mt-7" duration="45s">
-          {clients.map((c) => (
-            <Link
-              key={c.name}
-              href={`/work/${c.slug}`}
-              className="group mr-16 flex shrink-0 items-baseline gap-3 opacity-80 transition-opacity hover:opacity-100"
-            >
-              <span className="font-display text-2xl font-semibold tracking-tight text-white">
-                {c.name}
-              </span>
-              <span className="hidden font-mono text-xs uppercase tracking-wider text-slate-400 sm:inline">
-                {c.detail}
-              </span>
-            </Link>
-          ))}
-        </Marquee>
-      </section>
-
-      {/* ── Marquee band ─────────────────────────────────────── */}
-      <div className="relative z-10 -my-5 -rotate-1">
-        <Marquee className="bg-blue-600 py-3.5 shadow-lg" duration="36s">
-          {marqueeItems.map((item) => (
-            <span
-              key={item}
-              className="flex items-center gap-6 pr-6 font-mono text-sm font-medium uppercase tracking-wider text-white"
-            >
-              {item}
-              <span aria-hidden className="text-blue-300">
-                ✦
-              </span>
-            </span>
-          ))}
-        </Marquee>
-      </div>
-
-      {/* ── Services ─────────────────────────────────────────── */}
-      <section className="dot-grid mx-auto max-w-7xl px-6 pb-16 pt-24 lg:pb-24 lg:pt-32">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
-            Services
+          <p className="mt-8 text-center text-[0.9375rem] text-mute">
+            <span className="font-medium text-ink">
+              {stats.projectsDelivered} projects
+            </span>{" "}
+            delivered for{" "}
+            <span className="font-medium text-ink">
+              {stats.clientsServed} clients
+            </span>{" "}
+            over the years — most under NDA.{" "}
+            <span className="font-medium text-ink">{stats.live} systems</span>{" "}
+            are live in production right now.
           </p>
-          <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            What we build
-          </h2>
-          <p className="mt-4 text-lg text-slate-600">
-            Every service maps to a system we have already shipped — and can
-            show you.
-          </p>
-        </Reveal>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s, i) => (
-            <Reveal key={s.title} delay={i * 70}>
-            <Link
-              href={`/work/${s.proof}`}
-              className="group block h-full rounded-3xl bg-slate-50 p-8 ring-1 ring-slate-100 transition-all hover:-translate-y-1 hover:bg-white hover:shadow-xl hover:shadow-slate-900/[0.06] hover:ring-slate-200"
-            >
-              <span className="inline-flex rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-500 p-3 text-white shadow-md shadow-blue-600/20">
-                <s.icon aria-hidden className="h-6 w-6" strokeWidth={1.8} />
-              </span>
-              <h3 className="mt-5 text-lg font-semibold text-slate-900">
-                {s.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                {s.body}
-              </p>
-              <p className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600">
-                {s.proofLabel}
-                <ArrowRight
-                  aria-hidden
-                  className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
-                />
-              </p>
-            </Link>
-            </Reveal>
-          ))}
-        </div>
+        </Shell>
       </section>
 
-      {/* ── Industries — MathCo-style powder color block ─────── */}
-      <section id="industries" className="scroll-mt-20 bg-blue-100/60">
-        <div className="mx-auto max-w-7xl px-6 py-16 sm:px-12 lg:px-16 lg:py-24">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
-              Industries
-            </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-              Where our systems run
-            </h2>
-          </Reveal>
-          <div className="mx-auto mt-10 max-w-4xl">
-            {industries.map((ind, i) => (
-              <details
-                key={ind.name}
-                className="group border-b border-slate-900/15 py-6 last:border-b-0"
-                open={i === 0}
+      {/* ══ What the studio is ══════════════════════════════════════ */}
+      <Section tone="bone" id="studio">
+        <FadeUp>
+          <SectionIntro
+            align="center"
+            size="xl"
+            lead="CodeGang is a five-engineer studio"
+            trail="that ships systems companies run on"
+          />
+        </FadeUp>
+
+        <FadeUp className="mt-12">
+          <div className="grid items-start gap-4 lg:grid-cols-2">
+            <Frame size="lg" label="Verse AI — request path">
+              <Stack />
+            </Frame>
+            <Frame size="lg" label="Verse AI — assistant with retrieval trace">
+              <Console />
+            </Frame>
+          </div>
+        </FadeUp>
+
+        <FadeUp className="mt-12">
+          <LeadIns items={platformLeadIns} />
+        </FadeUp>
+
+        <FadeUp className="mt-12">
+          <div className="flex flex-col items-start gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
+            <Body className="max-w-md">
+              Bring us the system you need built, and we will tell you what it
+              actually takes — before you commit to anything.
+            </Body>
+            <Pill href="/contact">
+              Talk to an engineer <Nudge />
+            </Pill>
+          </div>
+        </FadeUp>
+      </Section>
+
+      {/* ══ Repeating system bands ══════════════════════════════════ */}
+      <Section tone="alt" id="systems" className="blueprint">
+        <FadeUp>
+          <SectionIntro
+            eyebrow="What we build"
+            lead="Five systems,"
+            trail="five different problems"
+            body="Each of these is live, maintained by us, and open to a technical reference call."
+          />
+        </FadeUp>
+
+        <div className="mt-14 space-y-16 lg:space-y-20">
+          {systemBands.map((s, i) => (
+            <FadeUp key={s.slug}>
+              <div
+                className={`grid items-center gap-8 lg:grid-cols-2 lg:gap-14 ${
+                  i % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""
+                }`}
               >
-                <summary className="grid cursor-pointer list-none grid-cols-[3.5rem_1fr_auto] items-baseline gap-4 [&::-webkit-details-marker]:hidden">
-                  <span className="font-display text-xl font-semibold text-slate-400/70 transition-colors group-open:text-blue-700">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="font-display text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
-                    {ind.name}
-                  </h3>
-                  <span
-                    aria-hidden
-                    className="text-xl text-slate-400 group-open:hidden"
-                  >
-                    +
-                  </span>
-                  <span
-                    aria-hidden
-                    className="hidden text-xl text-slate-400 group-open:inline"
-                  >
-                    −
-                  </span>
-                </summary>
-                <div className="grid grid-cols-[3.5rem_1fr] gap-4">
-                  <span aria-hidden />
-                  <div className="pt-3">
-                    <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-                      {ind.body}
-                    </p>
-                    <p className="mt-3 font-mono text-xs uppercase tracking-wider text-slate-400">
-                      {ind.systems}
-                    </p>
+                <div>
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-serif text-3xl leading-none text-line-strong">
+                      {s.n}
+                    </span>
+                    <Eyebrow>{s.eyebrow}</Eyebrow>
+                  </div>
+
+                  <Display
+                    lead={s.lead}
+                    trail={s.trail}
+                    size="md"
+                    className="mt-4"
+                  />
+
+                  <Body className="mt-5 max-w-lg">{s.body}</Body>
+
+                  <p className="mt-5 flex items-center gap-2">
+                    <LiveChip>live</LiveChip>
+                    <span className="text-[0.8rem] text-mute">{s.proof}</span>
+                  </p>
+
+                  <div className="mt-7 flex flex-wrap items-center gap-3">
+                    <Pill href={`/work/${s.slug}`} variant="light">
+                      Read the case study <Nudge />
+                    </Pill>
+                    <Pill href="/contact" variant="ghost">
+                      Build something like it
+                    </Pill>
                   </div>
                 </div>
-              </details>
+
+                <Frame size="lg" label={s.caption}>
+                  {s.diorama}
+                </Frame>
+              </div>
+            </FadeUp>
+          ))}
+        </div>
+      </Section>
+
+      {/* ══ How an engagement runs ══════════════════════════════════ */}
+      <Section tone="bone" id="process">
+        <FadeUp>
+          <SectionIntro
+            align="center"
+            eyebrow="How we work"
+            lead="Four stages,"
+            trail="and you can leave after any of them"
+            body="No lock-in, no phased invoice you cannot exit. If the scope says the system is wrong, we would rather tell you at stage one."
+          />
+        </FadeUp>
+
+        <Stagger
+          as="ol"
+          className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
+            {chapters.map((c) => (
+              <Item
+                as="li"
+                key={c.n}
+                className="group relative overflow-hidden rounded-xl border border-line bg-paper p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-frame"
+              >
+                <span
+                  aria-hidden
+                  className="font-serif text-5xl leading-none text-line-strong transition-colors duration-200 group-hover:text-signal/40"
+                >
+                  {c.n}
+                </span>
+                <p className="mt-5 text-[0.95rem] font-medium text-ink">
+                  {c.title}
+                </p>
+                <p className="mt-2 text-[0.85rem] leading-relaxed text-ink-soft">
+                  {c.body}
+                </p>
+              </Item>
+            ))}
+        </Stagger>
+
+        <FadeUp className="mt-10 text-center">
+          <Pill href="/studio">
+            How the studio works <Nudge />
+          </Pill>
+        </FadeUp>
+      </Section>
+
+      {/* ══ Industries ══════════════════════════════════════════════ */}
+      <Section tone="alt" id="industries">
+        <FadeUp>
+          <SectionIntro
+            eyebrow="Where our systems run"
+            lead="Five sectors,"
+            trail="each with a system behind it"
+          />
+        </FadeUp>
+
+        <FadeUp className="mt-12">
+          <div className="overflow-hidden rounded-xl border border-line bg-paper">
+            {industries.map((ind, i) => (
+              <Link
+                key={ind.name}
+                href={ind.href}
+                className={`group grid gap-2 px-6 py-6 transition-colors hover:bg-bone/70 sm:grid-cols-[minmax(0,13rem)_1fr_auto] sm:items-center sm:gap-6 ${
+                  i > 0 ? "border-t border-line" : ""
+                }`}
+              >
+                <span className="text-[1rem] font-medium text-ink">
+                  {ind.name}
+                </span>
+                <span className="text-[0.875rem] leading-relaxed text-ink-soft">
+                  {ind.body}
+                </span>
+                <span className="flex items-center gap-3 font-mono text-[0.6rem] uppercase tracking-wider text-mute">
+                  {ind.systems}
+                  <span
+                    aria-hidden
+                    className="text-signal opacity-0 transition-opacity group-hover:opacity-100"
+                  >
+                    →
+                  </span>
+                </span>
+              </Link>
             ))}
           </div>
+        </FadeUp>
+      </Section>
 
-          {/* The flow — how each problem becomes a scalable system */}
-          <div className="mx-auto mt-20 max-w-5xl">
-            <Reveal className="mx-auto max-w-2xl text-center">
-              <p className="text-sm font-semibold uppercase tracking-wider text-blue-700">
-                The flow
-              </p>
-              <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-                How we decode a problem and make it scale
-              </h3>
-              <p className="mt-3 text-slate-600">
-                Same six stages in every industry — each one proven by a
-                system that is live right now.
-              </p>
-            </Reveal>
-            <div className="mt-10">
-              <ProcessFlow />
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ══ Word grid ═══════════════════════════════════════════════ */}
+      <Section tone="bone" id="capabilities">
+        <FadeUp>
+          <SectionIntro
+            align="center"
+            lead="Everything a company needs built,"
+            trail="under one roof"
+            body="AI platforms, SaaS products, mobile apps, ERP suites, cloud infrastructure — shipped by the same five engineers, so nothing gets lost between vendors."
+          />
+        </FadeUp>
 
-      {/* ── Case studies — dark stacked panel ────────────────── */}
-      <section className="bg-[#0C1017] py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6">
+        <FadeUp className="mt-12">
+          <WordGrid />
+        </FadeUp>
+
+        <FadeUp className="mt-12">
+          <LeadIns
+            items={[
+              {
+                lead: "One team, one contract",
+                body: "The AI work and the ERP work and the mobile work are the same five people, so integration is not a project of its own.",
+              },
+              {
+                lead: "Every region supported",
+                body: `Systems live across ${stats.regions} regions, each one supported in its own timezone rather than in ours.`,
+              },
+              {
+                lead: "NDA by default",
+                body: "Most of our work is under one. This site shows regions, statuses and stacks rather than client internals — deliberately.",
+              },
+            ]}
+          />
+        </FadeUp>
+      </Section>
+
+      {/* ══ Live board ══════════════════════════════════════════════ */}
+      <Section tone="ink" id="live">
+        <FadeUp>
           <div className="flex flex-wrap items-end justify-between gap-6">
-            <div className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-wider text-blue-400">
-                Case studies
-              </p>
-              <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-                Proven systems, live status attached
+            <div>
+              <p className="mono-label !text-bone/45">Live board</p>
+              <h2 className="display-lg mt-4 text-bone">
+                Every system we have shipped,{" "}
+                <span className="text-bone/50">and its real status</span>
               </h2>
             </div>
             <Link
               href="/work"
-              className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:border-white/60"
+              className="group inline-flex items-center gap-2 rounded-[10px] border border-bone/20 px-5 py-2.5 text-sm font-medium text-bone transition-colors hover:bg-bone/10"
             >
-              View all {consoleProjects.length}
-              <ArrowRight aria-hidden className="h-4 w-4" />
+              All case studies <Nudge />
             </Link>
           </div>
+        </FadeUp>
 
-          {/* Sticky-stacked cards — each one parks a little lower */}
-          <div className="mt-12 space-y-8">
-            {consoleProjects.map((p, i) => {
-              const deep = getPortfolioProjectById(p.slug);
-              return (
-                <Link
-                  key={p.slug}
-                  href={`/work/${p.slug}`}
-                  className="group sticky block overflow-hidden rounded-3xl border border-white/10 bg-[#151A22] shadow-2xl"
-                  style={{ top: `${96 + i * 20}px` }}
-                >
-                  <div className="grid gap-0 md:grid-cols-2">
-                    {deep && (
-                      <div className="relative aspect-[16/10] overflow-hidden md:aspect-auto md:min-h-[320px]">
-                        <Image
-                          src={deep.image}
-                          alt={`${p.name} — product screenshot`}
-                          fill
-                          sizes="(min-width: 768px) 50vw, 100vw"
-                          className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
-                        />
-                        <div
-                          aria-hidden
-                          className="absolute inset-0 bg-gradient-to-r from-transparent to-[#151A22]/40"
-                        />
-                      </div>
-                    )}
-                    <div className="flex flex-col justify-center p-8 lg:p-10">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span className="rounded-full bg-white/10 px-3 py-1 font-mono text-xs uppercase tracking-wider text-slate-300">
-                          / {p.sector} /
-                        </span>
-                        <span className="flex items-center gap-1.5">
-                          <StatusDot status={p.status} />
-                          <span className="text-xs font-medium text-slate-400">
-                            {p.status === "live"
-                              ? "Live in production"
-                              : "In build"}
-                          </span>
-                        </span>
-                      </div>
-                      <h3 className="mt-4 font-display text-3xl font-semibold tracking-tight text-white">
+        <FadeUp className="mt-10">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[640px] border-collapse text-left">
+              <thead>
+                <tr className="border-b border-bone/15">
+                  {["System", "Sector", "Region", "Stack", "Status"].map((h) => (
+                    <th
+                      key={h}
+                      scope="col"
+                      className="pb-3 font-mono text-[0.6rem] uppercase tracking-wider text-bone/40"
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {consoleProjects.map((p) => (
+                  <tr
+                    key={p.slug}
+                    className="group border-b border-bone/10 transition-colors hover:bg-bone/[0.04]"
+                  >
+                    <td className="py-4 pr-4">
+                      <Link
+                        href={`/work/${p.slug}`}
+                        className="text-[0.9rem] font-medium text-bone"
+                      >
                         {p.name}
-                      </h3>
-                      <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-400">
+                        <span
+                          aria-hidden
+                          className="ml-2 inline-block text-signal opacity-0 transition-opacity group-hover:opacity-100"
+                        >
+                          →
+                        </span>
+                      </Link>
+                      <p className="mt-0.5 max-w-xs text-[0.75rem] leading-snug text-bone/45">
                         {p.summary}
                       </p>
-                      <p className="mt-4 font-mono text-xs text-slate-500">
-                        {p.region} · {p.city} · {p.stack.join(" · ")}
-                      </p>
-                      <span className="mt-6 inline-flex w-fit items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-semibold text-white transition-colors group-hover:border-white/60">
-                        View case study
-                        <ArrowRight
+                    </td>
+                    <td className="py-4 pr-4 text-[0.8rem] text-bone/60">
+                      {p.sector}
+                    </td>
+                    <td className="py-4 pr-4 font-mono text-[0.72rem] text-bone/60">
+                      {p.city} · {p.region}
+                    </td>
+                    <td className="py-4 pr-4">
+                      <span className="flex flex-wrap gap-1">
+                        {p.stack.slice(0, 3).map((t) => (
+                          <span
+                            key={t}
+                            className="rounded border border-bone/15 px-1.5 py-0.5 font-mono text-[0.58rem] text-bone/55"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </span>
+                    </td>
+                    <td className="py-4">
+                      <span className="inline-flex items-center gap-1.5 font-mono text-[0.62rem] uppercase tracking-wider">
+                        <span
                           aria-hidden
-                          className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                          className={`h-1.5 w-1.5 rounded-full ${
+                            p.status === "live"
+                              ? "pulse-dot bg-emerald-400"
+                              : "bg-bone/35"
+                          }`}
                         />
+                        <span
+                          className={
+                            p.status === "live"
+                              ? "text-emerald-300"
+                              : "text-bone/45"
+                          }
+                        >
+                          {p.status}
+                        </span>
                       </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div>
-      </section>
+        </FadeUp>
+      </Section>
 
-      {/* ── Evidence panel — all systems + giant honest stat ─── */}
-      <section className="mx-auto max-w-7xl px-6 py-16 lg:py-24">
-        <div className="grid overflow-hidden rounded-[2.5rem] border border-slate-200 shadow-sm lg:grid-cols-2">
-          <div className="bg-[#0C1017] p-8 lg:p-12">
-            <h2 className="font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-              All systems, reporting
-            </h2>
-            <p className="mt-2 text-sm text-slate-400">
-              The status column is computed, not claimed.
-            </p>
-            <ul className="mt-8 space-y-4">
-              {consoleProjects.map((p) => (
-                <li key={p.slug}>
-                  <Link
-                    href={`/work/${p.slug}`}
-                    className="flex items-center justify-between gap-4 border-b border-white/10 pb-4 transition-colors hover:border-white/25"
-                  >
-                    <span className="flex items-center gap-3">
-                      <StatusDot status={p.status} />
-                      <span className="text-sm font-medium text-white">
-                        {p.name}
+      {/* ══ Numbers ═════════════════════════════════════════════════ */}
+      <StatsBand />
+
+      {/* ══ Testimonials — renders only when a real quote exists ════ */}
+      {testimonials.length > 0 ? (
+        <Section tone="bone" id="testimonials">
+          <FadeUp>
+            <SectionIntro
+              align="center"
+              eyebrow="In their words"
+              lead="What the people who run these systems"
+              trail="say about them"
+            />
+          </FadeUp>
+          <FadeUp className="mt-12">
+            <div className="grid gap-4 md:grid-cols-2">
+              {testimonials.map((t) => (
+                <figure
+                  key={t.author}
+                  className="rounded-xl border border-line bg-paper p-7"
+                >
+                  <blockquote className="font-serif text-xl leading-snug text-ink">
+                    “{t.quote}”
+                  </blockquote>
+                  <figcaption className="mt-5 flex items-center justify-between border-t border-line pt-4">
+                    <span className="text-[0.85rem] text-ink">
+                      <span className="font-medium">{t.author}</span>
+                      <span className="text-mute">
+                        {" "}
+                        · {t.role}, {t.org}
                       </span>
                     </span>
-                    <span className="font-mono text-xs uppercase tracking-wider text-slate-500">
-                      {p.region} ·{" "}
-                      {p.status === "live" ? "LIVE" : "IN BUILD"}
-                    </span>
-                  </Link>
-                </li>
+                    <Link
+                      href={`/work/${t.slug}`}
+                      className="font-mono text-[0.6rem] uppercase tracking-wider text-signal"
+                    >
+                      the system →
+                    </Link>
+                  </figcaption>
+                </figure>
               ))}
-            </ul>
-          </div>
-          <div className="relative flex flex-col items-center justify-center bg-gradient-to-br from-blue-700 to-indigo-900 p-10 text-center lg:p-12">
-            <p className="stat-outline font-display text-7xl font-bold tracking-tight sm:text-8xl">
-              <CountUp value={stats.emediciInstalls} duration={1800} />
-            </p>
-            <p className="mt-3 text-sm font-semibold uppercase tracking-wider text-blue-200">
-              installs · eMedici · Google Play
-            </p>
-            <p className="mt-10 font-display text-5xl font-semibold text-white">
-              <CountUp value={`${stats.emediciRating}★`} duration={1800} />
-            </p>
-            <p className="mt-2 text-sm font-semibold uppercase tracking-wider text-blue-200">
-              Play Store rating · eMedici
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── KPI receipts — every number names its system ─────── */}
-      <section className="mx-auto max-w-7xl px-6 pb-16 lg:pb-24">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { v: "7-layer", l: "AWS architecture", src: "Verse AI" },
-            { v: "39 · 57", l: "tables · relationships", src: "Pinnacle HMS" },
-            { v: "5", l: "deep-learning modules", src: "ARM Tech ERP" },
-            { v: "6", l: "role-based portals", src: "Pinnacle HMS" },
-          ].map((k, i) => (
-            <Reveal key={`${k.v}-${k.l}`} delay={i * 70}>
-            <div className="h-full rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
-              <p className="font-display text-3xl font-semibold tracking-tight text-slate-900">
-                <CountUp value={k.v} />
-              </p>
-              <p className="mt-1 text-sm font-medium text-slate-600">{k.l}</p>
-              <p className="mt-3 font-mono text-xs uppercase tracking-wider text-blue-600">
-                {k.src}
-              </p>
             </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+          </FadeUp>
+        </Section>
+      ) : null}
 
-      {/* ── Client feedback — a real client, on camera ────────── */}
-      <section className="border-t border-slate-200 bg-slate-50">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-16 lg:grid-cols-[1.2fr_1fr] lg:py-24">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
-              Client feedback
-            </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-              Hear it from a client, on camera
-            </h2>
-            <p className="mt-4 max-w-xl text-lg leading-relaxed text-slate-600">
-              A client review of the multi-tenant WhatsApp audit platform we
-              built for them — unedited, straight from our channel. Most of
-              our work is under NDA; when a client is willing to say it on
-              camera, we let them do the talking.
-            </p>
-            <a
-              href="https://www.youtube.com/@CodeGang007"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700"
-            >
-              More on our YouTube channel
-              <ArrowRight aria-hidden className="h-4 w-4" />
-            </a>
-          </div>
-          <div className="mx-auto w-full max-w-[300px]">
-            <div className="overflow-hidden rounded-[2rem] border-8 border-slate-900 bg-slate-900 shadow-2xl">
-              <iframe
-                src="https://www.youtube-nocookie.com/embed/cvpkOsyEPR4"
-                title="Client review — Multi-Tenant WhatsApp Audit Platform"
-                loading="lazy"
-                allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="aspect-[9/16] w-full"
-              />
-            </div>
-            <p className="mt-3 text-center font-mono text-xs uppercase tracking-wider text-slate-400">
-              Client review · WhatsApp audit platform
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* ══ FAQ ═════════════════════════════════════════════════════ */}
+      <Section tone="alt" id="faq">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-20">
+          <FadeUp>
+            <Eyebrow className="mb-5">Questions</Eyebrow>
+            <Display
+              lead="The things"
+              trail="everyone asks first"
+              size="md"
+            />
+            <Body className="mt-5">
+              If yours is not here, ask an engineer directly — you will get an
+              answer from the person who would build it.
+            </Body>
+            <Pill href="/contact" variant="light" className="mt-7">
+              Ask a question <Nudge />
+            </Pill>
+          </FadeUp>
 
-      {/* ── Client feedback — renders only when real quotes exist ── */}
-      {testimonials.length > 0 && (
-        <section className="mx-auto max-w-7xl px-6 pb-16 lg:pb-24">
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
-              Client feedback
-            </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-              What the people running our systems say
-            </h2>
-          </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {testimonials.map((t) => (
-              <figure
-                key={`${t.org}-${t.author}`}
-                className="flex flex-col rounded-3xl bg-[#0C1017] p-8"
-              >
-                <span
-                  aria-hidden
-                  className="font-display text-5xl leading-none text-blue-500"
-                >
-                  &ldquo;
-                </span>
-                <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-slate-300">
-                  {t.quote}
-                </blockquote>
-                <figcaption className="mt-6 border-t border-white/10 pt-5">
-                  <p className="text-sm font-semibold text-white">{t.author}</p>
-                  <p className="mt-0.5 text-xs text-slate-400">
-                    {t.role}, {t.org}
-                  </p>
-                  <Link
-                    href={`/work/${t.slug}`}
-                    className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300"
-                  >
-                    See the system
-                    <ArrowRight aria-hidden className="h-3 w-3" />
-                  </Link>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ── Tech stack marquee ───────────────────────────────── */}
-      <section className="border-y border-slate-200 bg-slate-50 py-14">
-        <Reveal className="mx-auto max-w-2xl px-6 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
-            Technology
-          </p>
-          <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            The stack behind the systems
-          </h2>
-          <p className="mt-3 text-slate-600">
-            Pulled from what is actually running in production — not a logo
-            wall.
-          </p>
-        </Reveal>
-        <div className="mt-10 space-y-4">
-          <Marquee duration="55s">
-            {stackChips.slice(0, 13).map((t) => (
-              <span
-                key={t}
-                className="mr-4 rounded-full border border-slate-200 bg-white px-5 py-2.5 font-mono text-sm text-slate-700 shadow-sm"
-              >
-                {t}
-              </span>
-            ))}
-          </Marquee>
-          <Marquee duration="55s" reverse>
-            {stackChips.slice(13).map((t) => (
-              <span
-                key={t}
-                className="mr-4 rounded-full border border-slate-200 bg-white px-5 py-2.5 font-mono text-sm text-slate-700 shadow-sm"
-              >
-                {t}
-              </span>
-            ))}
-          </Marquee>
+          <FadeUp>
+            <dl>
+              {faq.map((f, i) => (
+                <div key={f.q} className={i > 0 ? "border-t border-line" : ""}>
+                  <dt className="pt-6 text-[1rem] font-medium text-ink">
+                    {f.q}
+                  </dt>
+                  <dd className="pb-6 pt-2 text-[0.9rem] leading-relaxed text-ink-soft">
+                    {f.a}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </FadeUp>
         </div>
-      </section>
+      </Section>
 
-      {/* ── FAQ ──────────────────────────────────────────────── */}
-      <section id="faq" className="mx-auto max-w-3xl scroll-mt-20 px-6 py-16 lg:py-24">
-        <p className="text-center text-sm font-semibold uppercase tracking-wider text-blue-600">
-          FAQ
-        </p>
-        <h2 className="mt-2 text-center font-display text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-          Common questions
-        </h2>
-        <div className="mt-10">
-          {faq.map((f) => (
-            <details
-              key={f.q}
-              className="group border-t border-slate-200 py-5 last:border-b"
-            >
-              <summary className="flex cursor-pointer list-none items-baseline justify-between gap-6 text-base font-semibold text-slate-900 [&::-webkit-details-marker]:hidden">
-                {f.q}
-                <span aria-hidden className="text-slate-400 group-open:hidden">
-                  +
-                </span>
-                <span
-                  aria-hidden
-                  className="hidden text-slate-400 group-open:inline"
-                >
-                  −
-                </span>
-              </summary>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                {f.a}
-              </p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Final CTA — dark rounded panel ───────────────────── */}
-      <section className="mx-auto max-w-7xl px-6 pb-20">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-[#0C1017] px-8 py-16 text-center lg:px-16 lg:py-20">
-          <div aria-hidden className="glow-blue pointer-events-none absolute inset-0" />
-          <div
-            aria-hidden
-            className="blob left-[10%] top-[-30%] h-[300px] w-[300px] bg-blue-600/40"
-          />
-          <h2 className="relative mx-auto max-w-3xl font-display text-3xl font-semibold tracking-tight text-white sm:text-5xl">
-            Have a system that needs to exist?
-          </h2>
-          <p className="relative mx-auto mt-4 max-w-xl text-lg text-slate-300">
-            Tell us what you are trying to ship. Your message lands in the
-            founders&apos; Telegram the moment you send it.
-          </p>
-          <div className="relative mt-9 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/contact"
-              className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-slate-900 transition-colors hover:bg-blue-50"
-            >
-              Start a project
-              <ArrowRight
-                aria-hidden
-                className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-              />
-            </Link>
-            <a
-              href={`mailto:${site.email}`}
-              className="inline-flex items-center rounded-full border border-white/25 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:border-white/60"
-            >
-              {site.email}
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* ══ Closing CTA ═════════════════════════════════════════════ */}
+      <FooterCta />
     </>
   );
 }

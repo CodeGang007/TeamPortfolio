@@ -1,8 +1,26 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { stats, site } from "@/content/site";
 import WorldClock from "@/components/console/WorldClock";
+import { FadeUp, Item, Stagger } from "@/components/site/motion";
+import {
+  Gallery,
+  Plate,
+  SectionNav,
+  TrustRow,
+  VisualLead,
+} from "@/components/site/blocks";
+import {
+  Body,
+  Display,
+  LeadIns,
+  Nudge,
+  Pill,
+  Section,
+  SectionIntro,
+  Shell,
+} from "@/components/site/primitives";
 
 export const metadata: Metadata = {
   title: "Studio",
@@ -27,7 +45,6 @@ const founders = [
     line: "Architecture and the code that has to survive production.",
     quote: "If it can't survive production, it isn't finished.",
     avatar: "/avatars/founder-eng.png",
-    card: "linear-gradient(135deg, #1D4ED8 0%, #1E1B4B 100%)",
   },
   {
     name: "Subhadip Sasmal",
@@ -35,7 +52,6 @@ const founders = [
     line: "Interfaces that respect the person using them.",
     quote: "Good design is the shortest path between a user and their goal.",
     avatar: "/avatars/founder-design.png",
-    card: "linear-gradient(135deg, #4338CA 0%, #172554 100%)",
   },
   {
     name: "Sushant Choudhary",
@@ -43,7 +59,6 @@ const founders = [
     line: "Runs the engagements and keeps the roadmap honest.",
     quote: "Scope honestly, then ship exactly that.",
     avatar: "/avatars/founder-strategy.png",
-    card: "linear-gradient(135deg, #0E7490 0%, #172554 100%)",
   },
   {
     name: "Abhrajit",
@@ -51,7 +66,6 @@ const founders = [
     line: "Builds and hardens the systems behind the case studies.",
     quote: "Simple systems survive. Clever ones page you at 3 a.m.",
     avatar: "/avatars/founder-backend.png",
-    card: "linear-gradient(135deg, #047857 0%, #0F172A 100%)",
   },
   {
     name: "Sourajit",
@@ -59,7 +73,6 @@ const founders = [
     line: "Ships features and keeps the pipelines green.",
     quote: "Code is read a hundred times more often than it is written.",
     avatar: "/avatars/founder-fullstack.png",
-    card: "linear-gradient(135deg, #7C3AED 0%, #1E1B4B 100%)",
   },
 ];
 
@@ -82,130 +95,241 @@ const principles = [
   },
 ];
 
+const sections = [
+  { id: "how-we-work", label: "How we work" },
+  { id: "team", label: "The team" },
+  { id: "engagement", label: "Engagement" },
+  { id: "inside", label: "Inside the studio" },
+] as const;
+
+const trust = [
+  { value: "5", label: "Engineers", sub: "the whole studio" },
+  { value: String(stats.live), label: "Systems live", sub: `${stats.regions} regions` },
+  { value: stats.projectsDelivered, label: "Projects delivered", sub: "most under NDA" },
+  { value: "0", label: "Account managers", sub: "no sales layer" },
+] as const;
+
+/** How an engagement actually runs, in the terms a buyer asks about. */
+const engagement = [
+  { lead: "Your repository", body: "We work in your organisation from the first commit. You own the code throughout, not on final payment." },
+  { lead: "Your cloud", body: "Deployment goes into your account under your keys. We hand over infrastructure, not access to a hosted black box." },
+  { lead: "Fixed scope, written down", body: "What the system does and what shipping means are agreed in writing before build starts." },
+  { lead: "Timezone overlap agreed", body: "We work across five client regions and set the overlap explicitly rather than pretending it is free." },
+  { lead: "Runbooks included", body: "Handover documentation is in the estimate, so ending an engagement is not a cliff." },
+  { lead: "NDA by default", body: "Confidentiality is the starting position, which is why most of our delivered work is unnamed on this site." },
+];
+
+const inside = [
+  { label: "Studio — the five of us" },
+  { label: "Review — pairing on retrieval" },
+  { label: "Whiteboard — clinical schema" },
+  { label: "Ship day — Verse AI cutover" },
+];
+
 export default function StudioPage() {
   return (
     <>
-      <section className="border-b border-slate-200 bg-gradient-to-b from-blue-50/60 to-white">
-        <div className="mx-auto max-w-7xl px-6 pb-16 pt-32 lg:pb-20 lg:pt-36">
-          <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
-            Studio
-          </p>
-          <h1 className="mt-2 font-display text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-            Five engineers. No hand-off.
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
-            CodeGang is a software engineering studio. We build production AI,
-            multi-tenant platforms, and mobile apps for clients in Brazil,
-            Australia, India, the USA, and Europe — and we keep them running
-            after launch.
-          </p>
-          <WorldClock className="mt-8" />
-        </div>
-      </section>
+      {/* ══ Page head ═══════════════════════════════════════════════ */}
+      <section className="relative isolate overflow-hidden bg-bone pb-12 pt-40 sm:pt-48">
+        <div
+          aria-hidden
+          className="blueprint mask-fade-y absolute inset-0 -z-10"
+        />
+        <Shell>
+          <VisualLead
+            eyebrow="Studio"
+            plate={
+              <Plate
+                label="Studio — the five of us"
+                ratio="16/11"
+                className="shadow-frame"
+              />
+            }
+          >
+            <Display size="xl" lead="Five engineers." trail="No hand-off." />
+            <Body className="mt-6 max-w-xl text-base">
+              CodeGang is a software engineering studio. We build production AI,
+              multi-tenant platforms, and mobile apps for clients in Brazil,
+              Australia, India, the USA and Europe — and we keep them running
+              after launch.
+            </Body>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Pill href="#team">
+                Meet the team <Nudge />
+              </Pill>
+              <Pill href="/our-values" variant="light">
+                Read our values
+              </Pill>
+            </div>
+          </VisualLead>
 
-      {/* Principles — MathCo-style ruled cards on a powder block */}
-      <section className="bg-blue-100/60">
-        <div className="mx-auto max-w-7xl px-6 py-16 lg:py-20">
-          <h2 className="text-center font-display text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            How we work
-          </h2>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2">
-            {principles.map((p) => (
-              <div key={p.title} className="border border-slate-900/25">
-                <h3 className="border-b border-slate-900/25 px-6 py-4 text-base font-semibold text-slate-900">
-                  {p.title}
-                </h3>
-                <p className="px-6 py-5 text-sm leading-relaxed text-slate-700">
-                  {p.body}
-                </p>
-              </div>
-            ))}
+          <WorldClock className="mt-12" />
+
+          <div className="mt-12">
+            <TrustRow items={trust} />
           </div>
-        </div>
+        </Shell>
       </section>
 
-      {/* Founders */}
-      <section id="team" className="scroll-mt-20 border-y border-slate-200 bg-slate-50">
-        <div className="mx-auto max-w-7xl px-6 py-16 lg:py-20">
-          <h2 className="font-display text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            The faces of the studio
-          </h2>
-          <p className="mt-3 max-w-2xl text-lg text-slate-600">
-            Five engineers. The whole team still fits on one line of a standup.
-          </p>
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {founders.map((f) => (
-              <div
-                key={f.name}
-                className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
-              >
-                {/* Poster panel — grid lines, big name, cutout avatar */}
-                <div
-                  className="relative overflow-hidden p-8"
-                  style={{
-                    backgroundImage: `linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px), ${f.card}`,
-                    backgroundSize: "44px 44px, 44px 44px, 100% 100%",
-                  }}
-                >
-                  <p className="font-display text-3xl font-bold leading-[0.97] tracking-tight text-white sm:text-4xl">
-                    {f.name.split(" ")[0]}
-                    {f.name.includes(" ") && (
-                      <>
-                        <br />
+      <SectionNav sections={sections} />
+
+      {/* ══ Principles ══════════════════════════════════════════════ */}
+      <Section tone="alt" id="how-we-work" className="scroll-mt-32">
+        <FadeUp>
+          <SectionIntro
+            align="center"
+            eyebrow="How we work"
+            lead="Four rules"
+            trail="we do not break"
+          />
+        </FadeUp>
+
+        <Stagger className="mt-12 grid gap-4 sm:grid-cols-2">
+          {principles.map((p) => (
+            <Item
+              key={p.title}
+              className="overflow-hidden rounded-xl border border-line bg-paper"
+            >
+              <h3 className="border-b border-line px-6 py-4 text-[0.95rem] font-medium text-ink">
+                {p.title}
+              </h3>
+              <p className="px-6 py-5 text-[0.875rem] leading-relaxed text-ink-soft">
+                {p.body}
+              </p>
+            </Item>
+          ))}
+        </Stagger>
+      </Section>
+
+      {/* ══ The team ════════════════════════════════════════════════ */}
+      <Section tone="bone" id="team" className="scroll-mt-32">
+        <FadeUp>
+          <SectionIntro
+            eyebrow="The team"
+            lead="The faces"
+            trail="of the studio"
+            body="Five engineers. The whole team still fits on one line of a standup."
+          />
+        </FadeUp>
+
+        <Stagger className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {founders.map((f) => (
+            <Item
+              key={f.name}
+              className="group overflow-hidden rounded-xl border border-line bg-paper transition-all duration-300 hover:-translate-y-1 hover:shadow-frame"
+            >
+              {/* Poster panel — blueprint grid, name set large, cutout portrait */}
+              <div className="blueprint-fine relative overflow-hidden bg-bone-alt px-6 pb-0 pt-6">
+                <p className="text-[1.6rem] font-medium leading-[1.05] tracking-tight text-ink">
+                  {f.name.split(" ")[0]}
+                  {f.name.includes(" ") && (
+                    <>
+                      <br />
+                      <span className="text-mute">
                         {f.name.split(" ").slice(1).join(" ")}
-                      </>
-                    )}
-                  </p>
-                  <p className="mb-16 mt-4 max-w-[55%] text-sm font-semibold text-sky-300 sm:mb-20">
-                    {f.focus}
-                  </p>
-                  <Image
-                    src={f.avatar}
-                    alt=""
-                    width={200}
-                    height={200}
-                    className="absolute -bottom-1 right-3 h-32 w-32 object-contain drop-shadow-2xl sm:h-36 sm:w-36"
-                  />
-                </div>
-                {/* Motto */}
-                <figure className="p-7">
-                  <blockquote className="font-display text-lg font-medium leading-snug tracking-tight text-slate-900">
-                    &ldquo;{f.quote}&rdquo;
-                  </blockquote>
-                  <figcaption className="mt-3 text-sm text-slate-500">
-                    {f.line}
-                  </figcaption>
-                </figure>
+                      </span>
+                    </>
+                  )}
+                </p>
+                <p className="mono-label mb-14 mt-3 max-w-[58%] !text-signal">
+                  {f.focus}
+                </p>
+                <Image
+                  src={f.avatar}
+                  alt=""
+                  width={200}
+                  height={200}
+                  className="absolute -bottom-1 right-2 h-32 w-32 object-contain transition-transform duration-500 group-hover:scale-105 sm:h-36 sm:w-36"
+                />
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* CTA */}
-      <section className="mx-auto max-w-7xl px-6 py-16">
-        <div className="rounded-2xl bg-blue-600 px-8 py-12 lg:px-12">
+              <figure className="border-t border-line p-6">
+                <blockquote className="font-serif text-[1.2rem] leading-snug text-ink">
+                  &ldquo;{f.quote}&rdquo;
+                </blockquote>
+                <figcaption className="mt-3 text-[0.82rem] text-mute">
+                  {f.line}
+                </figcaption>
+              </figure>
+            </Item>
+          ))}
+        </Stagger>
+      </Section>
+
+      {/* ══ Engagement ══════════════════════════════════════════════ */}
+      <Section tone="alt" id="engagement" className="blueprint scroll-mt-32">
+        <FadeUp>
+          <VisualLead
+            eyebrow="Engagement"
+            reverse
+            plate={
+              <Plate
+                label="Engagement — scope to handover"
+                ratio="1/1"
+                className="shadow-frame"
+              />
+            }
+          >
+            <Display size="md" lead="What working with us" trail="actually looks like" />
+            <Body className="mt-5 max-w-lg">
+              Six terms that hold on every engagement, whether it runs a month
+              or a year.
+            </Body>
+          </VisualLead>
+        </FadeUp>
+        <FadeUp className="mt-12">
+          <LeadIns items={engagement} />
+        </FadeUp>
+        <FadeUp className="mt-10">
+          <Link
+            href="/services"
+            className="inline-block text-[0.875rem] font-medium text-signal hover:underline"
+          >
+            See every service we offer →
+          </Link>
+        </FadeUp>
+      </Section>
+
+      {/* ══ Inside the studio ═══════════════════════════════════════ */}
+      <Section tone="bone" id="inside" className="scroll-mt-32">
+        <FadeUp>
+          <SectionIntro
+            eyebrow="Inside the studio"
+            lead="Photographs pending"
+            trail="rather than stock photography"
+            body="These fill in with real pictures of the room and the work. Until they exist they stay marked, which is the same rule that governs every number on this site."
+          />
+        </FadeUp>
+        <div className="mt-12">
+          <Gallery items={inside} />
+        </div>
+      </Section>
+
+      {/* ══ CTA ═════════════════════════════════════════════════════ */}
+      <Section tone="ink">
+        <FadeUp>
           <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
-            <h2 className="max-w-2xl font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-              Talk to the people who build it.
+            <h2 className="display-md max-w-xl text-bone">
+              Talk to the people{" "}
+              <span className="text-bone/50">who actually build it.</span>
             </h2>
-            <div className="flex flex-wrap gap-4">
-              <Link
+            <div className="flex flex-wrap gap-3">
+              <a
                 href="/contact"
-                className="rounded-lg bg-white px-6 py-3 text-sm font-semibold text-blue-700 shadow-sm transition-colors hover:bg-blue-50"
+                className="group inline-flex items-center gap-2 rounded-[10px] bg-bone px-5 py-3 text-sm font-medium text-ink transition-colors hover:bg-white"
               >
-                Chat with an engineer
-              </Link>
+                Chat with an engineer <Nudge />
+              </a>
               <a
                 href={`mailto:${site.email}`}
-                className="rounded-lg border border-blue-300 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+                className="inline-flex items-center rounded-[10px] border border-bone/25 px-5 py-3 text-sm font-medium text-bone transition-colors hover:bg-bone/10"
               >
                 {site.email}
               </a>
             </div>
           </div>
-        </div>
-      </section>
+        </FadeUp>
+      </Section>
     </>
   );
 }

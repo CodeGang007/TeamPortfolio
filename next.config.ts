@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
       // Console revamp — old routes keep whatever link equity exists
       { source: "/project", destination: "/work", permanent: true },
       { source: "/project/:slug", destination: "/work/:slug", permanent: true },
-      { source: "/about", destination: "/studio", permanent: true },
+      // /about is a real page again as of the bone revamp — no redirect.
       { source: "/team", destination: "/studio", permanent: true },
       { source: "/contactus", destination: "/contact", permanent: true },
     ];
