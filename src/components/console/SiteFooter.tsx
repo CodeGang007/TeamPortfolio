@@ -1,6 +1,25 @@
 import Link from "next/link";
-import { nav, site, stats } from "@/content/site";
+import { site, stats } from "@/content/site";
 import { consoleProjects } from "@/content/projects";
+import { industries, services } from "@/content/pages";
+
+/**
+ * Footer columns.
+ *
+ * Services and industries are derived from content/pages.ts rather than
+ * hand-listed, so a new page appears here the moment its spec exists and a
+ * removed one cannot leave a dead link behind.
+ */
+const company = [
+  { name: "About us", href: "/about" },
+  { name: "Our values", href: "/our-values" },
+  { name: "How we work", href: "/studio" },
+  { name: "Partners", href: "/partners" },
+  { name: "Careers", href: "/careers" },
+  { name: "Testimonials", href: "/testimonials" },
+  { name: "Resources", href: "/resources" },
+  { name: "Contact", href: "/contact" },
+];
 
 const legal = [
   { name: "Privacy", href: "/privacy" },
@@ -9,39 +28,72 @@ const legal = [
   { name: "License", href: "/license" },
 ];
 
+const elsewhere = [
+  { name: "GitHub", href: site.github },
+  { name: "LinkedIn", href: site.linkedin },
+  { name: "X", href: site.x },
+];
+
 export default function SiteFooter() {
   return (
-    <footer className="overflow-hidden border-t border-slate-200 bg-slate-50">
-      <div className="mx-auto max-w-7xl px-6 pt-14">
-        <div className="grid gap-10 md:grid-cols-[1fr_auto_auto_auto] md:gap-16">
+    <footer className="overflow-hidden border-t border-line bg-bone-alt">
+      <div className="mx-auto max-w-shell px-6 pt-16 lg:px-10 xl:px-16">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr_0.7fr] lg:gap-12">
           <div className="max-w-sm">
-            <p className="text-lg font-semibold tracking-tight text-slate-900">
+            <p className="font-serif text-[1.75rem] leading-none text-ink">
               CodeGang
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-slate-600">
+            <p className="mt-4 text-[0.875rem] leading-relaxed text-ink-soft">
               A five-engineer studio. {stats.projectsDelivered} projects
-              delivered for {stats.clientsServed} clients over the years —
-              most under NDA. {stats.live} systems live in production right
-              now across {stats.regions} regions.
+              delivered for {stats.clientsServed} clients over the years — most
+              under NDA. {stats.live} systems live in production right now
+              across {stats.regions} regions.
             </p>
             <a
               href={`mailto:${site.email}`}
-              className="mt-4 inline-block text-sm font-medium text-blue-600 hover:text-blue-700"
+              className="mt-5 inline-block text-[0.875rem] font-medium text-signal hover:underline"
             >
               {site.email}
             </a>
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Case studies
-            </p>
+            <p className="mono-label">Services</p>
+            <ul className="mt-4 space-y-2.5">
+              {services.map((s) => (
+                <li key={s.slug}>
+                  <Link
+                    href={`/services/${s.slug}`}
+                    className="text-[0.85rem] text-ink-soft transition-colors hover:text-ink"
+                  >
+                    {s.nav}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="mono-label">Industries</p>
+            <ul className="mt-4 space-y-2.5">
+              {industries.map((s) => (
+                <li key={s.slug}>
+                  <Link
+                    href={`/industries/${s.slug}`}
+                    className="text-[0.85rem] text-ink-soft transition-colors hover:text-ink"
+                  >
+                    {s.nav}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <p className="mono-label mt-8">Case studies</p>
             <ul className="mt-4 space-y-2.5">
               {consoleProjects.map((p) => (
                 <li key={p.slug}>
                   <Link
                     href={`/work/${p.slug}`}
-                    className="text-sm text-slate-600 transition-colors hover:text-slate-900"
+                    className="text-[0.85rem] text-ink-soft transition-colors hover:text-ink"
                   >
                     {p.name}
                   </Link>
@@ -51,15 +103,13 @@ export default function SiteFooter() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Company
-            </p>
+            <p className="mono-label">Company</p>
             <ul className="mt-4 space-y-2.5">
-              {nav.map((item) => (
+              {company.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-slate-600 transition-colors hover:text-slate-900"
+                    className="text-[0.85rem] text-ink-soft transition-colors hover:text-ink"
                   >
                     {item.name}
                   </Link>
@@ -67,31 +117,33 @@ export default function SiteFooter() {
               ))}
               <li>
                 <Link
-                  href="/project-request/custom"
-                  className="text-sm text-slate-600 transition-colors hover:text-slate-900"
+                  href="/portfolio"
+                  className="text-[0.85rem] text-ink-soft transition-colors hover:text-ink"
                 >
-                  Start a project
+                  Portfolio
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/project-request/custom"
+                  className="text-[0.85rem] font-medium text-signal transition-colors hover:underline"
+                >
+                  Start a project →
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Elsewhere
-            </p>
+            <p className="mono-label">Elsewhere</p>
             <ul className="mt-4 space-y-2.5">
-              {[
-                { name: "GitHub", href: site.github },
-                { name: "LinkedIn", href: site.linkedin },
-                { name: "X", href: site.x },
-              ].map((s) => (
+              {elsewhere.map((s) => (
                 <li key={s.name}>
                   <a
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-slate-600 transition-colors hover:text-slate-900"
+                    className="text-[0.85rem] text-ink-soft transition-colors hover:text-ink"
                   >
                     {s.name}
                   </a>
@@ -101,16 +153,16 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-slate-200 py-6 md:flex-row md:items-center md:justify-between">
-          <p className="text-xs text-slate-400">
-            © {new Date().getFullYear()} CodeGang
+        <div className="mt-14 flex flex-col gap-4 border-t border-line py-6 md:flex-row md:items-center md:justify-between">
+          <p className="font-mono text-[0.65rem] text-mute">
+            © {new Date().getFullYear()} CodeGang · NDA by default
           </p>
-          <ul className="flex gap-6">
+          <ul className="flex flex-wrap gap-6">
             {legal.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-xs text-slate-400 transition-colors hover:text-slate-600"
+                  className="font-mono text-[0.65rem] text-mute transition-colors hover:text-ink-soft"
                 >
                   {item.name}
                 </Link>
@@ -120,10 +172,10 @@ export default function SiteFooter() {
         </div>
       </div>
 
-      {/* MathCo-style giant wordmark — cropped by the footer edge */}
+      {/* Giant wordmark, cropped by the footer edge. */}
       <p
         aria-hidden
-        className="pointer-events-none -mb-[0.23em] select-none text-center font-display text-[17.5vw] font-bold leading-none tracking-tight text-blue-600/10"
+        className="pointer-events-none -mb-[0.24em] select-none text-center font-serif text-[19vw] leading-none tracking-tight text-ink/[0.055]"
       >
         CodeGang
       </p>

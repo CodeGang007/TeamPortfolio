@@ -260,8 +260,7 @@
   /* zinc-800 */
 }
 
-[data-slot="input"],
-textarea {
+[data-slot="input"] {
   color: white !important;
 }
 
@@ -330,20 +329,317 @@ input:-webkit-autofill:active {
 
 }
 
-/* Light enterprise surface — public marketing pages */
+/* ─────────────────────────────────────────────────────────────────
+   WARM-BONE MARKETING SURFACE
+   Scoped to .site-light so the dashboard / auth / legacy chrome that
+   lives outside the (site) route group is completely unaffected.
+   ───────────────────────────────────────────────────────────────── */
 .site-light {
   color-scheme: light;
+  --bone: #f5f3ef;
+  --bone-alt: #efece6;
+  --paper: #fbfaf8;
+  --ink: #1c1b19;
+  --ink-soft: #3d3a35;
+  --mute: #6b6862;
+  --line: #e2dfd8;
+  --line-strong: #d6d2c9;
+  --signal: #2e7df0;
+  background-color: var(--bone);
+  color: var(--ink);
+  /* Body copy wants a touch more warmth in its letterfit at these sizes. */
+  -webkit-font-smoothing: antialiased;
 }
 
 .site-light :focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
 .site-light ::selection {
-  background: #dbeafe;
-  color: #1e3a8a;
+  background: #d8e6fd;
+  color: #12305f;
+}
+
+/* Display headline: tight tracking + optical sizing. The second line of a
+   two-tone heading drops to --mute; that single move reads as art-directed. */
+.display-xl {
+  font-size: clamp(2.5rem, 5.6vw, 4.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.033em;
+  font-weight: 500;
+}
+
+.display-lg {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.06;
+  letter-spacing: -0.028em;
+  font-weight: 500;
+}
+
+.display-md {
+  font-size: clamp(1.5rem, 2.6vw, 2.125rem);
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  font-weight: 500;
+}
+
+/* Mono micro-label — the "Chapter I" / "Run this in Cofounder" register. */
+.mono-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+/* Faint architectural grid behind full-bleed bands. Two hairline families
+   at different scales so it reads as drafting paper, not as a table. */
+.blueprint {
+  background-image:
+    linear-gradient(to right, rgba(28, 27, 25, 0.038) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(28, 27, 25, 0.038) 1px, transparent 1px);
+  background-size: 88px 88px;
+}
+
+.blueprint-fine {
+  background-image:
+    linear-gradient(to right, rgba(28, 27, 25, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(28, 27, 25, 0.03) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Fades a texture out toward the edges so bands never end on a hard seam. */
+.mask-fade-y {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+.mask-fade-x {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+}
+
+/* Diorama chrome — the frame every system mock-up sits inside. */
+.diorama {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow:
+    0 1px 2px rgba(28, 27, 25, 0.04),
+    0 12px 32px -12px rgba(28, 27, 25, 0.14);
+}
+
+/* Animated data path used in the architecture / mesh dioramas. */
+.trace {
+  stroke-dasharray: 4 8;
+  animation: trace-flow 1.4s linear infinite;
+}
+
+@keyframes trace-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+/* A dot travelling along an SVG path (offset-path set inline per element). */
+@keyframes trace-travel {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+.trace-dot {
+  animation: trace-travel var(--travel, 3.2s) linear infinite;
+  animation-delay: var(--travel-delay, 0s);
+}
+
+/* Typewriter caret for the console diorama. */
+.caret::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: currentColor;
+  animation: caret-blink 1.2s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  95% {
+    opacity: 0;
+  }
+}
+
+/* ── Masked headline reveal ───────────────────────────────────────
+   Each line slides up from under its own baseline.
+
+   Critically, the RESTING state is visible: the transform only exists
+   inside the keyframes. If the IntersectionObserver never fires — JS
+   disabled, observer unsupported, an error earlier in the tree — the
+   heading is still readable. A reveal must never be able to permanently
+   hide content. */
+.maskline {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+}
+
+.maskline > span {
+  display: block;
+}
+
+.maskline.is-shown > span {
+  animation: mask-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes mask-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maskline.is-shown > span {
+    animation: none;
+  }
+}
+
+/* Hero height. Written as a real class rather than a Tailwind arbitrary
+   value — `min-h-[clamp(...)]` silently fails to generate because of the
+   commas inside the function, leaving the section at its content height. */
+.hero-min {
+  min-height: clamp(580px, 88vh, 880px);
+}
+
+/* ── Hero entrance ────────────────────────────────────────────────
+   Headline, copy and buttons rise in sequence on load; the floating
+   system cards slide in from the right and settle with a small pop.
+   Transform + opacity only, so the whole sequence stays on the
+   compositor and never blocks the first paint.
+   ───────────────────────────────────────────────────────────────── */
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-stagger {
+  animation: hero-enter 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes notif-slide {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes notif-pop {
+  0% {
+    transform: scale(0.9);
+  }
+  62% {
+    transform: scale(1.025);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Two nested elements so slide (outer) and pop (inner) compose without
+   fighting over the same transform property. */
+.notif-slide {
+  animation: notif-slide 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+.notif-pop {
+  animation: notif-pop 0.52s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-stagger,
+  .notif-slide,
+  .notif-pop {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hero scene parallax drift — transform-only, stays on the compositor. */
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(var(--dx, 8px), var(--dy, -6px), 0);
+  }
+}
+
+.drift {
+  animation: drift var(--dur, 14s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trace,
+  .trace-dot,
+  .drift,
+  .caret::after {
+    animation: none;
+  }
 }
 
 /* Marquee band — duplicated track scrolls -50% for a seamless loop */

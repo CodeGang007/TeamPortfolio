@@ -10,7 +10,7 @@ export const site = {
   title: "CodeGang — Software engineering studio",
   description:
     "A five-engineer studio shipping production AI, multi-tenant platforms, and mobile apps for clients in Brazil, Australia, India, the USA, and Europe.",
-  email: "support@codegang.online",
+  email: "codegang0077@gmail.com",
   github: "https://github.com/CodeGang007",
   linkedin: "https://www.linkedin.com/company/code-gang",
   x: "https://x.com/CodeGang20",
@@ -45,11 +45,10 @@ export const clients = [
   { name: "ARM Tech", detail: "Trade & Logistics · India", slug: "arm-tech" },
 ] as const;
 
-export const nav = [
-  { name: "Work", href: "/work" },
-  { name: "Studio", href: "/studio" },
-  { name: "Contact", href: "/contact" },
-] as const;
+// The old flat `nav` array lived here. Navigation now has real structure —
+// mega-menus in SiteHeader.tsx, derived columns in SiteFooter.tsx — and the
+// service/industry entries come from content/pages.ts, so a stale duplicate
+// list here would only be a way to ship a dead link.
 
 /** Distinct cities for the world-clock ticker, in project order. */
 export const clockCities = consoleProjects.reduce<

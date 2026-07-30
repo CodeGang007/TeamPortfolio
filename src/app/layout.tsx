@@ -2,7 +2,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import DeferredWidgets from "@/components/layout/DeferredWidgets";
 import { Metadata } from "next";
-import { Archivo, Geist, Geist_Mono } from "next/font/google";
+import { Archivo, Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import SchemaMarkup from "@/components/seo/SchemaMarkup";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -21,6 +21,15 @@ const archivo = Archivo({
   variable: "--font-display",
   display: "swap",
   axes: ["wdth"],
+});
+
+// Wordmark + pull-quote face. The serif/geometric-sans contrast is what
+// carries the "premium" read — display sizes only, never body copy.
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-serif",
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -94,7 +103,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geist.variable} ${archivo.variable} ${geistMono.variable}`}
+      className={`${geist.variable} ${archivo.variable} ${instrumentSerif.variable} ${geistMono.variable}`}
     >
       <body suppressHydrationWarning className="font-sans relative">
         <AuthProvider>
