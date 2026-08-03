@@ -14,13 +14,10 @@
  *    from the linked case study.
  */
 
-export type ProofSlug =
-  | "verse-ai"
-  | "emedici"
-  | "pinnacle-hms"
-  | "arm-tech"
-  | "ai-resume"
-  | "nestflow";
+import type { consoleProjects } from "./projects";
+
+/** Every slug that exists in content/projects.ts — derived, never hand-listed. */
+export type ProofSlug = (typeof consoleProjects)[number]["slug"];
 
 export type PageSpec = {
   slug: string;

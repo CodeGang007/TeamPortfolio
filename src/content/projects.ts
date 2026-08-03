@@ -26,7 +26,7 @@ export interface ConsoleProject {
   stack: string[];
 }
 
-export const consoleProjects: ConsoleProject[] = [
+export const consoleProjects = [
   {
     slug: "verse-ai",
     name: "Verse AI",
@@ -293,7 +293,7 @@ export const consoleProjects: ConsoleProject[] = [
     summary: "DTC site for Core100, a 13-active mitochondrial health protocol — root-cause science and a 90-day milestone timeline built to justify a premium subscription purchase.",
     stack: ["Shopify", "Klaviyo"],
   },
-];
+] satisfies ConsoleProject[];
 
 export function getConsoleProject(slug: string): ConsoleProject | undefined {
   return consoleProjects.find((p) => p.slug === slug);
