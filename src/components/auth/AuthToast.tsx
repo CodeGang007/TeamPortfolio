@@ -37,38 +37,36 @@ export default function AuthToast() {
                     transition={{ duration: 0.3, ease: "easeOut" }}
                     className="fixed bottom-6 right-6 z-[200] max-w-md"
                 >
-                    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
-                        {/* Glow effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-orange-500/10 animate-pulse" />
-
+                    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10">
                         <div className="relative p-5">
                             {/* Close button */}
                             <button
                                 onClick={dismissAuthToast}
-                                className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-500/20 transition-colors text-red-400 hover:text-red-300"
+                                className="absolute top-3 right-3 p-1.5 rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
                             >
                                 <X size={18} />
                             </button>
 
                             {/* Content */}
                             <div className="flex items-start gap-4 pr-6">
-                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
-                                    <Lock className="text-red-400" size={20} />
+                                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-50">
+                                    <Lock className="text-blue-600" size={20} />
                                 </div>
 
                                 <div className="flex-1">
-                                    <h3 className="text-lg font-bold text-red-100 mb-1">
-                                        Sign In
+                                    <h3 className="mb-1 text-base font-semibold text-slate-900">
+                                        Sign in
                                     </h3>
-                                    <p className="text-sm text-red-300/70 mb-4">
-                                        You're browsing in limited mode. Sign in to unlock full features and vibrant visuals.
+                                    <p className="mb-4 text-sm leading-relaxed text-slate-600">
+                                        You're browsing as a guest. Sign in to track your project
+                                        requests and see the full dashboard.
                                     </p>
 
                                     <button
                                         onClick={handleSignInClick}
-                                        className="px-4 py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-200 text-sm font-semibold transition-all hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]"
+                                        className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
                                     >
-                                        Sign In Now
+                                        Sign in now
                                     </button>
                                 </div>
                             </div>
@@ -79,7 +77,7 @@ export default function AuthToast() {
                             initial={{ scaleX: 1 }}
                             animate={{ scaleX: 0 }}
                             transition={{ duration: 8, ease: "linear" }}
-                            className="h-1 bg-gradient-to-r from-red-500 to-orange-500 origin-left"
+                            className="h-1 origin-left bg-blue-600"
                         />
                     </div>
                 </motion.div>

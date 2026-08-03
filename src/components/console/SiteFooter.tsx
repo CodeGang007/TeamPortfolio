@@ -28,10 +28,25 @@ const legal = [
   { name: "License", href: "/license" },
 ];
 
+/**
+ * Case studies grouped by sector so the footer column stays scannable as
+ * the list grows. A project not yet placed in a group falls into "More" —
+ * it still appears, it just hasn't been sorted yet.
+ */
+const caseStudyGroups = [
+  { label: "AI & Automation", slugs: ["verse-ai", "ai-resume", "ghl-automation", "pingo-ai", "opennote", "blaze-ai"] },
+  { label: "Healthcare", slugs: ["emedici", "pinnacle-hms"] },
+  { label: "Business Analytics", slugs: ["student-insights-suite", "sales-performance-report", "call-centre-dashboard", "local-shops-analytics"] },
+  { label: "ERP & Enterprise Systems", slugs: ["arm-tech", "epicor-kinetic"] },
+  { label: "Real Estate & Property", slugs: ["commonfloor", "clear-investment-group", "nestflow"] },
+  { label: "Commerce, Travel & Hospitality", slugs: ["buyticket", "navan", "six-spa", "rerise"] },
+];
+
 const elsewhere = [
   { name: "GitHub", href: site.github },
   { name: "LinkedIn", href: site.linkedin },
   { name: "X", href: site.x },
+  { name: "Instagram", href: site.instagram },
 ];
 
 export default function SiteFooter() {
@@ -88,18 +103,38 @@ export default function SiteFooter() {
               ))}
             </ul>
             <p className="mono-label mt-8">Case studies</p>
-            <ul className="mt-4 space-y-2.5">
-              {consoleProjects.map((p) => (
-                <li key={p.slug}>
-                  <Link
-                    href={`/work/${p.slug}`}
-                    className="text-[0.85rem] text-ink-soft transition-colors hover:text-ink"
-                  >
-                    {p.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {(() => {
+              const grouped = new Set(caseStudyGroups.flatMap((g) => g.slugs));
+              const leftover = consoleProjects.filter((p) => !grouped.has(p.slug));
+              const groups = leftover.length
+                ? [...caseStudyGroups, { label: "More", slugs: leftover.map((p) => p.slug) }]
+                : caseStudyGroups;
+              return groups.map((group) => {
+                const items = group.slugs
+                  .map((slug) => consoleProjects.find((p) => p.slug === slug))
+                  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+                if (items.length === 0) return null;
+                return (
+                  <div key={group.label} className="mt-5 first:mt-3">
+                    <p className="font-mono text-[0.62rem] uppercase tracking-wider text-mute/70">
+                      {group.label}
+                    </p>
+                    <ul className="mt-2 space-y-2.5">
+                      {items.map((p) => (
+                        <li key={p.slug}>
+                          <Link
+                            href={`/work/${p.slug}`}
+                            className="text-[0.85rem] text-ink-soft transition-colors hover:text-ink"
+                          >
+                            {p.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              });
+            })()}
           </div>
 
           <div>

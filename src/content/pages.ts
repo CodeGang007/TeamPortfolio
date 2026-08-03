@@ -14,13 +14,10 @@
  *    from the linked case study.
  */
 
-export type ProofSlug =
-  | "verse-ai"
-  | "emedici"
-  | "pinnacle-hms"
-  | "arm-tech"
-  | "ai-resume"
-  | "nestflow";
+import type { consoleProjects } from "./projects";
+
+/** Every slug that exists in content/projects.ts — derived, never hand-listed. */
+export type ProofSlug = (typeof consoleProjects)[number]["slug"];
 
 export type PageSpec = {
   slug: string;
@@ -650,7 +647,7 @@ export const industries: PageSpec[] = [
       { lead: "Usable at the machine", body: "Interfaces designed for the floor, not for a manager's laptop." },
     ],
     stack: ["Python", "PyTorch", "OpenCV", "PostgreSQL", "Docker", "MQTT"],
-    proof: ["arm-tech"],
+    proof: ["epicor-kinetic", "arm-tech"],
     faq: [
       { q: "Do we need new cameras or sensors?", a: "Sometimes. The assessment says what your existing hardware can support before anything is bought." },
       { q: "Can it run without internet on the floor?", a: "Yes — inference can run on-premise with sync when connectivity returns." },

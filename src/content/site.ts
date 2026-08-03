@@ -14,6 +14,7 @@ export const site = {
   github: "https://github.com/CodeGang007",
   linkedin: "https://www.linkedin.com/company/code-gang",
   x: "https://x.com/CodeGang20",
+  instagram: "https://www.instagram.com/codegang0077",
 } as const;
 
 // Computed, never typed by hand.
@@ -43,6 +44,15 @@ export const clients = [
   { name: "Pinnacle General Hospital", detail: "Healthcare · India", slug: "pinnacle-hms" },
   { name: "NailHiring", detail: "HR SaaS · USA", slug: "ai-resume" },
   { name: "ARM Tech", detail: "Trade & Logistics · India", slug: "arm-tech" },
+  { name: "Navan", detail: "Corporate Travel & Expense · USA", slug: "navan" },
+  { name: "Six Spa", detail: "Wellness & Hospitality · UK", slug: "six-spa" },
+  { name: "Rerise", detail: "Health & Longevity · Ladera Ranch, USA", slug: "rerise" },
+  { name: "BuyTicket", detail: "Marketplace / Ticketing · São Paulo, Brazil", slug: "buyticket" },
+  { name: "CommonFloor", detail: "Real Estate / Marketplace · Bangalore, India", slug: "commonfloor" },
+  { name: "Clear Investment Group", detail: "Real Estate Investment · Chicago, USA", slug: "clear-investment-group" },
+  { name: "Pingo AI", detail: "Consumer AI / EdTech · San Francisco, USA", slug: "pingo-ai" },
+  { name: "Opennote", detail: "Consumer AI / EdTech · San Francisco, USA", slug: "opennote" },
+  { name: "Blaze.ai", detail: "MarTech / AI Marketing · San Francisco, USA", slug: "blaze-ai" },
 ] as const;
 
 // The old flat `nav` array lived here. Navigation now has real structure —

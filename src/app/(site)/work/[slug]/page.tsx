@@ -100,6 +100,16 @@ export default async function CaseStudyPage({
                 Visit the live system ↗
               </a>
             )}
+            {deep.pdfUrl && (
+              <a
+                href={deep.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+              >
+                Read the full deck (PDF) ↗
+              </a>
+            )}
             <Link
               href={`/contact?about=${p.slug}`}
               className="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:border-slate-400 hover:text-slate-900"
@@ -146,15 +156,19 @@ export default async function CaseStudyPage({
                 key={g.src}
                 className="self-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md"
               >
-                <Image
-                  src={g.src}
-                  alt={g.caption}
-                  width={1280}
-                  height={800}
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                  priority={i === 0}
-                  className="w-full"
-                />
+                {g.type === "video" ? (
+                  <video src={g.src} controls playsInline className="w-full" />
+                ) : (
+                  <Image
+                    src={g.src}
+                    alt={g.caption}
+                    width={1280}
+                    height={800}
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    priority={i === 0}
+                    className="w-full"
+                  />
+                )}
                 <figcaption className="border-t border-slate-100 px-4 py-3 text-xs font-medium text-slate-500">
                   {g.caption}
                 </figcaption>

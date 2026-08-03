@@ -48,7 +48,15 @@ export default function TestimonialsPage() {
         <Shell>
           <VisualLead
             eyebrow="Testimonials"
-            plate={<Plate label="Client quotes — awaiting consent" ratio="4/3" className="shadow-frame" />}
+            plate={
+              <Plate
+                label="Client quotes — awaiting consent"
+                src="/testimonials/empty-frame.jpg"
+                alt="An empty picture frame hanging on a plain wall, nothing inside it"
+                ratio="4/3"
+                className="shadow-frame"
+              />
+            }
           >
             <Display size="xl" lead="No quotes yet," trail="and none invented" />
             <Body className="mt-6 max-w-xl text-base">
