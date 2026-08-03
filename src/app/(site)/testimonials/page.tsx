@@ -32,14 +32,19 @@ const sections = [
 const trust = [
   { value: stats.clientsServed, label: "Clients served", sub: `${stats.regions} regions` },
   { value: String(stats.live), label: "Systems live", sub: "verifiable now" },
-  { value: "", label: "Published quotes", pending: true },
-  { value: "", label: "Invented quotes", pending: true },
+  { value: "1", label: "Published quotes", sub: "on video" },
+  { value: "0", label: "Invented quotes", sub: "always" },
 ] as const;
 
 const liveProof = consoleProjects.filter((p) => p.status === "live");
 
+// Google Drive video ID for the one client testimonial we have written
+// permission to publish. Swap/extend this the same way `testimonials.ts`
+// is extended — real, permissioned material only.
+const videoTestimonialId = "10j-CGCPGF7XiiW8ogbnai1dhSUnAw3El";
+
 export default function TestimonialsPage() {
-  const hasQuotes = testimonials.length > 0;
+  const hasQuotes = testimonials.length > 0 || Boolean(videoTestimonialId);
 
   return (
     <>
@@ -50,19 +55,20 @@ export default function TestimonialsPage() {
             eyebrow="Testimonials"
             plate={
               <Plate
-                label="Client quotes — awaiting consent"
-                src="/testimonials/empty-frame.jpg"
-                alt="An empty picture frame hanging on a plain wall, nothing inside it"
+                label="In their words"
+                src="/about/studio-at-work.jpg"
+                alt="An engineer walking a client through a system, mid-explanation at the whiteboard"
                 ratio="4/3"
                 className="shadow-frame"
               />
             }
           >
-            <Display size="xl" lead="No quotes yet," trail="and none invented" />
+            <Display size="xl" lead="One quote so far," trail="and it's real" />
             <Body className="mt-6 max-w-xl text-base">
               Most of our work sits under NDA, and we will not publish a client
-              quote without written permission. So this page is empty on purpose
-              — and points you at evidence you can check without us.
+              quote without written permission. Below is the first one we have
+              that permission for — on video, from the client themselves — plus
+              evidence you can check without us for everything else.
             </Body>
             <div className="mt-8 flex flex-wrap gap-3">
               <Pill href="#instead">
@@ -93,30 +99,57 @@ export default function TestimonialsPage() {
                 trail="with their permission"
               />
             </FadeUp>
-            <Stagger className="mt-12 grid gap-4 md:grid-cols-2">
-              {testimonials.map((t) => (
-                <Item
-                  key={t.quote}
-                  className="rounded-xl border border-line bg-paper p-8"
-                >
-                  <blockquote className="font-serif text-[1.35rem] leading-snug text-ink">
-                    &ldquo;{t.quote}&rdquo;
-                  </blockquote>
-                  <figcaption className="mt-6 border-t border-line pt-4">
-                    <p className="text-[0.9rem] font-medium text-ink">{t.author}</p>
-                    <p className="mt-0.5 text-[0.82rem] text-mute">
-                      {t.role} · {t.org}
+
+            {videoTestimonialId ? (
+              <FadeUp>
+                <div className="mt-12 overflow-hidden rounded-xl border border-line bg-paper">
+                  <div className="aspect-video w-full">
+                    <iframe
+                      src={`https://drive.google.com/file/d/${videoTestimonialId}/preview`}
+                      className="h-full w-full"
+                      allow="autoplay"
+                      allowFullScreen
+                      title="Client video testimonial"
+                    />
+                  </div>
+                  <div className="border-t border-line px-6 py-4">
+                    <p className="mono-label">Video testimonial</p>
+                    <p className="mt-1.5 text-[0.85rem] text-mute">
+                      Published with the client&rsquo;s written permission.
                     </p>
-                    <Link
-                      href={`/work/${t.slug}`}
-                      className="mt-3 inline-block text-[0.82rem] font-medium text-signal hover:underline"
-                    >
-                      See the system it refers to →
-                    </Link>
-                  </figcaption>
-                </Item>
-              ))}
-            </Stagger>
+                  </div>
+                </div>
+              </FadeUp>
+            ) : null}
+
+            {testimonials.length > 0 ? (
+              <Stagger
+                className={`grid gap-4 md:grid-cols-2 ${videoTestimonialId ? "mt-8" : "mt-12"}`}
+              >
+                {testimonials.map((t) => (
+                  <Item
+                    key={t.quote}
+                    className="rounded-xl border border-line bg-paper p-8"
+                  >
+                    <blockquote className="font-serif text-[1.35rem] leading-snug text-ink">
+                      &ldquo;{t.quote}&rdquo;
+                    </blockquote>
+                    <figcaption className="mt-6 border-t border-line pt-4">
+                      <p className="text-[0.9rem] font-medium text-ink">{t.author}</p>
+                      <p className="mt-0.5 text-[0.82rem] text-mute">
+                        {t.role} · {t.org}
+                      </p>
+                      <Link
+                        href={`/work/${t.slug}`}
+                        className="mt-3 inline-block text-[0.82rem] font-medium text-signal hover:underline"
+                      >
+                        See the system it refers to →
+                      </Link>
+                    </figcaption>
+                  </Item>
+                ))}
+              </Stagger>
+            ) : null}
           </>
         ) : (
           <FadeUp>
