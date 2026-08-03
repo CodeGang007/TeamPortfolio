@@ -54,11 +54,16 @@ const shotBySlug = Object.fromEntries(
  * project's own gallery with its real caption.
  */
 const screens = PORTFOLIO_PROJECTS.flatMap((p) =>
-  p.gallery.slice(0, 2).map((g) => ({
-    label: g.caption,
-    src: g.src,
-    href: `/work/${p.id}`,
-  })),
+  // Stills only — a project's video walkthrough gets its own player on the
+  // case-study page, not a spot in this screenshot strip.
+  p.gallery
+    .filter((g) => g.type !== "video")
+    .slice(0, 2)
+    .map((g) => ({
+      label: g.caption,
+      src: g.src,
+      href: `/work/${p.id}`,
+    })),
 );
 
 export default function PortfolioPage() {
@@ -69,7 +74,15 @@ export default function PortfolioPage() {
         <Shell>
           <VisualLead
             eyebrow="Portfolio"
-            plate={<Plate label="Systems wall — all builds" ratio="4/3" className="shadow-frame" />}
+            plate={
+              <Plate
+                label="Systems wall — all builds"
+                src="/portfolio/systems-wall.jpg"
+                alt="Wall of monitors showing dashboards from CodeGang's live systems"
+                ratio="4/3"
+                className="shadow-frame"
+              />
+            }
           >
             <Display size="xl" lead="Every system," trail="filterable and checkable" />
             <Body className="mt-6 max-w-xl text-base">

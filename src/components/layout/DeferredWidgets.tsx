@@ -12,14 +12,18 @@ const FeedbackButton = dynamic(() => import("@/components/FeedbackButton"), { ss
 
 // The marketing surface stays free of app nags — visitors get the sign-in
 // modal (via the header button) but never the toast or feedback bubble.
-const MARKETING_ROUTES = ["/work", "/studio", "/contact", "/privacy", "/terms", "/cookies", "/license", "/project-request", "/project-templates"];
+// Every page lives under the (site) route group EXCEPT these authenticated
+// app surfaces, so we allowlist the app instead of the marketing pages —
+// a new marketing page can never accidentally start showing the nag again
+// just because someone forgot to add it to a list.
+const APP_ROUTES = ["/dashboard", "/admin", "/profile"];
 
 export default function DeferredWidgets() {
   const [ready, setReady] = useState(false);
   const pathname = usePathname() ?? "/";
-  const isMarketing =
-    pathname === "/" ||
-    MARKETING_ROUTES.some((r) => pathname === r || pathname.startsWith(`${r}/`));
+  const isMarketing = !APP_ROUTES.some(
+    (r) => pathname === r || pathname.startsWith(`${r}/`),
+  );
 
   useEffect(() => {
     const start = () => setReady(true);

@@ -84,10 +84,10 @@ const practice = [
 ];
 
 const culture = [
-  { label: "Studio — the five of us" },
-  { label: "Review — pairing on the retrieval layer" },
-  { label: "Whiteboard — schema for Pinnacle" },
-  { label: "Ship day — Verse AI cutover" },
+  { label: "Studio — the five of us", src: "/our-values/studio-five-of-us.jpg" },
+  { label: "Review — pairing on the retrieval layer", src: "/our-values/review-retrieval-layer.jpg" },
+  { label: "Whiteboard — schema for Pinnacle", src: "/our-values/whiteboard-pinnacle-schema.jpg" },
+  { label: "Ship day — Verse AI cutover", src: "/our-values/ship-day-verse-ai.jpg" },
 ];
 
 export default function OurValuesPage() {
@@ -98,7 +98,15 @@ export default function OurValuesPage() {
         <Shell>
           <VisualLead
             eyebrow="Our values"
-            plate={<Plate label="Studio — the operating rules" ratio="4/3" className="shadow-frame" />}
+            plate={
+              <Plate
+                label="Studio — the operating rules"
+                src="/our-values/operating-rules.jpg"
+                alt="An engineer writing a numbered list of rules on a whiteboard, each with a handwritten cost noted beside it"
+                ratio="4/3"
+                className="shadow-frame"
+              />
+            }
           >
             <Display size="xl" lead="Five rules," trail="each with a cost attached" />
             <Body className="mt-6 max-w-xl text-base">
@@ -223,7 +231,7 @@ export default function OurValuesPage() {
             eyebrow="Culture"
             lead="Five engineers,"
             trail="one room, no hand-off"
-            body="Photographs go in here once we have ones worth publishing. Until then these are marked pending, which is the rule working."
+            body="Four scenes from how the studio actually works — a group review, a pairing session, a whiteboard mid-schema, a ship-day cutover."
           />
         </FadeUp>
         <div className="mt-12">

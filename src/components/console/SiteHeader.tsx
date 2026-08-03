@@ -15,6 +15,7 @@ import {
   Github,
   Handshake,
   Heart,
+  Instagram,
   Landmark,
   Layers,
   LineChart,
@@ -342,6 +343,7 @@ export default function SiteHeader() {
                 { name: "GitHub", href: site.github, Icon: Github },
                 { name: "LinkedIn", href: site.linkedin, Icon: Linkedin },
                 { name: "X", href: site.x, Icon: null },
+                { name: "Instagram", href: site.instagram, Icon: Instagram },
               ].map((s) => (
                 <a
                   key={s.name}
@@ -384,20 +386,14 @@ export default function SiteHeader() {
             className="flex shrink-0 items-center gap-2.5"
             aria-label="CodeGang — home"
           >
-            <span
-              className={`grid h-9 w-9 place-items-center rounded-full border transition-colors ${
-                solid ? "border-line bg-paper" : "border-white/35 bg-white/10"
-              }`}
-            >
-              <Image
-                src="/assets/cg-logo-nav.png"
-                alt=""
-                width={22}
-                height={22}
-                priority
-                className="h-[22px] w-[22px] rounded-full object-contain"
-              />
-            </span>
+            <Image
+              src="/assets/cg-logo-nav.png"
+              alt=""
+              width={34}
+              height={34}
+              priority
+              className="h-[34px] w-[34px] shrink-0 object-contain"
+            />
             <span
               className={`font-serif text-[1.6rem] leading-none tracking-tight transition-colors ${
                 solid ? "text-ink" : "text-white"
@@ -453,7 +449,7 @@ export default function SiteHeader() {
             <Link
               href="/careers"
               onMouseEnter={() => enter("")}
-              className={`${navItem(pathname.startsWith("/careers"))} hidden xl:inline-flex`}
+              className={`${navItem(pathname.startsWith("/careers"))} hidden 2xl:inline-flex`}
             >
               Careers
             </Link>
@@ -468,7 +464,7 @@ export default function SiteHeader() {
             ) : (
               <button
                 onClick={openLoginModal}
-                className={`hidden px-2 text-[0.85rem] font-medium transition-colors xl:block ${
+                className={`hidden px-2 text-[0.85rem] font-medium transition-colors 2xl:block ${
                   solid ? "text-mute hover:text-ink" : "text-white/60 hover:text-white"
                 }`}
               >
@@ -478,7 +474,7 @@ export default function SiteHeader() {
 
             <Link
               href="/project-request/custom"
-              className={`hidden rounded-full border px-5 py-3 text-[0.85rem] font-medium transition-all xl:inline-flex ${
+              className={`hidden rounded-full border px-5 py-3 text-[0.85rem] font-medium transition-all 2xl:inline-flex ${
                 solid
                   ? "border-signal/45 text-ink shadow-[0_0_0_3px_rgba(46,125,240,0.10)] hover:border-signal hover:shadow-[0_0_0_4px_rgba(46,125,240,0.16)]"
                   : "border-white/45 text-white shadow-[0_0_0_3px_rgba(255,255,255,0.10)] hover:border-white hover:shadow-[0_0_0_4px_rgba(255,255,255,0.18)]"
@@ -810,17 +806,19 @@ export default function SiteHeader() {
 
             <div>
               <p className="mono-label !text-signal">Elsewhere</p>
-              <ul className="mt-2 flex gap-4">
+              <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">
                 {[
                   { name: "GitHub", href: site.github },
                   { name: "LinkedIn", href: site.linkedin },
                   { name: "X", href: site.x },
+                  { name: "Instagram", href: site.instagram },
+                  { name: site.email, href: `mailto:${site.email}` },
                 ].map((s) => (
                   <li key={s.name}>
                     <a
                       href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target={s.href.startsWith("mailto:") ? undefined : "_blank"}
+                      rel={s.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
                       className="text-[0.9rem] text-bone/70 transition-colors hover:text-bone"
                     >
                       {s.name}

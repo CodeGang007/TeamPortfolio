@@ -26,7 +26,7 @@ export default function Console() {
   const step = useSequence(inView, 7, 380);
 
   return (
-    <div ref={ref} className="grid grid-cols-[132px_1fr] text-[11px] sm:text-xs">
+    <div ref={ref} className="grid grid-cols-1 text-[11px] sm:grid-cols-[132px_1fr] sm:text-xs">
       {/* ── Tenant rail ──────────────────────────────────────────── */}
       <aside className="hidden border-r border-line bg-bone-alt/60 p-3 sm:block">
         <p className="mono-label mb-3 text-[0.55rem]">Workspace</p>
@@ -66,7 +66,7 @@ export default function Console() {
 
       {/* ── Thread ───────────────────────────────────────────────── */}
       <div className="flex min-h-[290px] flex-col bg-paper">
-        <header className="flex items-center justify-between border-b border-line px-4 py-2.5">
+        <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b border-line px-4 py-2.5">
           <span className="font-medium text-ink">Acme Logistics · Assistant</span>
           <span className="mono-label text-[0.55rem]">7-layer AWS stack</span>
         </header>

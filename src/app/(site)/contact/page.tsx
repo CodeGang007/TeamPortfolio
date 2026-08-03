@@ -75,6 +75,8 @@ export default async function ContactPage({
             plate={
               <Plate
                 label="Studio — where the message lands"
+                src="/contact/message-lands.jpg"
+                alt="A phone lighting up with a notification on a desk beside a laptop showing code"
                 ratio="16/11"
                 className="shadow-frame"
               />

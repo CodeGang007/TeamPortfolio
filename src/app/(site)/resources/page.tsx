@@ -121,7 +121,15 @@ export default function ResourcesPage() {
         <Shell>
           <VisualLead
             eyebrow="Resources"
-            plate={<Plate label="Notes — engineering write-ups" ratio="4/3" className="shadow-frame" />}
+            plate={
+              <Plate
+                label="Notes — engineering write-ups"
+                src="/resources/notes-desk.jpg"
+                alt="An engineer's notebook with hand-sketched pipeline architecture, open on a desk beside a laptop showing code"
+                ratio="4/3"
+                className="shadow-frame"
+              />
+            }
           >
             <Display size="xl" lead="Notes from the builds," trail="none of them gated" />
             <Body className="mt-6 max-w-xl text-base">
