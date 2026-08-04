@@ -22,7 +22,7 @@ import {
 
    Every page under /services and /industries renders through here from
    a single PageSpec, so the twenty-odd pages stay one component. If a
-   page needs a bespoke section, it belongs in the spec as data — not as
+   page needs a bespoke section, it belongs in the spec as data, not as
    a fork of this file.
    ═══════════════════════════════════════════════════════════════════ */
 
@@ -96,7 +96,7 @@ export default function PageTemplate({
         areaServed: ["Brazil", "Australia", "India", "United States", "Europe"],
         hasOfferCatalog: {
           "@type": "OfferCatalog",
-          name: `${spec.eyebrow} — what we build`,
+          name: `${spec.eyebrow}: what we build`,
           itemListElement: spec.offerings.map((o) => ({
             "@type": "Offer",
             itemOffered: { "@type": "Service", name: o.title, description: o.body },
@@ -238,7 +238,7 @@ export default function PageTemplate({
             reverse
             plate={
               <Plate
-                label={secondShot?.caption ?? `${spec.nav} — outcome board`}
+                label={secondShot?.caption ?? `${spec.nav}: outcome board`}
                 src={secondShot?.src}
                 alt={secondShot ? secondShot.caption : ""}
                 fit="contain"
@@ -323,7 +323,7 @@ export default function PageTemplate({
                 className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-paper transition-all duration-300 hover:-translate-y-1 hover:border-line-strong hover:shadow-frame"
               >
                 <Plate
-                  label={`${p.name} — screen`}
+                  label={`${p.name}: screen`}
                   src={PORTFOLIO_PROJECTS.find((x) => x.id === p.slug)?.image}
                   alt={`${p.name} interface`}
                   fit="contain"

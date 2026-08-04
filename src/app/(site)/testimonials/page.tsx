@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Testimonials",
   description:
     "We publish client quotes only with written permission. Until then, the evidence is the live systems themselves.",
-  openGraph: { title: "Testimonials — CodeGang", url: "/testimonials" },
+  openGraph: { title: "Testimonials. CodeGang", url: "/testimonials" },
   alternates: { canonical: "/testimonials" },
 };
 
@@ -67,7 +67,7 @@ export default function TestimonialsPage() {
             <Body className="mt-6 max-w-xl text-base">
               Most of our work sits under NDA, and we will not publish a client
               quote without written permission. Below is the first one we have
-              that permission for — on video, from the client themselves — plus
+              that permission for, on video, from the client themselves: plus
               evidence you can check without us for everything else.
             </Body>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -161,7 +161,7 @@ export default function TestimonialsPage() {
                 <p className="mono-label mt-6">Client quotes</p>
                 <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-soft">
                   Nothing published yet. This section renders the moment a real,
-                  permissioned quote exists — and not one moment before.
+                  permissioned quote exists, and not one moment before.
                 </p>
                 <p className="mt-4 font-mono text-[0.6rem] uppercase tracking-wider text-mute/70">
                   awaiting written consent
@@ -245,7 +245,7 @@ export default function TestimonialsPage() {
               <p>
                 A buyer who catches one fabricated testimonial is right to
                 discount every other claim on the site. That risk is not worth
-                the six sentences it would buy us — which is why there is one
+                the six sentences it would buy us, which is why there is one
                 quote here and not twenty.
               </p>
               <p>

@@ -11,43 +11,43 @@ const steps = [
   {
     title: "Decode",
     tag: "Understand the domain",
-    body: "We start inside your domain, not inside an editor — entities, roles, constraints, and the failure modes that keep you up at night. The domain model comes before any code.",
-    proof: "Pinnacle HMS — 39 tables and 57 relationships mapped before the first endpoint",
+    body: "We start inside your domain, not inside an editor: entities, roles, constraints, and the failure modes that keep you up at night. The domain model comes before any code.",
+    proof: "Pinnacle HMS: 39 tables and 57 relationships mapped before the first endpoint",
     href: "/work/pinnacle-hms",
   },
   {
     title: "Scope",
     tag: "Agree what shipping means",
     body: "One written scope: what ships, what does not, and how we will both know it is done. Modules get names and boundaries on day one.",
-    proof: "ARM Tech — scoped as three named modules: CementBook, TruckBook, FinanceBook",
+    proof: "ARM Tech, scoped as three named modules: CementBook, TruckBook, FinanceBook",
     href: "/work/arm-tech",
   },
   {
     title: "Architect",
     tag: "Design for scale first",
     body: "Multi-tenancy, queues, data isolation, and cost ceilings are architecture decisions, not refactors. We design the system for its tenth customer, not its first demo.",
-    proof: "Verse AI — 7-layer AWS stack with cryptographic tenant isolation",
+    proof: "Verse AI: 7-layer AWS stack with cryptographic tenant isolation",
     href: "/work/verse-ai",
   },
   {
     title: "Build",
     tag: "Ship in increments",
     body: "CI/CD from the first week, deployable at every step. You watch the system grow in a staging URL, not in a slide deck.",
-    proof: "AI Resume — fully dockerized CI/CD on GitHub Actions from week one",
+    proof: "AI Resume: fully dockerized CI/CD on GitHub Actions from week one",
     href: "/work/ai-resume",
   },
   {
     title: "Harden",
     tag: "Make it survive production",
-    body: "Load, auth boundaries, backups, observability. The whole stack must come up from scratch with one command — because one day it will have to.",
-    proof: "NestFlow — containerized microservices; one compose file brings the stack up",
+    body: "Load, auth boundaries, backups, observability. The whole stack must come up from scratch with one command: because one day it will have to.",
+    proof: "NestFlow: containerized microservices; one compose file brings the stack up",
     href: "/work/nestflow",
   },
   {
     title: "Run",
     tag: "Stay on after launch",
     body: "Live means someone is watching it. We keep maintenance and roadmap after shipping, in your timezone.",
-    proof: `${stats.live} systems live right now — ${marketsShort} — see the board`,
+    proof: `${stats.live} systems live right now: ${marketsShort}: see the board`,
     href: "/work",
   },
 ];
@@ -58,7 +58,7 @@ export default function ProcessFlow() {
 
   return (
     <div>
-      {/* Track — desktop */}
+      {/* Track: desktop */}
       <div className="relative hidden md:block">
         <div
           aria-hidden
@@ -96,7 +96,7 @@ export default function ProcessFlow() {
         </ol>
       </div>
 
-      {/* Track — mobile: horizontal chips */}
+      {/* Track: mobile: horizontal chips */}
       <ol className="flex gap-2 overflow-x-auto pb-2 md:hidden">
         {steps.map((s, i) => (
           <li key={s.title} className="shrink-0">

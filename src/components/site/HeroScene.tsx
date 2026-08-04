@@ -77,7 +77,7 @@ export default function HeroScene() {
         {/* The scene is 16:9 but the hero band is much wider than that, so
             object-cover has to crop vertically. Anchor to the BOTTOM: the
             laptop, server rack and grass live down there and are the whole
-            point — the sky at the top is the part we can afford to lose. */}
+            point: the sky at the top is the part we can afford to lose. */}
         <Image
           src="/site/hero-pixel.png"
           alt=""
@@ -150,7 +150,7 @@ export default function HeroScene() {
           >
             A software engineering company shipping production AI, multi-tenant
             platforms, and mobile apps. {stats.projectsDelivered} projects
-            delivered for {stats.clientsServed} clients — most under NDA.
+            delivered for {stats.clientsServed} clients, most under NDA.
           </p>
 
           <div

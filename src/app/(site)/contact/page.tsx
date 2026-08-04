@@ -22,7 +22,7 @@ const trust = [
   { value: "<24h", label: "First reply", sub: "from an engineer" },
   { value: "0", label: "Sales calls", sub: "no qualification layer" },
   { value: String(stats.live), label: "Systems live", sub: marketsShort },
-  { value: "", label: "Minimum budget", sub: "we do not set one", pending: true },
+  { value: "None", label: "Minimum budget", sub: "we do not set one" },
 ] as const;
 
 /** What actually happens after you press send. */
@@ -45,9 +45,9 @@ const expect = [
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Tell us what you are trying to ship. Your message lands in the founders' Telegram instantly — the engineer who answers is the one who will build it.",
+    "Tell us what you are trying to ship. Your message lands in the founders' Telegram instantly: the engineer who answers is the one who will build it.",
   openGraph: {
-    title: "Contact — CodeGang",
+    title: "Contact. CodeGang",
     description: "Tell us what you are trying to ship.",
     url: "/contact",
   },
@@ -75,7 +75,7 @@ export default async function ContactPage({
             eyebrow="Contact"
             plate={
               <Plate
-                label="Studio — where the message lands"
+                label="Studio, where the message lands"
                 src="/contact/message-lands.jpg"
                 alt="A phone lighting up with a notification on a desk beside a laptop showing code"
                 ratio="16/11"
@@ -91,7 +91,7 @@ export default async function ContactPage({
             />
             <Body className="mt-6 max-w-xl text-base">
               {aboutProject
-                ? `You came from the ${aboutProject.name} case study — say so and skip the context-setting. `
+                ? `You came from the ${aboutProject.name} case study: say so and skip the context-setting. `
                 : ""}
               Your message lands in the founders&apos; Telegram the moment you
               send it. No form queue, no sales layer.
@@ -113,13 +113,13 @@ export default async function ContactPage({
       {/* ══ Form ════════════════════════════════════════════════════ */}
       <section className="bg-bone py-16 sm:py-20">
         <Shell>
-          <div className="grid gap-12 lg:grid-cols-[1fr_20rem] lg:gap-16">
+          <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_19rem]">
             <FadeUp>
               <ContactForm about={aboutProject?.slug} />
             </FadeUp>
 
             <FadeUp delay={0.1}>
-              <aside className="rounded-xl border border-line bg-paper p-6">
+              <aside className="rounded-2xl border border-line bg-bone-alt p-6 lg:sticky lg:top-32">
                 <p className="mono-label">Prefer email</p>
                 <a
                   href={`mailto:${site.email}`}
@@ -133,7 +133,7 @@ export default async function ContactPage({
                 <p className="mono-label">Message us</p>
                 <a
                   href={whatsappHref(
-                    "Hi CodeGang — I want to discuss a project."
+                    "Hi CodeGang, I want to discuss a project."
                   )}
                   target="_blank"
                   rel="noopener noreferrer"

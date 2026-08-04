@@ -15,9 +15,9 @@ import {
 export const metadata: Metadata = {
   title: "Start a project",
   description:
-    "Send a project brief straight to the engineers who would build it. No sign-in, no sales call, no NDA needed first — a reply from a founder, usually within one business day.",
+    "Send a project brief straight to the engineers who would build it. No sign-in, no sales call, no NDA needed first: a reply from a founder, usually within one business day.",
   openGraph: {
-    title: "Start a project — CodeGang",
+    title: "Start a project. CodeGang",
     description:
       "Send a project brief straight to the engineers who would build it. No sign-in, no sales layer.",
     url: "/start-a-project",
@@ -54,7 +54,7 @@ const promises = [
   {
     n: "03",
     title: "You get scope in writing",
-    body: "If it is a fit, you get phases, architecture and an estimate you can hold us to — yours to keep whether or not you build with us.",
+    body: "If it is a fit, you get phases, architecture and an estimate you can hold us to: yours to keep whether or not you build with us.",
   },
 ];
 
@@ -83,7 +83,7 @@ export default function StartAProjectPage() {
               Five short steps, no sign-in, and no sales layer on the other
               side. Your brief goes straight to the founders of a software
               engineering company with {stats.live} systems live across{" "}
-              {marketsLong} — and the person who replies is the person
+              {marketsLong}, and the person who replies is the person
               who would build yours.
             </Body>
             <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[0.68rem] uppercase tracking-wider text-mute">
@@ -135,7 +135,7 @@ export default function StartAProjectPage() {
         </Stagger>
       </Section>
 
-      {/* ══ FAQ — the AEO surface ═══════════════════════════════════ */}
+      {/* ══ FAQ: the AEO surface ═══════════════════════════════════ */}
       <Section tone="bone">
         <FadeUp>
           <SectionIntro

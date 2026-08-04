@@ -24,7 +24,7 @@ export async function generateMetadata({
     title: p.name,
     description: p.summary,
     openGraph: {
-      title: `${p.name} — CodeGang`,
+      title: `${p.name}. CodeGang`,
       description: p.summary,
       url: `/work/${p.slug}`,
     },
@@ -320,7 +320,7 @@ export default async function CaseStudyPage({
               </Link>
               <a
                 href={whatsappHref(
-                  `Hi CodeGang — I just read the ${p.name} case study and want to build something similar.`
+                  `Hi CodeGang, I just read the ${p.name} case study and want to build something similar.`
                 )}
                 target="_blank"
                 rel="noopener noreferrer"

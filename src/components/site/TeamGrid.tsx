@@ -6,7 +6,7 @@ import { Item, Stagger } from "./motion";
 /* ═══════════════════════════════════════════════════════════════════
    TEAM GRID
    Portrait, name, role, what the person owns, their line, their links.
-   Everything is driven by content/team.ts — this file renders, it does
+   Everything is driven by content/team.ts: this file renders, it does
    not hold data.
    ═══════════════════════════════════════════════════════════════════ */
 

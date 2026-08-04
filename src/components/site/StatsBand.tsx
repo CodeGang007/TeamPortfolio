@@ -87,8 +87,7 @@ export default function StatsBand() {
         <p className="mt-12 max-w-2xl text-[0.8rem] leading-relaxed text-mute">
           Lifetime figures are asserted by the founders and include years of
           NDA-covered client work that cannot be itemised publicly. The systems
-          and regions counts are computed from the case studies on this site —
-          you can check them.
+          and regions counts are computed from the case studies on this site:           you can check them.
         </p>
       </div>
     </section>

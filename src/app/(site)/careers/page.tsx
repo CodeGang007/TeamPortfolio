@@ -17,8 +17,8 @@ import {
 export const metadata: Metadata = {
   title: "Careers",
   description:
-    "A software engineering company. No open roles posted right now — open applications go straight to the founders.",
-  openGraph: { title: "Careers — CodeGang", url: "/careers" },
+    "A software engineering company. No open roles posted right now: open applications go straight to the founders.",
+  openGraph: { title: "Careers. CodeGang", url: "/careers" },
   alternates: { canonical: "/careers" },
 };
 
@@ -74,16 +74,16 @@ const life = [
 ];
 
 const process = [
-  { n: "I", title: "Email", body: "Send code we can read — a repository, a package, anything you actually built." },
+  { n: "I", title: "Email", body: "Send code we can read: a repository, a package, anything you actually built." },
   { n: "II", title: "Conversation", body: "Forty-five minutes with an engineer about what you built and why you chose it." },
   { n: "III", title: "Paid exercise", body: "A small, scoped piece of real work. Paid at our normal rate, and yours to keep." },
   { n: "IV", title: "Decision", body: "A yes or a no with reasons, within a week. No silent pipelines." },
 ];
 
 const culture = [
-  { label: "Studio — at work", src: "/our-values/studio-five-of-us.jpg" },
-  { label: "Pairing — retrieval layer", src: "/our-values/review-retrieval-layer.jpg" },
-  { label: "Whiteboard — clinical schema", src: "/our-values/whiteboard-pinnacle-schema.jpg" },
+  { label: "Studio, at work", src: "/our-values/studio-five-of-us.jpg" },
+  { label: "Pairing: retrieval layer", src: "/our-values/review-retrieval-layer.jpg" },
+  { label: "Whiteboard: clinical schema", src: "/our-values/whiteboard-pinnacle-schema.jpg" },
   { label: "Ship day", src: "/our-values/ship-day-verse-ai.jpg" },
 ];
 
@@ -96,7 +96,7 @@ export default function CareersPage() {
           <VisualLead
             eyebrow="Careers"
             plate={<Plate
-              label="Studio — at work"
+              label="Studio, at work"
               src="/our-values/studio-five-of-us.jpg"
               alt="The team around a standing desk, mid-review of a pull request"
               ratio="4/3"
@@ -183,7 +183,7 @@ export default function CareersPage() {
             eyebrow="How we work"
             reverse
             plate={<Plate
-              label="Review — pairing session"
+              label="Review: pairing session"
               src="/our-values/review-retrieval-layer.jpg"
               alt="Two engineers pairing over the retrieval layer during review"
               ratio="1/1"

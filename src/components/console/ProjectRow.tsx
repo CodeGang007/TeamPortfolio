@@ -23,12 +23,12 @@ export default function ProjectRow({
         <div className="relative aspect-[16/10] overflow-hidden border-b border-slate-100 bg-slate-50">
           <Image
             src={deep.image}
-            alt={`${project.name} — product screenshot`}
+            alt={`${project.name}: product screenshot`}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
           />
-          {/* Status chip lives on the image — visible before any scroll */}
+          {/* Status chip lives on the image: visible before any scroll */}
           <span className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 shadow-sm backdrop-blur">
             <StatusDot status={project.status} />
             <span className="text-xs font-semibold text-slate-700">

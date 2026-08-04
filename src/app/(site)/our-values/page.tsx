@@ -18,8 +18,8 @@ import {
 export const metadata: Metadata = {
   title: "Our values",
   description:
-    "The five rules we actually work by — including the one that governs every number published on this site.",
-  openGraph: { title: "Our values — CodeGang", url: "/our-values" },
+    "The five rules we actually work by, including the one that governs every number published on this site.",
+  openGraph: { title: "Our values. CodeGang", url: "/our-values" },
   alternates: { canonical: "/our-values" },
 };
 
@@ -79,15 +79,15 @@ const practice = [
   { lead: "Dates are never guessed", body: "Where we do not have a verified go-live date, the site shows no date at all rather than an approximation." },
   { lead: "Empty is better than invented", body: "Awards, reseller badges and open roles render an em dash until there is something real to put there. We removed the third-party rating slots outright rather than leave scores we have not earned sitting on the page." },
   { lead: "NDA work stays unnamed", body: "Most of our delivered projects cannot be itemised. We say so instead of inventing a portfolio." },
-  { lead: "Placeholders look like placeholders", body: "Where artwork does not exist yet, the page shows a drafting plate marked 'image pending' — not a stock photo pretending to be our office." },
+  { lead: "Placeholders look like placeholders", body: "Where artwork does not exist yet, the page shows a drafting plate marked 'image pending', not a stock photo pretending to be our office." },
   { lead: "Testimonials need written consent", body: "The testimonial section renders nothing until a client has given permission in writing." },
 ];
 
 const culture = [
-  { label: "Studio — at work", src: "/our-values/studio-five-of-us.jpg" },
-  { label: "Review — pairing on the retrieval layer", src: "/our-values/review-retrieval-layer.jpg" },
-  { label: "Whiteboard — schema for Pinnacle", src: "/our-values/whiteboard-pinnacle-schema.jpg" },
-  { label: "Ship day — Verse AI cutover", src: "/our-values/ship-day-verse-ai.jpg" },
+  { label: "Studio, at work", src: "/our-values/studio-five-of-us.jpg" },
+  { label: "Review: pairing on the retrieval layer", src: "/our-values/review-retrieval-layer.jpg" },
+  { label: "Whiteboard: schema for Pinnacle", src: "/our-values/whiteboard-pinnacle-schema.jpg" },
+  { label: "Ship day. Verse AI cutover", src: "/our-values/ship-day-verse-ai.jpg" },
 ];
 
 export default function OurValuesPage() {
@@ -100,7 +100,7 @@ export default function OurValuesPage() {
             eyebrow="Our values"
             plate={
               <Plate
-                label="Studio — the operating rules"
+                label="Studio: the operating rules"
                 src="/our-values/operating-rules.jpg"
                 alt="An engineer writing a numbered list of rules on a whiteboard, each with a handwritten cost noted beside it"
                 ratio="4/3"
@@ -111,7 +111,7 @@ export default function OurValuesPage() {
             <Display as="h1" size="xl" lead="Five rules," trail="each with a cost attached" />
             <Body className="mt-6 max-w-xl text-base">
               A value that costs nothing to hold is decoration. Each of these
-              has a consequence we actually absorb — listed underneath it.
+              has a consequence we actually absorb: listed underneath it.
             </Body>
             <div className="mt-8 flex flex-wrap gap-3">
               <Pill href="#rules">
@@ -195,7 +195,7 @@ export default function OurValuesPage() {
               </p>
               <p>
                 None of that is an oversight. A buyer who catches one fabricated
-                figure is right to discount every other number on the page — so
+                figure is right to discount every other number on the page: so
                 the blanks are load-bearing. They are what makes{" "}
                 <span className="text-bone">
                   {stats.live} systems live across {marketsLong}
@@ -232,7 +232,7 @@ export default function OurValuesPage() {
             eyebrow="Culture"
             lead="One team,"
             trail="one room, no hand-off"
-            body="Four scenes from how the studio actually works — a group review, a pairing session, a whiteboard mid-schema, a ship-day cutover."
+            body="Four scenes from how the studio actually works: a group review, a pairing session, a whiteboard mid-schema, a ship-day cutover."
           />
         </FadeUp>
         <div className="mt-12">

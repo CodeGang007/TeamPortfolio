@@ -81,7 +81,7 @@ export default function Ats() {
             </span>
           </p>
           <p className="mt-1.5 text-[0.72rem] leading-snug text-ink-soft">
-            Rewritten against the pasted job description — bullets re-scoped,
+            Rewritten against the pasted job description: bullets re-scoped,
             missing keywords surfaced, formatting flattened for the parser.
           </p>
         </div>
