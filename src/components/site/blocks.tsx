@@ -97,8 +97,17 @@ export function TrustRow({
       {items.map((it) => (
         <Item key={it.label}>
           {it.pending ? (
-            <p className="font-display text-[clamp(1.6rem,3vw,2.25rem)] font-semibold leading-none tracking-tight text-line-strong">
-:             </p>
+            // A figure we cannot source renders as an explicit blank rather
+            // than a number. Drawn as a rule rather than typed as a dash, so
+            // it reads unmistakably as "nothing to publish" and carries a
+            // label for anyone on a screen reader.
+            <p className="flex h-[clamp(1.6rem,3vw,2.25rem)] items-center">
+              <span
+                aria-hidden
+                className="inline-block h-[3px] w-7 rounded-full bg-line-strong"
+              />
+              <span className="sr-only">No verified figure to publish</span>
+            </p>
           ) : (
             <p className="font-display text-[clamp(1.6rem,3vw,2.25rem)] font-semibold leading-none tracking-tight text-ink">
               {it.value.replace("+", "")}
