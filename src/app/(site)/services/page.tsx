@@ -20,8 +20,10 @@ export default function ServicesIndexPage() {
       eyebrow="Our services"
       lead="Everything we sell"
       trail="is something we have already shipped"
-      intro={`A five-engineer studio covering AI, platforms, mobile, and the infrastructure underneath them. ${stats.projectsDelivered} projects delivered for ${stats.clientsServed} clients — most under NDA.`}
+      intro={`A software engineering company covering AI, platforms, mobile, and the infrastructure underneath them. ${stats.projectsDelivered} projects delivered for ${stats.clientsServed} clients — most under NDA.`}
       plate="Studio — capability wall"
+      plateSrc="/services/capability-wall.webp"
+      plateAlt="Two engineers in front of the wall of system diagrams the studio works against"
       items={services}
       base="/services"
       closing="Fourteen ways in."

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { stats } from "@/content/site";
+import { stats, marketsShort } from "@/content/site";
 import type { PageSpec } from "@/content/pages";
 import { FadeUp, Item, Stagger } from "./motion";
 import { Plate, TrustRow, VisualLead } from "./blocks";
@@ -20,7 +20,7 @@ import {
 
 const trust = [
   { value: stats.projectsDelivered, label: "Projects delivered", sub: "most under NDA" },
-  { value: stats.clientsServed, label: "Clients served", sub: `${stats.regions} regions` },
+  { value: stats.clientsServed, label: "Clients served", sub: marketsShort },
   { value: String(stats.live), label: "Systems live", sub: "in production now" },
   { value: String(stats.building), label: "In build", sub: "shipping next" },
 ] as const;
@@ -31,6 +31,8 @@ export default function IndexTemplate({
   trail,
   intro,
   plate,
+  plateSrc,
+  plateAlt,
   items,
   base,
   closing,
@@ -40,6 +42,9 @@ export default function IndexTemplate({
   trail: string;
   intro: string;
   plate: string;
+  /** Omit and the plate renders as an explicit "image pending" drafting slot. */
+  plateSrc?: string;
+  plateAlt?: string;
   items: PageSpec[];
   base: string;
   closing: string;
@@ -51,9 +56,17 @@ export default function IndexTemplate({
         <Shell>
           <VisualLead
             eyebrow={eyebrow}
-            plate={<Plate label={plate} ratio="16/11" className="shadow-frame" />}
+            plate={
+              <Plate
+                label={plate}
+                src={plateSrc}
+                alt={plateAlt}
+                ratio="16/11"
+                className="shadow-frame"
+              />
+            }
           >
-            <Display size="xl" lead={lead} trail={trail} />
+            <Display as="h1" size="xl" lead={lead} trail={trail} />
             <Body className="mt-6 max-w-xl text-base">{intro}</Body>
             <div className="mt-8 flex flex-wrap gap-3">
               <Pill href="/contact">

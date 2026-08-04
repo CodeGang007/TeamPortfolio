@@ -25,7 +25,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/careers",
     "/resources",
     "/contact",
-    "/project-templates",
+    "/start-a-project",
+    // /project-templates is a redirect, not a page. Listing a redirect in the
+    // sitemap advertises a URL that never renders.
   ].map((route) => ({
     url: `${site.domain}${route}`,
     lastModified: now,

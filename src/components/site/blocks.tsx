@@ -22,21 +22,40 @@ export function Plate({
   ratio = "4/3",
   src,
   alt = "",
+  fit = "cover",
   className = "",
 }: {
   label: string;
   ratio?: string;
   src?: string;
   alt?: string;
+  /**
+   * How the image sits in the plate.
+   * `cover`   — fill and centre-crop. Right for photography.
+   * `top`     — fill and crop from the top. Right for landscape UI captures,
+   *             where the app header and first rows carry the recognition.
+   * `contain` — letterbox the whole frame. The only honest option for a
+   *             portrait phone capture, which `cover` would zoom ~3.5× into
+   *             an unreadable fragment.
+   */
+  fit?: "cover" | "top" | "contain";
   className?: string;
 }) {
   if (src) {
+    const imageClass =
+      fit === "contain"
+        ? "object-contain p-3"
+        : fit === "top"
+          ? "object-cover object-top"
+          : "object-cover";
     return (
       <div
-        className={`relative overflow-hidden rounded-xl border border-line bg-bone ${className}`}
+        className={`relative overflow-hidden rounded-xl border border-line ${
+          fit === "contain" ? "bg-bone-alt" : "bg-bone"
+        } ${className}`}
         style={{ aspectRatio: ratio }}
       >
-        <Image src={src} alt={alt} fill className="object-cover" sizes="(max-width:768px) 90vw, 40vw" />
+        <Image src={src} alt={alt} fill className={imageClass} sizes="(max-width:768px) 90vw, 40vw" />
       </div>
     );
   }
@@ -60,9 +79,8 @@ export function Plate({
  * Trust row under a page hero.
  *
  * TRUTH RULE: entries marked `pending` render as an explicit blank slot
- * rather than a number. We do not publish a Clutch or Google score until a
- * real one exists — a fabricated rating is the fastest way to make every
- * other figure on the site suspect.
+ * rather than a number. An em dash we can defend beats a figure we cannot —
+ * one fabricated number makes every other figure on the site suspect.
  */
 export function TrustRow({
   items,
@@ -90,7 +108,7 @@ export function TrustRow({
           )}
           <p className="mt-2.5 text-[0.85rem] font-medium text-ink">{it.label}</p>
           <p className="mt-0.5 font-mono text-[0.58rem] uppercase tracking-wider text-mute">
-            {it.pending ? "awaiting verified score" : it.sub}
+            {it.pending ? (it.sub ?? "none to publish yet") : it.sub}
           </p>
         </Item>
       ))}
@@ -168,6 +186,8 @@ export function Gallery({
     src?: string;
     ratio?: string;
     href?: string;
+    /** Screenshots need "contain"; photography wants the default crop. */
+    fit?: "cover" | "top" | "contain";
   }[];
   className?: string;
 }) {
@@ -179,6 +199,7 @@ export function Gallery({
             label={it.label}
             src={it.src}
             alt={it.src ? it.label : ""}
+            fit={it.fit}
             ratio={it.ratio ?? "4/3"}
             className="transition-transform duration-300 group-hover:-translate-y-1"
           />
@@ -214,6 +235,9 @@ export function OutcomeCard({
   metric,
   href,
   src,
+  // Product screenshots, never photography: `contain` is the only fit that
+  // works for both a 0.56 phone capture and a 1.98 desktop one.
+  fit = "contain",
   status = "live",
 }: {
   sector: string;
@@ -222,6 +246,7 @@ export function OutcomeCard({
   metric?: string;
   href: string;
   src?: string;
+  fit?: "cover" | "top" | "contain";
   status?: "live" | "building";
 }) {
   return (
@@ -233,6 +258,7 @@ export function OutcomeCard({
         label={`${client} — screen`}
         src={src}
         alt={src ? `${client} interface` : ""}
+        fit={fit}
         ratio="16/10"
         className="!rounded-none !border-0 !border-b !border-line"
       />

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { testimonials } from "@/content/testimonials";
-import { clients, stats } from "@/content/site";
+import { clients, stats, marketsShort } from "@/content/site";
 import { consoleProjects } from "@/content/projects";
 import { FadeUp, Item, Stagger } from "@/components/site/motion";
 import { Plate, SectionNav, TrustRow, VisualLead } from "@/components/site/blocks";
@@ -30,7 +30,7 @@ const sections = [
 ] as const;
 
 const trust = [
-  { value: stats.clientsServed, label: "Clients served", sub: `${stats.regions} regions` },
+  { value: stats.clientsServed, label: "Clients served", sub: marketsShort },
   { value: String(stats.live), label: "Systems live", sub: "verifiable now" },
   { value: "1", label: "Published quotes", sub: "on video" },
   { value: "0", label: "Invented quotes", sub: "always" },
@@ -63,7 +63,7 @@ export default function TestimonialsPage() {
               />
             }
           >
-            <Display size="xl" lead="One quote so far," trail="and it's real" />
+            <Display as="h1" size="xl" lead="One quote so far," trail="and it's real" />
             <Body className="mt-6 max-w-xl text-base">
               Most of our work sits under NDA, and we will not publish a client
               quote without written permission. Below is the first one we have
@@ -238,14 +238,15 @@ export default function TestimonialsPage() {
       <Section tone="bone" id="policy" className="scroll-mt-32">
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <FadeUp>
-            <SectionIntro eyebrow="Our policy" lead="Why this page" trail="stays empty" />
+            <SectionIntro eyebrow="Our policy" lead="Why this page" trail="fills up slowly" />
           </FadeUp>
           <FadeUp>
             <div className="space-y-5 text-[0.9375rem] leading-relaxed text-ink-soft">
               <p>
                 A buyer who catches one fabricated testimonial is right to
                 discount every other claim on the site. That risk is not worth
-                the six sentences it would buy us.
+                the six sentences it would buy us — which is why there is one
+                quote here and not twenty.
               </p>
               <p>
                 So we require three things before a quote appears here: it was

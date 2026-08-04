@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { site, stats } from "@/content/site";
+import { marketsShort, site, stats } from "@/content/site";
 import { FadeUp, Item, Stagger } from "@/components/site/motion";
 import { Gallery, Plate, SectionNav, TrustRow, VisualLead } from "@/components/site/blocks";
 import {
@@ -17,7 +17,7 @@ import {
 export const metadata: Metadata = {
   title: "Careers",
   description:
-    "A five-engineer studio. No open roles posted right now — open applications go straight to the founders.",
+    "A software engineering company. No open roles posted right now — open applications go straight to the founders.",
   openGraph: { title: "Careers — CodeGang", url: "/careers" },
   alternates: { canonical: "/careers" },
 };
@@ -30,10 +30,10 @@ const sections = [
 ] as const;
 
 const trust = [
-  { value: "5", label: "Engineers", sub: "the whole studio" },
+  { value: stats.projectsDelivered, label: "Projects delivered", sub: "most under NDA" },
   { value: String(stats.live), label: "Systems live", sub: "in production now" },
-  { value: String(stats.regions), label: "Client regions", sub: "BR · AU · IN · US · EU" },
-  { value: "", label: "Open roles", pending: true },
+  { value: stats.clientsServed, label: "Clients served", sub: marketsShort },
+  { value: "", label: "Open roles", sub: "none posted today", pending: true },
 ] as const;
 
 /**
@@ -67,10 +67,10 @@ const interests = [
 const life = [
   { lead: "You own a system", body: "Not a ticket queue. You take a system from scope to production and stay on it afterwards." },
   { lead: "You talk to clients", body: "There is no account layer between you and the person using what you built." },
-  { lead: "Five people means visible work", body: "Nothing you ship disappears into a monorepo nobody reads. It is in front of a client within weeks." },
+  { lead: "Your work is visible", body: "Nothing you ship disappears into a monorepo nobody reads. It is in front of a client within weeks." },
   { lead: "Review is written", body: "Reasoning goes in the pull request, so decisions are inspectable months later." },
   { lead: "Documentation is the job", body: "Runbooks and handover docs are in the estimate, not squeezed in on a Friday." },
-  { lead: "Timezones overlap deliberately", body: "We work across five client regions and agree the overlap rather than pretending it is free." },
+  { lead: "Timezones overlap deliberately", body: "We work across Brazil, Australia, India, the USA and Europe, and agree the overlap rather than pretending it is free." },
 ];
 
 const process = [
@@ -81,10 +81,10 @@ const process = [
 ];
 
 const culture = [
-  { label: "Studio — the five of us" },
-  { label: "Pairing — retrieval layer" },
-  { label: "Whiteboard — clinical schema" },
-  { label: "Ship day" },
+  { label: "Studio — at work", src: "/our-values/studio-five-of-us.jpg" },
+  { label: "Pairing — retrieval layer", src: "/our-values/review-retrieval-layer.jpg" },
+  { label: "Whiteboard — clinical schema", src: "/our-values/whiteboard-pinnacle-schema.jpg" },
+  { label: "Ship day", src: "/our-values/ship-day-verse-ai.jpg" },
 ];
 
 export default function CareersPage() {
@@ -95,9 +95,15 @@ export default function CareersPage() {
         <Shell>
           <VisualLead
             eyebrow="Careers"
-            plate={<Plate label="Studio — the five of us" ratio="4/3" className="shadow-frame" />}
+            plate={<Plate
+              label="Studio — at work"
+              src="/our-values/studio-five-of-us.jpg"
+              alt="The team around a standing desk, mid-review of a pull request"
+              ratio="4/3"
+              className="shadow-frame"
+            />}
           >
-            <Display size="xl" lead="Five engineers." trail="Occasionally, a sixth." />
+            <Display as="h1" size="xl" lead="A senior engineering team." trail="Occasionally, one more." />
             <Body className="mt-6 max-w-xl text-base">
               We have no verified open positions today, so this page does not
               list any. Open applications are read by the founders, and the
@@ -176,7 +182,13 @@ export default function CareersPage() {
           <VisualLead
             eyebrow="How we work"
             reverse
-            plate={<Plate label="Review — pairing session" ratio="1/1" className="shadow-frame" />}
+            plate={<Plate
+              label="Review — pairing session"
+              src="/our-values/review-retrieval-layer.jpg"
+              alt="Two engineers pairing over the retrieval layer during review"
+              ratio="1/1"
+              className="shadow-frame"
+            />}
           >
             <Display size="md" lead="Small enough" trail="that your work is visible" />
             <Body className="mt-5 max-w-lg">

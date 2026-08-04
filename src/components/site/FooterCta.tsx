@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { site, stats } from "@/content/site";
+import { site, stats, marketsShort } from "@/content/site";
 import { Nudge, Pill, Shell } from "./primitives";
 
 /**
@@ -33,7 +33,7 @@ export default function FooterCta() {
               <Pill href="/contact">
                 Talk to an engineer <Nudge />
               </Pill>
-              <Pill href="/project-request/custom" variant="light">
+              <Pill href="/start-a-project" variant="light">
                 Brief us with documents
               </Pill>
             </div>
@@ -46,7 +46,7 @@ export default function FooterCta() {
                 {site.email}
               </a>
               <span className="font-mono text-[0.62rem] uppercase tracking-wider text-mute">
-                {stats.live} systems live · {stats.regions} regions · NDA by
+                {stats.live} systems live · {marketsShort} · NDA by
                 default
               </span>
             </div>
@@ -68,7 +68,7 @@ export default function FooterCta() {
               />
               <div className="absolute inset-x-0 bottom-0 p-5">
                 <p className="text-[1.05rem] font-medium leading-snug text-white">
-                  Five engineers.
+                  Senior engineers.
                   <span className="text-white/65">
                     {" "}
                     {stats.live} systems that stay up.

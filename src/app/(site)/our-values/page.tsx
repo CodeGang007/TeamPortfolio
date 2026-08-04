@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { stats } from "@/content/site";
+import { stats, marketsShort, marketsLong } from "@/content/site";
 import { FadeUp, Item, Stagger } from "@/components/site/motion";
 import { Gallery, Plate, SectionNav, TrustRow, VisualLead } from "@/components/site/blocks";
 import {
@@ -32,9 +32,9 @@ const sections = [
 
 const trust = [
   { value: stats.projectsDelivered, label: "Projects delivered", sub: "most under NDA" },
-  { value: stats.clientsServed, label: "Clients served", sub: `${stats.regions} regions` },
+  { value: stats.clientsServed, label: "Clients served", sub: marketsShort },
   { value: String(stats.live), label: "Systems live", sub: "in production now" },
-  { value: "", label: "Fabricated claims", pending: true },
+  { value: "", label: "Fabricated claims", sub: "none, by policy", pending: true },
 ] as const;
 
 /**
@@ -77,14 +77,14 @@ const rules = [
 const practice = [
   { lead: "Numbers appear once", body: "Every figure on this site is computed from one source file. A stat cannot drift between two pages because it only exists in one place." },
   { lead: "Dates are never guessed", body: "Where we do not have a verified go-live date, the site shows no date at all rather than an approximation." },
-  { lead: "Ratings stay blank until earned", body: "The Clutch and Google slots on our pages render an em dash. They fill in when there is a real score to publish." },
+  { lead: "Empty is better than invented", body: "Awards, reseller badges and open roles render an em dash until there is something real to put there. We removed the third-party rating slots outright rather than leave scores we have not earned sitting on the page." },
   { lead: "NDA work stays unnamed", body: "Most of our delivered projects cannot be itemised. We say so instead of inventing a portfolio." },
   { lead: "Placeholders look like placeholders", body: "Where artwork does not exist yet, the page shows a drafting plate marked 'image pending' — not a stock photo pretending to be our office." },
   { lead: "Testimonials need written consent", body: "The testimonial section renders nothing until a client has given permission in writing." },
 ];
 
 const culture = [
-  { label: "Studio — the five of us", src: "/our-values/studio-five-of-us.jpg" },
+  { label: "Studio — at work", src: "/our-values/studio-five-of-us.jpg" },
   { label: "Review — pairing on the retrieval layer", src: "/our-values/review-retrieval-layer.jpg" },
   { label: "Whiteboard — schema for Pinnacle", src: "/our-values/whiteboard-pinnacle-schema.jpg" },
   { label: "Ship day — Verse AI cutover", src: "/our-values/ship-day-verse-ai.jpg" },
@@ -108,7 +108,7 @@ export default function OurValuesPage() {
               />
             }
           >
-            <Display size="xl" lead="Five rules," trail="each with a cost attached" />
+            <Display as="h1" size="xl" lead="Five rules," trail="each with a cost attached" />
             <Body className="mt-6 max-w-xl text-base">
               A value that costs nothing to hold is decoration. Each of these
               has a consequence we actually absorb — listed underneath it.
@@ -187,17 +187,18 @@ export default function OurValuesPage() {
             </div>
             <div className="space-y-5 text-[0.9375rem] leading-relaxed text-bone/70">
               <p>
-                Our Clutch and Google rating slots render an em dash and the
-                words &ldquo;awaiting verified score&rdquo;. Several of our
-                systems show no go-live date. The testimonial section renders
-                nothing at all.
+                Our awards, reseller-badge and open-role slots render an em
+                dash rather than a number. Several of our systems show no
+                go-live date. The testimonials page carries exactly one quote,
+                because that is how many we have written permission to
+                publish.
               </p>
               <p>
                 None of that is an oversight. A buyer who catches one fabricated
                 figure is right to discount every other number on the page — so
                 the blanks are load-bearing. They are what makes{" "}
                 <span className="text-bone">
-                  {stats.live} systems live across {stats.regions} regions
+                  {stats.live} systems live across {marketsLong}
                 </span>{" "}
                 worth reading.
               </p>
@@ -229,7 +230,7 @@ export default function OurValuesPage() {
         <FadeUp>
           <SectionIntro
             eyebrow="Culture"
-            lead="Five engineers,"
+            lead="One team,"
             trail="one room, no hand-off"
             body="Four scenes from how the studio actually works — a group review, a pairing session, a whiteboard mid-schema, a ship-day cutover."
           />

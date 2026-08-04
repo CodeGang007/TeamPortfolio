@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { consoleProjects } from "@/content/projects";
-import { stats } from "@/content/site";
+import { stats, marketsShort } from "@/content/site";
 
 /**
  * Full-bleed pixel-art hero.
@@ -132,7 +132,7 @@ export default function HeroScene() {
               aria-hidden
               className="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-300"
             />
-            {stats.live} systems live · {stats.regions} regions
+            {stats.live} systems live · {marketsShort}
           </p>
 
           <h1
@@ -148,7 +148,7 @@ export default function HeroScene() {
             className="hero-stagger mt-6 max-w-lg text-base leading-relaxed text-white/90 [text-shadow:0_1px_10px_rgba(0,35,60,0.45)]"
             style={{ "--d": "240ms" } as React.CSSProperties}
           >
-            A five-engineer studio shipping production AI, multi-tenant
+            A software engineering company shipping production AI, multi-tenant
             platforms, and mobile apps. {stats.projectsDelivered} projects
             delivered for {stats.clientsServed} clients — most under NDA.
           </p>

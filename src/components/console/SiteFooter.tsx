@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { site, stats } from "@/content/site";
+import { site, stats, whatsappHref, marketsLong } from "@/content/site";
 import { consoleProjects } from "@/content/projects";
 import { industries, services } from "@/content/pages";
 
@@ -43,7 +43,12 @@ const caseStudyGroups = [
 ];
 
 const elsewhere = [
-  { name: "GitHub", href: site.github },
+  {
+    name: "WhatsApp",
+    href: whatsappHref(
+      "Hi CodeGang — I found you through codegang.online and want to discuss a project."
+    ),
+  },
   { name: "LinkedIn", href: site.linkedin },
   { name: "X", href: site.x },
   { name: "Instagram", href: site.instagram },
@@ -59,10 +64,10 @@ export default function SiteFooter() {
               CodeGang
             </p>
             <p className="mt-4 text-[0.875rem] leading-relaxed text-ink-soft">
-              A five-engineer studio. {stats.projectsDelivered} projects
+              A software engineering company. {stats.projectsDelivered} projects
               delivered for {stats.clientsServed} clients over the years — most
               under NDA. {stats.live} systems live in production right now
-              across {stats.regions} regions.
+              across {marketsLong}.
             </p>
             <a
               href={`mailto:${site.email}`}
@@ -160,7 +165,7 @@ export default function SiteFooter() {
               </li>
               <li>
                 <Link
-                  href="/project-request/custom"
+                  href="/start-a-project"
                   className="text-[0.85rem] font-medium text-signal transition-colors hover:underline"
                 >
                   Start a project →

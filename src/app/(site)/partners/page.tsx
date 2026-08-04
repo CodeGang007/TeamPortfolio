@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { clients, stats } from "@/content/site";
+import { clients, stats, marketsShort } from "@/content/site";
 import { consoleProjects } from "@/content/projects";
 import { FadeUp, Item, Stagger } from "@/components/site/motion";
 import { Plate, SectionNav, TrustRow, VisualLead } from "@/components/site/blocks";
@@ -30,10 +30,10 @@ const sections = [
 ] as const;
 
 const trust = [
-  { value: stats.clientsServed, label: "Clients served", sub: `${stats.regions} regions` },
+  { value: stats.clientsServed, label: "Clients served", sub: marketsShort },
   { value: String(clients.length), label: "Named publicly", sub: "the rest under NDA" },
   { value: String(stats.live), label: "Systems live", sub: "in production now" },
-  { value: "", label: "Reseller badges", pending: true },
+  { value: "", label: "Reseller badges", sub: "we hold none", pending: true },
 ] as const;
 
 /**
@@ -85,9 +85,15 @@ export default function PartnersPage() {
         <Shell>
           <VisualLead
             eyebrow="Partners"
-            plate={<Plate label="Partners — engagement map" ratio="4/3" className="shadow-frame" />}
+            plate={<Plate
+                label="Partners — engagement"
+                src="/partners/engagement.webp"
+                alt="A delivery partner and an engineer working through a build together"
+                ratio="4/3"
+                className="shadow-frame"
+              />}
           >
-            <Display size="xl" lead="Two ways to partner," trail="both of them real" />
+            <Display as="h1" size="xl" lead="Two ways to partner," trail="both of them real" />
             <Body className="mt-6 max-w-xl text-base">
               We have run white-label delivery and referral arrangements. Those
               are the two on this page. We hold no reseller badges, which is why

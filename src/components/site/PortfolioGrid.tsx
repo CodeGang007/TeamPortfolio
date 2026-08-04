@@ -107,6 +107,7 @@ export default function PortfolioGrid({
                   label={`${p.name} — screen`}
                   src={shotBySlug[p.slug]}
                   alt={shotBySlug[p.slug] ? `${p.name} interface` : ""}
+                  fit="contain"
                   ratio="16/10"
                   className="!rounded-none !border-0 !border-b !border-line"
                 />

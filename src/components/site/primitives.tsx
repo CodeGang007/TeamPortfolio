@@ -77,12 +77,15 @@ export function Display({
   trail,
   size = "lg",
   align = "left",
+  as: Tag = "h2",
   className = "",
 }: {
   lead: ReactNode;
   trail?: ReactNode;
   size?: "xl" | "lg" | "md";
   align?: "left" | "center";
+  /** A page's hero headline must be `h1` — every other use stays `h2`. */
+  as?: "h1" | "h2";
   className?: string;
 }) {
   const sizes = { xl: "display-xl", lg: "display-lg", md: "display-md" };
@@ -103,13 +106,13 @@ export function Display({
   }
 
   return (
-    <h2
+    <Tag
       className={`${sizes[size]} text-balance ${
         align === "center" ? "text-center" : ""
       } ${className}`}
     >
       <MaskLines lines={lines} />
-    </h2>
+    </Tag>
   );
 }
 

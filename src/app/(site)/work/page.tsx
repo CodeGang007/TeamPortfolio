@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { consoleProjects } from "@/content/projects";
 import { PORTFOLIO_PROJECTS } from "@/data/portfolioProjects";
-import { stats } from "@/content/site";
+import { stats, marketsShort, marketsLong } from "@/content/site";
 import { FadeUp, Item, Stagger } from "@/components/site/motion";
 import {
   Gallery,
@@ -25,10 +25,10 @@ import {
 
 export const metadata: Metadata = {
   title: "Work",
-  description: `${stats.live} systems live in production across ${stats.regions} regions, ${stats.building} in build. Production AI, multi-tenant SaaS, mobile, ERP, and healthcare systems.`,
+  description: `${stats.live} systems live in production across ${marketsLong}, ${stats.building} in build. Production AI, multi-tenant SaaS, mobile, ERP, and healthcare systems.`,
   openGraph: {
     title: "Work — CodeGang",
-    description: `${stats.live} systems live in production across ${stats.regions} regions.`,
+    description: `${stats.live} systems live in production across ${marketsLong}.`,
     url: "/work",
   },
   alternates: { canonical: "/work" },
@@ -41,8 +41,8 @@ const sections = [
   { id: "inside", label: "Inside the work" },
 ] as const;
 
-// Trust row. `pending` entries render as an explicit blank — we do not
-// publish a Clutch or Google score until a real one exists.
+// Trust row. `pending` entries render as an explicit blank rather than a
+// number we cannot source. Every value below is computed from projects.ts.
 const trust = [
   {
     value: stats.projectsDelivered,
@@ -52,10 +52,10 @@ const trust = [
   {
     value: stats.clientsServed,
     label: "Clients served",
-    sub: `${stats.regions} regions`,
+    sub: marketsShort,
   },
-  { value: "", label: "Clutch rating", pending: true },
-  { value: "", label: "Google rating", pending: true },
+  { value: String(stats.live), label: "Systems live", sub: "in production now" },
+  { value: "0", label: "Account managers", sub: "you talk to the engineer" },
 ] as const;
 
 /**
@@ -69,7 +69,7 @@ const cases = [
     client: "MooveHub · Brazil",
     outcome: "A private assistant over the company's own documents",
     metric: "7-layer AWS stack · tenant-isolated retrieval",
-    src: "/illustrations/verse.png",
+    src: "/projects/verse-ai-login.webp",
   },
   {
     slug: "emedici",
@@ -77,7 +77,7 @@ const cases = [
     client: "EMEDICI2 PTY LTD · Australia",
     outcome: "Australia's medical students study for exams on it",
     metric: `${stats.emediciInstalls} installs · ${stats.emediciRating}★ Play Store`,
-    src: "/illustrations/emedici.png",
+    src: "/projects/emedici-question-bank.webp",
   },
   {
     slug: "pinnacle-hms",
@@ -85,7 +85,7 @@ const cases = [
     client: "Pinnacle General Hospital · India",
     outcome: "A working hospital runs its entire day on it",
     metric: "6 role-based portals · 39 tables · 57 relationships",
-    src: "/illustrations/pinnacle.png",
+    src: "/projects/pinnacle-portals.webp",
   },
   {
     slug: "arm-tech",
@@ -93,7 +93,7 @@ const cases = [
     client: "ARM Tech · India",
     outcome: "Forecasts the buyer acts on, inside the ERP itself",
     metric: "5 deep-learning modules on one pipeline",
-    src: "/illustrations/arm.png",
+    src: "/projects/armtech-dashboard.webp",
   },
   {
     slug: "ai-resume",
@@ -101,7 +101,7 @@ const cases = [
     client: "NailHiring · USA",
     outcome: "An ATS-ready resume in under a minute",
     metric: "live at nailhiring.com",
-    src: "/illustrations/resume.png",
+    src: "/projects/resume-ai-ats-score.webp",
   },
   {
     slug: "nestflow",
@@ -109,7 +109,7 @@ const cases = [
     client: "NestFlow · Europe",
     outcome: "Properties, tenants, leases and rent in one place",
     metric: "containerized microservices · in build",
-    src: "/illustrations/nestflow.png",
+    src: "/projects/nestflow-properties.webp",
   },
 ] as const;
 
@@ -137,6 +137,7 @@ const phases = [
 const insideShots = PORTFOLIO_PROJECTS.slice(0, 4).map((p) => ({
   label: p.gallery[0]?.caption ?? `${p.title} — screen`,
   src: p.gallery[0]?.src,
+  fit: "contain" as const,
   href: `/work/${p.id}`,
 }));
 
@@ -151,16 +152,17 @@ export default function WorkPage() {
             eyebrow="Case studies"
             plate={
               <Plate
-                label="Studio — systems wall"
+                label="Studio — working the architecture"
+                src="/about/studio-at-work.jpg"
+                alt="Three of the studio walking through a system's architecture at the whiteboard"
                 ratio="4/3"
                 className="shadow-frame"
               />
             }
           >
-            <Display size="xl" lead="Our experience," trail="live and checkable" />
+            <Display as="h1" size="xl" lead="Our experience," trail="live and checkable" />
             <Body className="mt-6 max-w-xl text-base">
-              {stats.live} systems live in production across {stats.regions}{" "}
-              regions, {stats.building} in build. The status next to each one is
+              {stats.live} systems live in production across {marketsLong}, {stats.building} in build. The status next to each one is
               computed from this site&apos;s own data, not claimed.
             </Body>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -186,8 +188,8 @@ export default function WorkPage() {
         <FadeUp>
           <SectionIntro
             eyebrow="The systems"
-            lead="Six systems,"
-            trail="and what each one changed"
+            lead={`${stats.live} systems live,`}
+            trail="six of them, and what each changed"
             body="Every card leads with the outcome. Each links to the case study that backs it."
           />
         </FadeUp>
@@ -218,7 +220,13 @@ export default function WorkPage() {
           <VisualLead
             eyebrow="Our expertise"
             reverse
-            plate={<Plate label="Architecture — whiteboard" ratio="1/1" className="shadow-frame" />}
+            plate={<Plate
+              label="Architecture — whiteboard"
+              src="/our-values/whiteboard-pinnacle-schema.jpg"
+              alt="The Pinnacle HMS schema, worked out on a whiteboard before any code"
+              ratio="1/1"
+              className="shadow-frame"
+            />}
           >
             <Display
               lead="Everything we sell"

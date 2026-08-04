@@ -1,6 +1,6 @@
 "use client";
 
-import { stats } from "@/content/site";
+import { marketsShort, stats } from "@/content/site";
 import { useCountTo, useInView } from "./useInView";
 
 /**
@@ -25,7 +25,7 @@ const FIGURES = [
     to: 100,
     suffix: "+",
     label: "Clients served",
-    note: "across five regions",
+    note: marketsShort,
   },
   {
     display: String(stats.live),
@@ -35,11 +35,11 @@ const FIGURES = [
     note: "in production, maintained by us",
   },
   {
-    display: String(stats.regions),
-    to: stats.regions,
+    display: "0",
+    to: 0,
     suffix: "",
-    label: "Regions supported",
-    note: "each in its own timezone",
+    label: "Account managers",
+    note: "you talk to the engineer building it",
   },
 ];
 

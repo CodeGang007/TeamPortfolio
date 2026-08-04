@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { marketsShort, stats } from "@/content/site";
 
 // Interactive delivery flow — how a problem becomes a scalable system.
 // Every stage cites the real system that proves we actually work this way.
@@ -46,7 +47,7 @@ const steps = [
     title: "Run",
     tag: "Stay on after launch",
     body: "Live means someone is watching it. We keep maintenance and roadmap after shipping, in your timezone.",
-    proof: "5 systems live right now across 5 regions — see the board",
+    proof: `${stats.live} systems live right now — ${marketsShort} — see the board`,
     href: "/work",
   },
 ];

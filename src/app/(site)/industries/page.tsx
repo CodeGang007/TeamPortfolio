@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { industries } from "@/content/pages";
-import { stats } from "@/content/site";
+import { stats, marketsLong } from "@/content/site";
 import IndexTemplate from "@/components/site/IndexTemplate";
 
 export const metadata: Metadata = {
@@ -20,8 +20,10 @@ export default function IndustriesIndexPage() {
       eyebrow="Industries"
       lead="Where our systems"
       trail="are running right now"
-      intro={`Healthcare, enterprise SaaS, trade and logistics, PropTech and HR — ${stats.live} systems live across ${stats.regions} regions, ${stats.building} in build.`}
+      intro={`Healthcare, enterprise SaaS, trade and logistics, PropTech and HR — ${stats.live} systems live across ${marketsLong}, ${stats.building} in build.`}
       plate="Map — systems by region"
+      plateSrc="/industries/systems-by-region.webp"
+      plateAlt="An engineer reviewing the map of where the studio's systems run"
       items={industries}
       base="/industries"
       closing="Seven sectors."

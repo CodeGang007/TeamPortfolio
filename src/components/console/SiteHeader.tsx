@@ -12,7 +12,6 @@ import {
   Cloud,
   Cpu,
   Factory,
-  Github,
   Handshake,
   Heart,
   Instagram,
@@ -34,7 +33,7 @@ import {
   Users,
   Workflow,
 } from "lucide-react";
-import { site, stats } from "@/content/site";
+import { site, stats, marketsShort, marketsLong } from "@/content/site";
 import { useAuth } from "@/contexts/AuthContext";
 
 const UserMenu = dynamic(() => import("@/components/UserMenu"), { ssr: false });
@@ -145,7 +144,7 @@ const megaMenus: MegaMenu[] = [
     feature: {
       eyebrow: "Proof",
       title: `${stats.live} systems live`,
-      body: `Across ${stats.regions} regions, with ${stats.building} more in build. Each one has a case study and, where public, a working URL.`,
+      body: `Across ${marketsLong}, with ${stats.building} more in build. Each one has a case study and, where public, a working URL.`,
       href: "/portfolio",
       cta: "Open the portfolio",
     },
@@ -159,7 +158,7 @@ const megaMenus: MegaMenu[] = [
         items: [
           { title: "About us", desc: "The road so far", href: "/about", Icon: Building2 },
           { title: "Our values", desc: "Five rules, each with a cost", href: "/our-values", Icon: Scale },
-          { title: "How we work", desc: "Five engineers, no hand-off", href: "/studio", Icon: Workflow },
+          { title: "How we work", desc: "Senior engineers, no hand-off", href: "/studio", Icon: Workflow },
           { title: "Careers", desc: "Open applications welcome", href: "/careers", Icon: Users },
         ],
       },
@@ -240,7 +239,7 @@ export default function SiteHeader() {
   const [mobileGroup, setMobileGroup] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname() ?? "/";
-  const { isAuthenticated, openLoginModal } = useAuth();
+  const { isAuthenticated } = useAuth();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const overArt = pathname === "/";
@@ -327,7 +326,7 @@ export default function SiteHeader() {
                 {site.email}
               </a>
               <span className="hidden font-mono text-[0.68rem] text-bone/45 sm:inline">
-                NDA by default · {stats.regions} regions
+                NDA by default · {marketsLong}
               </span>
             </div>
             <div className="flex items-center gap-3">
@@ -340,7 +339,6 @@ export default function SiteHeader() {
               </Link>
               <span aria-hidden className="hidden h-3.5 w-px bg-bone/20 sm:block" />
               {[
-                { name: "GitHub", href: site.github, Icon: Github },
                 { name: "LinkedIn", href: site.linkedin, Icon: Linkedin },
                 { name: "X", href: site.x, Icon: null },
                 { name: "Instagram", href: site.instagram, Icon: Instagram },
@@ -457,23 +455,18 @@ export default function SiteHeader() {
 
           {/* Right cluster */}
           <div className="ml-auto flex shrink-0 items-center gap-2.5">
-            {isAuthenticated ? (
+            {/* No sign-in prompt on the marketing surface. A visitor has no
+                account and no reason to want one — the only call to action
+                here is starting a project. The menu still appears for anyone
+                already signed in, so the team keeps its route to the app. */}
+            {isAuthenticated && (
               <span className="hidden md:block">
                 <UserMenu />
               </span>
-            ) : (
-              <button
-                onClick={openLoginModal}
-                className={`hidden px-2 text-[0.85rem] font-medium transition-colors 2xl:block ${
-                  solid ? "text-mute hover:text-ink" : "text-white/60 hover:text-white"
-                }`}
-              >
-                Sign in
-              </button>
             )}
 
             <Link
-              href="/project-request/custom"
+              href="/start-a-project"
               className={`hidden rounded-full border px-5 py-3 text-[0.85rem] font-medium transition-all 2xl:inline-flex ${
                 solid
                   ? "border-signal/45 text-ink shadow-[0_0_0_3px_rgba(46,125,240,0.10)] hover:border-signal hover:shadow-[0_0_0_4px_rgba(46,125,240,0.16)]"
@@ -660,18 +653,11 @@ export default function SiteHeader() {
                 ),
               )}
 
-              <li className="px-6 py-4">
-                {isAuthenticated ? (
+              {isAuthenticated && (
+                <li className="px-6 py-4">
                   <UserMenu />
-                ) : (
-                  <button
-                    onClick={openLoginModal}
-                    className="text-[0.9rem] font-medium text-mute"
-                  >
-                    Sign in
-                  </button>
-                )}
-              </li>
+                </li>
+              )}
               <li className="p-6">
                 <Link
                   href="/contact"
@@ -750,7 +736,7 @@ export default function SiteHeader() {
           </div>
 
           <p className="mt-4 text-[0.85rem] leading-relaxed text-bone/60">
-            A five-engineer studio. {stats.projectsDelivered} projects delivered
+            A software engineering company. {stats.projectsDelivered} projects delivered
             for {stats.clientsServed} clients — most under NDA.
           </p>
 
@@ -761,7 +747,7 @@ export default function SiteHeader() {
                 Brazil · Australia · India · USA · Europe
               </p>
               <p className="mt-1 font-mono text-[0.68rem] text-bone/45">
-                {stats.live} systems live · {stats.regions} regions
+                {stats.live} systems live · {marketsShort}
               </p>
             </div>
 
@@ -808,7 +794,6 @@ export default function SiteHeader() {
               <p className="mono-label !text-signal">Elsewhere</p>
               <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">
                 {[
-                  { name: "GitHub", href: site.github },
                   { name: "LinkedIn", href: site.linkedin },
                   { name: "X", href: site.x },
                   { name: "Instagram", href: site.instagram },
