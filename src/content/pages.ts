@@ -70,7 +70,7 @@ export const services: PageSpec[] = [
       { lead: "Built by the people who run it", body: "The engineers who design the retrieval layer are the ones who keep it alive afterwards." },
     ],
     stack: ["Python", "FastAPI", "AWS Bedrock", "OpenSearch", "LangChain", "PostgreSQL", "Docker", "Next.js"],
-    proof: ["verse-ai", "ai-resume"],
+    proof: ["verse-ai", "ai-resume", "pingo-ai", "opennote", "blaze-ai"],
     faq: [
       { q: "Do you use our data to train models?", a: "No. Your corpus is used for retrieval only, inside infrastructure you own. Nothing is sent to a training pipeline." },
       { q: "Can this run entirely in our cloud?", a: "Yes: that is the default. We deploy into your account so the data never leaves your perimeter." },
@@ -100,7 +100,7 @@ export const services: PageSpec[] = [
       { lead: "A record of the gaps", body: "Unanswered questions become a documentation backlog you can act on." },
     ],
     stack: ["Next.js", "FastAPI", "OpenAI / Bedrock", "pgvector", "Redis", "WebSockets"],
-    proof: ["verse-ai"],
+    proof: ["verse-ai", "pingo-ai", "ghl-automation", "opennote"],
     faq: [
       { q: "How do you stop it making things up?", a: "Retrieval-first: the model only answers from retrieved chunks, and returns a refusal when nothing relevant is found." },
       { q: "Can it read PDFs and scans?", a: "Yes. OCR sits in the ingestion pipeline for scanned documents." },
@@ -130,7 +130,7 @@ export const services: PageSpec[] = [
       { lead: "Costed", body: "Per-run token and time cost is recorded, so the business case stays measurable." },
     ],
     stack: ["Python", "TypeScript", "MCP", "Celery", "PostgreSQL", "Docker"],
-    proof: ["verse-ai", "arm-tech"],
+    proof: ["verse-ai", "arm-tech", "ghl-automation", "blaze-ai"],
     faq: [
       { q: "Will it act without asking?", a: "Only for steps you mark as safe. Anything destructive or outward-facing routes through an approval gate." },
       { q: "What happens when a tool fails?", a: "The run retries with backoff, then stops and surfaces the error rather than improvising around it." },
@@ -160,7 +160,7 @@ export const services: PageSpec[] = [
       { lead: "Engineer-led", body: "The assessment is run by the people who would build it, so the estimate is a commitment rather than a guess." },
     ],
     stack: ["Architecture review", "Cost modelling", "Data audit", "Prototype"],
-    proof: ["verse-ai", "arm-tech"],
+    proof: ["verse-ai", "arm-tech", "epicor-kinetic"],
     faq: [
       { q: "How long does it take?", a: "Two to three weeks for most scopes, depending on how many systems we need to look at." },
       { q: "Do we have to build with you afterwards?", a: "No. The deliverable is standalone and detailed enough for another team to execute." },
@@ -190,7 +190,7 @@ export const services: PageSpec[] = [
       { lead: "Predictable cost", body: "Batching and caching keep per-document cost inside a number you can plan around." },
     ],
     stack: ["Python", "Pydantic", "OpenAI / Bedrock", "Celery", "PostgreSQL", "S3"],
-    proof: ["ai-resume", "verse-ai"],
+    proof: ["ai-resume", "verse-ai", "blaze-ai", "opennote"],
     faq: [
       { q: "How do you keep output on-format?", a: "Schema-constrained decoding plus validation. Anything that fails the schema is retried or routed to review." },
       { q: "Can a person review before it goes out?", a: "Yes, and we recommend it for anything customer-facing until the eval set proves it out." },
@@ -220,7 +220,7 @@ export const services: PageSpec[] = [
       { lead: "Explainable enough to trust", body: "Contributing factors ship alongside the prediction so the user can sanity-check it." },
     ],
     stack: ["Python", "PyTorch", "scikit-learn", "pandas", "Airflow", "PostgreSQL", "Docker"],
-    proof: ["arm-tech", "emedici"],
+    proof: ["arm-tech", "emedici", "ai-resume", "local-shops-analytics"],
     faq: [
       { q: "How much data do we need?", a: "It depends on the target, and we say so in the assessment rather than after a failed build." },
       { q: "Who retrains it?", a: "The pipeline does, on a schedule. Your team sees the metrics; we handle the plumbing." },
@@ -250,7 +250,7 @@ export const services: PageSpec[] = [
       { lead: "Measured", body: "You can see what proportion is actually automated, weekly." },
     ],
     stack: ["Python", "Celery", "n8n-style orchestration", "PostgreSQL", "Redis", "REST / webhooks"],
-    proof: ["arm-tech", "pinnacle-hms"],
+    proof: ["ghl-automation", "arm-tech", "pinnacle-hms", "blaze-ai"],
     faq: [
       { q: "What if the automation gets one wrong?", a: "Confidence thresholds route uncertain cases to a person before anything is committed." },
       { q: "Do we need to replace our current tools?", a: "No. Automation sits between them and writes back through their APIs." },
@@ -280,7 +280,7 @@ export const services: PageSpec[] = [
       { lead: "Scales with the product", body: "Component-level decisions mean feature seven does not require a redesign." },
     ],
     stack: ["Figma", "Tailwind CSS", "React", "Framer Motion", "Storybook"],
-    proof: ["pinnacle-hms", "emedici", "nestflow"],
+    proof: ["pinnacle-hms", "emedici", "nestflow", "six-spa", "navan"],
     faq: [
       { q: "Can you work with our existing brand?", a: "Yes. We build the system around your tokens rather than replacing your identity." },
       { q: "Do you deliver Figma or code?", a: "Both. The Figma file is the conversation; the component library is the deliverable." },
@@ -310,7 +310,7 @@ export const services: PageSpec[] = [
       { lead: "Editable", body: "Copy changes are a content edit, not a ticket." },
     ],
     stack: ["Next.js", "Tailwind CSS", "Framer Motion", "Vercel", "Structured data"],
-    proof: ["ai-resume", "nestflow"],
+    proof: ["six-spa", "clear-investment-group", "rerise", "buyticket", "commonfloor", "nestflow", "ai-resume"],
     faq: [
       { q: "Do you write the copy?", a: "We structure it and draft it, then work from your corrections. We do not invent claims about your business." },
       { q: "Can we edit pages ourselves?", a: "Yes, through the CMS layer for anything that changes regularly." },
@@ -340,7 +340,7 @@ export const services: PageSpec[] = [
       { lead: "Observable", body: "Logs, metrics, and error tracking from the first deploy, not after the first outage." },
     ],
     stack: ["Next.js", "React", "TypeScript", "Node.js", "FastAPI", "PostgreSQL", "Redis", "Docker", "AWS"],
-    proof: ["verse-ai", "nestflow", "ai-resume"],
+    proof: ["verse-ai", "commonfloor", "buyticket", "nestflow", "navan", "ai-resume", "opennote", "blaze-ai", "six-spa", "clear-investment-group"],
     faq: [
       { q: "Do you work in our repository?", a: "Yes. Branches, reviews, and CI in your organisation from day one." },
       { q: "Can you take over an existing codebase?", a: "Yes, starting with a short audit so the estimate reflects what is actually there." },
@@ -370,7 +370,7 @@ export const services: PageSpec[] = [
       { lead: "Measured after launch", body: "Crash-free rate and usage tracked so quality is a number, not an impression." },
     ],
     stack: ["Flutter", "Dart", "Kotlin", "Firebase", "SQLite / Drift", "REST", "Play Console"],
-    proof: ["emedici"],
+    proof: ["emedici", "pingo-ai"],
     faq: [
       { q: "Flutter or native?", a: "Flutter unless the product needs deep platform integration. We say which in the assessment." },
       { q: "Do you handle store submission?", a: "Yes, including signing, metadata, and staged rollout." },
@@ -400,7 +400,7 @@ export const services: PageSpec[] = [
       { lead: "Predictable spend", body: "Cost is broken down by service and reviewed rather than discovered on the invoice." },
     ],
     stack: ["AWS", "Docker", "GitHub Actions", "Terraform", "NGINX", "CloudWatch", "PostgreSQL"],
-    proof: ["verse-ai", "nestflow"],
+    proof: ["verse-ai", "nestflow", "navan"],
     faq: [
       { q: "Can you work with our existing cloud setup?", a: "Yes. We start with an audit and improve incrementally rather than rebuilding by default." },
       { q: "Do you offer ongoing operations?", a: "Yes, as a retainer: but the runbook is written so you are not obliged to keep it." },
@@ -430,7 +430,7 @@ export const services: PageSpec[] = [
       { lead: "Known limits", body: "Load testing tells you where the system breaks before your traffic does." },
     ],
     stack: ["Playwright", "Vitest", "pytest", "k6", "GitHub Actions", "axe"],
-    proof: ["emedici", "pinnacle-hms"],
+    proof: ["emedici", "pinnacle-hms", "navan"],
     faq: [
       { q: "Can you add tests to an existing project?", a: "Yes: starting with the highest-risk paths rather than chasing a coverage number." },
       { q: "Do you do manual testing too?", a: "Yes. Automation and exploratory testing catch different classes of defect." },
@@ -460,7 +460,7 @@ export const services: PageSpec[] = [
       { lead: "Exit without damage", body: "Documentation and pairing are part of the engagement, so ending it is not a cliff." },
     ],
     stack: ["Python", "TypeScript", "React", "Next.js", "Flutter", "AWS", "PostgreSQL"],
-    proof: ["verse-ai", "emedici", "pinnacle-hms"],
+    proof: ["verse-ai", "opennote", "emedici", "pinnacle-hms", "navan"],
     faq: [
       { q: "What is the minimum engagement?", a: "One month, though most work is scoped in quarters because that is when handover pays off." },
       { q: "Which timezone do you work in?", a: "We overlap with your working hours; the specifics are agreed before we start." },
@@ -497,7 +497,7 @@ export const industries: PageSpec[] = [
       { lead: "Auditable", body: "Who saw what, and when, is recorded: because in healthcare that question gets asked." },
     ],
     stack: ["Next.js", "PostgreSQL", "Flutter", "Node.js", "Docker", "AWS"],
-    proof: ["pinnacle-hms", "emedici"],
+    proof: ["pinnacle-hms", "emedici", "rerise"],
     faq: [
       { q: "Do you handle patient data compliance?", a: "We build to the regime you operate under and design the access and audit layers around it. We do not claim certifications we do not hold." },
       { q: "Can it integrate with existing lab or imaging systems?", a: "Where those systems expose an interface, yes. We scope each integration explicitly." },
@@ -527,7 +527,7 @@ export const industries: PageSpec[] = [
       { lead: "Support that scales", body: "Routine order questions resolve without a ticket." },
     ],
     stack: ["Python", "pgvector", "Next.js", "PostgreSQL", "Redis", "AWS"],
-    proof: ["arm-tech", "verse-ai"],
+    proof: ["arm-tech", "verse-ai", "rerise", "blaze-ai"],
     faq: [
       { q: "Do you replace our storefront?", a: "No. These sit alongside it and integrate through its APIs." },
       { q: "How much catalogue data is needed?", a: "Enough to embed meaningfully: we check that in the assessment before quoting." },
@@ -557,7 +557,7 @@ export const industries: PageSpec[] = [
       { lead: "One customer record", body: "Support, purchase, and marketing read the same profile." },
     ],
     stack: ["Next.js", "TypeScript", "PostgreSQL", "Stripe", "Redis", "AWS"],
-    proof: ["nestflow", "ai-resume"],
+    proof: ["rerise", "buyticket", "blaze-ai", "ai-resume"],
     faq: [
       { q: "Should we leave our current platform?", a: "Not automatically. We model the cost and effort both ways before recommending it." },
       { q: "Can you migrate our existing data?", a: "Yes: catalogue, customers, and order history, with a reconciliation step." },
@@ -587,7 +587,7 @@ export const industries: PageSpec[] = [
       { lead: "Explainable", body: "Contributing factors ship with the prediction so a planner can override with reason." },
     ],
     stack: ["Python", "PyTorch", "pandas", "Airflow", "PostgreSQL", "Docker"],
-    proof: ["arm-tech"],
+    proof: ["arm-tech", "navan"],
     faq: [
       { q: "Does this replace our ERP?", a: "No. It integrates into it: that is the whole point of the ARM Tech build." },
       { q: "How much history do you need?", a: "Enough to cover your seasonality. We assess that against your actual data before committing." },
@@ -617,7 +617,7 @@ export const industries: PageSpec[] = [
       { lead: "Defensible scores", body: "Factor attribution means a decision can be explained to the person it affected." },
     ],
     stack: ["Python", "PostgreSQL", "FastAPI", "Redis", "Docker", "AWS"],
-    proof: ["arm-tech", "verse-ai"],
+    proof: ["arm-tech", "verse-ai", "clear-investment-group", "navan"],
     faq: [
       { q: "Do you handle regulatory compliance?", a: "We build to the requirements you operate under and design the audit layer around them. We do not claim certifications we do not hold." },
       { q: "Can you integrate with our core banking system?", a: "Where it exposes an interface, yes, scoped explicitly per integration." },
@@ -677,7 +677,7 @@ export const industries: PageSpec[] = [
       { lead: "Supportable", body: "Internal tooling ships with the product rather than a year after it." },
     ],
     stack: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Redis", "Stripe", "AWS", "Docker"],
-    proof: ["verse-ai", "ai-resume", "nestflow"],
+    proof: ["verse-ai", "opennote", "blaze-ai", "pingo-ai", "ai-resume", "nestflow"],
     faq: [
       { q: "Single-tenant or multi-tenant?", a: "Multi-tenant by default; single-tenant where a customer's compliance regime demands it. We model both costs." },
       { q: "Can you take over an existing SaaS?", a: "Yes, beginning with an audit so the estimate reflects the real codebase." },
