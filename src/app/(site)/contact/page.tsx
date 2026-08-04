@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { site, stats } from "@/content/site";
+import { site, stats, whatsappDisplay, whatsappHref, marketsShort, marketsLong } from "@/content/site";
+import WhatsAppGlyph from "@/components/console/WhatsAppGlyph";
 import { getConsoleProject } from "@/content/projects";
 import ContactForm from "@/components/console/ContactForm";
 import WorldClock from "@/components/console/WorldClock";
@@ -20,8 +21,8 @@ import {
 const trust = [
   { value: "<24h", label: "First reply", sub: "from an engineer" },
   { value: "0", label: "Sales calls", sub: "no qualification layer" },
-  { value: String(stats.live), label: "Systems live", sub: `${stats.regions} regions` },
-  { value: "", label: "Minimum budget", pending: true },
+  { value: String(stats.live), label: "Systems live", sub: marketsShort },
+  { value: "", label: "Minimum budget", sub: "we do not set one", pending: true },
 ] as const;
 
 /** What actually happens after you press send. */
@@ -37,8 +38,8 @@ const expect = [
   { lead: "We will say no", body: "If it is outside what we have shipped, we tell you rather than learning on your budget." },
   { lead: "Rough is fine", body: "A paragraph about the problem beats a specification document. We would rather help shape the scope." },
   { lead: "You keep the estimate", body: "Scope and architecture from a first conversation are yours, whether or not you build with us." },
-  { lead: "Founders, not a funnel", body: "There is no CRM sequence behind this form. Five engineers read it." },
-  { lead: "Timezones", body: `We work across ${stats.regions} client regions, so one of the clocks below is always business hours.` },
+  { lead: "Founders, not a funnel", body: "There is no CRM sequence behind this form. The founders read it." },
+  { lead: "Timezones", body: `We work across ${marketsLong}, so one of the clocks below is always business hours.` },
 ];
 
 export const metadata: Metadata = {
@@ -83,6 +84,7 @@ export default async function ContactPage({
             }
           >
             <Display
+              as="h1"
               size="xl"
               lead="Tell us what"
               trail="you are trying to ship."
@@ -128,12 +130,27 @@ export default async function ContactPage({
 
                 <Rule className="my-6" />
 
+                <p className="mono-label">Message us</p>
+                <a
+                  href={whatsappHref(
+                    "Hi CodeGang — I want to discuss a project."
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-4 py-2.5 text-[0.85rem] font-semibold text-white transition-colors hover:bg-[#1EBE5A]"
+                >
+                  <WhatsAppGlyph className="h-4 w-4" />
+                  WhatsApp {whatsappDisplay}
+                </a>
+
+                <Rule className="my-6" />
+
                 <p className="mono-label">Detailed brief</p>
                 <p className="mt-2 text-[0.85rem] leading-relaxed text-ink-soft">
                   Have a scoped project with documents and requirements?
                 </p>
                 <Link
-                  href="/project-request/custom"
+                  href="/start-a-project"
                   className="mt-2 inline-block text-[0.85rem] font-medium text-signal hover:underline"
                 >
                   Submit a full brief →
@@ -144,7 +161,6 @@ export default async function ContactPage({
                 <p className="mono-label">Elsewhere</p>
                 <ul className="mt-2 space-y-1.5">
                   {[
-                    { name: "GitHub", href: site.github },
                     { name: "LinkedIn", href: site.linkedin },
                     { name: "X", href: site.x },
                   ].map((s) => (
@@ -164,7 +180,7 @@ export default async function ContactPage({
                 <Rule className="my-6" />
 
                 <p className="font-mono text-[0.62rem] uppercase leading-relaxed tracking-wider text-mute">
-                  {stats.live} systems live · {stats.regions} regions · NDA by
+                  {stats.live} systems live · {marketsShort} · NDA by
                   default
                 </p>
               </aside>

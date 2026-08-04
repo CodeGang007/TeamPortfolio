@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import { consoleProjects } from "@/content/projects";
 import { getPortfolioProjectById } from "@/data/portfolioProjects";
-import { clients, site, stats } from "@/content/site";
+import { clients, site, stats, marketsShort, marketsLong } from "@/content/site";
 import { FadeUp, Item, Stagger } from "@/components/site/motion";
 import {
   OutcomeCard,
@@ -21,6 +21,8 @@ import {
   SectionIntro,
   Shell,
 } from "@/components/site/primitives";
+import TeamGrid from "@/components/site/TeamGrid";
+import { cofounderCount, teamSize } from "@/content/team";
 import {
   DeliveryStackDiagram,
   OperatingCycleDiagram,
@@ -29,10 +31,10 @@ import {
 
 export const metadata: Metadata = {
   title: "About",
-  description: `A five-engineer studio. ${stats.projectsDelivered} projects delivered for ${stats.clientsServed} clients — most under NDA — with ${stats.live} systems live across ${stats.regions} regions.`,
+  description: `A software engineering company. ${stats.projectsDelivered} projects delivered for ${stats.clientsServed} clients — most under NDA — with ${stats.live} systems live across ${marketsLong}.`,
   openGraph: {
     title: "About — CodeGang",
-    description: "Five engineers, and the systems they keep running.",
+    description: "The team, and the systems they keep running.",
     url: "/about",
   },
   alternates: { canonical: "/about" },
@@ -48,9 +50,9 @@ const VALUES_MARK_IMAGE: string | undefined = "/about/values-mark.png";
 
 const trustItems = [
   { value: stats.projectsDelivered, label: "Projects delivered", sub: "most under NDA" },
-  { value: stats.clientsServed, label: "Clients served", sub: `${stats.regions} regions` },
-  { value: "", label: "Clutch rating", pending: true },
-  { value: "", label: "Google rating", pending: true },
+  { value: stats.clientsServed, label: "Clients served", sub: marketsShort },
+  { value: String(stats.live), label: "Systems live", sub: "in production now" },
+  { value: "0", label: "Account managers", sub: "you talk to the engineer" },
 ] as const;
 
 /**
@@ -107,7 +109,7 @@ const difference = [
   },
   {
     lead: "How we do it",
-    body: "Scope, build, ship, stay. Short cycles in your repository from day one, deployed into your cloud account, with the same five engineers on maintenance afterwards.",
+    body: "Scope, build, ship, stay. Short cycles in your repository from day one, deployed into your cloud account, with the same engineers on maintenance afterwards.",
   },
   {
     lead: "Why CodeGang",
@@ -176,12 +178,12 @@ export default function AboutPage() {
         <Shell className="relative pb-16 pt-40 sm:pt-48">
           <p className="mono-label !text-bone/50 mb-6">About</p>
           <h1 className="display-xl max-w-3xl text-bone">
-            Five engineers.
+            Engineers who stay
             <br />
-            <span className="text-bone/55">No sales layer in between.</span>
+            <span className="text-bone/55">after the handover.</span>
           </h1>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-bone/80">
-            CodeGang is a five-engineer software studio. We ship production
+            CodeGang is a software engineering company. We ship production
             AI, multi-tenant platforms and mobile apps for clients in Brazil,
             Australia, India, the USA and Europe — and we stay on to keep
             them running after launch.
@@ -240,7 +242,7 @@ export default function AboutPage() {
             <Body className="mx-auto mt-6 max-w-2xl text-base">
               CodeGang exists because most studios optimise for the handoff —
               scope it, build it, hand you a repo, disappear. We do the
-              opposite: the same five engineers who scope a system stay on it
+              opposite: the same engineers who scope a system stay on it
               after launch, so the thing that shipped on day one still works
               on day five hundred.
             </Body>
@@ -250,6 +252,7 @@ export default function AboutPage() {
 
       <SectionNav
         sections={[
+          { id: "team", label: "The team" },
           { id: "build", label: "How we build" },
           { id: "systems", label: "The road so far" },
           { id: "work", label: "Explore the work" },
@@ -269,10 +272,25 @@ export default function AboutPage() {
             className="shadow-frame-lg"
           />
           <p className="mono-label mt-4 text-center">
-            Standups, architecture reviews, release day — same five people,
+            Standups, architecture reviews, release day — same people,
             every time.
           </p>
         </FadeUp>
+      </Section>
+
+      {/* ══ The team ════════════════════════════════════════════════ */}
+      <Section tone="bone" id="team" className="scroll-mt-32">
+        <FadeUp>
+          <SectionIntro
+            eyebrow="The team"
+            lead="The people who"
+            trail="actually build it"
+            body={`${cofounderCount} co-founders and the people who build alongside them — ${teamSize} in total. The person you meet in the first call is the person who writes your code; there is nobody behind them to hand it to.`}
+          />
+        </FadeUp>
+        <div className="mt-10">
+          <TeamGrid />
+        </div>
       </Section>
 
       {/* ══ How we build ════════════════════════════════════════════ */}
@@ -283,7 +301,7 @@ export default function AboutPage() {
               eyebrow="How we build"
               lead="Engineering your delivery pipeline,"
               trail="four layers, one accountable team"
-              body="Every system we ship sits on the same four layers — engineered by the same five people, from the interface a user touches down to the infrastructure that keeps it up."
+              body="Every system we ship sits on the same four layers — engineered by the same people, from the interface a user touches down to the infrastructure that keeps it up."
             />
           </FadeUp>
 
@@ -371,8 +389,8 @@ export default function AboutPage() {
         <FadeUp>
           <SectionIntro
             eyebrow="The road so far"
-            lead="Six systems,"
-            trail="and what each one had to solve"
+            lead={`${stats.live} systems live,`}
+            trail="six of them in detail"
             body="Ordered by system rather than by date — we publish go-live dates only once we can source them."
           />
         </FadeUp>
@@ -459,8 +477,7 @@ export default function AboutPage() {
               {stats.live}
             </p>
             <p className="mt-3 text-[0.95rem] text-bone/70">
-              systems live in production right now, across {stats.regions}{" "}
-              regions — not prototypes, not staging environments.
+              systems live in production right now, across {marketsLong} — not prototypes, not staging environments.
             </p>
           </FadeUp>
           <FadeUp delay={0.05}>

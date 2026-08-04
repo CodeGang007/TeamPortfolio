@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { consoleProjects } from "@/content/projects";
 import { PORTFOLIO_PROJECTS } from "@/data/portfolioProjects";
-import { clients, stats } from "@/content/site";
+import { clients, stats, marketsShort, marketsLong } from "@/content/site";
 import { FadeUp } from "@/components/site/motion";
 import { Gallery, Plate, SectionNav, TrustRow, VisualLead } from "@/components/site/blocks";
 import PortfolioGrid from "@/components/site/PortfolioGrid";
@@ -18,7 +18,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Portfolio",
-  description: `Every system we have built, filterable by sector and status — ${stats.live} live across ${stats.regions} regions, ${stats.building} in build.`,
+  description: `Every system we have built, filterable by sector and status — ${stats.live} live across ${marketsLong}, ${stats.building} in build.`,
   openGraph: { title: "Portfolio — CodeGang", url: "/portfolio" },
   alternates: { canonical: "/portfolio" },
 };
@@ -26,14 +26,14 @@ export const metadata: Metadata = {
 const sections = [
   { id: "grid", label: "All systems" },
   { id: "screens", label: "Screens" },
-  { id: "nda", label: "The unnamed work" },
+  { id: "nda", label: "Under NDA" },
 ] as const;
 
 const trust = [
   { value: String(consoleProjects.length), label: "Systems documented", sub: "case study each" },
-  { value: String(stats.live), label: "Live in production", sub: `${stats.regions} regions` },
+  { value: String(stats.live), label: "Live in production", sub: marketsShort },
   { value: stats.projectsDelivered, label: "Projects delivered", sub: "most under NDA" },
-  { value: "", label: "Awards", pending: true },
+  { value: "", label: "Awards", sub: "none entered for", pending: true },
 ] as const;
 
 const clientBySlug = Object.fromEntries(
@@ -62,6 +62,8 @@ const screens = PORTFOLIO_PROJECTS.flatMap((p) =>
     .map((g) => ({
       label: g.caption,
       src: g.src,
+      // Screenshots, not photos: aspect ratios run 0.56 (phone) to 2.97.
+      fit: "contain" as const,
       href: `/work/${p.id}`,
     })),
 );
@@ -77,17 +79,17 @@ export default function PortfolioPage() {
             plate={
               <Plate
                 label="Systems wall — all builds"
-                src="/portfolio/systems-wall.jpg"
-                alt="Wall of monitors showing dashboards from CodeGang's live systems"
+                src="/portfolio/systems-wall.webp"
+                alt="An engineer reviewing the wall of printed screens from every live system"
                 ratio="4/3"
                 className="shadow-frame"
               />
             }
           >
-            <Display size="xl" lead="Every system," trail="filterable and checkable" />
+            <Display as="h1" size="xl" lead="Every system," trail="filterable and checkable" />
             <Body className="mt-6 max-w-xl text-base">
               {consoleProjects.length} documented systems — {stats.live} live in
-              production across {stats.regions} regions, {stats.building} in
+              production across {marketsLong}, {stats.building} in
               build. Filter by sector or status; each card opens the case study.
             </Body>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -147,29 +149,27 @@ export default function PortfolioPage() {
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <FadeUp>
             <SectionIntro
-              eyebrow="The unnamed work"
-              lead="Why the portfolio"
-              trail="is smaller than the number"
+              eyebrow="Under NDA"
+              lead="Most of what we build"
+              trail="we are not allowed to name"
             />
           </FadeUp>
           <FadeUp>
             <div className="space-y-5 text-[0.9375rem] leading-relaxed text-ink-soft">
               <p>
-                We state {stats.projectsDelivered} projects delivered for{" "}
-                {stats.clientsServed} clients, and document{" "}
-                {consoleProjects.length} of them here. The gap is NDA work — the
-                majority of it.
+                {stats.projectsDelivered} projects for {stats.clientsServed}{" "}
+                clients over the studio&apos;s lifetime.{" "}
+                {consoleProjects.length} of them are documented here — the rest
+                run under client confidentiality agreements.
               </p>
               <p>
-                The alternative would be padding this page with unattributable
-                thumbnails, which is exactly the kind of claim that makes a
-                buyer stop believing the rest. So the page stays honest and
-                short, and the lifetime figure always carries its qualifier.
+                That does not put them out of reach. We can take you through the
+                architecture, the stack, the integrations and the outcome of a
+                comparable system without naming the client it was built for.
               </p>
               <p>
-                If a system in your sector is not shown, ask. We can usually
-                describe the architecture and the outcome without naming the
-                client.
+                Tell us your sector and we will tell you what we have already
+                shipped in it.
               </p>
               <Link
                 href="/contact"

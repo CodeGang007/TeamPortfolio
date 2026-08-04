@@ -4,7 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { consoleProjects, getConsoleProject, daysLive } from "@/content/projects";
 import { getPortfolioProjectById } from "@/data/portfolioProjects";
-import { site } from "@/content/site";
+import { site, whatsappHref } from "@/content/site";
 import StatusDot from "@/components/console/StatusDot";
 import JsonLd from "@/components/console/JsonLd";
 
@@ -166,7 +166,11 @@ export default async function CaseStudyPage({
                     height={800}
                     sizes="(min-width: 768px) 50vw, 100vw"
                     priority={i === 0}
-                    className="w-full"
+                    // `h-auto` is load-bearing: width/height below are nominal,
+                    // and without it the browser holds the 1280×800 box and
+                    // clips every screenshot that is not 16:10 — the portrait
+                    // phone captures lost most of their content.
+                    className="h-auto w-full"
                   />
                 )}
                 <figcaption className="border-t border-slate-100 px-4 py-3 text-xs font-medium text-slate-500">
@@ -314,16 +318,16 @@ export default async function CaseStudyPage({
               >
                 Start a project
               </Link>
-              {process.env.NEXT_PUBLIC_WA_NUMBER && (
-                <a
-                  href={`https://wa.me/${process.env.NEXT_PUBLIC_WA_NUMBER}?text=${encodeURIComponent(`Hi CodeGang — I just read the ${p.name} case study and want to build something similar.`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-lg bg-emerald-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-600"
-                >
-                  WhatsApp us
-                </a>
-              )}
+              <a
+                href={whatsappHref(
+                  `Hi CodeGang — I just read the ${p.name} case study and want to build something similar.`
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-lg bg-[#25D366] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1EBE5A]"
+              >
+                WhatsApp us
+              </a>
               <a
                 href={`mailto:${site.email}?subject=${encodeURIComponent(`About ${p.name}`)}`}
                 className="rounded-lg border border-blue-300 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-500"

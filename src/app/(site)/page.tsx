@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 import { consoleProjects } from "@/content/projects";
-import { clients, site, stats } from "@/content/site";
+import { clients, site, stats, marketsLong } from "@/content/site";
 import { testimonials } from "@/content/testimonials";
 
 import HeroScene from "@/components/site/HeroScene";
@@ -181,7 +181,7 @@ const industries = [
 const faq = [
   {
     q: "Who actually writes the code?",
-    a: "The five engineers on the studio page. There is no sales layer and no hand-off — the engineer in the meeting is the one writing the code.",
+    a: "The engineers on the studio page. There is no sales layer and no hand-off — the engineer in the meeting is the one writing the code.",
   },
   {
     q: "What do you build?",
@@ -193,7 +193,7 @@ const faq = [
   },
   {
     q: "Do you work across time zones?",
-    a: `Yes. Our clients are in ${stats.regions} regions — Brazil, Australia, India, the USA and Europe — and every system stays supported in its own timezone.`,
+    a: `Yes. Our clients are in ${marketsLong} — Brazil, Australia, India, the USA and Europe — and every system stays supported in its own timezone.`,
   },
   {
     q: "Can you work under NDA?",
@@ -213,7 +213,7 @@ const jsonLd = {
       url: site.domain,
       email: site.email,
       description: site.description,
-      sameAs: [site.github, site.linkedin, site.x],
+      sameAs: [site.linkedin, site.x],
     },
     {
       "@type": "FAQPage",
@@ -275,7 +275,7 @@ export default function HomePage() {
           <SectionIntro
             align="center"
             size="xl"
-            lead="CodeGang is a five-engineer studio"
+            lead="CodeGang is a software engineering company"
             trail="that ships systems companies run on"
           />
         </FadeUp>
@@ -344,9 +344,28 @@ export default function HomePage() {
 
                   <Body className="mt-5 max-w-lg">{s.body}</Body>
 
-                  <p className="mt-5 flex items-center gap-2">
+                  {/* A claim and the link that settles it, side by side. The
+                      URL comes from projects.ts so it can never drift. */}
+                  <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
                     <LiveChip>live</LiveChip>
                     <span className="text-[0.8rem] text-mute">{s.proof}</span>
+                    {(() => {
+                      const url = consoleProjects.find(
+                        (p) => p.slug === s.slug,
+                      )?.liveUrl;
+                      if (!url) return null;
+                      const store = url.includes("play.google.com");
+                      return (
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[0.8rem] font-medium text-signal hover:underline"
+                        >
+                          {store ? "View on Play Store" : "Open it live"} ↗
+                        </a>
+                      );
+                    })()}
                   </p>
 
                   <div className="mt-7 flex flex-wrap items-center gap-3">
@@ -461,7 +480,7 @@ export default function HomePage() {
             align="center"
             lead="Everything a company needs built,"
             trail="under one roof"
-            body="AI platforms, SaaS products, mobile apps, ERP suites, cloud infrastructure — shipped by the same five engineers, so nothing gets lost between vendors."
+            body="AI platforms, SaaS products, mobile apps, ERP suites, cloud infrastructure — shipped by the same team, so nothing gets lost between vendors."
           />
         </FadeUp>
 
@@ -474,11 +493,11 @@ export default function HomePage() {
             items={[
               {
                 lead: "One team, one contract",
-                body: "The AI work and the ERP work and the mobile work are the same five people, so integration is not a project of its own.",
+                body: "The AI work and the ERP work and the mobile work are the same people, so integration is not a project of its own.",
               },
               {
                 lead: "Every region supported",
-                body: `Systems live across ${stats.regions} regions, each one supported in its own timezone rather than in ours.`,
+                body: `Systems live across ${marketsLong}, each one supported in its own timezone rather than in ours.`,
               },
               {
                 lead: "NDA by default",

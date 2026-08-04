@@ -45,3 +45,9 @@ document-phase2/
 codegang-plans.zip
 files.zip
 .claude/*.tmp.*
+
+# Personal source photographs used to generate the team headshots. The
+# delivered images live in Cloudinary; these originals stay off the repo.
+.originals/
+src/*.jpeg
+src/*.jpg

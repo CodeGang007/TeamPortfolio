@@ -33,7 +33,7 @@ const trust = [
   { value: String(consoleProjects.length), label: "Systems documented", sub: "case study each" },
   { value: String(services.length + industries.length), label: "Service pages", sub: "each proof-linked" },
   { value: "0", label: "Gated downloads", sub: "no email wall" },
-  { value: "", label: "Published articles", pending: true },
+  { value: "", label: "Published articles", sub: "none published yet", pending: true },
 ] as const;
 
 /**
@@ -101,7 +101,7 @@ const answers = [
   },
   {
     q: "How big is the team?",
-    a: "Five engineers. That caps how much we run at once, and it is why the person who scoped your system is still on it a year later.",
+    a: "A senior engineering team across design, delivery and custom solutioning, with onsite coverage in the USA. We staff each engagement with named engineers who stay on it — the person who scoped your system is still on it a year later.",
   },
   {
     q: "Do you sign NDAs?",
@@ -131,7 +131,7 @@ export default function ResourcesPage() {
               />
             }
           >
-            <Display size="xl" lead="Notes from the builds," trail="none of them gated" />
+            <Display as="h1" size="xl" lead="Notes from the builds," trail="none of them gated" />
             <Body className="mt-6 max-w-xl text-base">
               Six write-ups drawn from systems we actually shipped. None are
               published yet, so each is marked as such — an unwritten article is

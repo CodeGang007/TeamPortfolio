@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { consoleProjects } from "@/content/projects";
 import { PORTFOLIO_PROJECTS } from "@/data/portfolioProjects";
-import { stats } from "@/content/site";
+import { site, stats, marketsShort } from "@/content/site";
 import type { PageSpec } from "@/content/pages";
 import { FadeUp, Item, Stagger } from "./motion";
 import { Plate, SectionNav, TrustRow, VisualLead } from "./blocks";
@@ -34,13 +34,13 @@ const sections = [
   { id: "faq", label: "FAQ" },
 ] as const;
 
-// Trust row. `pending` entries render an explicit blank — we do not publish
-// a Clutch or Google score until a real one exists.
+// Trust row. `pending` entries render an explicit blank rather than a number
+// we cannot source. Every value below is computed from projects.ts.
 const trust = [
   { value: stats.projectsDelivered, label: "Projects delivered", sub: "most under NDA" },
-  { value: stats.clientsServed, label: "Clients served", sub: `${stats.regions} regions` },
+  { value: stats.clientsServed, label: "Clients served", sub: marketsShort },
   { value: String(stats.live), label: "Systems live", sub: "in production now" },
-  { value: "", label: "Clutch rating", pending: true },
+  { value: "0", label: "Account managers", sub: "you talk to the engineer" },
 ] as const;
 
 const phases = [
@@ -74,8 +74,67 @@ export default function PageTemplate({
   // same gallery so the two visuals on the page are never the same image.
   const secondShot = leadProject?.gallery[1] ?? leadProject?.gallery[0];
 
+  /* ── Structured data ───────────────────────────────────────────────
+     These pages already answer, in prose, the questions a buyer types
+     into a search box or asks an assistant. Emitting that same text as
+     schema is what lets an answer engine quote it instead of guessing.
+     Everything below is generated from the spec, so the machine-readable
+     copy and the visible copy are the same strings by construction. */
+  const url = `${site.domain}${base}/${spec.slug}`;
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": `${url}#service`,
+        name: spec.eyebrow,
+        description: spec.intro,
+        url,
+        serviceType: spec.eyebrow,
+        provider: { "@type": "Organization", name: site.name, url: site.domain },
+        areaServed: ["Brazil", "Australia", "India", "United States", "Europe"],
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: `${spec.eyebrow} — what we build`,
+          itemListElement: spec.offerings.map((o) => ({
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: o.title, description: o.body },
+          })),
+        },
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${url}#faq`,
+        mainEntity: spec.faq.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumbs`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: backLabel,
+            item: `${site.domain}${base}`,
+          },
+          { "@type": "ListItem", position: 2, name: spec.eyebrow, item: url },
+        ],
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+
       {/* ══ Page head ═══════════════════════════════════════════════ */}
       <section className="relative isolate overflow-hidden bg-bone pb-12 pt-40 sm:pt-48">
         <div aria-hidden className="blueprint mask-fade-y absolute inset-0 -z-10" />
@@ -95,6 +154,7 @@ export default function PageTemplate({
                   label={leadShot?.caption ?? spec.plate}
                   src={leadShot?.src}
                   alt={leadShot ? leadShot.caption : ""}
+                  fit="contain"
                   ratio="16/11"
                   className="shadow-frame"
                 />
@@ -112,7 +172,7 @@ export default function PageTemplate({
               </figure>
             }
           >
-            <Display size="xl" lead={spec.lead} trail={spec.trail} />
+            <Display as="h1" size="xl" lead={spec.lead} trail={spec.trail} />
             <Body className="mt-6 max-w-xl text-base">{spec.intro}</Body>
             <div className="mt-8 flex flex-wrap gap-3">
               <Pill href="/contact">
@@ -181,6 +241,7 @@ export default function PageTemplate({
                 label={secondShot?.caption ?? `${spec.nav} — outcome board`}
                 src={secondShot?.src}
                 alt={secondShot ? secondShot.caption : ""}
+                fit="contain"
                 ratio="4/3"
                 className="shadow-frame"
               />
@@ -265,6 +326,7 @@ export default function PageTemplate({
                   label={`${p.name} — screen`}
                   src={PORTFOLIO_PROJECTS.find((x) => x.id === p.slug)?.image}
                   alt={`${p.name} interface`}
+                  fit="contain"
                   ratio="16/10"
                   className="!rounded-none !border-0 !border-b !border-line"
                 />

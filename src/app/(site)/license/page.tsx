@@ -33,7 +33,7 @@ export default function License() {
                             <section className="space-y-4">
                                 <h2 className="text-2xl font-bold text-slate-900">2. Open Source Contributions</h2>
                                 <p className="text-slate-600 leading-relaxed">
-                                    CodeGang actively contributes to the open source community. Projects identified as open source on our GitHub are typically licensed under MIT or Apache 2.0. Please check individual repositories for specific license files.
+                                    Projects we identify as open source are typically licensed under MIT or Apache 2.0. Please check individual repositories for specific license files.
                                 </p>
                             </section>
 

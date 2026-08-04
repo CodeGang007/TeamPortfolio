@@ -1,6 +1,6 @@
 # CodeGang
 
-> CodeGang is a five-engineer software studio (codegang.online) shipping production
+> CodeGang is a software engineering company (codegang.online) shipping production
 > AI, multi-tenant platforms, and mobile apps for clients in Brazil, Australia,
 > India, the USA, and Europe. The engineers in the meeting are the ones writing
 > the code.
@@ -29,11 +29,10 @@
 ## Pages
 
 - [Work](https://www.codegang.online/work): all systems with live status
-- [Studio](https://www.codegang.online/studio): the five engineers and how the studio works
+- [Studio](https://www.codegang.online/studio): the team and how the studio works
 - [Contact](https://www.codegang.online/contact): messages go straight to the founders
 
 ## Contact
 
 - Email: support@codegang.online
-- GitHub: https://github.com/CodeGang007
 - LinkedIn: https://www.linkedin.com/company/code-gang

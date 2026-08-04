@@ -9,13 +9,61 @@ export const site = {
   domain: "https://www.codegang.online",
   title: "CodeGang — Software engineering studio",
   description:
-    "A five-engineer studio shipping production AI, multi-tenant platforms, and mobile apps for clients in Brazil, Australia, India, the USA, and Europe.",
+    "A software engineering company shipping production AI, multi-tenant platforms, and mobile apps for clients in Brazil, Australia, India, the USA, and Europe.",
   email: "codegang0077@gmail.com",
-  github: "https://github.com/CodeGang007",
   linkedin: "https://www.linkedin.com/company/code-gang",
   x: "https://x.com/CodeGang20",
   instagram: "https://www.instagram.com/codegang0077",
+  /** Public wa.me number — digits only, country code first, no `+`. */
+  whatsapp: "917908631466",
 } as const;
+
+/** Human-readable form of `site.whatsapp`, for anywhere the number is shown. */
+export const whatsappDisplay = "+91 79086 31466";
+
+/**
+ * Build a wa.me deep link with a prefilled message.
+ *
+ * Every WhatsApp link on the site goes through here. The number previously
+ * came straight from NEXT_PUBLIC_WA_NUMBER, which meant an unset env var
+ * silently removed the button everywhere; `site.whatsapp` is the fallback so
+ * that can't happen again, and the env var still wins if it is set.
+ */
+export function whatsappHref(message: string): string {
+  const number = process.env.NEXT_PUBLIC_WA_NUMBER || site.whatsapp;
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Named client markets, derived from the regions that actually have a live
+ * system. We name them rather than counting them: "5 regions" is a number a
+ * reader has to interpret, while "Brazil, Australia, India, the USA and
+ * Europe" is the same fact stated in terms a buyer — and a search engine —
+ * already understands.
+ *
+ * Order follows content/projects.ts, so a system in a new region adds itself.
+ */
+const REGION_NAMES = {
+  BR: { long: "Brazil", short: "BR" },
+  AU: { long: "Australia", short: "AU" },
+  IN: { long: "India", short: "IN" },
+  US: { long: "the USA", short: "US" },
+  EU: { long: "Europe", short: "EU" },
+} as const;
+
+const activeRegions = [...new Set(consoleProjects.map((p) => p.region))];
+
+/** "Brazil, Australia, India, the USA and Europe" — for running prose. */
+export const marketsLong: string = activeRegions
+  .map<string>((r) => REGION_NAMES[r].long)
+  .reduce((acc, name, i, arr) =>
+    i === arr.length - 1 ? `${acc} and ${name}` : `${acc}, ${name}`
+  );
+
+/** "BR · AU · IN · US · EU" — for stat sub-labels and tight chrome. */
+export const marketsShort = activeRegions
+  .map((r) => REGION_NAMES[r].short)
+  .join(" · ");
 
 // Computed, never typed by hand.
 export const stats = {

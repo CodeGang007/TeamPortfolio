@@ -19,18 +19,28 @@ const STACK_LAYERS = [
 /** Layered stack — mirrors the "value proposition" diagram, CodeGang's stack instead. */
 export function DeliveryStackDiagram() {
   return (
-    <div className="relative pl-9 sm:pl-11">
-      <span
-        aria-hidden
-        className="absolute bottom-2 left-0 top-2 w-px bg-line-strong"
-      />
-      <span
-        aria-hidden
-        className="mono-label absolute left-0 top-1/2 origin-left -translate-y-1/2 -rotate-90 whitespace-nowrap tracking-[0.16em]"
-        style={{ transformOrigin: "left center" }}
-      >
-        CODEGANG DELIVERY STACK
-      </span>
+    <div className="relative pl-9 pr-9 sm:pl-11 sm:pr-11">
+      {/* Left rail. `writing-mode` keeps the label inside its own column and
+          centred against the stack — a rotate() transform measured the text
+          horizontally and pushed "CODEGANG" off the top of the box. */}
+      <div className="absolute inset-y-0 left-0 flex w-9 items-center justify-center sm:w-11">
+        <span aria-hidden className="absolute inset-y-2 left-0 w-px bg-line-strong" />
+        <span className="mono-label rotate-180 whitespace-nowrap tracking-[0.16em] [writing-mode:vertical-rl]">
+          CODEGANG DELIVERY STACK
+        </span>
+      </div>
+
+      {/* Right rail — brackets the two highlighted layers, which straddle the
+          vertical middle of a four-layer stack. */}
+      <div className="absolute inset-y-0 right-0 hidden w-9 items-center justify-center sm:flex sm:w-11">
+        <span
+          aria-hidden
+          className="absolute inset-y-[25%] right-0 w-2 rounded-r-sm border-y border-r border-line-strong"
+        />
+        <span className="mono-label rotate-180 whitespace-nowrap tracking-[0.16em] [writing-mode:vertical-rl]">
+          the engineering core
+        </span>
+      </div>
 
       <div className="space-y-2.5">
         {STACK_LAYERS.map((layer, i) => {
@@ -68,10 +78,6 @@ export function DeliveryStackDiagram() {
           Production
         </span>
       </div>
-
-      <p className="mono-label absolute -right-1 top-0 hidden text-right sm:block">
-        the engineering core →
-      </p>
     </div>
   );
 }
@@ -120,10 +126,14 @@ export function OperatingCycleDiagram() {
   );
 }
 
+// Circles sit at (37,37) (63,37) (50,67) with a 31% radius, so each one has
+// exactly one lobe the other two do not cover. Each label is centred on its
+// own lobe — previously they were corner-anchored and floated ~100px outside
+// the circle they were naming.
 const STRENGTHS = [
-  { icon: Cloud, label: "Production Engineering", style: { top: "4%", left: "8%" } },
-  { icon: Sparkles, label: "Applied AI", style: { top: "4%", right: "8%" } },
-  { icon: LayoutTemplate, label: "Design & Usability", style: { bottom: "0%", left: "50%", transform: "translateX(-50%)" } },
+  { icon: Cloud, label: "Production Engineering", at: { left: "25%", top: "27%" } },
+  { icon: Sparkles, label: "Applied AI", at: { left: "75%", top: "27%" } },
+  { icon: LayoutTemplate, label: "Design & Usability", at: { left: "50%", top: "81%" } },
 ] as const;
 
 /** Three overlapping circles around a shared centre — mirrors the strengths Venn. */
@@ -143,15 +153,16 @@ export function StrengthsVenn() {
         className="absolute bottom-[2%] left-1/2 h-[62%] w-[62%] -translate-x-1/2 rounded-full border border-signal/50 bg-signal/[0.07] mix-blend-multiply"
       />
 
-      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-lg font-semibold tracking-tight text-ink">
+      {/* Centroid of the three circle centres — the true three-way overlap. */}
+      <span className="absolute left-1/2 top-[47%] -translate-x-1/2 -translate-y-1/2 font-display text-lg font-semibold tracking-tight text-ink">
         Build
       </span>
 
       {STRENGTHS.map((s) => (
         <div
           key={s.label}
-          className="absolute flex w-24 flex-col items-center gap-1.5 text-center"
-          style={s.style}
+          className="absolute flex w-24 -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1.5 text-center"
+          style={s.at}
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-paper shadow-frame">
             <s.icon aria-hidden className="h-4 w-4 text-signal" />

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { stats, site } from "@/content/site";
+import { stats, site, marketsShort, marketsLong } from "@/content/site";
+import { team } from "@/content/team";
 import WorldClock from "@/components/console/WorldClock";
 import { FadeUp, Item, Stagger } from "@/components/site/motion";
 import {
@@ -25,61 +26,21 @@ import {
 export const metadata: Metadata = {
   title: "Studio",
   description:
-    "Five engineers. No sales layer, no hand-off — the engineer in the meeting is the one writing the code.",
+    "No sales layer, no hand-off — the engineer in the meeting is the one writing the code.",
   openGraph: {
     title: "Studio — CodeGang",
-    description: "Five engineers. No sales layer, no hand-off.",
+    description: "No sales layer, no hand-off.",
     url: "/studio",
   },
   alternates: { canonical: "/studio" },
 };
 
-// The public faces of the studio (the rest of the team stays off the site
-// by choice). Mottos are theirs to edit in one place.
-// TODO(team): real photos for Gourav, Subhadip, and Sushant are coming —
-// drop them in public/avatars/ and swap the `avatar` paths below.
-const founders = [
-  {
-    name: "Gourav Chakraborty",
-    focus: "Full stack · System design",
-    line: "Architecture and the code that has to survive production.",
-    quote: "If it can't survive production, it isn't finished.",
-    avatar: "/avatars/founder-eng.png",
-  },
-  {
-    name: "Subhadip Sasmal",
-    focus: "Product design · UX",
-    line: "Interfaces that respect the person using them.",
-    quote: "Good design is the shortest path between a user and their goal.",
-    avatar: "/avatars/founder-design.png",
-  },
-  {
-    name: "Sushant Choudhary",
-    focus: "Strategy · Client engineering",
-    line: "Runs the engagements and keeps the roadmap honest.",
-    quote: "Scope honestly, then ship exactly that.",
-    avatar: "/avatars/founder-strategy.png",
-  },
-  {
-    name: "Abhrajit",
-    focus: "Software engineering",
-    line: "Builds and hardens the systems behind the case studies.",
-    quote: "Simple systems survive. Clever ones page you at 3 a.m.",
-    avatar: "/avatars/founder-backend.png",
-  },
-  {
-    name: "Sourajit",
-    focus: "Software engineering",
-    line: "Ships features and keeps the pipelines green.",
-    quote: "Code is read a hundred times more often than it is written.",
-    avatar: "/avatars/founder-fullstack.png",
-  },
-];
+// The team now lives in content/team.ts — one list, used by /about and here.
 
 const principles = [
   {
     title: "The engineer in the meeting writes the code.",
-    body: "There are five of us and no account managers. Whoever scopes your system builds your system.",
+    body: "There are no account managers in between. Whoever scopes your system builds your system.",
   },
   {
     title: "We stay on after shipping.",
@@ -90,8 +51,8 @@ const principles = [
     body: "Every number on this site is computed from the systems themselves. If we can't source a stat, we don't publish it.",
   },
   {
-    title: "Small on purpose.",
-    body: `Five engineers, ${stats.live + stats.building} systems, ${stats.regions} regions. Small enough that nothing gets lost between the person who promised and the person who builds.`,
+    title: "Senior on purpose.",
+    body: `${stats.live + stats.building} systems across ${marketsLong}, built by the people who scoped them. Nothing gets lost between the person who promised and the person who builds.`,
   },
 ];
 
@@ -103,8 +64,8 @@ const sections = [
 ] as const;
 
 const trust = [
-  { value: "5", label: "Engineers", sub: "the whole studio" },
-  { value: String(stats.live), label: "Systems live", sub: `${stats.regions} regions` },
+  { value: stats.clientsServed, label: "Clients served", sub: "most under NDA" },
+  { value: String(stats.live), label: "Systems live", sub: marketsShort },
   { value: stats.projectsDelivered, label: "Projects delivered", sub: "most under NDA" },
   { value: "0", label: "Account managers", sub: "no sales layer" },
 ] as const;
@@ -114,16 +75,16 @@ const engagement = [
   { lead: "Your repository", body: "We work in your organisation from the first commit. You own the code throughout, not on final payment." },
   { lead: "Your cloud", body: "Deployment goes into your account under your keys. We hand over infrastructure, not access to a hosted black box." },
   { lead: "Fixed scope, written down", body: "What the system does and what shipping means are agreed in writing before build starts." },
-  { lead: "Timezone overlap agreed", body: "We work across five client regions and set the overlap explicitly rather than pretending it is free." },
+  { lead: "Timezone overlap agreed", body: "We work across Brazil, Australia, India, the USA and Europe, and set the overlap explicitly rather than pretending it is free." },
   { lead: "Runbooks included", body: "Handover documentation is in the estimate, so ending an engagement is not a cliff." },
   { lead: "NDA by default", body: "Confidentiality is the starting position, which is why most of our delivered work is unnamed on this site." },
 ];
 
 const inside = [
-  { label: "Studio — the five of us" },
-  { label: "Review — pairing on retrieval" },
-  { label: "Whiteboard — clinical schema" },
-  { label: "Ship day — Verse AI cutover" },
+  { label: "Studio — at work", src: "/our-values/studio-five-of-us.jpg" },
+  { label: "Review — pairing on retrieval", src: "/our-values/review-retrieval-layer.jpg" },
+  { label: "Whiteboard — clinical schema", src: "/our-values/whiteboard-pinnacle-schema.jpg" },
+  { label: "Ship day — Verse AI cutover", src: "/our-values/ship-day-verse-ai.jpg" },
 ];
 
 export default function StudioPage() {
@@ -140,13 +101,15 @@ export default function StudioPage() {
             eyebrow="Studio"
             plate={
               <Plate
-                label="Studio — the five of us"
+                label="Studio — at work"
+                src="/our-values/studio-five-of-us.jpg"
+                alt="The team around a standing desk, mid-review of a pull request"
                 ratio="16/11"
                 className="shadow-frame"
               />
             }
           >
-            <Display size="xl" lead="Five engineers." trail="No hand-off." />
+            <Display as="h1" size="xl" lead="One team." trail="No hand-off." />
             <Body className="mt-6 max-w-xl text-base">
               CodeGang is a software engineering studio. We build production AI,
               multi-tenant platforms, and mobile apps for clients in Brazil,
@@ -208,14 +171,14 @@ export default function StudioPage() {
             eyebrow="The team"
             lead="The faces"
             trail="of the studio"
-            body="Five engineers. The whole team still fits on one line of a standup."
+            body="The people who scope your system are the people who build it."
           />
         </FadeUp>
 
         <Stagger className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {founders.map((f) => (
+          {team.map((f) => (
             <Item
-              key={f.name}
+              key={f.id}
               className="group overflow-hidden rounded-xl border border-line bg-paper transition-all duration-300 hover:-translate-y-1 hover:shadow-frame"
             >
               {/* Poster panel — blueprint grid, name set large, cutout portrait */}
@@ -232,13 +195,13 @@ export default function StudioPage() {
                   )}
                 </p>
                 <p className="mono-label mb-14 mt-3 max-w-[58%] !text-signal">
-                  {f.focus}
+                  {f.role}
                 </p>
                 <Image
-                  src={f.avatar}
-                  alt=""
-                  width={200}
-                  height={200}
+                  src={f.cutout}
+                  alt={`${f.name}, ${f.role}`}
+                  width={400}
+                  height={400}
                   className="absolute -bottom-1 right-2 h-32 w-32 object-contain transition-transform duration-500 group-hover:scale-105 sm:h-36 sm:w-36"
                 />
               </div>
@@ -248,7 +211,7 @@ export default function StudioPage() {
                   &ldquo;{f.quote}&rdquo;
                 </blockquote>
                 <figcaption className="mt-3 text-[0.82rem] text-mute">
-                  {f.line}
+                  {f.owns}
                 </figcaption>
               </figure>
             </Item>
@@ -265,6 +228,8 @@ export default function StudioPage() {
             plate={
               <Plate
                 label="Engagement — scope to handover"
+                src="/studio/scope-to-handover.webp"
+                alt="Two engineers going through a written scope document line by line"
                 ratio="1/1"
                 className="shadow-frame"
               />

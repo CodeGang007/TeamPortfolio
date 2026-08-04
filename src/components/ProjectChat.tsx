@@ -18,6 +18,8 @@ import { db } from "@/lib/firebaseDb";
 import { storage } from "@/lib/firebaseStorage";
 import { useAuth } from "@/contexts/AuthContext";
 import { X, Send, Mic, Square, MessageSquare } from "lucide-react";
+import { whatsappHref } from "@/content/site";
+import WhatsAppGlyph from "@/components/console/WhatsAppGlyph";
 
 interface ChatMessage {
     id: string;
@@ -35,8 +37,6 @@ interface Presence {
     typingAt?: Timestamp;
     lastSeenAt?: Timestamp;
 }
-
-const WA_NUMBER = process.env.NEXT_PUBLIC_WA_NUMBER; // e.g. 9198XXXXXXXX (digits only)
 
 // Realtime per-project chat on Firestore (the app's provisioned backend):
 // text + voice notes (Storage), typing indicator and seen receipts via a
@@ -238,11 +238,9 @@ export default function ProjectChat({
     const fmt = (ts?: Timestamp) =>
         ts ? ts.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
 
-    const waHref = WA_NUMBER
-        ? `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(
-              `Hi CodeGang — about the project "${projectTitle}" (${projectId}).`
-          )}`
-        : null;
+    const waHref = whatsappHref(
+        `Hi CodeGang — about the project "${projectTitle}" (${projectId}).`
+    );
 
     return (
         <>
@@ -264,21 +262,16 @@ export default function ProjectChat({
                         </div>
                     </div>
                     <div className="flex items-center gap-1.5">
-                        {waHref && (
-                            <a
-                                href={waHref}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title="Continue on WhatsApp"
-                                className="flex items-center gap-1.5 rounded-full bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-emerald-600"
-                            >
-                                {/* WhatsApp glyph */}
-                                <svg viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5" aria-hidden>
-                                    <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.1 8.1 0 0 1-4.1-1.1l-.3-.2-3 .8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.3-.5v-.5c0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.4-.3Z" />
-                                </svg>
-                                WhatsApp
-                            </a>
-                        )}
+                        <a
+                            href={waHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Continue on WhatsApp"
+                            className="flex items-center gap-1.5 rounded-full bg-[#25D366] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#1EBE5A]"
+                        >
+                            <WhatsAppGlyph className="h-3.5 w-3.5" />
+                            WhatsApp
+                        </a>
                         <button
                             onClick={onClose}
                             className="rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
