@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Our values",
   description:
     "The five rules we actually work by, including the one that governs every number published on this site.",
-  openGraph: { title: "Our values. CodeGang", url: "/our-values" },
+  openGraph: { title: "Our values · CodeGang", url: "/our-values" },
   alternates: { canonical: "/our-values" },
 };
 

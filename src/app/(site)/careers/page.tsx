@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "Careers",
   description:
     "A software engineering company. No open roles posted right now: open applications go straight to the founders.",
-  openGraph: { title: "Careers. CodeGang", url: "/careers" },
+  openGraph: { title: "Careers · CodeGang", url: "/careers" },
   alternates: { canonical: "/careers" },
 };
 

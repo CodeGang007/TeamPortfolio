@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: "Partners",
   description: `The organisations our ${stats.live} live systems run for, and the two ways we partner with other teams.`,
-  openGraph: { title: "Partners. CodeGang", url: "/partners" },
+  openGraph: { title: "Partners · CodeGang", url: "/partners" },
   alternates: { canonical: "/partners" },
 };
 

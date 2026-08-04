@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   description:
     "No sales layer, no hand-off: the engineer in the meeting is the one writing the code.",
   openGraph: {
-    title: "Studio. CodeGang",
+    title: "Studio · CodeGang",
     description: "No sales layer, no hand-off.",
     url: "/studio",
   },

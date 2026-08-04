@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Resources",
   description:
     "Engineering notes, the questions we get asked most, and the full page index. No gated PDFs.",
-  openGraph: { title: "Resources. CodeGang", url: "/resources" },
+  openGraph: { title: "Resources · CodeGang", url: "/resources" },
   alternates: { canonical: "/resources" },
 };
 

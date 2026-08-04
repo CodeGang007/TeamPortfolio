@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     default: site.title,
     // Pages pass a BARE title ('Work', not 'Work | CodeGang') — the template
     // appends the brand exactly once.
-    template: "%s — CodeGang",
+    template: "%s · CodeGang",
   },
   description: site.description,
   authors: [{ name: "CodeGang" }],

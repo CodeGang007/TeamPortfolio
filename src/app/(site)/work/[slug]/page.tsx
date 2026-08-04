@@ -24,7 +24,7 @@ export async function generateMetadata({
     title: p.name,
     description: p.summary,
     openGraph: {
-      title: `${p.name}. CodeGang`,
+      title: `${p.name} · CodeGang`,
       description: p.summary,
       url: `/work/${p.slug}`,
     },

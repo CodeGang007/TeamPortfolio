@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   description:
     "Tell us what you are trying to ship. Your message lands in the founders' Telegram instantly: the engineer who answers is the one who will build it.",
   openGraph: {
-    title: "Contact. CodeGang",
+    title: "Contact · CodeGang",
     description: "Tell us what you are trying to ship.",
     url: "/contact",
   },

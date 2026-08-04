@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description:
     "Send a project brief straight to the engineers who would build it. No sign-in, no sales call, no NDA needed first: a reply from a founder, usually within one business day.",
   openGraph: {
-    title: "Start a project. CodeGang",
+    title: "Start a project · CodeGang",
     description:
       "Send a project brief straight to the engineers who would build it. No sign-in, no sales layer.",
     url: "/start-a-project",

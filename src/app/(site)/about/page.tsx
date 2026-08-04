@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   title: "About",
   description: `A software engineering company. ${stats.projectsDelivered} projects delivered for ${stats.clientsServed} clients, most under NDA, with ${stats.live} systems live across ${marketsLong}.`,
   openGraph: {
-    title: "About. CodeGang",
+    title: "About · CodeGang",
     description: "The team, and the systems they keep running.",
     url: "/about",
   },

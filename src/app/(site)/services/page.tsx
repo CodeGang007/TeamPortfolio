@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Services",
   description: `AI, SaaS, mobile, machine learning, design, DevOps and QA, every service backed by one of the ${stats.live} systems we have live in production.`,
   openGraph: {
-    title: "Services. CodeGang",
+    title: "Services · CodeGang",
     description: "Every service we sell is something we have already shipped.",
     url: "/services",
   },

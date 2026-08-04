@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Industries",
   description: `Healthcare, ecommerce, logistics, fintech, manufacturing and SaaS: the sectors our ${stats.live} live systems run in.`,
   openGraph: {
-    title: "Industries. CodeGang",
+    title: "Industries · CodeGang",
     description: "The sectors our production systems already run in.",
     url: "/industries",
   },

@@ -19,7 +19,7 @@ import {
 export const metadata: Metadata = {
   title: "Portfolio",
   description: `Every system we have built, filterable by sector and status: ${stats.live} live across ${marketsLong}, ${stats.building} in build.`,
-  openGraph: { title: "Portfolio. CodeGang", url: "/portfolio" },
+  openGraph: { title: "Portfolio · CodeGang", url: "/portfolio" },
   alternates: { canonical: "/portfolio" },
 };
 

@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   title: "Work",
   description: `${stats.live} systems live in production across ${marketsLong}, ${stats.building} in build. Production AI, multi-tenant SaaS, mobile, ERP, and healthcare systems.`,
   openGraph: {
-    title: "Work. CodeGang",
+    title: "Work · CodeGang",
     description: `${stats.live} systems live in production across ${marketsLong}.`,
     url: "/work",
   },

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Testimonials",
   description:
     "We publish client quotes only with written permission. Until then, the evidence is the live systems themselves.",
-  openGraph: { title: "Testimonials. CodeGang", url: "/testimonials" },
+  openGraph: { title: "Testimonials · CodeGang", url: "/testimonials" },
   alternates: { canonical: "/testimonials" },
 };
 
