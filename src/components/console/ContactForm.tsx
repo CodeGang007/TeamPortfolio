@@ -178,7 +178,7 @@ export default function ContactForm({ about }: { about?: string }) {
             disabled={disabled}
             onChange={(e) => setMessageLength(e.target.value.length)}
             className={`mt-2.5 resize-y leading-relaxed ${fieldClass}`}
-            placeholder="The system, the constraint, the deadline: whatever you have. If it is still vague, say that too; scoping it is part of the work."
+            placeholder="Tell us the system, the constraint, and the deadline. If it is still vague, say that too; scoping it is part of the work."
           />
         </label>
 
@@ -197,7 +197,7 @@ export default function ContactForm({ about }: { about?: string }) {
           <button
             type="submit"
             disabled={disabled}
-            className="group inline-flex items-center gap-2 rounded-full bg-signal px-7 py-3 text-[0.875rem] font-medium text-white shadow-[0_8px_24px_-8px_rgba(46,125,240,0.6)] transition-all duration-200 hover:shadow-[0_10px_30px_-8px_rgba(46,125,240,0.75)] disabled:cursor-wait disabled:opacity-60"
+            className="group inline-flex items-center gap-2 rounded-full bg-signal px-7 py-3 text-[0.875rem] font-medium text-white shadow-[0_8px_24px_-8px_rgba(52,125,38,0.6)] transition-all duration-200 hover:shadow-[0_10px_30px_-8px_rgba(52,125,38,0.75)] disabled:cursor-wait disabled:opacity-60"
           >
             {state === "sending" ? (
               <>

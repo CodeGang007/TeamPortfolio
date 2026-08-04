@@ -131,15 +131,19 @@ export default async function ContactPage({
                 <Rule className="my-6" />
 
                 <p className="mono-label">Message us</p>
+                {/* Outlined rather than filled: the brand green owns the
+                    primary action on this page, and two saturated greens side
+                    by side just read as a colour mistake. The glyph keeps
+                    WhatsApp instantly recognisable without the fill. */}
                 <a
                   href={whatsappHref(
                     "Hi CodeGang, I want to discuss a project."
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-4 py-2.5 text-[0.85rem] font-semibold text-white transition-colors hover:bg-[#1EBE5A]"
+                  className="mt-2 inline-flex items-center gap-2 rounded-lg border border-line-strong bg-paper px-4 py-2.5 text-[0.85rem] font-medium text-ink transition-colors hover:border-[#25D366] hover:bg-bone"
                 >
-                  <WhatsAppGlyph className="h-4 w-4" />
+                  <WhatsAppGlyph className="h-4 w-4 text-[#25D366]" />
                   WhatsApp {whatsappDisplay}
                 </a>
 

@@ -20,8 +20,8 @@ module.exports = {
         mute: "#6B6862", // tertiary text, mono labels
         line: "#E2DFD8", // hairline
         "line-strong": "#D6D2C9", // emphasised hairline
-        signal: "#2E7DF0", // the single accent — links, live dots, charts
-        "signal-soft": "#E8F0FE",
+        signal: "#347D26", // the single accent: links, live dots, charts (from the logo green, darkened to pass AA on bone)
+        "signal-soft": "#E9F5E3",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],

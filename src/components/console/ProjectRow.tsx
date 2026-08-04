@@ -42,7 +42,7 @@ export default function ProjectRow({
           <h3 className="text-lg font-semibold tracking-tight text-slate-900">
             {project.name}
           </h3>
-          <span className="rounded-full bg-blue-50 p-2 text-blue-600 opacity-0 transition-opacity group-hover:opacity-100">
+          <span className="rounded-full bg-signal-soft p-2 text-signal opacity-0 transition-opacity group-hover:opacity-100">
             <svg
               aria-hidden
               viewBox="0 0 24 24"

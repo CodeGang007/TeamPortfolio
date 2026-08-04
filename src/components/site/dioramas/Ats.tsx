@@ -54,7 +54,7 @@ export default function Ats() {
               cy="32"
               r={R}
               fill="none"
-              stroke="#2E7DF0"
+              stroke="#347D26"
               strokeWidth="5"
               strokeLinecap="round"
               strokeDasharray={C}

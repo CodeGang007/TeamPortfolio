@@ -469,7 +469,7 @@ export default function SiteHeader() {
               href="/start-a-project"
               className={`hidden rounded-full border px-5 py-3 text-[0.85rem] font-medium transition-all 2xl:inline-flex ${
                 solid
-                  ? "border-signal/45 text-ink shadow-[0_0_0_3px_rgba(46,125,240,0.10)] hover:border-signal hover:shadow-[0_0_0_4px_rgba(46,125,240,0.16)]"
+                  ? "border-signal/45 text-ink shadow-[0_0_0_3px_rgba(52,125,38,0.10)] hover:border-signal hover:shadow-[0_0_0_4px_rgba(52,125,38,0.16)]"
                   : "border-white/45 text-white shadow-[0_0_0_3px_rgba(255,255,255,0.10)] hover:border-white hover:shadow-[0_0_0_4px_rgba(255,255,255,0.18)]"
               }`}
             >
@@ -698,7 +698,7 @@ export default function SiteHeader() {
             className="pointer-events-none absolute inset-0 -z-10"
             style={{
               backgroundImage:
-                "radial-gradient(120% 60% at 0% 0%, rgba(46,125,240,0.42), transparent 62%), radial-gradient(90% 50% at 100% 100%, rgba(46,125,240,0.20), transparent 70%)",
+                "radial-gradient(120% 60% at 0% 0%, rgba(52,125,38,0.42), transparent 62%), radial-gradient(90% 50% at 100% 100%, rgba(52,125,38,0.20), transparent 70%)",
             }}
           />
           <svg
@@ -708,8 +708,8 @@ export default function SiteHeader() {
           >
             <defs>
               <linearGradient id="cg-arc" x1="0" y1="1" x2="1" y2="0">
-                <stop offset="0%" stopColor="#2E7DF0" stopOpacity="0.9" />
-                <stop offset="100%" stopColor="#2E7DF0" stopOpacity="0" />
+                <stop offset="0%" stopColor="#347D26" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#347D26" stopOpacity="0" />
               </linearGradient>
             </defs>
             {[60, 88, 116, 144, 172].map((r) => (

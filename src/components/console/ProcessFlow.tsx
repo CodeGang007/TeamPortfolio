@@ -66,7 +66,7 @@ export default function ProcessFlow() {
         />
         <div
           aria-hidden
-          className="absolute left-0 top-5 h-0.5 bg-blue-600 transition-all duration-500"
+          className="absolute left-0 top-5 h-0.5 bg-signal transition-all duration-500"
           style={{ width: `${(active / (steps.length - 1)) * 100}%` }}
         />
         <ol className="relative grid grid-cols-6">
@@ -77,8 +77,8 @@ export default function ProcessFlow() {
                 aria-current={i === active ? "step" : undefined}
                 className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-display text-sm font-bold transition-all duration-300 ${
                   i <= active
-                    ? "border-blue-600 bg-blue-600 text-white"
-                    : "border-slate-300 bg-white text-slate-400 hover:border-blue-400"
+                    ? "border-signal bg-signal text-white"
+                    : "border-slate-300 bg-white text-slate-400 hover:border-signal"
                 }`}
               >
                 {i + 1}
@@ -86,7 +86,7 @@ export default function ProcessFlow() {
               <button
                 onClick={() => setActive(i)}
                 className={`mt-3 text-sm font-semibold transition-colors ${
-                  i === active ? "text-blue-700" : "text-slate-500 hover:text-slate-800"
+                  i === active ? "text-signal" : "text-slate-500 hover:text-slate-800"
                 }`}
               >
                 {s.title}
@@ -105,7 +105,7 @@ export default function ProcessFlow() {
               aria-current={i === active ? "step" : undefined}
               className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                 i === active
-                  ? "bg-blue-600 text-white"
+                  ? "bg-signal text-white"
                   : "bg-white text-slate-600 ring-1 ring-slate-300"
               }`}
             >
@@ -122,7 +122,7 @@ export default function ProcessFlow() {
       >
         <div className="grid md:grid-cols-[1fr_auto]">
           <div className="p-8">
-            <p className="font-mono text-xs uppercase tracking-[0.18em] text-blue-700">
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-signal">
               Step {active + 1} of {steps.length} · {step.tag}
             </p>
             <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
@@ -133,7 +133,7 @@ export default function ProcessFlow() {
             </p>
             <Link
               href={step.href}
-              className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:text-blue-800"
+              className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-signal hover:text-[#2a6620]"
             >
               {step.proof}
               <ArrowRight aria-hidden className="h-4 w-4 shrink-0" />
@@ -141,7 +141,7 @@ export default function ProcessFlow() {
           </div>
           <div
             aria-hidden
-            className="hidden select-none items-end p-6 font-display text-[7rem] font-bold leading-none text-blue-600/10 md:flex"
+            className="hidden select-none items-end p-6 font-display text-[7rem] font-bold leading-none text-signal/10 md:flex"
           >
             {String(active + 1).padStart(2, "0")}
           </div>

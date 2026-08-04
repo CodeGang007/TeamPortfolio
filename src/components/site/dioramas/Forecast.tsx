@@ -89,7 +89,7 @@ export default function Forecast() {
           {/* confidence band */}
           <path
             d={bandPath}
-            fill="#2E7DF0"
+            fill="#347D26"
             opacity={inView ? 0.1 : 0}
             className="transition-opacity duration-1000"
           />
@@ -114,7 +114,7 @@ export default function Forecast() {
           <path
             d={forecastPath}
             fill="none"
-            stroke="#2E7DF0"
+            stroke="#347D26"
             strokeWidth="1.75"
             strokeDasharray="4 4"
             strokeLinecap="round"
@@ -157,7 +157,7 @@ export default function Forecast() {
               className="h-0.5 w-4 rounded bg-signal"
               style={{
                 backgroundImage:
-                  "repeating-linear-gradient(90deg,#2E7DF0 0 3px,transparent 3px 6px)",
+                  "repeating-linear-gradient(90deg,#347D26 0 3px,transparent 3px 6px)",
               }}
             />
             forecast

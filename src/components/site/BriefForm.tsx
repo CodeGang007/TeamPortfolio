@@ -739,7 +739,7 @@ export default function BriefForm() {
                 type="button"
                 onClick={submit}
                 disabled={sending}
-                className="group inline-flex items-center gap-2 rounded-full bg-signal px-7 py-3 text-[0.875rem] font-medium text-white shadow-[0_8px_24px_-8px_rgba(46,125,240,0.6)] transition-all duration-200 hover:shadow-[0_10px_30px_-8px_rgba(46,125,240,0.75)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="group inline-flex items-center gap-2 rounded-full bg-signal px-7 py-3 text-[0.875rem] font-medium text-white shadow-[0_8px_24px_-8px_rgba(52,125,38,0.6)] transition-all duration-200 hover:shadow-[0_10px_30px_-8px_rgba(52,125,38,0.75)] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {sending ? "Sending…" : "Send the brief"}
                 {!sending && (
