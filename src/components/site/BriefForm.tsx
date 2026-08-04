@@ -14,7 +14,7 @@ import {
 import { site, stats, whatsappHref, marketsShort } from "@/content/site";
 
 /* ═══════════════════════════════════════════════════════════════════
-   PROJECT BRIEF — guided, five steps, no sign-in.
+   PROJECT BRIEF: guided, five steps, no sign-in.
 
    One decision per screen. Nobody fills twenty fields for a company
    they have not spoken to yet, so the form earns each answer: the
@@ -22,7 +22,7 @@ import { site, stats, whatsappHref, marketsShort } from "@/content/site";
    last, once there is something to lose by abandoning.
 
    The rail on the right is not decoration. Watching the brief assemble
-   itself is what makes a five-step form feel short — you can always see
+   itself is what makes a five-step form feel short: you can always see
    how much you have already banked.
    ═══════════════════════════════════════════════════════════════════ */
 
@@ -106,7 +106,7 @@ function ChoiceCard({
           : "border-line bg-paper hover:-translate-y-1 hover:border-line-strong hover:shadow-frame"
       }`}
     >
-      {/* Accent edge — the whole selected state in one stroke. */}
+      {/* Accent edge: the whole selected state in one stroke. */}
       <span
         aria-hidden
         className={`absolute inset-y-0 left-0 w-[3px] origin-top bg-signal transition-transform duration-300 ${
@@ -212,7 +212,7 @@ function StepHead({ n, lead, trail }: { n: number; lead: string; trail?: string 
   return (
     <div className="mb-8">
       <p className="mono-label !text-signal">
-        Step {n} — {STEPS[n - 1].label}
+        Step {n}: {STEPS[n - 1].label}
       </p>
       <h2 className="display-md mt-3 text-balance text-ink">
         {lead}{" "}
@@ -379,13 +379,13 @@ export default function BriefForm() {
           </h2>
           <p className="mx-auto mt-4 max-w-md text-[0.9375rem] leading-relaxed text-ink-soft">
             Your brief landed in the founders&apos; Telegram the moment you sent
-            it. An engineer will reply, usually within a business day — and a
+            it. An engineer will reply, usually within a business day, and a
             copy is on its way to {form.email}.
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">
             <a
               href={whatsappHref(
-                `Hi CodeGang — I just sent a project brief through the site (${form.name}).`
+                `Hi CodeGang, I just sent a project brief through the site (${form.name}).`
               )}
               target="_blank"
               rel="noopener noreferrer"
@@ -488,7 +488,7 @@ export default function BriefForm() {
         <Field
           label="Links"
           optional
-          hint="A live site, a design file, a requirements doc — anything we can read."
+          hint="A live site, a design file, a requirements doc: anything we can read."
         >
           <textarea
             value={form.links}
@@ -526,7 +526,7 @@ export default function BriefForm() {
               Drop files, or click to choose
             </p>
             <p className="mt-1.5 text-[0.8rem] text-mute">
-              PDF, docs, spreadsheets, screenshots — up to {MAX_FILES} files, 10 MB each
+              PDF, docs, spreadsheets, screenshots: up to {MAX_FILES} files, 10 MB each
             </p>
             <input
               ref={fileInput}
@@ -623,7 +623,7 @@ export default function BriefForm() {
       <p className="mt-7 border-t border-line pt-5 text-[0.82rem] leading-relaxed text-mute">
         Your brief goes straight to the founders&apos; Telegram. No CRM
         sequence, no sales call booked on your behalf, and confidentiality is
-        the default — you do not need an NDA in place to describe the problem.
+        the default: you do not need an NDA in place to describe the problem.
       </p>
     </div>,
   ];
@@ -739,7 +739,7 @@ export default function BriefForm() {
                 type="button"
                 onClick={submit}
                 disabled={sending}
-                className="group inline-flex items-center gap-2 rounded-full bg-signal px-7 py-3 text-[0.875rem] font-medium text-white shadow-[0_8px_24px_-8px_rgba(46,125,240,0.6)] transition-all duration-200 hover:shadow-[0_10px_30px_-8px_rgba(46,125,240,0.75)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="group inline-flex items-center gap-2 rounded-full bg-signal px-7 py-3 text-[0.875rem] font-medium text-white shadow-[0_8px_24px_-8px_rgba(52,125,38,0.6)] transition-all duration-200 hover:shadow-[0_10px_30px_-8px_rgba(52,125,38,0.75)] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {sending ? "Sending…" : "Send the brief"}
                 {!sending && (

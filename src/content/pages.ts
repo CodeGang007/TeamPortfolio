@@ -54,12 +54,12 @@ export const services: PageSpec[] = [
     lead: "AI that ships",
     trail: "into the product, not into a slide deck",
     intro:
-      "We build AI features that live inside real software — retrieval over a company's own documents, tenant-isolated knowledge bases, and model gateways that keep working when a provider goes down.",
-    plate: "Verse AI — retrieval trace",
+      "We build AI features that live inside real software: retrieval over a company's own documents, tenant-isolated knowledge bases, and model gateways that keep working when a provider goes down.",
+    plate: "Verse AI: retrieval trace",
     offerings: [
       { title: "Retrieval-augmented platforms", body: "Ingestion, chunking, embeddings, and a vector store your team controls, so answers cite your documents instead of the open web." },
       { title: "Multi-LLM gateways", body: "One interface in front of several providers, with routing, retries, and cost accounting per tenant." },
-      { title: "Tenant-isolated knowledge", body: "Every query is scoped to one customer's corpus at the storage layer — not filtered after the fact." },
+      { title: "Tenant-isolated knowledge", body: "Every query is scoped to one customer's corpus at the storage layer, not filtered after the fact." },
       { title: "Evaluation harnesses", body: "Golden question sets and regression runs so a prompt change cannot quietly make answers worse." },
       { title: "Streaming interfaces", body: "Token-by-token UI with cancellation, retry, and a trace panel that shows which sources were used." },
       { title: "Deployment into your cloud", body: "The system runs in your AWS account under your keys. We hand over the infrastructure, not a hosted black box." },
@@ -73,7 +73,7 @@ export const services: PageSpec[] = [
     proof: ["verse-ai", "ai-resume"],
     faq: [
       { q: "Do you use our data to train models?", a: "No. Your corpus is used for retrieval only, inside infrastructure you own. Nothing is sent to a training pipeline." },
-      { q: "Can this run entirely in our cloud?", a: "Yes — that is the default. We deploy into your account so the data never leaves your perimeter." },
+      { q: "Can this run entirely in our cloud?", a: "Yes: that is the default. We deploy into your account so the data never leaves your perimeter." },
       { q: "What if the model provider changes pricing?", a: "The gateway abstracts the provider. Routing to a different model is a configuration change." },
     ],
   },
@@ -84,13 +84,13 @@ export const services: PageSpec[] = [
     lead: "Assistants that know",
     trail: "your business, not the internet",
     intro:
-      "A chatbot is only useful when it is grounded in your own material. We build assistants over your documents, your product data, and your policies — with the retrieval trace visible so nobody has to take an answer on faith.",
-    plate: "Assistant — grounded answer with sources",
+      "A chatbot is only useful when it is grounded in your own material. We build assistants over your documents, your product data, and your policies, with the retrieval trace visible so nobody has to take an answer on faith.",
+    plate: "Assistant: grounded answer with sources",
     offerings: [
       { title: "Document-grounded chat", body: "Upload, index, and query your handbooks, contracts, and specs with citations on every answer." },
       { title: "Product and catalogue assistants", body: "Natural-language search over structured data, so a question returns the right SKU rather than a paragraph." },
       { title: "Escalation to a human", body: "Confidence thresholds and clean hand-off with the full conversation attached." },
-      { title: "Channel delivery", body: "Web widget, in-app panel, or WhatsApp — the same engine behind each surface." },
+      { title: "Channel delivery", body: "Web widget, in-app panel, or WhatsApp: the same engine behind each surface." },
       { title: "Guardrails", body: "Scope limits, refusal behaviour, and PII handling defined before launch, not patched after an incident." },
       { title: "Conversation analytics", body: "What people actually ask, what went unanswered, and which documents are missing." },
     ],
@@ -115,11 +115,11 @@ export const services: PageSpec[] = [
     trail: "and leave an audit trail",
     intro:
       "An agent that takes actions in your systems needs boundaries, retries, and a log. We build agents with explicit tool contracts, human approval gates on anything irreversible, and a full trace of every step.",
-    plate: "Agent run — step trace and tool calls",
+    plate: "Agent run: step trace and tool calls",
     offerings: [
       { title: "Tool-calling agents", body: "Typed tool definitions over your APIs, with validation before anything is executed." },
       { title: "Approval gates", body: "Irreversible steps pause for a human. The agent proposes; a person confirms." },
-      { title: "Multi-step workflows", body: "Plan, execute, verify — with a bounded step budget so a loop cannot run away." },
+      { title: "Multi-step workflows", body: "Plan, execute, verify, with a bounded step budget so a loop cannot run away." },
       { title: "Observability", body: "Every run is stored: inputs, tool calls, outputs, cost, and duration." },
       { title: "Failure handling", body: "Retries with backoff, deterministic fallbacks, and a clear stop condition." },
       { title: "Integration layer", body: "Connectors into the CRM, ERP, or ticketing system the agent needs to touch." },
@@ -134,7 +134,7 @@ export const services: PageSpec[] = [
     faq: [
       { q: "Will it act without asking?", a: "Only for steps you mark as safe. Anything destructive or outward-facing routes through an approval gate." },
       { q: "What happens when a tool fails?", a: "The run retries with backoff, then stops and surfaces the error rather than improvising around it." },
-      { q: "Can we add our own tools later?", a: "Yes — tools are declarative. Adding one is a definition plus a handler." },
+      { q: "Can we add our own tools later?", a: "Yes: tools are declarative. Adding one is a definition plus a handler." },
     ],
   },
   {
@@ -145,10 +145,10 @@ export const services: PageSpec[] = [
     trail: "that tells you what is actually buildable",
     intro:
       "Before a build, a two-to-three week assessment: what your data can support, what the model layer costs at your volume, and which of your ideas is worth doing first. You leave with an architecture and an estimate, whether or not you build it with us.",
-    plate: "Assessment — architecture and cost model",
+    plate: "Assessment: architecture and cost model",
     offerings: [
       { title: "Data readiness review", body: "What you hold, where it lives, and what has to change before retrieval or training is viable." },
-      { title: "Use-case scoring", body: "Each candidate ranked by value, effort, and risk — with the ones we would not build called out." },
+      { title: "Use-case scoring", body: "Each candidate ranked by value, effort, and risk, with the ones we would not build called out." },
       { title: "Reference architecture", body: "The actual diagram: services, storage, model routing, and where your data crosses a boundary." },
       { title: "Cost modelling", body: "Token, inference, and infrastructure cost projected at your real volume, not a demo's." },
       { title: "Build-or-buy", body: "An honest read on which parts should be an off-the-shelf product instead of custom software." },
@@ -174,14 +174,14 @@ export const services: PageSpec[] = [
     lead: "Generation with",
     trail: "a structure behind it",
     intro:
-      "Generated text is only useful when it lands in a format the next system can consume. We build generation pipelines with schemas, validation, and a review step — documents, summaries, and structured extractions that hold their shape.",
-    plate: "Generation pipeline — schema and review",
+      "Generated text is only useful when it lands in a format the next system can consume. We build generation pipelines with schemas, validation, and a review step: documents, summaries, and structured extractions that hold their shape.",
+    plate: "Generation pipeline: schema and review",
     offerings: [
       { title: "Structured generation", body: "Schema-constrained output so downstream code gets fields, not prose it has to parse." },
       { title: "Document assembly", body: "Long-form documents composed from templates, retrieved context, and validated sections." },
       { title: "Extraction pipelines", body: "Unstructured input in, typed records out, with confidence scores and a review queue." },
       { title: "Summarisation at scale", body: "Batch pipelines over large corpora with deduplication and cost control." },
-      { title: "Human-in-the-loop review", body: "A queue where a person accepts, edits, or rejects — and the edits feed the eval set." },
+      { title: "Human-in-the-loop review", body: "A queue where a person accepts, edits, or rejects, and the edits feed the eval set." },
       { title: "Versioned prompts", body: "Prompts live in the repository under review, with regression runs on every change." },
     ],
     outcomes: [
@@ -194,7 +194,7 @@ export const services: PageSpec[] = [
     faq: [
       { q: "How do you keep output on-format?", a: "Schema-constrained decoding plus validation. Anything that fails the schema is retried or routed to review." },
       { q: "Can a person review before it goes out?", a: "Yes, and we recommend it for anything customer-facing until the eval set proves it out." },
-      { q: "Does prompt tuning need an engineer every time?", a: "No — prompts are versioned assets your team can edit, with regression runs guarding the change." },
+      { q: "Does prompt tuning need an engineer every time?", a: "No: prompts are versioned assets your team can edit, with regression runs guarding the change." },
     ],
   },
   {
@@ -204,15 +204,15 @@ export const services: PageSpec[] = [
     lead: "Models that run",
     trail: "inside business software",
     intro:
-      "Forecasting, anomaly detection, OCR, and risk scoring — deployed inside the ERP or platform where somebody actually acts on the number, not sitting in a notebook nobody opens.",
-    plate: "ARM Tech — forecast board",
+      "Forecasting, anomaly detection, OCR, and risk scoring, deployed inside the ERP or platform where somebody actually acts on the number, not sitting in a notebook nobody opens.",
+    plate: "ARM Tech: forecast board",
     offerings: [
       { title: "Demand and price forecasting", body: "Sequence models trained on your history, with the confidence band shown next to the number." },
       { title: "Anomaly detection", body: "Baselines per entity so an alert means something unusual for that account, not merely a large value." },
       { title: "OCR and document parsing", body: "Invoices, forms, and scans converted to typed records with a confidence-driven review queue." },
       { title: "Risk and quality scoring", body: "Ranked outputs with the contributing factors exposed, so a score can be argued with." },
       { title: "Training pipelines", body: "Reproducible runs, versioned datasets, and metrics tracked across every retrain." },
-      { title: "In-product delivery", body: "The prediction appears in the screen where the decision is made — not in a separate dashboard." },
+      { title: "In-product delivery", body: "The prediction appears in the screen where the decision is made, not in a separate dashboard." },
     ],
     outcomes: [
       { lead: "Used, not admired", body: "A forecast inside the purchasing screen changes an order. One in a report does not." },
@@ -234,8 +234,8 @@ export const services: PageSpec[] = [
     lead: "Automate the steps",
     trail: "nobody should be doing by hand",
     intro:
-      "The repetitive middle of a process — reading a document, deciding a route, updating three systems. We automate those steps with explicit rules first and models only where rules genuinely cannot cope.",
-    plate: "Workflow — routing and exception queue",
+      "The repetitive middle of a process: reading a document, deciding a route, updating three systems. We automate those steps with explicit rules first and models only where rules genuinely cannot cope.",
+    plate: "Workflow: routing and exception queue",
     offerings: [
       { title: "Process mapping", body: "The current path documented step by step before a line of automation is written." },
       { title: "Document intake", body: "Email, upload, or API in; classified, extracted, and routed automatically." },
@@ -265,7 +265,7 @@ export const services: PageSpec[] = [
     trail: "by the people who have to build them",
     intro:
       "Design and engineering are the same team here, so a screen never gets approved that the front-end cannot deliver. We design in components, not in flat pictures.",
-    plate: "Design system — component sheet",
+    plate: "Design system: component sheet",
     offerings: [
       { title: "Product discovery", body: "The jobs each user role does, mapped before any screen is drawn." },
       { title: "Information architecture", body: "Navigation and data hierarchy that survive the second and third feature." },
@@ -294,8 +294,8 @@ export const services: PageSpec[] = [
     lead: "Sites that load fast",
     trail: "and say something true",
     intro:
-      "Marketing sites built on the same stack as the products — server-rendered, fast on a mid-range phone, and structured so the content team can change copy without a deployment.",
-    plate: "Marketing site — layout grid",
+      "Marketing sites built on the same stack as the products, server-rendered, fast on a mid-range phone, and structured so the content team can change copy without a deployment.",
+    plate: "Marketing site: layout grid",
     offerings: [
       { title: "Content architecture", body: "The page set and the narrative order, decided before any layout." },
       { title: "Art direction", body: "A visual system with a point of view, not a template with your logo dropped in." },
@@ -324,8 +324,8 @@ export const services: PageSpec[] = [
     lead: "Web applications",
     trail: "built to survive their own success",
     intro:
-      "Multi-tenant platforms, dashboards, and portals — with the architecture, the deployment pipeline, and the monitoring that keeps them shippable after launch.",
-    plate: "Platform — request path",
+      "Multi-tenant platforms, dashboards, and portals, with the architecture, the deployment pipeline, and the monitoring that keeps them shippable after launch.",
+    plate: "Platform: request path",
     offerings: [
       { title: "Multi-tenant architecture", body: "Isolation at the data layer, so one customer's growth cannot reach another's records." },
       { title: "Role-based access", body: "Permissions modelled as data, enforced server-side, and testable." },
@@ -344,7 +344,7 @@ export const services: PageSpec[] = [
     faq: [
       { q: "Do you work in our repository?", a: "Yes. Branches, reviews, and CI in your organisation from day one." },
       { q: "Can you take over an existing codebase?", a: "Yes, starting with a short audit so the estimate reflects what is actually there." },
-      { q: "Who owns the code?", a: "You do, throughout — not on final payment." },
+      { q: "Who owns the code?", a: "You do, throughout, not on final payment." },
     ],
   },
   {
@@ -355,7 +355,7 @@ export const services: PageSpec[] = [
     trail: "when the signal drops",
     intro:
       "Flutter and native Android, built offline-first, with the release engineering that gets them through store review and keeps them updated afterwards.",
-    plate: "eMedici — question screen",
+    plate: "eMedici: question screen",
     offerings: [
       { title: "Cross-platform builds", body: "One Flutter codebase for iOS and Android where the product does not need platform-specific behaviour." },
       { title: "Offline-first sync", body: "Local storage with conflict resolution, so the app works on a train and reconciles later." },
@@ -374,7 +374,7 @@ export const services: PageSpec[] = [
     faq: [
       { q: "Flutter or native?", a: "Flutter unless the product needs deep platform integration. We say which in the assessment." },
       { q: "Do you handle store submission?", a: "Yes, including signing, metadata, and staged rollout." },
-      { q: "What about updates after launch?", a: "The same engineers stay on maintenance and roadmap — there is no hand-off team." },
+      { q: "What about updates after launch?", a: "The same engineers stay on maintenance and roadmap: there is no hand-off team." },
     ],
   },
   {
@@ -385,11 +385,11 @@ export const services: PageSpec[] = [
     trail: "your team can operate without us",
     intro:
       "AWS architecture, containerisation, and CI/CD set up so deploying is routine and the runbook is written down. We build it in your account, under your keys.",
-    plate: "Pipeline — build, test, deploy",
+    plate: "Pipeline: build, test, deploy",
     offerings: [
       { title: "Cloud architecture", body: "Networking, storage, and compute laid out for the workload you actually have." },
       { title: "Containerisation", body: "Docker images and orchestration, with parity between local and production." },
-      { title: "CI/CD pipelines", body: "Build, test, migrate, deploy, roll back — automated and documented." },
+      { title: "CI/CD pipelines", body: "Build, test, migrate, deploy, roll back: automated and documented." },
       { title: "Observability", body: "Logs, metrics, traces, and alerts that page a human only when a human is needed." },
       { title: "Cost control", body: "Right-sizing, autoscaling, and a monthly cost breakdown by service." },
       { title: "Runbooks and handover", body: "Written procedures so your team can operate the system independently." },
@@ -403,7 +403,7 @@ export const services: PageSpec[] = [
     proof: ["verse-ai", "nestflow"],
     faq: [
       { q: "Can you work with our existing cloud setup?", a: "Yes. We start with an audit and improve incrementally rather than rebuilding by default." },
-      { q: "Do you offer ongoing operations?", a: "Yes, as a retainer — but the runbook is written so you are not obliged to keep it." },
+      { q: "Do you offer ongoing operations?", a: "Yes, as a retainer: but the runbook is written so you are not obliged to keep it." },
       { q: "AWS only?", a: "AWS is where most of our production work runs, which is what we say rather than claiming every cloud equally." },
     ],
   },
@@ -415,9 +415,9 @@ export const services: PageSpec[] = [
     trail: "on every commit, not before every launch",
     intro:
       "Automated suites in the pipeline, plus the manual exploratory work that catches what assertions never will. Quality as a continuous signal rather than a phase.",
-    plate: "Test run — suite and coverage",
+    plate: "Test run: suite and coverage",
     offerings: [
-      { title: "Test strategy", body: "What gets unit, integration, or end-to-end coverage — decided deliberately, not by habit." },
+      { title: "Test strategy", body: "What gets unit, integration, or end-to-end coverage: decided deliberately, not by habit." },
       { title: "Automated suites", body: "Fast unit and integration tests in CI, with end-to-end covering the critical paths." },
       { title: "Regression packs", body: "Every fixed bug gets a test, so it cannot come back unnoticed." },
       { title: "Exploratory testing", body: "Structured manual sessions against real devices and real data shapes." },
@@ -432,7 +432,7 @@ export const services: PageSpec[] = [
     stack: ["Playwright", "Vitest", "pytest", "k6", "GitHub Actions", "axe"],
     proof: ["emedici", "pinnacle-hms"],
     faq: [
-      { q: "Can you add tests to an existing project?", a: "Yes — starting with the highest-risk paths rather than chasing a coverage number." },
+      { q: "Can you add tests to an existing project?", a: "Yes: starting with the highest-risk paths rather than chasing a coverage number." },
       { q: "Do you do manual testing too?", a: "Yes. Automation and exploratory testing catch different classes of defect." },
       { q: "What coverage should we target?", a: "Coverage of the paths that lose money if they break, rather than a percentage." },
     ],
@@ -444,8 +444,8 @@ export const services: PageSpec[] = [
     lead: "Engineers who join",
     trail: "your team, not a separate one",
     intro:
-      "Dedicated engineers working in your repository, your stand-ups, and your review process. The same people who build our own production systems — not a bench.",
-    plate: "Team — engagement model",
+      "Dedicated engineers working in your repository, your stand-ups, and your review process. The same people who build our own production systems, not a bench.",
+    plate: "Team: engagement model",
     offerings: [
       { title: "Dedicated engineers", body: "Full-time allocation to one project, in your tooling and your timezone overlap." },
       { title: "Team extension", body: "Engineers who slot into your existing process rather than running a parallel one." },
@@ -482,7 +482,7 @@ export const industries: PageSpec[] = [
     trail: "runs its whole day on",
     intro:
       "We have built both ends of healthcare software: a hospital management system that a working hospital operates on daily, and a medical-education app Australian students study for exams with.",
-    plate: "Pinnacle HMS — reception portal",
+    plate: "Pinnacle HMS: reception portal",
     offerings: [
       { title: "Hospital management systems", body: "Role-based portals for reception, doctors, pharmacy, lab, billing, and administration." },
       { title: "Clinical data modelling", body: "Patients, encounters, orders, and results modelled so reporting does not require a rewrite." },
@@ -494,7 +494,7 @@ export const industries: PageSpec[] = [
     outcomes: [
       { lead: "Built with the staff", body: "The Pinnacle portals were shaped by the people at each desk, which is why they get used." },
       { lead: "Works under load", body: "Reception at peak is the design case, not the exception." },
-      { lead: "Auditable", body: "Who saw what, and when, is recorded — because in healthcare that question gets asked." },
+      { lead: "Auditable", body: "Who saw what, and when, is recorded: because in healthcare that question gets asked." },
     ],
     stack: ["Next.js", "PostgreSQL", "Flutter", "Node.js", "Docker", "AWS"],
     proof: ["pinnacle-hms", "emedici"],
@@ -511,8 +511,8 @@ export const industries: PageSpec[] = [
     lead: "AI that moves",
     trail: "the numbers a merchant watches",
     intro:
-      "Search that understands intent, recommendations grounded in your own catalogue, and forecasting that tells a buyer what to order — the same forecasting stack we shipped into a trading ERP.",
-    plate: "Catalogue — semantic search results",
+      "Search that understands intent, recommendations grounded in your own catalogue, and forecasting that tells a buyer what to order: the same forecasting stack we shipped into a trading ERP.",
+    plate: "Catalogue: semantic search results",
     offerings: [
       { title: "Semantic product search", body: "Natural-language queries matched against your catalogue, including the attributes buyers actually type." },
       { title: "Recommendations", body: "Behaviour and catalogue signals combined, with the cold-start case handled deliberately." },
@@ -530,7 +530,7 @@ export const industries: PageSpec[] = [
     proof: ["arm-tech", "verse-ai"],
     faq: [
       { q: "Do you replace our storefront?", a: "No. These sit alongside it and integrate through its APIs." },
-      { q: "How much catalogue data is needed?", a: "Enough to embed meaningfully — we check that in the assessment before quoting." },
+      { q: "How much catalogue data is needed?", a: "Enough to embed meaningfully: we check that in the assessment before quoting." },
       { q: "Will recommendations work on launch day?", a: "Cold start is handled with catalogue similarity until behavioural data accumulates." },
     ],
   },
@@ -541,15 +541,15 @@ export const industries: PageSpec[] = [
     lead: "Direct-to-consumer",
     trail: "without the platform tax",
     intro:
-      "Storefronts, subscription logic, and the operational back-end that keeps a D2C brand running — built as software you own rather than rented from a platform's roadmap.",
-    plate: "Storefront — checkout flow",
+      "Storefronts, subscription logic, and the operational back-end that keeps a D2C brand running, built as software you own rather than rented from a platform's roadmap.",
+    plate: "Storefront: checkout flow",
     offerings: [
       { title: "Custom storefronts", body: "Server-rendered, fast on mobile, and structured for the merchandising you actually do." },
       { title: "Subscription and recurring billing", body: "Plans, pauses, upgrades, and dunning handled as first-class states." },
       { title: "Order management", body: "The operational back-end: fulfilment, exceptions, returns, and the audit trail." },
       { title: "Inventory sync", body: "Stock reconciled across channels without a spreadsheet as the source of truth." },
       { title: "Customer data platform", body: "One profile per customer across purchase, support, and marketing." },
-      { title: "Analytics", body: "Cohorts, retention, and contribution margin — computed from your data, not sampled." },
+      { title: "Analytics", body: "Cohorts, retention, and contribution margin: computed from your data, not sampled." },
     ],
     outcomes: [
       { lead: "You own the roadmap", body: "Features ship when you decide, not when a platform prioritises them." },
@@ -560,7 +560,7 @@ export const industries: PageSpec[] = [
     proof: ["nestflow", "ai-resume"],
     faq: [
       { q: "Should we leave our current platform?", a: "Not automatically. We model the cost and effort both ways before recommending it." },
-      { q: "Can you migrate our existing data?", a: "Yes — catalogue, customers, and order history, with a reconciliation step." },
+      { q: "Can you migrate our existing data?", a: "Yes: catalogue, customers, and order history, with a reconciliation step." },
       { q: "Who handles payments?", a: "A payment provider does. We integrate; we never store card data." },
     ],
   },
@@ -571,8 +571,8 @@ export const industries: PageSpec[] = [
     lead: "Forecasts and routing",
     trail: "inside the ERP that already runs the business",
     intro:
-      "We shipped five deep-learning modules into a trade and logistics ERP on one pipeline — demand, price, and risk signals delivered where the buyer is already working.",
-    plate: "ARM Tech — forecast and route board",
+      "We shipped five deep-learning modules into a trade and logistics ERP on one pipeline: demand, price, and risk signals delivered where the buyer is already working.",
+    plate: "ARM Tech: forecast and route board",
     offerings: [
       { title: "Demand forecasting", body: "Sequence models per SKU and lane, with confidence bands the planner can read." },
       { title: "Price and cost prediction", body: "Trained on your transaction history rather than an index nobody trades on." },
@@ -589,7 +589,7 @@ export const industries: PageSpec[] = [
     stack: ["Python", "PyTorch", "pandas", "Airflow", "PostgreSQL", "Docker"],
     proof: ["arm-tech"],
     faq: [
-      { q: "Does this replace our ERP?", a: "No. It integrates into it — that is the whole point of the ARM Tech build." },
+      { q: "Does this replace our ERP?", a: "No. It integrates into it: that is the whole point of the ARM Tech build." },
       { q: "How much history do you need?", a: "Enough to cover your seasonality. We assess that against your actual data before committing." },
       { q: "What if the forecast is wrong?", a: "Confidence bands and factor attribution are shown so a planner can override it knowingly." },
     ],
@@ -601,8 +601,8 @@ export const industries: PageSpec[] = [
     lead: "Financial software",
     trail: "where the audit trail is the feature",
     intro:
-      "Ledgers, reconciliation, risk scoring, and document processing — built with the traceability that a financial system is judged on before it is judged on speed.",
-    plate: "Ledger — reconciliation view",
+      "Ledgers, reconciliation, risk scoring, and document processing, built with the traceability that a financial system is judged on before it is judged on speed.",
+    plate: "Ledger: reconciliation view",
     offerings: [
       { title: "Double-entry ledgers", body: "Immutable entries with a reconstructable balance at any point in time." },
       { title: "Reconciliation engines", body: "Automated matching with a clear exception queue for what does not match." },
@@ -620,7 +620,7 @@ export const industries: PageSpec[] = [
     proof: ["arm-tech", "verse-ai"],
     faq: [
       { q: "Do you handle regulatory compliance?", a: "We build to the requirements you operate under and design the audit layer around them. We do not claim certifications we do not hold." },
-      { q: "Can you integrate with our core banking system?", a: "Where it exposes an interface, yes — scoped explicitly per integration." },
+      { q: "Can you integrate with our core banking system?", a: "Where it exposes an interface, yes, scoped explicitly per integration." },
       { q: "Do you store card or account credentials?", a: "No. Those stay with the regulated provider." },
     ],
   },
@@ -631,8 +631,8 @@ export const industries: PageSpec[] = [
     lead: "Production data",
     trail: "turned into a decision on the floor",
     intro:
-      "Quality inspection, maintenance prediction, and production planning — the applied-ML work we do in logistics, pointed at a plant instead of a warehouse.",
-    plate: "Plant — line and quality board",
+      "Quality inspection, maintenance prediction, and production planning: the applied-ML work we do in logistics, pointed at a plant instead of a warehouse.",
+    plate: "Plant: line and quality board",
     offerings: [
       { title: "Visual quality inspection", body: "Defect detection on the line with a confidence-driven review queue." },
       { title: "Predictive maintenance", body: "Sensor baselines per machine, alerting on deviation rather than on a calendar." },
@@ -650,7 +650,7 @@ export const industries: PageSpec[] = [
     proof: ["epicor-kinetic", "arm-tech"],
     faq: [
       { q: "Do we need new cameras or sensors?", a: "Sometimes. The assessment says what your existing hardware can support before anything is bought." },
-      { q: "Can it run without internet on the floor?", a: "Yes — inference can run on-premise with sync when connectivity returns." },
+      { q: "Can it run without internet on the floor?", a: "Yes: inference can run on-premise with sync when connectivity returns." },
       { q: "How is it integrated with our MES?", a: "Through its API where one exists; otherwise through a documented interchange we agree up front." },
     ],
   },
@@ -661,8 +661,8 @@ export const industries: PageSpec[] = [
     lead: "Multi-tenant products",
     trail: "built to onboard the hundredth customer",
     intro:
-      "Architecture, product surface, and deployment pipeline for SaaS — the shape of work behind Verse AI, a tenant-isolated AI platform running on a seven-layer AWS stack.",
-    plate: "Verse AI — tenant console",
+      "Architecture, product surface, and deployment pipeline for SaaS: the shape of work behind Verse AI, a tenant-isolated AI platform running on a seven-layer AWS stack.",
+    plate: "Verse AI: tenant console",
     offerings: [
       { title: "Multi-tenant architecture", body: "Isolation in the schema, so a tenant boundary is a database constraint rather than a code convention." },
       { title: "Onboarding and provisioning", body: "A new tenant is automated end to end, including seed data and first-run state." },

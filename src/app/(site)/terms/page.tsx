@@ -7,11 +7,11 @@ export default function TermsOfService() {
         <>
             <div className="relative min-h-screen bg-white pt-32 pb-20 overflow-hidden">
                 {/* Background Effects */}
-                <div className="absolute top-0 right-0 w-full h-[50vh] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
+                <div className="absolute top-0 right-0 w-full h-[50vh] bg-signal/5 blur-[120px] rounded-full pointer-events-none" />
 
                 <div className="container mx-auto px-6 max-w-4xl relative z-10">
                     <div className="mb-12">
-                        <div className="flex items-center gap-3 mb-6 text-blue-600">
+                        <div className="flex items-center gap-3 mb-6 text-signal">
                             <FileText className="w-6 h-6" />
                             <span className="text-sm font-bold tracking-widest uppercase">Legal</span>
                         </div>

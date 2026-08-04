@@ -54,7 +54,7 @@ export default function Ats() {
               cy="32"
               r={R}
               fill="none"
-              stroke="#2E7DF0"
+              stroke="#347D26"
               strokeWidth="5"
               strokeLinecap="round"
               strokeDasharray={C}
@@ -81,7 +81,7 @@ export default function Ats() {
             </span>
           </p>
           <p className="mt-1.5 text-[0.72rem] leading-snug text-ink-soft">
-            Rewritten against the pasted job description — bullets re-scoped,
+            Rewritten against the pasted job description: bullets re-scoped,
             missing keywords surfaced, formatting flattened for the parser.
           </p>
         </div>

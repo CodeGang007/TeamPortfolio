@@ -131,7 +131,7 @@ export const team: TeamMember[] = [
   },
   {
     id: "sourajit",
-    name: "Sourajit",
+    name: "Sourajit Mitra",
     role: "Chief People Officer",
     cofounder: true,
     owns: "Hiring, and keeping this a place senior engineers stay.",
@@ -142,7 +142,7 @@ export const team: TeamMember[] = [
   },
   {
     id: "sunny",
-    name: "Sunny",
+    name: "Sunny Srivastava",
     role: "Chief Information Officer",
     cofounder: true,
     owns: "Cloud, security and the pipelines every system ships through.",
@@ -176,7 +176,7 @@ export const team: TeamMember[] = [
   },
   {
     id: "abhrajit",
-    name: "Abhrajit",
+    name: "Abhrajit Ray",
     role: "Founding Engineer",
     cofounder: false,
     owns: "Builds and hardens the systems behind the case studies.",

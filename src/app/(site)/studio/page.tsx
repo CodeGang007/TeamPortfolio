@@ -26,9 +26,9 @@ import {
 export const metadata: Metadata = {
   title: "Studio",
   description:
-    "No sales layer, no hand-off — the engineer in the meeting is the one writing the code.",
+    "No sales layer, no hand-off: the engineer in the meeting is the one writing the code.",
   openGraph: {
-    title: "Studio — CodeGang",
+    title: "Studio · CodeGang",
     description: "No sales layer, no hand-off.",
     url: "/studio",
   },
@@ -81,10 +81,10 @@ const engagement = [
 ];
 
 const inside = [
-  { label: "Studio — at work", src: "/our-values/studio-five-of-us.jpg" },
-  { label: "Review — pairing on retrieval", src: "/our-values/review-retrieval-layer.jpg" },
-  { label: "Whiteboard — clinical schema", src: "/our-values/whiteboard-pinnacle-schema.jpg" },
-  { label: "Ship day — Verse AI cutover", src: "/our-values/ship-day-verse-ai.jpg" },
+  { label: "Studio, at work", src: "/our-values/studio-five-of-us.jpg" },
+  { label: "Review: pairing on retrieval", src: "/our-values/review-retrieval-layer.jpg" },
+  { label: "Whiteboard: clinical schema", src: "/our-values/whiteboard-pinnacle-schema.jpg" },
+  { label: "Ship day. Verse AI cutover", src: "/our-values/ship-day-verse-ai.jpg" },
 ];
 
 export default function StudioPage() {
@@ -101,7 +101,7 @@ export default function StudioPage() {
             eyebrow="Studio"
             plate={
               <Plate
-                label="Studio — at work"
+                label="Studio, at work"
                 src="/our-values/studio-five-of-us.jpg"
                 alt="The team around a standing desk, mid-review of a pull request"
                 ratio="16/11"
@@ -113,7 +113,7 @@ export default function StudioPage() {
             <Body className="mt-6 max-w-xl text-base">
               CodeGang is a software engineering studio. We build production AI,
               multi-tenant platforms, and mobile apps for clients in Brazil,
-              Australia, India, the USA and Europe — and we keep them running
+              Australia, India, the USA and Europe, and we keep them running
               after launch.
             </Body>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -181,7 +181,7 @@ export default function StudioPage() {
               key={f.id}
               className="group overflow-hidden rounded-xl border border-line bg-paper transition-all duration-300 hover:-translate-y-1 hover:shadow-frame"
             >
-              {/* Poster panel — blueprint grid, name set large, cutout portrait */}
+              {/* Poster panel: blueprint grid, name set large, cutout portrait */}
               <div className="blueprint-fine relative overflow-hidden bg-bone-alt px-6 pb-0 pt-6">
                 <p className="text-[1.6rem] font-medium leading-[1.05] tracking-tight text-ink">
                   {f.name.split(" ")[0]}
@@ -227,7 +227,7 @@ export default function StudioPage() {
             reverse
             plate={
               <Plate
-                label="Engagement — scope to handover"
+                label="Engagement: scope to handover"
                 src="/studio/scope-to-handover.webp"
                 alt="Two engineers going through a written scope document line by line"
                 ratio="1/1"

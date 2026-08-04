@@ -104,7 +104,7 @@ export default function PortfolioGrid({
                 className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-paper transition-all duration-300 hover:-translate-y-1 hover:border-line-strong hover:shadow-frame"
               >
                 <Plate
-                  label={`${p.name} — screen`}
+                  label={`${p.name}: screen`}
                   src={shotBySlug[p.slug]}
                   alt={shotBySlug[p.slug] ? `${p.name} interface` : ""}
                   fit="contain"

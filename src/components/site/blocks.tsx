@@ -98,8 +98,7 @@ export function TrustRow({
         <Item key={it.label}>
           {it.pending ? (
             <p className="font-display text-[clamp(1.6rem,3vw,2.25rem)] font-semibold leading-none tracking-tight text-line-strong">
-              —
-            </p>
+:             </p>
           ) : (
             <p className="font-display text-[clamp(1.6rem,3vw,2.25rem)] font-semibold leading-none tracking-tight text-ink">
               {it.value.replace("+", "")}
@@ -255,7 +254,7 @@ export function OutcomeCard({
       className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-paper transition-all duration-300 hover:-translate-y-1 hover:border-line-strong hover:shadow-frame"
     >
       <Plate
-        label={`${client} — screen`}
+        label={`${client}: screen`}
         src={src}
         alt={src ? `${client} interface` : ""}
         fit={fit}

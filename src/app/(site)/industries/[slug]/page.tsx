@@ -20,7 +20,7 @@ export async function generateMetadata({
     title: spec.eyebrow,
     description: spec.intro,
     openGraph: {
-      title: `${spec.eyebrow} — CodeGang`,
+      title: `${spec.eyebrow} · CodeGang`,
       description: spec.intro,
       url: `/industries/${spec.slug}`,
     },

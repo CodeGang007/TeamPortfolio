@@ -58,7 +58,7 @@ const platformLeadIns = [
   },
   {
     lead: "Yours to keep",
-    body: "Your repository, your cloud account, your data. We build so the system survives us — documented, tested, and handed over whole.",
+    body: "Your repository, your cloud account, your data. We build so the system survives us: documented, tested, and handed over whole.",
   },
 ];
 
@@ -71,10 +71,10 @@ const systemBands = [
     eyebrow: "AI & GenAI engineering",
     lead: "Private AI over your own documents,",
     trail: "with the retrieval trace attached",
-    body: "Verse AI gives an enterprise a private assistant over its own files. Every answer arrives with the chunks it came from, and every chunk is scoped to one tenant — so a buyer can audit the answer instead of trusting it.",
+    body: "Verse AI gives an enterprise a private assistant over its own files. Every answer arrives with the chunks it came from, and every chunk is scoped to one tenant, so a buyer can audit the answer instead of trusting it.",
     proof: "Live for MooveHub in São Paulo",
     diorama: <Console />,
-    caption: "Verse AI — assistant with retrieval trace",
+    caption: "Verse AI: assistant with retrieval trace",
   },
   {
     n: "02",
@@ -85,7 +85,7 @@ const systemBands = [
     body: "Pinnacle HMS runs a working hospital. Reception, OPD, diagnostics, pharmacy, billing and admin each get their own portal, but a patient episode is one record moving across 39 tables and 57 relationships with an audit trail behind it.",
     proof: "Live in a hospital in Kolkata",
     diorama: <Hospital />,
-    caption: "Pinnacle HMS — one patient episode across six portals",
+    caption: "Pinnacle HMS: one patient episode across six portals",
   },
   {
     n: "03",
@@ -96,7 +96,7 @@ const systemBands = [
     body: "ARM Tech runs purchasing, fleet and finance for a cement trader. Five deep-learning modules sit on the same pipeline as the transactional system, so a forecast is something the buyer acts on in the app rather than a slide in a review.",
     proof: "Live for a trading business in Kolkata",
     diorama: <Forecast />,
-    caption: "ARM Tech ERP — LSTM demand forecast",
+    caption: "ARM Tech ERP, LSTM demand forecast",
   },
   {
     n: "04",
@@ -104,10 +104,10 @@ const systemBands = [
     eyebrow: "Mobile app development",
     lead: "Mobile built for a real audience,",
     trail: "shipped to a real store",
-    body: "eMedici teaches medical students across Australia. Offline-first sync, store-ready release engineering, and a question engine that has to stay correct — because the people using it are being examined on it.",
-    proof: `eMedici · Play Store — ${stats.emediciInstalls} installs, ${stats.emediciRating}★`,
+    body: "eMedici teaches medical students across Australia. Offline-first sync, store-ready release engineering, and a question engine that has to stay correct: because the people using it are being examined on it.",
+    proof: `eMedici · Play Store · ${stats.emediciInstalls} installs, ${stats.emediciRating}★`,
     diorama: <Mobile />,
-    caption: "eMedici — question engine",
+    caption: "eMedici: question engine",
   },
   {
     n: "05",
@@ -115,10 +115,10 @@ const systemBands = [
     eyebrow: "SaaS product development",
     lead: "A product that earns its keep",
     trail: "in the first sixty seconds",
-    body: "AI Resume Builder turns a pasted job description into an ATS-optimised resume. The whole product is one loop — paste, score, rewrite, download — and the score has to move for a visible, explainable reason.",
+    body: "AI Resume Builder turns a pasted job description into an ATS-optimised resume. The whole product is one loop: paste, score, rewrite, download, and the score has to move for a visible, explainable reason.",
     proof: "Live at nailhiring.com",
     diorama: <Ats />,
-    caption: "AI Resume Builder — ATS match report",
+    caption: "AI Resume Builder, ATS match report",
   },
 ] as const;
 
@@ -126,7 +126,7 @@ const chapters = [
   {
     n: "I",
     title: "Scope",
-    body: "We work out what the system has to do and what shipping means. You leave with a written scope you could hand to anyone — including someone who is not us.",
+    body: "We work out what the system has to do and what shipping means. You leave with a written scope you could hand to anyone, including someone who is not us.",
   },
   {
     n: "II",
@@ -160,7 +160,7 @@ const industries = [
   },
   {
     name: "Trade & Logistics",
-    body: "ARM Tech runs purchasing, fleet and finance — with five deep-learning modules feeding decisions daily.",
+    body: "ARM Tech runs purchasing, fleet and finance, with five deep-learning modules feeding decisions daily.",
     systems: "ARM Tech ERP",
     href: "/work/arm-tech",
   },
@@ -181,11 +181,11 @@ const industries = [
 const faq = [
   {
     q: "Who actually writes the code?",
-    a: "The engineers on the studio page. There is no sales layer and no hand-off — the engineer in the meeting is the one writing the code.",
+    a: "The engineers on the studio page. There is no sales layer and no hand-off: the engineer in the meeting is the one writing the code.",
   },
   {
     q: "What do you build?",
-    a: "Production AI systems (RAG, multi-LLM gateways), multi-tenant SaaS platforms, mobile apps, ERP suites with applied deep learning, and healthcare systems. Every one of those maps to a system we have shipped — see the case studies.",
+    a: "Production AI systems (RAG, multi-LLM gateways), multi-tenant SaaS platforms, mobile apps, ERP suites with applied deep learning, and healthcare systems. Every one of those maps to a system we have shipped: see the case studies.",
   },
   {
     q: "How does an engagement run?",
@@ -193,7 +193,7 @@ const faq = [
   },
   {
     q: "Do you work across time zones?",
-    a: `Yes. Our clients are in ${marketsLong} — Brazil, Australia, India, the USA and Europe — and every system stays supported in its own timezone.`,
+    a: `Yes. Our clients are in ${marketsLong}. Brazil, Australia, India, the USA and Europe, and every system stays supported in its own timezone.`,
   },
   {
     q: "Can you work under NDA?",
@@ -262,7 +262,7 @@ export default function HomePage() {
             <span className="font-medium text-ink">
               {stats.clientsServed} clients
             </span>{" "}
-            over the years — most under NDA.{" "}
+            over the years, most under NDA.{" "}
             <span className="font-medium text-ink">{stats.live} systems</span>{" "}
             are live in production right now.
           </p>
@@ -282,10 +282,10 @@ export default function HomePage() {
 
         <FadeUp className="mt-12">
           <div className="grid items-start gap-4 lg:grid-cols-2">
-            <Frame size="lg" label="Verse AI — request path">
+            <Frame size="lg" label="Verse AI: request path">
               <Stack />
             </Frame>
-            <Frame size="lg" label="Verse AI — assistant with retrieval trace">
+            <Frame size="lg" label="Verse AI: assistant with retrieval trace">
               <Console />
             </Frame>
           </div>
@@ -299,7 +299,7 @@ export default function HomePage() {
           <div className="flex flex-col items-start gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
             <Body className="max-w-md">
               Bring us the system you need built, and we will tell you what it
-              actually takes — before you commit to anything.
+              actually takes, before you commit to anything.
             </Body>
             <Pill href="/contact">
               Talk to an engineer <Nudge />
@@ -480,7 +480,7 @@ export default function HomePage() {
             align="center"
             lead="Everything a company needs built,"
             trail="under one roof"
-            body="AI platforms, SaaS products, mobile apps, ERP suites, cloud infrastructure — shipped by the same team, so nothing gets lost between vendors."
+            body="AI platforms, SaaS products, mobile apps, ERP suites, cloud infrastructure, shipped by the same team, so nothing gets lost between vendors."
           />
         </FadeUp>
 
@@ -501,7 +501,7 @@ export default function HomePage() {
               },
               {
                 lead: "NDA by default",
-                body: "Most of our work is under one. This site shows regions, statuses and stacks rather than client internals — deliberately.",
+                body: "Most of our work is under one. This site shows regions, statuses and stacks rather than client internals: deliberately.",
               },
             ]}
           />
@@ -617,7 +617,7 @@ export default function HomePage() {
       {/* ══ Numbers ═════════════════════════════════════════════════ */}
       <StatsBand />
 
-      {/* ══ Testimonials — renders only when a real quote exists ════ */}
+      {/* ══ Testimonials: renders only when a real quote exists ════ */}
       {testimonials.length > 0 ? (
         <Section tone="bone" id="testimonials">
           <FadeUp>
@@ -671,7 +671,7 @@ export default function HomePage() {
               size="md"
             />
             <Body className="mt-5">
-              If yours is not here, ask an engineer directly — you will get an
+              If yours is not here, ask an engineer directly: you will get an
               answer from the person who would build it.
             </Body>
             <Pill href="/contact" variant="light" className="mt-7">

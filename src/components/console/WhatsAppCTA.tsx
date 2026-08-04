@@ -12,16 +12,16 @@ function contextMessage(pathname: string): string {
     const slug = pathname.split("/")[2];
     const p = slug ? getConsoleProject(slug) : undefined;
     if (p) {
-      return `Hi CodeGang — I just read the ${p.name} case study and want to build something similar.`;
+      return `Hi CodeGang, I just read the ${p.name} case study and want to build something similar.`;
     }
   }
   if (pathname.startsWith("/work"))
-    return "Hi CodeGang — I was looking through your case studies and want to discuss a project.";
+    return "Hi CodeGang, I was looking through your case studies and want to discuss a project.";
   if (pathname.startsWith("/studio"))
-    return "Hi CodeGang — I'd like to talk to one of the engineers about a project.";
+    return "Hi CodeGang. I'd like to talk to one of the engineers about a project.";
   if (pathname.startsWith("/contact") || pathname.startsWith("/project-request"))
-    return "Hi CodeGang — I want to discuss a project.";
-  return "Hi CodeGang — I found you through codegang.online and want to discuss a project.";
+    return "Hi CodeGang, I want to discuss a project.";
+  return "Hi CodeGang, I found you through codegang.online and want to discuss a project.";
 }
 
 export default function WhatsAppCTA() {
@@ -42,7 +42,7 @@ export default function WhatsAppCTA() {
       />
       <WhatsAppGlyph className="h-7 w-7" />
 
-      {/* Label slides out on hover. Pointer devices only — on touch there is
+      {/* Label slides out on hover. Pointer devices only, on touch there is
           no hover state, so the tooltip would just sit there permanently. */}
       <span className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-lg bg-ink px-3 py-2 text-[0.75rem] font-medium text-bone opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 [@media(hover:hover)]:block">
         Chat on WhatsApp

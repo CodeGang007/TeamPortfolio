@@ -25,8 +25,7 @@ export default function FooterCta() {
 
             <p className="mt-6 max-w-lg text-[0.9375rem] leading-relaxed text-ink-soft">
               Tell us what it has to do. You will get a straight answer about
-              what it takes to build, from the engineer who would build it —
-              before you commit to anything.
+              what it takes to build, from the engineer who would build it:               before you commit to anything.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -52,7 +51,7 @@ export default function FooterCta() {
             </div>
           </div>
 
-          {/* Illustrated card — the hero's world at dusk */}
+          {/* Illustrated card: the hero's world at dusk */}
           <div className="relative mx-auto w-full max-w-[22rem] overflow-hidden rounded-2xl border border-line bg-paper p-2 shadow-frame-lg">
             <div className="relative aspect-[3/4] overflow-hidden rounded-xl">
               <Image

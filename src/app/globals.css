@@ -344,7 +344,7 @@ input:-webkit-autofill:active {
   --mute: #6b6862;
   --line: #e2dfd8;
   --line-strong: #d6d2c9;
-  --signal: #2e7df0;
+  --signal: #347d26;
   background-color: var(--bone);
   color: var(--ink);
   /* Body copy wants a touch more warmth in its letterfit at these sizes. */

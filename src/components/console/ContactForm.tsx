@@ -1,11 +1,44 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Send } from "lucide-react";
-import { site } from "@/content/site";
+import { Loader2 } from "lucide-react";
+import { site, stats } from "@/content/site";
+
+/* ═══════════════════════════════════════════════════════════════════
+   CONTACT FORM
+
+   Styled from the marketing tokens (bone / ink / line / signal) rather
+   than Tailwind's stock slate-and-blue. A form in default framework
+   colours is the single fastest way to make an otherwise art-directed
+   page look unfinished, and this one sits on the page a buyer reaches
+   when they have already decided to talk to someone.
+   ═══════════════════════════════════════════════════════════════════ */
 
 type FormState = "idle" | "sending" | "sent" | "error";
 const MESSAGE_LIMIT = 5000;
+
+const fieldClass =
+  "w-full rounded-lg border border-line bg-bone px-4 py-3 text-[0.9rem] text-ink placeholder:text-mute/60 transition-all duration-200 focus:border-signal focus:bg-paper focus:outline-none focus:ring-4 focus:ring-signal/10 disabled:opacity-50";
+
+function Label({
+  children,
+  aside,
+}: {
+  children: React.ReactNode;
+  aside?: React.ReactNode;
+}) {
+  return (
+    <span className="flex items-baseline justify-between gap-4">
+      <span className="mono-label">
+        {children}
+        <span aria-hidden className="ml-1 text-signal">
+          *
+        </span>
+      </span>
+      {aside}
+    </span>
+  );
+}
 
 export default function ContactForm({ about }: { about?: string }) {
   const [state, setState] = useState<FormState>("idle");
@@ -43,113 +76,157 @@ export default function ContactForm({ about }: { about?: string }) {
     }
   }
 
+  /* ── Sent ──────────────────────────────────────────────────────── */
+
   if (state === "sent") {
     return (
-      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-8">
-        <p className="flex items-center gap-2.5">
-          <span aria-hidden className="h-2 w-2 rounded-full bg-emerald-500" />
-          <span className="text-sm font-semibold text-emerald-900">
-            Delivered
-          </span>
-        </p>
-        <p className="mt-3 text-sm leading-relaxed text-emerald-800">
-          Your message is in the founders&apos; Telegram already. An engineer
-          will reply from {site.email}.
-        </p>
-        <button
-          type="button"
-          onClick={() => setState("idle")}
-          className="mt-5 text-sm font-medium text-emerald-700 underline-offset-2 hover:underline"
-        >
-          Send another message
-        </button>
+      <div className="relative overflow-hidden rounded-2xl border border-line bg-paper p-10 text-center shadow-frame-lg sm:p-16">
+        <div aria-hidden className="blueprint-fine absolute inset-0 opacity-60" />
+        <div className="relative">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-signal-soft">
+            <svg viewBox="0 0 24 24" className="h-8 w-8 text-signal" fill="none">
+              <path
+                d="m5 12.5 4.5 4.5L19 7"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <h2 className="display-md mt-7 text-ink">
+            Delivered{" "}
+            <span className="font-serif italic text-mute">to the founders.</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-[0.9375rem] leading-relaxed text-ink-soft">
+            Your message is in the founders&apos; Telegram already: no queue, no
+            triage. An engineer will reply from {site.email}.
+          </p>
+          <button
+            type="button"
+            onClick={() => setState("idle")}
+            className="mt-8 text-[0.875rem] font-medium text-signal underline-offset-4 hover:underline"
+          >
+            Send another message
+          </button>
+        </div>
       </div>
     );
   }
 
   const disabled = state === "sending";
 
+  /* ── Form ──────────────────────────────────────────────────────── */
+
   return (
-    <form onSubmit={onSubmit} className="max-w-xl">
-      <div className="grid gap-5 sm:grid-cols-2">
-        <label className="block">
-          <span className="text-sm font-medium text-slate-700">
-            Name <span className="text-red-500">*</span>
-          </span>
-          <input
-            name="name"
-            required
-            autoComplete="name"
-            disabled={disabled}
-            className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-slate-50 disabled:text-slate-400"
-            placeholder="Your name"
-          />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium text-slate-700">
-            Email <span className="text-red-500">*</span>
-          </span>
-          <input
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            disabled={disabled}
-            className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-slate-50 disabled:text-slate-400"
-            placeholder="you@company.com"
-          />
-        </label>
+    <form
+      onSubmit={onSubmit}
+      className="overflow-hidden rounded-2xl border border-line bg-paper shadow-frame-lg"
+    >
+      {/* Header strip: same drafting treatment as the guided brief, so the
+          two entry points on the site read as one family. */}
+      <div className="blueprint-fine border-b border-line bg-bone-alt px-6 py-6 sm:px-10">
+        <p className="mono-label !text-signal">Write to us</p>
+        <h2 className="display-md mt-2.5 text-ink">
+          A paragraph is enough{" "}
+          <span className="font-serif italic text-mute">to start.</span>
+        </h2>
       </div>
-      <label className="mt-5 block">
-        <div className="flex items-baseline justify-between">
-          <span className="text-sm font-medium text-slate-700">
-            What are you trying to ship? <span className="text-red-500">*</span>
-          </span>
-          <span className="text-xs text-slate-400">
-            {messageLength}/{MESSAGE_LIMIT}
-          </span>
+
+      <div className="px-6 py-8 sm:px-10 sm:py-10">
+        <div className="grid gap-6 sm:grid-cols-2">
+          <label className="block">
+            <Label>Your name</Label>
+            <input
+              name="name"
+              required
+              autoComplete="name"
+              disabled={disabled}
+              className={`mt-2.5 ${fieldClass}`}
+              placeholder="Priya Raman"
+            />
+          </label>
+          <label className="block">
+            <Label>Email</Label>
+            <input
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              disabled={disabled}
+              className={`mt-2.5 ${fieldClass}`}
+              placeholder="you@company.com"
+            />
+          </label>
         </div>
-        <textarea
-          name="message"
-          required
-          rows={6}
-          maxLength={MESSAGE_LIMIT}
-          disabled={disabled}
-          onChange={(e) => setMessageLength(e.target.value.length)}
-          className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm leading-relaxed text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-slate-50 disabled:text-slate-400"
-          placeholder="The system, the constraint, the deadline — whatever you have."
-        />
-      </label>
 
-      <div aria-live="polite">
-        {state === "error" && (
-          <p
-            className="mt-4 flex items-center gap-2.5 text-sm font-medium text-red-600"
-            role="alert"
+        <label className="mt-6 block">
+          <Label
+            aside={
+              <span className="font-mono text-[0.65rem] tabular-nums text-mute">
+                {messageLength} / {MESSAGE_LIMIT}
+              </span>
+            }
           >
-            <span aria-hidden className="h-2 w-2 rounded-full bg-red-500" />
-            {error}
-          </p>
-        )}
+            What are you trying to ship?
+          </Label>
+          <textarea
+            name="message"
+            required
+            rows={8}
+            maxLength={MESSAGE_LIMIT}
+            disabled={disabled}
+            onChange={(e) => setMessageLength(e.target.value.length)}
+            className={`mt-2.5 resize-y leading-relaxed ${fieldClass}`}
+            placeholder="Tell us the system, the constraint, and the deadline. If it is still vague, say that too; scoping it is part of the work."
+          />
+        </label>
+
+        <div aria-live="polite">
+          {state === "error" && (
+            <p
+              role="alert"
+              className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[0.85rem] text-red-700"
+            >
+              {error}
+            </p>
+          )}
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-end gap-5 border-t border-line pt-7">
+          <button
+            type="submit"
+            disabled={disabled}
+            className="group inline-flex items-center gap-2 rounded-full bg-signal px-7 py-3 text-[0.875rem] font-medium text-white shadow-[0_8px_24px_-8px_rgba(52,125,38,0.6)] transition-all duration-200 hover:shadow-[0_10px_30px_-8px_rgba(52,125,38,0.75)] disabled:cursor-wait disabled:opacity-60"
+          >
+            {state === "sending" ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                Sending…
+              </>
+            ) : (
+              <>
+                Send it
+                <span
+                  aria-hidden
+                  className="transition-transform group-hover:translate-x-1"
+                >
+                  →
+                </span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
-      <button
-        type="submit"
-        disabled={disabled}
-        className="mt-6 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-wait disabled:opacity-60"
-      >
-        {state === "sending" ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-            Sending…
-          </>
-        ) : (
-          <>
-            <Send className="h-4 w-4" aria-hidden />
-            Send it
-          </>
-        )}
-      </button>
+      {/* Proof strip: the page's own numbers, closing the card. */}
+      <div className="flex flex-wrap gap-x-8 gap-y-2 border-t border-line bg-bone-alt px-6 py-4 font-mono text-[0.62rem] uppercase tracking-wider text-mute sm:px-10">
+        <span>{stats.live} systems live</span>
+        <span aria-hidden>·</span>
+        <span>{stats.projectsDelivered} projects delivered</span>
+        <span aria-hidden>·</span>
+        <span>No sales layer</span>
+      </div>
     </form>
   );
 }

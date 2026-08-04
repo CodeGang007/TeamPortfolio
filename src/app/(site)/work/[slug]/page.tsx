@@ -24,7 +24,7 @@ export async function generateMetadata({
     title: p.name,
     description: p.summary,
     openGraph: {
-      title: `${p.name} — CodeGang`,
+      title: `${p.name} · CodeGang`,
       description: p.summary,
       url: `/work/${p.slug}`,
     },
@@ -58,7 +58,7 @@ export default async function CaseStudyPage({
       <JsonLd data={breadcrumbJsonLd} />
 
       {/* ── Header ───────────────────────────────────────────── */}
-      <section className="border-b border-slate-200 bg-gradient-to-b from-blue-50/60 to-white">
+      <section className="border-b border-slate-200 bg-gradient-to-b from-signal-soft/60 to-white">
         <div className="mx-auto max-w-7xl px-6 pb-14 pt-32 lg:pb-20 lg:pt-36">
           <nav aria-label="Breadcrumb" className="text-sm text-slate-500">
             <Link href="/work" className="font-medium hover:text-slate-900">
@@ -95,7 +95,7 @@ export default async function CaseStudyPage({
                 href={p.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+                className="rounded-lg bg-signal px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#2a6620]"
               >
                 Visit the live system ↗
               </a>
@@ -105,7 +105,7 @@ export default async function CaseStudyPage({
                 href={deep.pdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+                className="rounded-lg bg-signal px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#2a6620]"
               >
                 Read the full deck (PDF) ↗
               </a>
@@ -218,7 +218,7 @@ export default async function CaseStudyPage({
                 key={m.title}
                 className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
               >
-                <p className="font-mono text-xs uppercase tracking-wider text-blue-600">
+                <p className="font-mono text-xs uppercase tracking-wider text-signal">
                   {m.subtitle}
                 </p>
                 <h3 className="mt-2 text-base font-semibold text-slate-900">
@@ -300,13 +300,13 @@ export default async function CaseStudyPage({
 
       {/* ── CTA ──────────────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-6 py-16">
-        <div className="rounded-2xl bg-blue-600 px-8 py-12 lg:px-12">
+        <div className="rounded-2xl bg-signal px-8 py-12 lg:px-12">
           <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
             <div className="max-w-2xl">
               <h2 className="font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl">
                 Need a system like {p.name}?
               </h2>
-              <p className="mt-3 text-blue-100">
+              <p className="mt-3 text-signal-soft">
                 Tell us what you are trying to ship. The engineer who built
                 this one answers.
               </p>
@@ -314,13 +314,13 @@ export default async function CaseStudyPage({
             <div className="flex flex-wrap gap-4">
               <Link
                 href={`/contact?about=${p.slug}`}
-                className="rounded-lg bg-white px-6 py-3 text-sm font-semibold text-blue-700 shadow-sm transition-colors hover:bg-blue-50"
+                className="rounded-lg bg-white px-6 py-3 text-sm font-semibold text-signal shadow-sm transition-colors hover:bg-signal-soft"
               >
                 Start a project
               </Link>
               <a
                 href={whatsappHref(
-                  `Hi CodeGang — I just read the ${p.name} case study and want to build something similar.`
+                  `Hi CodeGang, I just read the ${p.name} case study and want to build something similar.`
                 )}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -330,7 +330,7 @@ export default async function CaseStudyPage({
               </a>
               <a
                 href={`mailto:${site.email}?subject=${encodeURIComponent(`About ${p.name}`)}`}
-                className="rounded-lg border border-blue-300 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+                className="rounded-lg border border-signal/40 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#2a6620]"
               >
                 {site.email}
               </a>
