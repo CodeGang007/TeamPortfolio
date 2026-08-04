@@ -6,6 +6,7 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import {
+  BarChart3,
   Bot,
   BrainCircuit,
   Building2,
@@ -88,6 +89,7 @@ const megaMenus: MegaMenu[] = [
           { title: "AI consulting", desc: "A two-week viability read", href: "/services/ai-consulting", Icon: Sparkles },
           { title: "Generative AI", desc: "Schema-constrained output", href: "/services/generative-ai-development", Icon: Cpu },
           { title: "Machine learning", desc: "Forecasting, OCR, scoring", href: "/services/machine-learning-development", Icon: LineChart },
+          { title: "Data & analytics", desc: "Power BI, pipelines, one number", href: "/services/data-analytics", Icon: BarChart3 },
         ],
       },
       {
@@ -175,7 +177,7 @@ const megaMenus: MegaMenu[] = [
     feature: {
       eyebrow: "Our rule",
       title: "Some numbers are blank",
-      body: "Ratings render an em dash until a verified score exists. That is what makes the rest worth reading.",
+      body: "A stat we cannot source does not get published, and a rating we cannot verify does not get a placeholder. That is what makes the rest worth reading.",
       href: "/our-values",
       cta: "Read the rules",
     },
