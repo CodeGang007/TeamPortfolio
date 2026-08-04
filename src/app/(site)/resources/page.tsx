@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Resources",
   description:
     "Engineering notes, the questions we get asked most, and the full page index. No gated PDFs.",
-  openGraph: { title: "Resources — CodeGang", url: "/resources" },
+  openGraph: { title: "Resources · CodeGang", url: "/resources" },
   alternates: { canonical: "/resources" },
 };
 
@@ -56,7 +56,7 @@ const notes: {
   },
   {
     title: "Five deep-learning modules, one pipeline",
-    body: "Shared feature engineering across demand, price, and risk models — and where that sharing stops paying off.",
+    body: "Shared feature engineering across demand, price, and risk models, and where that sharing stops paying off.",
     tag: "Applied ML",
     from: "ARM Tech",
   },
@@ -89,7 +89,7 @@ const notes: {
 const answers = [
   {
     q: "Who owns the code?",
-    a: "You do, from the first commit — not on final payment. We work in your repository under your organisation.",
+    a: "You do, from the first commit, not on final payment. We work in your repository under your organisation.",
   },
   {
     q: "Where does it run?",
@@ -101,7 +101,7 @@ const answers = [
   },
   {
     q: "How big is the team?",
-    a: "A senior engineering team across design, delivery and custom solutioning, with onsite coverage in the USA. We staff each engagement with named engineers who stay on it — the person who scoped your system is still on it a year later.",
+    a: "A senior engineering team across design, delivery and custom solutioning, with onsite coverage in the USA. We staff each engagement with named engineers who stay on it: the person who scoped your system is still on it a year later.",
   },
   {
     q: "Do you sign NDAs?",
@@ -123,7 +123,7 @@ export default function ResourcesPage() {
             eyebrow="Resources"
             plate={
               <Plate
-                label="Notes — engineering write-ups"
+                label="Notes: engineering write-ups"
                 src="/resources/notes-desk.jpg"
                 alt="An engineer's notebook with hand-sketched pipeline architecture, open on a desk beside a laptop showing code"
                 ratio="4/3"
@@ -134,7 +134,7 @@ export default function ResourcesPage() {
             <Display as="h1" size="xl" lead="Notes from the builds," trail="none of them gated" />
             <Body className="mt-6 max-w-xl text-base">
               Six write-ups drawn from systems we actually shipped. None are
-              published yet, so each is marked as such — an unwritten article is
+              published yet, so each is marked as such: an unwritten article is
               not a lead magnet.
             </Body>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -252,7 +252,7 @@ export default function ResourcesPage() {
             eyebrow="Page index"
             lead="Everything on this site,"
             trail="in one list"
-            body={`${services.length} services, ${industries.length} industries, and ${consoleProjects.length} case studies — each one linked to the production system behind it.`}
+            body={`${services.length} services, ${industries.length} industries, and ${consoleProjects.length} case studies, each one linked to the production system behind it.`}
           />
         </FadeUp>
 

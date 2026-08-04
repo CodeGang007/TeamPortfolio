@@ -3,7 +3,7 @@ import { Cloud, Sparkles, LayoutTemplate } from "lucide-react";
 /* ═══════════════════════════════════════════════════════════════════
    ABOUT-PAGE DIAGRAMS
    Three bespoke, coded (not photographic) illustrations for the About
-   page — a layered delivery stack, a four-stage operating cycle, and a
+   page: a layered delivery stack, a four-stage operating cycle, and a
    three-strength Venn. Plain HTML/CSS/SVG so labels stay crisp and
    editable, and so the page never depends on an AI-generated image
    rendering text correctly.
@@ -21,7 +21,7 @@ export function DeliveryStackDiagram() {
   return (
     <div className="relative pl-9 pr-9 sm:pl-11 sm:pr-11">
       {/* Left rail. `writing-mode` keeps the label inside its own column and
-          centred against the stack — a rotate() transform measured the text
+          centred against the stack: a rotate() transform measured the text
           horizontally and pushed "CODEGANG" off the top of the box. */}
       <div className="absolute inset-y-0 left-0 flex w-9 items-center justify-center sm:w-11">
         <span aria-hidden className="absolute inset-y-2 left-0 w-px bg-line-strong" />
@@ -30,7 +30,7 @@ export function DeliveryStackDiagram() {
         </span>
       </div>
 
-      {/* Right rail — brackets the two highlighted layers, which straddle the
+      {/* Right rail: brackets the two highlighted layers, which straddle the
           vertical middle of a four-layer stack. */}
       <div className="absolute inset-y-0 right-0 hidden w-9 items-center justify-center sm:flex sm:w-11">
         <span
@@ -119,7 +119,7 @@ export function OperatingCycleDiagram() {
           ↺
         </span>
         <p className="font-mono text-[0.62rem] uppercase tracking-wider text-mute">
-          Repeats for every release — Stay feeds the next Scope
+          Repeats for every release. Stay feeds the next Scope
         </p>
       </div>
     </div>
@@ -153,7 +153,7 @@ export function StrengthsVenn() {
         className="absolute bottom-[2%] left-1/2 h-[62%] w-[62%] -translate-x-1/2 rounded-full border border-signal/50 bg-signal/[0.07] mix-blend-multiply"
       />
 
-      {/* Centroid of the three circle centres — the true three-way overlap. */}
+      {/* Centroid of the three circle centres: the true three-way overlap. */}
       <span className="absolute left-1/2 top-[47%] -translate-x-1/2 -translate-y-1/2 font-display text-lg font-semibold tracking-tight text-ink">
         Build
       </span>

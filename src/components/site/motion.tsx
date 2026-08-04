@@ -12,7 +12,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 
 /* ═══════════════════════════════════════════════════════════════════
    MOTION LAYER
-   One easing curve, one distance, one duration — used everywhere. The
+   One easing curve, one distance, one duration: used everywhere. The
    page should feel like a single hand animated it, not like six
    different components each brought their own spring.
    ═══════════════════════════════════════════════════════════════════ */

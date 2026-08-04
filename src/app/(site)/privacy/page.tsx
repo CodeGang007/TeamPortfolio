@@ -8,11 +8,11 @@ export default function PrivacyPolicy() {
         <>
             <div className="relative min-h-screen bg-white pt-32 pb-20 overflow-hidden">
                 {/* Background Effects */}
-                <div className="absolute top-0 left-0 w-full h-[50vh] bg-blue-600/5 blur-[120px] rounded-full pointer-events-none" />
+                <div className="absolute top-0 left-0 w-full h-[50vh] bg-signal/5 blur-[120px] rounded-full pointer-events-none" />
 
                 <div className="container mx-auto px-6 max-w-4xl relative z-10">
                     <div className="mb-12">
-                        <div className="flex items-center gap-3 mb-6 text-blue-600">
+                        <div className="flex items-center gap-3 mb-6 text-signal">
                             <Shield className="w-6 h-6" />
                             <span className="text-sm font-bold tracking-widest uppercase">Legal</span>
                         </div>
@@ -48,7 +48,7 @@ export default function PrivacyPolicy() {
                             <section className="space-y-4">
                                 <h2 className="text-2xl font-bold text-slate-900">4. Your Rights</h2>
                                 <p className="text-slate-600 leading-relaxed">
-                                    You have the right to access, correct, or delete your personal data. Contact us at <a href={`mailto:${site.email}`} className="text-blue-600 hover:underline">{site.email}</a> for any privacy-related inquiries.
+                                    You have the right to access, correct, or delete your personal data. Contact us at <a href={`mailto:${site.email}`} className="text-signal hover:underline">{site.email}</a> for any privacy-related inquiries.
                                 </p>
                             </section>
 

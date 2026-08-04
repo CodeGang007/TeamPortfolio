@@ -106,7 +106,7 @@ export default function Console() {
                   <span className="font-mono text-[0.58rem] text-mute">
                     {s.page}
                   </span>
-                  {/* Similarity bar — width encodes the score */}
+                  {/* Similarity bar: width encodes the score */}
                   <span className="ml-auto flex items-center gap-1.5">
                     <span
                       aria-hidden
@@ -136,7 +136,7 @@ export default function Console() {
           >
             Thirty days, per{" "}
             <span className="font-medium text-ink">clause 7</span> of the
-            contract template — with the handbook exception for probation.
+            contract template, with the handbook exception for probation.
             <span className="caret" />
           </div>
         </div>

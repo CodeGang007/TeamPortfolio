@@ -45,7 +45,7 @@ export default function GlobeWordmark({
       tx: number; ty: number;
       c: string; d: number;
       ox: number; oy: number; vx: number; vy: number;
-      lx: number; ly: number; // last drawn position — used for click accuracy
+      lx: number; ly: number; // last drawn position: used for click accuracy
     };
     let pts: P[] = [];
 
@@ -218,7 +218,7 @@ export default function GlobeWordmark({
       };
 
       if (reduced) {
-        draw(); // static finished wordmark — information without motion
+        draw(); // static finished wordmark: information without motion
         return;
       }
       frame();

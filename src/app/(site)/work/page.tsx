@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   title: "Work",
   description: `${stats.live} systems live in production across ${marketsLong}, ${stats.building} in build. Production AI, multi-tenant SaaS, mobile, ERP, and healthcare systems.`,
   openGraph: {
-    title: "Work — CodeGang",
+    title: "Work · CodeGang",
     description: `${stats.live} systems live in production across ${marketsLong}.`,
     url: "/work",
   },
@@ -119,7 +119,7 @@ const expertise = [
   { title: "Mobile app development", body: "Flutter and native Android with offline-first sync and store-ready release engineering.", proof: "emedici" },
   { title: "Applied machine learning", body: "Forecasting, anomaly detection, OCR, and risk scoring deployed inside business software.", proof: "arm-tech" },
   { title: "Enterprise systems", body: "ERPs, hospital management, and role-based platforms with the domain modelling they depend on.", proof: "pinnacle-hms" },
-  { title: "Cloud & DevOps", body: "AWS architecture, Docker, CI/CD — infrastructure that survives the system's own success.", proof: "ai-resume" },
+  { title: "Cloud & DevOps", body: "AWS architecture, Docker, CI/CD: infrastructure that survives the system's own success.", proof: "ai-resume" },
 ];
 
 const phases = [
@@ -135,7 +135,7 @@ const phases = [
  * system so the strip reads as a survey rather than a deep dive.
  */
 const insideShots = PORTFOLIO_PROJECTS.slice(0, 4).map((p) => ({
-  label: p.gallery[0]?.caption ?? `${p.title} — screen`,
+  label: p.gallery[0]?.caption ?? `${p.title}: screen`,
   src: p.gallery[0]?.src,
   fit: "contain" as const,
   href: `/work/${p.id}`,
@@ -152,7 +152,7 @@ export default function WorkPage() {
             eyebrow="Case studies"
             plate={
               <Plate
-                label="Studio — working the architecture"
+                label="Studio: working the architecture"
                 src="/about/studio-at-work.jpg"
                 alt="Three of the studio walking through a system's architecture at the whiteboard"
                 ratio="4/3"
@@ -221,7 +221,7 @@ export default function WorkPage() {
             eyebrow="Our expertise"
             reverse
             plate={<Plate
-              label="Architecture — whiteboard"
+              label="Architecture: whiteboard"
               src="/our-values/whiteboard-pinnacle-schema.jpg"
               alt="The Pinnacle HMS schema, worked out on a whiteboard before any code"
               ratio="1/1"
@@ -234,8 +234,7 @@ export default function WorkPage() {
               size="md"
             />
             <Body className="mt-5 max-w-lg">
-              Each capability links to the production system that proves it —
-              with its stack, its screens, and its live status.
+              Each capability links to the production system that proves it:               with its stack, its screens, and its live status.
             </Body>
           </VisualLead>
         </FadeUp>

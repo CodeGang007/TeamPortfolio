@@ -31,9 +31,9 @@ import {
 
 export const metadata: Metadata = {
   title: "About",
-  description: `A software engineering company. ${stats.projectsDelivered} projects delivered for ${stats.clientsServed} clients — most under NDA — with ${stats.live} systems live across ${marketsLong}.`,
+  description: `A software engineering company. ${stats.projectsDelivered} projects delivered for ${stats.clientsServed} clients, most under NDA, with ${stats.live} systems live across ${marketsLong}.`,
   openGraph: {
-    title: "About — CodeGang",
+    title: "About · CodeGang",
     description: "The team, and the systems they keep running.",
     url: "/about",
   },
@@ -74,7 +74,7 @@ const milestones = [
     slug: "emedici",
     region: "Australia",
     title: "Medical education, shipped to a store",
-    body: "An Android app that med students, junior doctors and registrars are examined on — offline-first sync and store-ready release engineering.",
+    body: "An Android app that med students, junior doctors and registrars are examined on: offline-first sync and store-ready release engineering.",
   },
   {
     slug: "pinnacle-hms",
@@ -86,7 +86,7 @@ const milestones = [
     slug: "arm-tech",
     region: "India",
     title: "Deep learning inside the ERP",
-    body: "Five models — forecasting, anomaly detection, OCR, risk, route cost — on the same pipeline as the transactional system.",
+    body: "Five models: forecasting, anomaly detection, OCR, risk, route cost, on the same pipeline as the transactional system.",
   },
   {
     slug: "ai-resume",
@@ -98,14 +98,14 @@ const milestones = [
     slug: "nestflow",
     region: "Europe",
     title: "Property management on microservices",
-    body: "Landlord and tenant portals over containerized services — one compose file brings the whole stack up. Still in build.",
+    body: "Landlord and tenant portals over containerized services: one compose file brings the whole stack up. Still in build.",
   },
 ] as const;
 
 const difference = [
   {
     lead: "What we do",
-    body: "We build production software — AI platforms, multi-tenant SaaS, mobile apps, ERP suites and healthcare systems — and then keep them running. Every category maps to something already live.",
+    body: "We build production software, AI platforms, multi-tenant SaaS, mobile apps, ERP suites and healthcare systems, and then keep them running. Every category maps to something already live.",
   },
   {
     lead: "How we do it",
@@ -120,18 +120,18 @@ const difference = [
 const principles = [
   { lead: "Directness", body: "We say the tradeoff, not the pitch. If a deadline or a budget doesn't work, you hear that in the scoping call, not after the invoice." },
   { lead: "Ownership", body: "The engineer who scopes a system ships it and stays on it. Nothing gets handed to a support desk that has never opened the repo." },
-  { lead: "Evidence", body: "Every claim on this site links to a system you can inspect — a live URL, a Play Store listing, a case study with real screens." },
-  { lead: "Craft", body: "Code the next engineer can read — including future us, six months into maintaining what we built today." },
+  { lead: "Evidence", body: "Every claim on this site links to a system you can inspect: a live URL, a Play Store listing, a case study with real screens." },
+  { lead: "Craft", body: "Code the next engineer can read, including future us, six months into maintaining what we built today." },
   { lead: "Momentum", body: "Short cycles and a staging URL from week one. You watch a system grow; you don't wait for a reveal." },
   { lead: "Candor", body: "Bad news travels as fast as good news. A slipping estimate gets a message the day it slips, not the day it's due." },
 ] as const;
 
 const productionChecklist = [
-  "Deployed into your cloud account — not a shared sandbox you have to migrate off later.",
-  "CI/CD from the first commit — every system ships through the same pipeline it runs on in production.",
-  "Code review on every change — nothing merges without a second pair of eyes from the studio.",
-  "The engineer who built it maintains it — no handoff to a team that has never opened the repo.",
-  "Weekly checkpoints, not milestones — you see real progress every week, not at the end of a quarter.",
+  "Deployed into your cloud account, not a shared sandbox you have to migrate off later.",
+  "CI/CD from the first commit, every system ships through the same pipeline it runs on in production.",
+  "Code review on every change: nothing merges without a second pair of eyes from the studio.",
+  "The engineer who built it maintains it: no handoff to a team that has never opened the repo.",
+  "Weekly checkpoints, not milestones: you see real progress every week, not at the end of a quarter.",
 ];
 
 /** A visually varied spread across the real case studies for the carousel. */
@@ -185,7 +185,7 @@ export default function AboutPage() {
           <p className="mt-6 max-w-xl text-base leading-relaxed text-bone/80">
             CodeGang is a software engineering company. We ship production
             AI, multi-tenant platforms and mobile apps for clients in Brazil,
-            Australia, India, the USA and Europe — and we stay on to keep
+            Australia, India, the USA and Europe, and we stay on to keep
             them running after launch.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -240,8 +240,7 @@ export default function AboutPage() {
               <span className="text-signal">keeps shipping.</span>
             </h2>
             <Body className="mx-auto mt-6 max-w-2xl text-base">
-              CodeGang exists because most studios optimise for the handoff —
-              scope it, build it, hand you a repo, disappear. We do the
+              CodeGang exists because most studios optimise for the handoff:               scope it, build it, hand you a repo, disappear. We do the
               opposite: the same engineers who scope a system stay on it
               after launch, so the thing that shipped on day one still works
               on day five hundred.
@@ -272,7 +271,7 @@ export default function AboutPage() {
             className="shadow-frame-lg"
           />
           <p className="mono-label mt-4 text-center">
-            Standups, architecture reviews, release day — same people,
+            Standups, architecture reviews, release day: same people,
             every time.
           </p>
         </FadeUp>
@@ -285,7 +284,7 @@ export default function AboutPage() {
             eyebrow="The team"
             lead="The people who"
             trail="actually build it"
-            body={`${cofounderCount} co-founders and the people who build alongside them — ${teamSize} in total. The person you meet in the first call is the person who writes your code; there is nobody behind them to hand it to.`}
+            body={`${cofounderCount} co-founders and the people who build alongside them: ${teamSize} in total. The person you meet in the first call is the person who writes your code; there is nobody behind them to hand it to.`}
           />
         </FadeUp>
         <div className="mt-10">
@@ -301,7 +300,7 @@ export default function AboutPage() {
               eyebrow="How we build"
               lead="Engineering your delivery pipeline,"
               trail="four layers, one accountable team"
-              body="Every system we ship sits on the same four layers — engineered by the same people, from the interface a user touches down to the infrastructure that keeps it up."
+              body="Every system we ship sits on the same four layers: engineered by the same people, from the interface a user touches down to the infrastructure that keeps it up."
             />
           </FadeUp>
 
@@ -345,7 +344,7 @@ export default function AboutPage() {
                 <div className="space-y-6">
                   <p className="text-[0.9375rem] leading-relaxed text-ink-soft">
                     <span className="font-semibold text-ink">
-                      Production engineering —{" "}
+                      Production engineering: {" "}
                     </span>
                     We combine architecture, cloud infrastructure and
                     deployment practice to build systems that stay up, not
@@ -353,7 +352,7 @@ export default function AboutPage() {
                   </p>
                   <p className="text-[0.9375rem] leading-relaxed text-ink-soft">
                     <span className="font-semibold text-ink">
-                      Applied AI —{" "}
+                      Applied AI: {" "}
                     </span>
                     RAG pipelines, multi-LLM gateways and deep-learning
                     modules embedded inside real business software, not a
@@ -361,10 +360,10 @@ export default function AboutPage() {
                   </p>
                   <p className="text-[0.9375rem] leading-relaxed text-ink-soft">
                     <span className="font-semibold text-ink">
-                      Design & usability —{" "}
+                      Design & usability: {" "}
                     </span>
-                    Interfaces the actual end user runs their day on — a
-                    nurse, a call-centre agent, a store manager — not just
+                    Interfaces the actual end user runs their day on: a
+                    nurse, a call-centre agent, a store manager, not just
                     the buyer who signed off on the build.
                   </p>
                 </div>
@@ -391,7 +390,7 @@ export default function AboutPage() {
             eyebrow="The road so far"
             lead={`${stats.live} systems live,`}
             trail="six of them in detail"
-            body="Ordered by system rather than by date — we publish go-live dates only once we can source them."
+            body="Ordered by system rather than by date: we publish go-live dates only once we can source them."
           />
         </FadeUp>
 
@@ -477,7 +476,7 @@ export default function AboutPage() {
               {stats.live}
             </p>
             <p className="mt-3 text-[0.95rem] text-bone/70">
-              systems live in production right now, across {marketsLong} — not prototypes, not staging environments.
+              systems live in production right now, across {marketsLong}, not prototypes, not staging environments.
             </p>
           </FadeUp>
           <FadeUp delay={0.05}>
@@ -537,7 +536,7 @@ export default function AboutPage() {
             eyebrow="Who we build for"
             lead="Real organisations,"
             trail="each with a system behind the name"
-            body="We do not pad this list with logos for optics — every name here has a system we built and still maintain."
+            body="We do not pad this list with logos for optics, every name here has a system we built and still maintain."
           />
         </FadeUp>
 

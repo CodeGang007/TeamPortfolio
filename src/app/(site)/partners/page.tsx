@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: "Partners",
   description: `The organisations our ${stats.live} live systems run for, and the two ways we partner with other teams.`,
-  openGraph: { title: "Partners — CodeGang", url: "/partners" },
+  openGraph: { title: "Partners · CodeGang", url: "/partners" },
   alternates: { canonical: "/partners" },
 };
 
@@ -69,7 +69,7 @@ const why = [
  * We hold none of those, and the trust row says so explicitly.
  */
 const platforms = [
-  { name: "AWS", detail: "Bedrock, ECS, RDS, OpenSearch — Verse AI's seven-layer stack" },
+  { name: "AWS", detail: "Bedrock, ECS, RDS, OpenSearch. Verse AI's seven-layer stack" },
   { name: "Google Play", detail: "eMedici released and maintained on the store" },
   { name: "PostgreSQL", detail: "Every platform we run, including Pinnacle's 39-table schema" },
   { name: "Docker", detail: "Containerised delivery on all current builds" },
@@ -86,7 +86,7 @@ export default function PartnersPage() {
           <VisualLead
             eyebrow="Partners"
             plate={<Plate
-                label="Partners — engagement"
+                label="Partners: engagement"
                 src="/partners/engagement.webp"
                 alt="A delivery partner and an engineer working through a build together"
                 ratio="4/3"
@@ -124,7 +124,7 @@ export default function PartnersPage() {
             eyebrow="Who we build for"
             lead="The names we can print,"
             trail="and the many we cannot"
-            body={`${stats.clientsServed} clients over the studio's lifetime. These five have a live system we are permitted to name — the rest are under NDA and stay unnamed rather than being padded out with logos.`}
+            body={`${stats.clientsServed} clients over the studio's lifetime. These five have a live system we are permitted to name: the rest are under NDA and stay unnamed rather than being padded out with logos.`}
           />
         </FadeUp>
 
@@ -215,7 +215,7 @@ export default function PartnersPage() {
                 {m.body}
               </p>
               <p className="mt-5 border-t border-line pt-4 font-mono text-[0.62rem] uppercase tracking-wider text-mute">
-                Fits — {m.fit}
+                Fits: {m.fit}
               </p>
             </Item>
           ))}

@@ -92,7 +92,7 @@ export default function Mobile() {
           </p>
         </div>
 
-        {/* Play Store strip — explicitly attributed */}
+        {/* Play Store strip: explicitly attributed */}
         <div className="flex items-center justify-between border-t border-line bg-bone-alt/70 px-3.5 py-2">
           <span className="font-mono text-[0.55rem] text-mute">
             eMedici · Play Store

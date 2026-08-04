@@ -18,8 +18,8 @@ import {
 
 export const metadata: Metadata = {
   title: "Portfolio",
-  description: `Every system we have built, filterable by sector and status — ${stats.live} live across ${marketsLong}, ${stats.building} in build.`,
-  openGraph: { title: "Portfolio — CodeGang", url: "/portfolio" },
+  description: `Every system we have built, filterable by sector and status: ${stats.live} live across ${marketsLong}, ${stats.building} in build.`,
+  openGraph: { title: "Portfolio · CodeGang", url: "/portfolio" },
   alternates: { canonical: "/portfolio" },
 };
 
@@ -78,7 +78,7 @@ export default function PortfolioPage() {
             eyebrow="Portfolio"
             plate={
               <Plate
-                label="Systems wall — all builds"
+                label="Systems wall, all builds"
                 src="/portfolio/systems-wall.webp"
                 alt="An engineer reviewing the wall of printed screens from every live system"
                 ratio="4/3"
@@ -88,7 +88,7 @@ export default function PortfolioPage() {
           >
             <Display as="h1" size="xl" lead="Every system," trail="filterable and checkable" />
             <Body className="mt-6 max-w-xl text-base">
-              {consoleProjects.length} documented systems — {stats.live} live in
+              {consoleProjects.length} documented systems: {stats.live} live in
               production across {marketsLong}, {stats.building} in
               build. Filter by sector or status; each card opens the case study.
             </Body>
@@ -159,7 +159,7 @@ export default function PortfolioPage() {
               <p>
                 {stats.projectsDelivered} projects for {stats.clientsServed}{" "}
                 clients over the studio&apos;s lifetime.{" "}
-                {consoleProjects.length} of them are documented here — the rest
+                {consoleProjects.length} of them are documented here: the rest
                 run under client confidentiality agreements.
               </p>
               <p>

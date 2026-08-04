@@ -113,7 +113,7 @@ const megaMenus: MegaMenu[] = [
     feature: {
       eyebrow: "Start here",
       title: "Not sure which one?",
-      body: "A two-to-three week assessment tells you what your data can support — and which ideas we would not build.",
+      body: "A two-to-three week assessment tells you what your data can support, and which ideas we would not build.",
       href: "/services/ai-consulting",
       cta: "See the assessment",
     },
@@ -311,7 +311,7 @@ export default function SiteHeader() {
         }`}
         onMouseLeave={leave}
       >
-        {/* ── Utility strip — retracts once you start reading ────── */}
+        {/* ── Utility strip: retracts once you start reading ────── */}
         <div
           className={`overflow-hidden border-b border-transparent bg-ink transition-all duration-300 ${
             scrolled ? "max-h-0 opacity-0" : "max-h-10 opacity-100"
@@ -382,7 +382,7 @@ export default function SiteHeader() {
           <Link
             href="/"
             className="flex shrink-0 items-center gap-2.5"
-            aria-label="CodeGang — home"
+            aria-label="CodeGang: home"
           >
             <Image
               src="/assets/cg-logo-nav.png"
@@ -403,7 +403,7 @@ export default function SiteHeader() {
 
           {/* Centre nav */}
           <nav className="mx-auto hidden items-center lg:flex" aria-label="Main">
-            {/* Featured pill — the permanently highlighted first item, the
+            {/* Featured pill: the permanently highlighted first item, the
                 way WebOsmotic leads with "LET'S TALK AI". */}
             <Link
               href="/services/ai-consulting"
@@ -456,7 +456,7 @@ export default function SiteHeader() {
           {/* Right cluster */}
           <div className="ml-auto flex shrink-0 items-center gap-2.5">
             {/* No sign-in prompt on the marketing surface. A visitor has no
-                account and no reason to want one — the only call to action
+                account and no reason to want one: the only call to action
                 here is starting a project. The menu still appears for anyone
                 already signed in, so the team keeps its route to the app. */}
             {isAuthenticated && (
@@ -469,7 +469,7 @@ export default function SiteHeader() {
               href="/start-a-project"
               className={`hidden rounded-full border px-5 py-3 text-[0.85rem] font-medium transition-all 2xl:inline-flex ${
                 solid
-                  ? "border-signal/45 text-ink shadow-[0_0_0_3px_rgba(46,125,240,0.10)] hover:border-signal hover:shadow-[0_0_0_4px_rgba(46,125,240,0.16)]"
+                  ? "border-signal/45 text-ink shadow-[0_0_0_3px_rgba(52,125,38,0.10)] hover:border-signal hover:shadow-[0_0_0_4px_rgba(52,125,38,0.16)]"
                   : "border-white/45 text-white shadow-[0_0_0_3px_rgba(255,255,255,0.10)] hover:border-white hover:shadow-[0_0_0_4px_rgba(255,255,255,0.18)]"
               }`}
             >
@@ -512,7 +512,7 @@ export default function SiteHeader() {
             className="pointer-events-none absolute inset-x-0 top-full hidden justify-center lg:flex"
             onMouseEnter={() => enter(activeMenu.name)}
           >
-            {/* Both gradient stops must be fully opaque — a translucent stop
+            {/* Both gradient stops must be fully opaque: a translucent stop
                 lets the hero artwork read straight through the menu. */}
             <div
               className={`notif-pop pointer-events-auto mt-2 grid w-[calc(100vw-3rem)] overflow-hidden rounded-[20px] border border-line bg-gradient-to-b from-paper to-[#EDF2FC] shadow-frame-lg ${
@@ -550,7 +550,7 @@ export default function SiteHeader() {
                 </div>
               ))}
 
-              {/* Feature card — the panel's right rail */}
+              {/* Feature card: the panel's right rail */}
               <div className="flex flex-col justify-between bg-[#E8F0FE]/70 p-6">
                 <div>
                   <p className="mono-label !text-signal">{activeMenu.feature.eyebrow}</p>
@@ -691,14 +691,14 @@ export default function SiteHeader() {
             drawer ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          {/* Brand wash — signal blue bleeding in from the top so the panel
+          {/* Brand wash: signal blue bleeding in from the top so the panel
               is CodeGang's colour rather than a neutral dark slab. */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 -z-10"
             style={{
               backgroundImage:
-                "radial-gradient(120% 60% at 0% 0%, rgba(46,125,240,0.42), transparent 62%), radial-gradient(90% 50% at 100% 100%, rgba(46,125,240,0.20), transparent 70%)",
+                "radial-gradient(120% 60% at 0% 0%, rgba(52,125,38,0.42), transparent 62%), radial-gradient(90% 50% at 100% 100%, rgba(52,125,38,0.20), transparent 70%)",
             }}
           />
           <svg
@@ -708,8 +708,8 @@ export default function SiteHeader() {
           >
             <defs>
               <linearGradient id="cg-arc" x1="0" y1="1" x2="1" y2="0">
-                <stop offset="0%" stopColor="#2E7DF0" stopOpacity="0.9" />
-                <stop offset="100%" stopColor="#2E7DF0" stopOpacity="0" />
+                <stop offset="0%" stopColor="#347D26" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#347D26" stopOpacity="0" />
               </linearGradient>
             </defs>
             {[60, 88, 116, 144, 172].map((r) => (
@@ -737,7 +737,7 @@ export default function SiteHeader() {
 
           <p className="mt-4 text-[0.85rem] leading-relaxed text-bone/60">
             A software engineering company. {stats.projectsDelivered} projects delivered
-            for {stats.clientsServed} clients — most under NDA.
+            for {stats.clientsServed} clients, most under NDA.
           </p>
 
           <div className="mt-10 space-y-8">
@@ -760,7 +760,7 @@ export default function SiteHeader() {
                 {site.email}
               </a>
               <p className="mt-1 font-mono text-[0.68rem] text-bone/45">
-                Straight to the founders — no sales layer
+                Straight to the founders: no sales layer
               </p>
             </div>
 

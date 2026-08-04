@@ -68,7 +68,7 @@ export default function Stack() {
                 aria-hidden
                 className={`relative z-10 grid h-[27px] w-[27px] shrink-0 place-items-center rounded-full border font-mono text-[0.6rem] transition-all duration-300 ${
                   on
-                    ? "scale-110 border-signal bg-signal text-white shadow-[0_0_0_4px_rgba(46,125,240,0.14)]"
+                    ? "scale-110 border-signal bg-signal text-white shadow-[0_0_0_4px_rgba(52,125,38,0.14)]"
                     : passed
                       ? "border-signal/40 bg-signal-soft text-signal"
                       : "border-line bg-bone text-mute"

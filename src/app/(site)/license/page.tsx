@@ -11,7 +11,7 @@ export default function License() {
 
                 <div className="container mx-auto px-6 max-w-4xl relative z-10">
                     <div className="mb-12">
-                        <div className="flex items-center gap-3 mb-6 text-blue-600">
+                        <div className="flex items-center gap-3 mb-6 text-signal">
                             <CheckCircle className="w-6 h-6" />
                             <span className="text-sm font-bold tracking-widest uppercase">Legal</span>
                         </div>

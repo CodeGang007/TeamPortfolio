@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { LiftIn, MaskLines } from "./motion";
 
 /* ═══════════════════════════════════════════════════════════════════
-   MARKETING PRIMITIVES — warm-bone surface
+   MARKETING PRIMITIVES: warm-bone surface
    Every public page composes from these. If a page hand-rolls its own
    heading sizes or button colours, the system has been broken.
    ═══════════════════════════════════════════════════════════════════ */
@@ -202,7 +202,7 @@ export function LeadIns({
           key={it.lead}
           className="text-[0.9375rem] leading-relaxed text-ink-soft"
         >
-          <span className="font-semibold text-ink">{it.lead} — </span>
+          <span className="font-semibold text-ink">{it.lead}: </span>
           {it.body}
         </p>
       ))}

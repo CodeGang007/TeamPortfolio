@@ -7,7 +7,7 @@ import { consoleProjects } from "./projects";
 export const site = {
   name: "CodeGang",
   domain: "https://www.codegang.online",
-  title: "CodeGang — Software engineering studio",
+  title: "CodeGang. Software engineering studio",
   description:
     "A software engineering company shipping production AI, multi-tenant platforms, and mobile apps for clients in Brazil, Australia, India, the USA, and Europe.",
   email: "codegang0077@gmail.com",

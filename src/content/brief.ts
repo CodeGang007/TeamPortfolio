@@ -32,7 +32,7 @@ export const buildTypes: Choice[] = [
   {
     id: "erp",
     label: "Internal / ERP systems",
-    hint: "The software the company actually runs on — purchasing to finance.",
+    hint: "The software the company actually runs on: purchasing to finance.",
   },
   {
     id: "commerce",
@@ -84,7 +84,7 @@ export const engagements: Choice[] = [
 export const briefFaqs = [
   {
     q: "How long does it take to hear back?",
-    a: "Usually within one business day. Your brief goes straight to the founders — there is no sales team triaging it first, and the engineer who replies is the one who would build the system.",
+    a: "Usually within one business day. Your brief goes straight to the founders: there is no sales team triaging it first, and the engineer who replies is the one who would build the system.",
   },
   {
     q: "Do I need to sign in to send a brief?",
@@ -100,7 +100,7 @@ export const briefFaqs = [
   },
   {
     q: "Who owns the code?",
-    a: "You do, from the first commit. We work inside your repository and deploy into your cloud account under your keys — not into a hosted black box you rent back from us.",
+    a: "You do, from the first commit. We work inside your repository and deploy into your cloud account under your keys, not into a hosted black box you rent back from us.",
   },
   {
     q: "What happens if the project is not a fit?",
