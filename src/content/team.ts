@@ -38,6 +38,7 @@ const VERSION: Record<string, number> = {
   "nishika-jha": 1785791732,
   "sara-jones-duke": 1785794180,
   abhrajit: 1785790401,
+  "sahib-dokal": 1786480151,
 };
 
 /**
@@ -183,6 +184,18 @@ export const team: TeamMember[] = [
     quote: "Simple systems survive. Clever ones page you at 3 a.m.",
     photo: portrait("abhrajit"),
     cutout: cutout("abhrajit"),
+    links: {},
+  },
+  {
+    id: "sahib-dokal",
+    name: "Sahib Dokal",
+    role: "Chief of Marketing/Sales",
+    cofounder: false,
+    owns: "Building brand. Driving growth. Creating impact.",
+    quote:
+      "Good marketing doesn't just sell a product, it builds a movement people believe in.",
+    photo: portrait("sahib-dokal"),
+    cutout: cutout("sahib-dokal"),
     links: {},
   },
 ];
