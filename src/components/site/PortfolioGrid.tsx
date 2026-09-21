@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { hasCaseStudy } from "@/data/portfolioProjects";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { ConsoleProject } from "@/content/projects";
@@ -100,7 +101,7 @@ export default function PortfolioGrid({
               className="h-full"
             >
               <Link
-                href={`/work/${p.slug}`}
+                href={hasCaseStudy(p.slug) ? `/work/${p.slug}` : (p.liveUrl ?? "/work")}
                 className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-paper transition-all duration-300 hover:-translate-y-1 hover:border-line-strong hover:shadow-frame"
               >
                 <Plate

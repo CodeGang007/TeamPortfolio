@@ -9,7 +9,7 @@ export const site = {
   domain: "https://www.codegang.online",
   title: "CodeGang. Software engineering studio",
   description:
-    "A software engineering company shipping production AI, multi-tenant platforms, and mobile apps for clients in Brazil, Australia, India, the USA, and Europe.",
+    "A software engineering company shipping production AI, multi-tenant platforms, and mobile apps for clients in Brazil, Australia, India, the USA, Europe, and the UAE.",
   email: "codegang0077@gmail.com",
   linkedin: "https://www.linkedin.com/company/code-gang",
   x: "https://x.com/CodeGang20",
@@ -49,6 +49,7 @@ const REGION_NAMES = {
   IN: { long: "India", short: "IN" },
   US: { long: "the USA", short: "US" },
   EU: { long: "Europe", short: "EU" },
+  AE: { long: "the UAE", short: "AE" },
 } as const;
 
 const activeRegions = [...new Set(consoleProjects.map((p) => p.region))];

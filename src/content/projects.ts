@@ -8,7 +8,7 @@
 // - Deep case-study content (features, architecture, galleries) lives in
 //   `src/data/portfolioProjects.ts` and is joined by slug.
 
-export type Region = "BR" | "AU" | "IN" | "US" | "EU";
+export type Region = "BR" | "AU" | "IN" | "US" | "EU" | "AE";
 export type SystemStatus = "live" | "building";
 
 export interface ConsoleProject {
@@ -292,6 +292,35 @@ export const consoleProjects = [
     liveUrl: "https://rerisehealth.com",
     summary: "DTC site for Core100, a 13-active mitochondrial health protocol: root-cause science and a 90-day milestone timeline built to justify a premium subscription purchase.",
     stack: ["Shopify", "Klaviyo"],
+  },
+  {
+    slug: "coba",
+    name: "COBA",
+    region: "AE",
+    city: "Abu Dhabi",
+    tz: "Asia/Dubai",
+    sector: "Community & Hospitality",
+    status: "live",
+    liveSince: "2026-09-04", // domain cut over from the holding page, verified live
+    liveUrl: "https://cobauae.com",
+    summary:
+      "Bilingual EN/RU site for a creative community hub in Nation Towers Mall, plus the brand system, social and the in-mall screen loop.",
+    stack: ["Next.js", "TypeScript", "Vercel", "EN/RU"],
+  },
+  {
+    slug: "swords-house",
+    name: "Swords House",
+    region: "EU",
+    city: "Swords",
+    tz: "Europe/Dublin",
+    sector: "Education · Brand & Content",
+    // Brand and content engagement, not a software build: no liveUrl, because
+    // swordshouse.net is the client's own site and we did not build it.
+    status: "live",
+    liveSince: null, // TODO(team): engagement start date: do not guess
+    summary:
+      "Brand system and weekly social content for a multicultural children's education and development centre: design, photo direction and production.",
+    stack: ["Brand System", "Social Design", "Content Production"],
   },
 ] satisfies ConsoleProject[];
 

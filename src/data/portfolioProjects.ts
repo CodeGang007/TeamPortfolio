@@ -59,6 +59,46 @@ export interface PortfolioProject {
 
 export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   {
+    id: "coba",
+    title: "COBA",
+    description:
+      "A creative community hub opening on the first floor of Nation Towers Mall, Al Bateen, Abu Dhabi. We built the brand system and the bilingual website end to end \u2014 English and Russian, the week\u2019s programme, the rooms and what they cost, the founders\u2019 story \u2014 and then the layer most studios hand off: the Instagram launch campaign, the story-highlight set, and the three-minute loop that plays on the screen inside the mall.",
+    category: "Brand & Web / Community",
+    image: "/projects/coba-hero.webp",
+    gallery: [
+      { src: "/projects/coba-hero.webp", caption: "Homepage \u2014 \u201cA creative community hub for children, families and adults\u201d" },
+      { src: "/projects/coba-week.webp", caption: "Our community \u2014 the programme, in English, Russian and Arabic" },
+      { src: "/projects/coba-community.webp", caption: "\u201cWhich one are you?\u201d \u2014 the three ways to be part of COBA" },
+    ],
+    link: "https://cobauae.com",
+    geography: "Abu Dhabi, UAE",
+    sector: "Community & Hospitality",
+    tagline:
+      "One roof for children, families and adults \u2014 the brand, the bilingual site, and the screen in the mall.",
+    badges: [
+      { label: "REGION", value: "Abu Dhabi, UAE" },
+      { label: "STACK", value: "Next.js \u00b7 TypeScript \u00b7 Vercel" },
+      { label: "STATUS", value: "Live in production" },
+      { label: "LIVE URL", value: "cobauae.com" },
+    ],
+    features: [
+      { title: "Bilingual by construction", description: "Every page ships in English and Russian off one content layer, with Arabic running through the brand furniture rather than bolted on as a third translation." },
+      { title: "The week, not a brochure", description: "The programme is modelled as what actually happens \u2014 mornings, afternoons, evenings, weekends \u2014 so a parent can find their slot instead of reading a services list." },
+      { title: "Brand system applied", description: "The crossbar-less COBA wordmark, the owl mark and the plaster-and-olive palette carried from the brand book into the site, the social set and the in-mall screen." },
+      { title: "Launch campaign", description: "A scroll-through carousel in both languages, a story set carrying the link, eight highlight covers, and a three-minute silent loop for the mall screen." },
+    ],
+    architecture: [],
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel"],
+    outcomes: [
+      { label: "Scope", value: "Brand system, bilingual website, Instagram launch set, in-mall screen loop" },
+      { label: "Languages", value: "English and Russian, with Arabic brand furniture throughout" },
+      { label: "Status", value: "Live at cobauae.com ahead of the doors opening" },
+    ],
+    active: true,
+    order: 22,
+    isPortfolio: true,
+  },
+  {
     id: "verse-ai",
     title: "Verse AI",
     description:
@@ -979,4 +1019,11 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
 
 export function getPortfolioProjectById(id: string): PortfolioProject | undefined {
   return PORTFOLIO_PROJECTS.find((p) => p.id === id);
+}
+
+/** Whether a console system has a deep case study behind it.
+ *  Anything that links to /work/<slug> must check this first: an engagement
+ *  can be listed on the console without a case-study page existing. */
+export function hasCaseStudy(id: string): boolean {
+  return PORTFOLIO_PROJECTS.some((p) => p.id === id);
 }
