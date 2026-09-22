@@ -6,6 +6,7 @@ import { getPortfolioProjectById } from "@/data/portfolioProjects";
 import { clients, site, stats, marketsLong } from "@/content/site";
 import { testimonials } from "@/content/testimonials";
 
+import AnnouncementBar from "@/components/site/AnnouncementBar";
 import HeroScene from "@/components/site/HeroScene";
 import WordGrid from "@/components/site/WordGrid";
 import FooterCta from "@/components/site/FooterCta";
@@ -232,6 +233,7 @@ export default function HomePage() {
   return (
     <>
       <JsonLd data={jsonLd} />
+      <AnnouncementBar />
       <HeroScene />
 
       {/* ══ Proof band ══════════════════════════════════════════════ */}
