@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { marketsShort, site, stats } from "@/content/site";
+import { marketsShort, site, stats, marketsLong } from "@/content/site";
 import { FadeUp, Item, Stagger } from "@/components/site/motion";
 import { Gallery, Plate, SectionNav, TrustRow, VisualLead } from "@/components/site/blocks";
 import {
@@ -70,7 +70,7 @@ const life = [
   { lead: "Your work is visible", body: "Nothing you ship disappears into a monorepo nobody reads. It is in front of a client within weeks." },
   { lead: "Review is written", body: "Reasoning goes in the pull request, so decisions are inspectable months later." },
   { lead: "Documentation is the job", body: "Runbooks and handover docs are in the estimate, not squeezed in on a Friday." },
-  { lead: "Timezones overlap deliberately", body: "We work across Brazil, Australia, India, the USA and Europe, and agree the overlap rather than pretending it is free." },
+  { lead: "Timezones overlap deliberately", body: `We work across ${marketsLong}, and agree the overlap rather than pretending it is free.` },
 ];
 
 const process = [

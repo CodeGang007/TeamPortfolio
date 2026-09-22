@@ -12,7 +12,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 /** Cloudinary cloud holding the team portraits. */
-const CLOUD = "dumxpxosd";
+const CLOUD = "bglqfxco";
 
 /**
  * Each portrait is stored once at full size and cropped on delivery:
@@ -30,15 +30,12 @@ const CLOUD = "dumxpxosd";
  * Bump the number here after re-uploading and every cache layer misses.
  */
 const VERSION: Record<string, number> = {
-  "gourav-chakraborty": 1785794005,
-  "subhadip-sasmal": 1785790382,
-  "sushant-choudhary": 1785790384,
-  sourajit: 1785790395,
-  sunny: 1785790399,
-  "nishika-jha": 1785791732,
-  "sara-jones-duke": 1785794180,
-  abhrajit: 1785790401,
-  "sahib-dokal": 1786480151,
+  "gourav-chakraborty": 1789970777,
+  "raunok-bhowmick": 1789970787,
+  "sushant-choudhary": 1789970798,
+  sourajit: 1789970808,
+  "nishika-jha": 1789970812,
+  "sahib-dokal": 1789970825,
 };
 
 /**
@@ -109,14 +106,14 @@ export const team: TeamMember[] = [
     },
   },
   {
-    id: "subhadip-sasmal",
-    name: "Subhadip Sasmal",
+    id: "raunok-bhowmick",
+    name: "Raunok Bhowmick",
     role: "Chief Technology Officer",
     cofounder: true,
-    owns: "Interfaces that respect the person using them.",
-    quote: "Good design is the shortest path between a user and their goal.",
-    photo: portrait("subhadip-sasmal"),
-    cutout: cutout("subhadip-sasmal"),
+    owns: "Technical architecture and the engineering roadmap.",
+    quote: "Good architecture is invisible until you need it.",
+    photo: portrait("raunok-bhowmick"),
+    cutout: cutout("raunok-bhowmick"),
     links: {},
   },
   {
@@ -131,6 +128,18 @@ export const team: TeamMember[] = [
     links: {},
   },
   {
+    id: "sahib-dokal",
+    name: "Sahib Dokal",
+    role: "Chief Marketing Officer",
+    cofounder: false,
+    owns: "Building brand. Driving growth. Creating impact.",
+    quote:
+      "Good marketing doesn't just sell a product, it builds a movement people believe in.",
+    photo: portrait("sahib-dokal"),
+    cutout: cutout("sahib-dokal"),
+    links: {},
+  },
+  {
     id: "sourajit",
     name: "Sourajit Mitra",
     role: "Chief People Officer",
@@ -142,17 +151,6 @@ export const team: TeamMember[] = [
     links: {},
   },
   {
-    id: "sunny",
-    name: "Sunny Srivastava",
-    role: "Chief Information Officer",
-    cofounder: true,
-    owns: "Cloud, security and the pipelines every system ships through.",
-    quote: "Boring infrastructure is the goal, not a compromise.",
-    photo: portrait("sunny"),
-    cutout: cutout("sunny"),
-    links: {},
-  },
-  {
     id: "nishika-jha",
     name: "Nishika Jha",
     role: "Head of Design",
@@ -161,41 +159,6 @@ export const team: TeamMember[] = [
     quote: "If a user needs the manual, the interface lost.",
     photo: portrait("nishika-jha"),
     cutout: cutout("nishika-jha"),
-    links: {},
-  },
-  {
-    id: "sara-jones-duke",
-    name: "Sara Jones Duke",
-    role: "Head of Custom Solutioning",
-    cofounder: false,
-    location: "Onsite \u00b7 USA",
-    owns: "Shapes bespoke builds with clients before a line is written.",
-    quote: "The right scope beats the clever solution, every time.",
-    photo: portrait("sara-jones-duke"),
-    cutout: cutout("sara-jones-duke"),
-    links: { email: "sara@codegang.online" },
-  },
-  {
-    id: "abhrajit",
-    name: "Abhrajit Ray",
-    role: "Founding Engineer",
-    cofounder: false,
-    owns: "Builds and hardens the systems behind the case studies.",
-    quote: "Simple systems survive. Clever ones page you at 3 a.m.",
-    photo: portrait("abhrajit"),
-    cutout: cutout("abhrajit"),
-    links: {},
-  },
-  {
-    id: "sahib-dokal",
-    name: "Sahib Dokal",
-    role: "Chief of Marketing/Sales",
-    cofounder: false,
-    owns: "Building brand. Driving growth. Creating impact.",
-    quote:
-      "Good marketing doesn't just sell a product, it builds a movement people believe in.",
-    photo: portrait("sahib-dokal"),
-    cutout: cutout("sahib-dokal"),
     links: {},
   },
 ];

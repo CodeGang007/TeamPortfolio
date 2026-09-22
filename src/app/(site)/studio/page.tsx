@@ -75,7 +75,7 @@ const engagement = [
   { lead: "Your repository", body: "We work in your organisation from the first commit. You own the code throughout, not on final payment." },
   { lead: "Your cloud", body: "Deployment goes into your account under your keys. We hand over infrastructure, not access to a hosted black box." },
   { lead: "Fixed scope, written down", body: "What the system does and what shipping means are agreed in writing before build starts." },
-  { lead: "Timezone overlap agreed", body: "We work across Brazil, Australia, India, the USA and Europe, and set the overlap explicitly rather than pretending it is free." },
+  { lead: "Timezone overlap agreed", body: `We work across ${marketsLong}, and set the overlap explicitly rather than pretending it is free.` },
   { lead: "Runbooks included", body: "Handover documentation is in the estimate, so ending an engagement is not a cliff." },
   { lead: "NDA by default", body: "Confidentiality is the starting position, which is why most of our delivered work is unnamed on this site." },
 ];
@@ -112,9 +112,8 @@ export default function StudioPage() {
             <Display as="h1" size="xl" lead="One team." trail="No hand-off." />
             <Body className="mt-6 max-w-xl text-base">
               CodeGang is a software engineering studio. We build production AI,
-              multi-tenant platforms, and mobile apps for clients in Brazil,
-              Australia, India, the USA and Europe, and we keep them running
-              after launch.
+              multi-tenant platforms, and mobile apps for clients in{" "}
+              {marketsLong}, and we keep them running after launch.
             </Body>
             <div className="mt-8 flex flex-wrap gap-3">
               <Pill href="#team">

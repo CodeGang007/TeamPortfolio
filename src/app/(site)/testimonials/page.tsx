@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { hasCaseStudy } from "@/data/portfolioProjects";
 import { testimonials } from "@/content/testimonials";
 import { clients, stats, marketsShort } from "@/content/site";
 import { consoleProjects } from "@/content/projects";
@@ -210,12 +211,14 @@ export default function TestimonialsPage() {
                     {p.summary}
                   </p>
                   <div className="mt-auto flex flex-wrap gap-4 pt-5">
-                    <Link
-                      href={`/work/${p.slug}`}
-                      className="text-[0.82rem] font-medium text-signal hover:underline"
-                    >
-                      Case study →
-                    </Link>
+                    {hasCaseStudy(p.slug) ? (
+                      <Link
+                        href={`/work/${p.slug}`}
+                        className="text-[0.82rem] font-medium text-signal hover:underline"
+                      >
+                        Case study →
+                      </Link>
+                    ) : null}
                     {p.liveUrl ? (
                       <a
                         href={p.liveUrl}

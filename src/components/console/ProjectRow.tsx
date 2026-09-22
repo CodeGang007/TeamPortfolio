@@ -14,11 +14,23 @@ export default function ProjectRow({
 }) {
   const deep = getPortfolioProjectById(project.slug);
 
+  // Only the systems that have a deep case study get a link. Engagements
+  // listed here without one — brand and content work, for instance — used to
+  // point at /work/<slug> and render a 404.
+  const shell = "group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all";
+  const interactive = " hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/[0.08]";
+  const Card = deep
+    ? ({ children }: { children: React.ReactNode }) => (
+        <Link href={`/work/${project.slug}`} className={shell + interactive}>
+          {children}
+        </Link>
+      )
+    : ({ children }: { children: React.ReactNode }) => (
+        <div className={shell}>{children}</div>
+      );
+
   return (
-    <Link
-      href={`/work/${project.slug}`}
-      className="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/[0.08]"
-    >
+    <Card>
       {deep && (
         <div className="relative aspect-[16/10] overflow-hidden border-b border-slate-100 bg-slate-50">
           <Image
@@ -68,6 +80,6 @@ export default function ProjectRow({
           {project.stack.join(" · ")}
         </p>
       </div>
-    </Link>
+    </Card>
   );
 }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 import { consoleProjects } from "@/content/projects";
+import { getPortfolioProjectById } from "@/data/portfolioProjects";
 import { clients, site, stats, marketsLong } from "@/content/site";
 import { testimonials } from "@/content/testimonials";
 
@@ -193,7 +194,7 @@ const faq = [
   },
   {
     q: "Do you work across time zones?",
-    a: `Yes. Our clients are in ${marketsLong}. Brazil, Australia, India, the USA and Europe, and every system stays supported in its own timezone.`,
+    a: `Yes. Our clients are in ${marketsLong}, and every system stays supported in its own timezone.`,
   },
   {
     q: "Can you work under NDA?",
@@ -551,18 +552,27 @@ export default function HomePage() {
                     className="group border-b border-bone/10 transition-colors hover:bg-bone/[0.04]"
                   >
                     <td className="py-4 pr-4">
-                      <Link
-                        href={`/work/${p.slug}`}
-                        className="text-[0.9rem] font-medium text-bone"
-                      >
-                        {p.name}
-                        <span
-                          aria-hidden
-                          className="ml-2 inline-block text-signal opacity-0 transition-opacity group-hover:opacity-100"
+                      {/* Only link rows that have a case study behind them —
+                          an engagement listed here without one would point at
+                          /work/<slug> and 404. */}
+                      {getPortfolioProjectById(p.slug) ? (
+                        <Link
+                          href={`/work/${p.slug}`}
+                          className="text-[0.9rem] font-medium text-bone"
                         >
-                          →
+                          {p.name}
+                          <span
+                            aria-hidden
+                            className="ml-2 inline-block text-signal opacity-0 transition-opacity group-hover:opacity-100"
+                          >
+                            →
+                          </span>
+                        </Link>
+                      ) : (
+                        <span className="text-[0.9rem] font-medium text-bone">
+                          {p.name}
                         </span>
-                      </Link>
+                      )}
                       <p className="mt-0.5 max-w-xs text-[0.75rem] leading-snug text-bone/45">
                         {p.summary}
                       </p>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { site, stats, whatsappHref, marketsLong } from "@/content/site";
 import { consoleProjects } from "@/content/projects";
+import { getPortfolioProjectById } from "@/data/portfolioProjects";
 import { industries, services } from "@/content/pages";
 
 /**
@@ -115,9 +116,14 @@ export default function SiteFooter() {
                 ? [...caseStudyGroups, { label: "More", slugs: leftover.map((p) => p.slug) }]
                 : caseStudyGroups;
               return groups.map((group) => {
+                // This list is headed "Case studies", so it may only carry
+                // systems that actually have one. An engagement without a deep
+                // entry (brand and content work, say) would otherwise link
+                // straight into a 404 from every page on the site.
                 const items = group.slugs
                   .map((slug) => consoleProjects.find((p) => p.slug === slug))
-                  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+                  .filter((p): p is NonNullable<typeof p> => Boolean(p))
+                  .filter((p) => getPortfolioProjectById(p.slug));
                 if (items.length === 0) return null;
                 return (
                   <div key={group.label} className="mt-5 first:mt-3">

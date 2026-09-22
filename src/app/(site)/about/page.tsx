@@ -184,9 +184,8 @@ export default function AboutPage() {
           </h1>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-bone/80">
             CodeGang is a software engineering company. We ship production
-            AI, multi-tenant platforms and mobile apps for clients in Brazil,
-            Australia, India, the USA and Europe, and we stay on to keep
-            them running after launch.
+            AI, multi-tenant platforms and mobile apps for clients in{" "}
+            {marketsLong}, and we stay on to keep them running after launch.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Link

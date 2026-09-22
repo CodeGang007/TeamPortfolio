@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { services, industries } from "@/content/pages";
 import { consoleProjects } from "@/content/projects";
+import { PORTFOLIO_PROJECTS, hasCaseStudy } from "@/data/portfolioProjects";
 import { stats } from "@/content/site";
 import { FadeUp, Item, Stagger } from "@/components/site/motion";
 import { Plate, SectionNav, TrustRow, VisualLead } from "@/components/site/blocks";
@@ -30,7 +31,7 @@ const sections = [
 ] as const;
 
 const trust = [
-  { value: String(consoleProjects.length), label: "Systems documented", sub: "case study each" },
+  { value: String(consoleProjects.length), label: "Systems documented", sub: `${consoleProjects.filter((p) => hasCaseStudy(p.slug)).length} with a full case study` },
   { value: String(services.length + industries.length), label: "Service pages", sub: "each proof-linked" },
   { value: "0", label: "Gated downloads", sub: "no email wall" },
   { value: "", label: "Published articles", sub: "none published yet", pending: true },
@@ -252,7 +253,7 @@ export default function ResourcesPage() {
             eyebrow="Page index"
             lead="Everything on this site,"
             trail="in one list"
-            body={`${services.length} services, ${industries.length} industries, and ${consoleProjects.length} case studies, each one linked to the production system behind it.`}
+            body={`${services.length} services, ${industries.length} industries, and ${PORTFOLIO_PROJECTS.length} case studies, each one linked to the production system behind it.`}
           />
         </FadeUp>
 
@@ -260,7 +261,7 @@ export default function ResourcesPage() {
           {[
             { title: "Services", base: "/services", items: services.map((s) => ({ label: s.nav, slug: s.slug })) },
             { title: "Industries", base: "/industries", items: industries.map((s) => ({ label: s.nav, slug: s.slug })) },
-            { title: "Case studies", base: "/work", items: consoleProjects.map((p) => ({ label: p.name, slug: p.slug })) },
+            { title: "Case studies", base: "/work", items: consoleProjects.filter((p) => hasCaseStudy(p.slug)).map((p) => ({ label: p.name, slug: p.slug })) },
           ].map((col) => (
             <FadeUp key={col.title}>
               <p className="mono-label border-b border-line pb-3">{col.title}</p>

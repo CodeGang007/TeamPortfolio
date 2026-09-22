@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { consoleProjects } from "@/content/projects";
-import { PORTFOLIO_PROJECTS } from "@/data/portfolioProjects";
+import { PORTFOLIO_PROJECTS, hasCaseStudy } from "@/data/portfolioProjects";
 import { clients, stats, marketsShort, marketsLong } from "@/content/site";
 import { FadeUp } from "@/components/site/motion";
 import { Gallery, Plate, SectionNav, TrustRow, VisualLead } from "@/components/site/blocks";
@@ -30,7 +30,7 @@ const sections = [
 ] as const;
 
 const trust = [
-  { value: String(consoleProjects.length), label: "Systems documented", sub: "case study each" },
+  { value: String(consoleProjects.length), label: "Systems documented", sub: `${consoleProjects.filter((p) => hasCaseStudy(p.slug)).length} with a full case study` },
   { value: String(stats.live), label: "Live in production", sub: marketsShort },
   { value: stats.projectsDelivered, label: "Projects delivered", sub: "most under NDA" },
   { value: "", label: "Awards", sub: "none entered for", pending: true },
