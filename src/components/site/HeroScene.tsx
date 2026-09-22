@@ -120,7 +120,7 @@ export default function HeroScene() {
 
       {/* ── Content ─────────────────────────────────────────────── */}
       <motion.div
-        className="hero-min relative mx-auto flex w-full max-w-shell flex-col justify-center px-6 pb-24 pt-32 lg:px-10 lg:pt-36 xl:px-16"
+        className="hero-min relative mx-auto flex w-full max-w-shell flex-col justify-center px-6 pb-24 pt-[10.25rem] lg:px-10 lg:pt-[11.25rem] xl:px-16"
         style={reduced ? undefined : { y: copyY, opacity: copyFade }}
       >
         <div className="max-w-2xl">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
+import AnnouncementBar from "@/components/site/AnnouncementBar";
 import {
   BarChart3,
   Bot,
@@ -313,6 +314,8 @@ export default function SiteHeader() {
         }`}
         onMouseLeave={leave}
       >
+        {overArt && <AnnouncementBar hidden={scrolled} />}
+
         {/* ── Utility strip: retracts once you start reading ────── */}
         <div
           className={`overflow-hidden border-b border-transparent bg-ink transition-all duration-300 ${
