@@ -21,7 +21,7 @@ function contextMessage(pathname: string): string {
     return "Hi CodeGang. I'd like to talk to one of the engineers about a project.";
   if (pathname.startsWith("/contact") || pathname.startsWith("/project-request"))
     return "Hi CodeGang, I want to discuss a project.";
-  return "Hi CodeGang, I found you through codegang.online and want to discuss a project.";
+  return "Hi CodeGang, I found you through codegang.in and want to discuss a project.";
 }
 
 export default function WhatsAppCTA() {

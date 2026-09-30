@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
   ];
 
   const text = [
-    "📋 <b>New project brief — codegang.online</b>",
+    "📋 <b>New project brief — codegang.in</b>",
     `From: ${escapeHtml(name)} &lt;${escapeHtml(email)}&gt;`,
     "",
     ...fields
@@ -181,7 +181,7 @@ export async function POST(request: NextRequest) {
           "If anything changed since you sent it, just reply to this email.",
           "",
           "— CodeGang",
-          "https://www.codegang.online",
+          "https://www.codegang.in",
         ].join("\n"),
       });
     } catch (err) {

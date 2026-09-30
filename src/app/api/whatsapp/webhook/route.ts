@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 //        WhatsApp inbox workflow exists.
 //
 // Configure in Meta dev console → WhatsApp → Configuration:
-//   Callback URL:  https://www.codegang.online/api/whatsapp/webhook
+//   Callback URL:  https://www.codegang.in/api/whatsapp/webhook
 //   Verify token:  must equal WHATSAPP_VERIFY_TOKEN
 
 const TELEGRAM_BOT_TOKEN =

@@ -16,10 +16,10 @@ const nextConfig: NextConfig = {
         has: [
           {
             type: "host",
-            value: "codegang.online",
+            value: "codegang.in",
           },
         ],
-        destination: "https://www.codegang.online/:path*",
+        destination: "https://www.codegang.in/:path*",
         permanent: true,
       },
       // Console revamp — old routes keep whatever link equity exists

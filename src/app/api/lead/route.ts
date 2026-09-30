@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
   // 1. Telegram — the rail that matters
   const text = [
-    "🟢 <b>New lead — codegang.online</b>",
+    "🟢 <b>New lead — codegang.in</b>",
     about ? `Context: saw the <b>${escapeHtml(about)}</b> case study` : null,
     `From: ${escapeHtml(name)} &lt;${escapeHtml(email)}&gt;`,
     "",
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 
   // 2. WhatsApp — best-effort mirror to the founders (needs Cloud API creds)
   notifyFoundersWhatsApp(
-    `🟢 New lead — codegang.online\n${about ? `Context: ${about}\n` : ""}From: ${name} <${email}>\n\n${message}`
+    `🟢 New lead — codegang.in\n${about ? `Context: ${about}\n` : ""}From: ${name} <${email}>\n\n${message}`
   ).catch(() => {});
 
   // 3. Email — best-effort confirmation to the lead; never fails the request
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
         from: `"CodeGang" <${process.env.SMTP_EMAIL}>`,
         to: email,
         subject: "We got your message — CodeGang",
-        text: `Hi ${name},\n\nYour message just landed in the founders' Telegram. One of the engineers will get back to you.\n\nWhat you sent:\n${message}\n\n— CodeGang\nhttps://www.codegang.online`,
+        text: `Hi ${name},\n\nYour message just landed in the founders' Telegram. One of the engineers will get back to you.\n\nWhat you sent:\n${message}\n\n— CodeGang\nhttps://www.codegang.in`,
       });
     } catch (err) {
       console.error("Lead confirmation email failed (non-fatal):", err);
