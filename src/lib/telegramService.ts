@@ -80,7 +80,7 @@ export const telegramService = {
 <b>Description:</b>
 ${description}
 
-<a href="https://codegang.online/dashboard/projects">View in Dashboard</a>
+<a href="https://www.codegang.in/dashboard/projects">View in Dashboard</a>
       `.trim();
   }
 };

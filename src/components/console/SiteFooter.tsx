@@ -47,7 +47,7 @@ const elsewhere = [
   {
     name: "WhatsApp",
     href: whatsappHref(
-      "Hi CodeGang, I found you through codegang.online and want to discuss a project."
+      "Hi CodeGang, I found you through codegang.in and want to discuss a project."
     ),
   },
   { name: "LinkedIn", href: site.linkedin },
